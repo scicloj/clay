@@ -1,6 +1,6 @@
 # clay
 
-A tiny Clojure tool for a dynamic workflow with the more serious tool.
+A tiny Clojure tool for a dynamic workflow with the more serious visual tools
 
 ## Usage
 
