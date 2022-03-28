@@ -4,12 +4,9 @@ A tiny Clojure tool for a dynamic workflow with the more serious visual tools
 
 ## Usage
 
-FIXME: write usage documentation!
+Coming soon
 
-Invoke a library API function from the command-line:
-
-    $ clojure -X org.scicloj.clay/foo :a 1 :b '"two"'
-    {:a 1, :b "two"} "Hello, World!"
+## Development
 
 Run the project's tests.
 
