@@ -6,11 +6,8 @@
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))
 
-(defn start []
-  (pipeline/start))
+(defn start! [config]
+  (pipeline/start! config))
 
-(defn restart []
-  (pipeline/restart))
-
-(defn setup-clerk []
-  (view.clerk/setup!))
+(defn restart! [config ]
+  (pipeline/restart! config))

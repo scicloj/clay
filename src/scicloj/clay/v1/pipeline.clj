@@ -3,16 +3,18 @@
              :refer [<! go go-loop timeout chan thread]]
             [scicloj.clay.v1.view :as view]))
 
-(defn handle-value [{:keys [code value] :as event}]
-  (view/show value code))
+(defn handle-value [{:keys [code value] :as event}
+                    tools]
+  (view/show! value code tools))
 
-(defn handle [{:keys [event-type]
-               :as event}]
-  (some-> event-type
-          (case :event-type/value (handle-value event))))
+(defn create-handler [tools]
+  (fn [{:keys [event-type]
+        :as event}]
+    (some-> event-type
+            (case :event-type/value (handle-value event tools)))))
 
-(defn new-pipeline [handler]
-  (view/open)
+(defn new-pipeline [handler tools]
+  (view/open! tools)
   (let [events-channel         (async/chan 100)]
     (async/go-loop []
       (when-let [event (async/<! events-channel)]
@@ -26,16 +28,18 @@
 (defonce *pipeline
   (atom nil))
 
-(defn restart []
-  (view/close)
+(defn restart! [{:keys [tools] :as config}]
+  (view/setup! tools config)
+  (view/close! tools)
   (when-let [s (:stop @*pipeline)]
     (s))
-  (reset! *pipeline (new-pipeline #'handle)))
+  (reset! *pipeline (new-pipeline (create-handler tools)
+                                  tools)))
 
-(defn start []
+(defn start! [config]
   (if-not (:stop @*pipeline)
-    (restart)))
+    (restart! config)))
 
-(defn process [event]
+(defn process! [event]
   (when-let [p (:process @*pipeline)]
     (p event)))

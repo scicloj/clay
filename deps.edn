@@ -4,7 +4,11 @@
         io.github.nextjournal/clerk {:mvn/version "0.6.387"}
         org.clojure/core.async {:mvn/version "1.1.587"}
         nrepl/nrepl       {:mvn/version "0.9.0"}
-        org.scicloj/kindly {:mvn/version "2-alpha1"}}
+        org.scicloj/kindly {:mvn/version "2-alpha1"}
+        ;; inspired by: https://github.com/seancorfield/dot-clojure/blob/develop/deps.edn#L96
+        org.clojure/tools.deps.alpha ; add-lib3 branch
+        {:git/url "https://github.com/clojure/tools.deps.alpha"
+         :sha "83a477b305839c697666401508c395cfed29506a"}}
  :aliases
  {:build {:deps {io.github.seancorfield/build-clj
                  {:git/tag "v0.6.4" :git/sha "c21cfde"}}

@@ -1,7 +1,8 @@
 (ns scicloj.clay.v1.view.portal
   (:require [portal.api :as portal]
             [scicloj.kindly.v2.api :as kindly]
-            [scicloj.clay.v1.walk]))
+            [scicloj.clay.v1.walk]
+            [scicloj.clay.v1.tool :as tool]))
 
 (kindly/define-kind-behaviour! :kind/hiccup
   {:portal.viewer (fn [v]
@@ -44,3 +45,13 @@
       (with-meta
         {:portal.viewer/default :portal.viewer/hiccup})
       portal/submit))
+
+(def tool
+  (reify tool/Tool
+    (setup! [this config])
+    (open! [this]
+      (portal/open))
+    (close! [this]
+      (portal/close))
+    (show! [this value code]
+      (show! value code))))

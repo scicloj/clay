@@ -4,7 +4,8 @@
             [nextjournal.clerk :as clerk]
             [scicloj.clay.v1.walk]
             [nextjournal.clerk.webserver :as webserver]
-            [nextjournal.clerk.view :as view]))
+            [nextjournal.clerk.view :as view]
+            [scicloj.clay.v1.tool :as tool]))
 
 (comment
   (clerk/serve! {}))
@@ -91,3 +92,14 @@
                           [(clerk/code code)
                            (clerk/html [:hr])])
                         [value])))
+
+
+(def tool
+  (reify tool/Tool
+    (setup! [this config]
+      (setup!))
+    (open! [this]
+      (clerk/serve! {:browse? true}))
+    (close! [this])
+    (show! [this value code]
+      (show! value code))))
