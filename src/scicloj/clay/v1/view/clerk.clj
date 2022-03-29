@@ -7,9 +7,6 @@
             [nextjournal.clerk.view :as view]
             [scicloj.clay.v1.tool :as tool]))
 
-(comment
-  (clerk/serve! {}))
-
 (def *notes (atom []))
 
 (defn get-value-with-id! [value]
@@ -85,14 +82,11 @@
   {:clerk.viewer (fn [v]
                    (clerk/vl v))})
 
-(setup!)
-
 (defn show! [value code]
   (show-values! (concat (when code
                           [(clerk/code code)
                            (clerk/html [:hr])])
                         [value])))
-
 
 (def tool
   (reify tool/Tool
