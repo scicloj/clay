@@ -3,15 +3,19 @@
             [scicloj.clay.v1.tools :as tools]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
-            [clojure.tools.deps.alpha.repl :as repl]
+            #_[clojure.tools.deps.alpha.repl :as repl]
             [nextjournal.clerk :as clerk])
   (:import javax.imageio.ImageIO
            java.net.URL))
 
-(clay/start! {:tools [tools/clerk
-                      tools/portal]})
+(clay/restart! {:tools [tools/clerk
+                        tools/portal]})
 
-(+ 1 2)
+;; # intro
+
+(+ 1 3)
+
+;; # section 1
 
 (defonce clay-image
   (-> "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
@@ -46,8 +50,27 @@ clay-image
     bi))
 
 
-(repl/add-libs '{scicloj/tablecloth {:mvn/version "6.051"}
-                 aerial.hanami/aerial.hanami {:mvn/version "0.17.0"}
-                 org.scicloj/viz.clj {:mvn/version "0.1.2"}})
+;; (repl/add-libs '{scicloj/tablecloth {:mvn/version "6.051"}
+;;                  aerial.hanami/aerial.hanami {:mvn/version "0.17.0"}
+;;                  org.scicloj/viz.clj {:mvn/version "0.1.2"}})
 
-(require '[tablecloth.api :as tc])
+;; (require '[tablecloth.api :as tc])
+
+
+
+(delay
+  (Thread/sleep 1000)
+  42)
+
+
+
+(delay
+  (-> [:div [:h2 "hi......."]]
+      (kindly/consider kind/hiccup)))
+
+
+
+
+(delay
+  (-> [:div [:h2 "hi.1!@!......"]]
+      clerk/html))
