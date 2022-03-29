@@ -60,7 +60,8 @@
 
 (defn setup! []
   (clerk/set-viewers!
-   [{:pred kindly/kind
+   [{:pred (fn [v]
+             (some-> v kindly/kind kindly/kind->behaviour :clerk.viewer))
      :transform-fn prepare}
     {:pred delay?
      :transform-fn (fn [v]
