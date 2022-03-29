@@ -16,7 +16,7 @@
     (cond
       ;;
       (contains? message :value)
-      (pipeline/process
+      (pipeline/process!
        {:request-id id
         :value      value
         :code (:code request)
