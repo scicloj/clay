@@ -1,5 +1,6 @@
 (ns scicloj.clay.v1.view
-  (:require [scicloj.clay.v1.tool :as tool]))
+  (:require [scicloj.clay.v1.tool :as tool]
+            [scicloj.clay.v1.view.image]))
 
 (defn setup! [tools config]
   (doseq [tool tools]
