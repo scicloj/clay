@@ -36,8 +36,10 @@
   (reset! *pipeline (new-pipeline (create-handler tools)
                                   tools)))
 
-(defn start! [config]
-  (if-not (:stop @*pipeline)
+(defn start! [{:keys [tools] :as config}]
+  (if (:stop @*pipeline) ; already started, so just re-setup it
+    (view/setup! tools config)
+    ;; actually start it
     (restart! config)))
 
 (defn process! [event]
