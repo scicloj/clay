@@ -8,7 +8,7 @@
   {:portal.viewer (fn [v]
                     [:portal.viewer/hiccup v])})
 
-(kindly/define-kind-behaviour! :kind/vega-lite
+(kindly/define-kind-behaviour! :kind/vega
   {:portal.viewer (fn [v]
                     [:portal.viewer/vega-lite v])})
 

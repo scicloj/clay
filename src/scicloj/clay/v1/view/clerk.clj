@@ -75,10 +75,6 @@
   {:clerk.viewer (fn [v]
                    (clerk/html v))})
 
-(kindly/define-kind-behaviour! :kind/vega-lite
-  {:clerk.viewer (fn [v]
-                   (clerk/vl v))})
-
 (kindly/define-kind-behaviour! :kind/vega
   {:clerk.viewer (fn [v]
                    (clerk/vl v))})
