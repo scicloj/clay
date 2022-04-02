@@ -1,7 +1,9 @@
 # clay
 
-[A big ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) with your favourite Clojure tools inside --
-a tiny Clojure tool for a dynamic workflow with the more serious visual tools
+[A big ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) with your favourite Clojure tools inside
+
+
+Clay is a tiny Clojure tool for a dynamic workflow with the more serious visual tools
 
 ## Usage
 
