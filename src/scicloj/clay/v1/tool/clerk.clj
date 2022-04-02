@@ -1,4 +1,4 @@
-(ns scicloj.clay.v1.view.clerk
+(ns scicloj.clay.v1.tool.clerk
   (:require [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
             [nextjournal.clerk :as clerk]
@@ -74,6 +74,17 @@
 (kindly/define-kind-behaviour! :kind/hiccup
   {:clerk.viewer (fn [v]
                    (clerk/html v))})
+
+(kindly/define-kind-behaviour! :kind/table
+  {:clerk.viewer (fn [{:keys [row-maps row-vectors column-names]}]
+                   (clerk/table {:head column-names
+                                 :rows (or row-vectors
+                                           (map (fn [row-map]
+                                                  (map row-map column-names))
+                                                row-maps))}))})
+
+(kindly/define-kind-behaviour! :kind/table
+  {:html.viewer (fn [{:keys [row-maps row-vectors column-names]}])})
 
 (kindly/define-kind-behaviour! :kind/vega
   {:clerk.viewer (fn [v]

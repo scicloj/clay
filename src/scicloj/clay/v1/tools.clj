@@ -1,7 +1,10 @@
 (ns scicloj.clay.v1.tools
-  (:require [scicloj.clay.v1.view.portal :as view.portal]
-            [scicloj.clay.v1.view.clerk :as view.clerk]))
+  (:require [scicloj.clay.v1.tool.portal :as tool.portal]
+            [scicloj.clay.v1.tool.clerk :as tool.clerk]
+            [scicloj.clay.v1.tool.html :as tool.html]))
 
-(def portal view.portal/tool)
+(def portal tool.portal/tool)
 
-(def clerk view.clerk/tool)
+(def clerk tool.clerk/tool)
+
+(def html tool.html/tool)

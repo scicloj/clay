@@ -1,12 +1,20 @@
-(ns scicloj.clay.v1.view.portal
+(ns scicloj.clay.v1.tool.portal
   (:require [portal.api :as portal]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.clay.v1.walk]
-            [scicloj.clay.v1.tool :as tool]))
+            [scicloj.clay.v1.tool :as tool]
+            [scicloj.clay.v1.tool.html.table :as table]))
 
 (kindly/define-kind-behaviour! :kind/hiccup
   {:portal.viewer (fn [v]
                     [:portal.viewer/hiccup v])})
+
+(kindly/define-kind-behaviour! :kind/table
+  {:portal.viewer (fn [table-spec]
+                    [:portal.viewer/hiccup
+                     ;; TODO: Use Portal's Table viewer
+                     (table/->table-hiccup
+                      table-spec)])})
 
 (kindly/define-kind-behaviour! :kind/vega
   {:portal.viewer (fn [v]
