@@ -3,16 +3,20 @@
             [scicloj.clay.v1.tools :as tools]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
-            #_[clojure.tools.deps.alpha.repl :as repl]
             [nextjournal.clerk :as clerk])
   (:import javax.imageio.ImageIO
            java.net.URL))
 
-(clay/restart! {:tools [tools/clerk
-                        tools/portal]})
+(clay/start! {:tools [tools/clerk
+                      tools/portal
+                      #_tools/html]})
+
+(comment
+  (clay/restart! {:tools [tools/clerk
+                          tools/portal
+                          #_tools/html]}))
 
 ;; # intro
-
 (+ 1 3)
 
 ;; # section 1
@@ -50,27 +54,44 @@ clay-image
     bi))
 
 
-;; (repl/add-libs '{scicloj/tablecloth {:mvn/version "6.051"}
-;;                  aerial.hanami/aerial.hanami {:mvn/version "0.17.0"}
-;;                  org.scicloj/viz.clj {:mvn/version "0.1.2"}})
-
-;; (require '[tablecloth.api :as tc])
-
-
-
-(delay
-  (Thread/sleep 1000)
-  42)
-
-
-
 (delay
   (-> [:div [:h2 "hi......."]]
       (kindly/consider kind/hiccup)))
 
+(-> {:row-vectors (for [i (range 9)]
+                    [i (rand)])
+     :column-names [:x :y]}
+    (kindly/consider kind/table))
 
+(-> {:column-names [:x :y]
+     :row-maps (for [i (range 9)]
+                 {:x i
+                  :y (rand)})}
+    (kindly/consider kind/table))
 
+(def vega-lite-spec
+  (memoize
+   (fn [n]
+     (-> {:data {:values
+                 (->> (repeatedly n #(- (rand) 0.5))
+                      (reductions +)
+                      (map-indexed (fn [x y]
+                                     {:w (rand-int 9)
+                                      :z (rand-int 9)
+                                      :x x
+                                      :y y})))},
+          :mark "point"
+          :encoding
+          {:size {:field "w" :type "quantitative"}
+           :x {:field "x", :type "quantitative"},
+           :y {:field "y", :type "quantitative"},
+           :fill {:field "z", :type "nominal"}}}
+         (kindly/consider kind/vega)))))
 
-(delay
-  (-> [:div [:h2 "hi.1!@!......"]]
-      clerk/html))
+(-> (->> [10 100 1000]
+         (map (fn [n]
+                [:div {:style {:width "400px"}}
+                 [:h1 (str "n=" n)]
+                 (vega-lite-spec n)]))
+         (into [:div]))
+    (kindly/consider kind/hiccup))
