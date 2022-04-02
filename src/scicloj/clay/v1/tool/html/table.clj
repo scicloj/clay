@@ -33,9 +33,12 @@
      (row-maps->table-hiccup row-maps))))
 
 (defn ->table-hiccup [{:keys [row-maps row-vectors column-names]}]
+  (assert column-names)
   (if row-vectors
     (row-vectors->table-hiccup column-names row-vectors)
-    (row-maps->table-hiccup column-names row-maps)))
+    (do
+      (assert row-maps)
+      (row-maps->table-hiccup column-names row-maps))))
 
 (def datatables-default-options
   {:sPaginationType "full_numbers"})
