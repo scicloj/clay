@@ -35,4 +35,8 @@
                                              :kind/hide-code)
                                  code)]
         (doseq [tool tools]
-          (tool/show! tool value-to-show code-to-show))))))
+          (try
+            (tool/show! tool value-to-show code-to-show)
+            (catch Exception e
+              (println ["Exception while trying to show value:"
+                        e]))))))))
