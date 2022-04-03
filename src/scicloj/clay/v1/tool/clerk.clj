@@ -19,7 +19,8 @@
                (not (:blob->result doc)) (assoc
                                           :blob->result {})
                true (assoc-in
-                     [:blob->result blob-id] value-with-id))))
+                     [:blob->result blob-id] value-with-id)
+               true (assoc :ns *ns*))))
     value-with-id))
 
 (defn sync-notes! [notes]
