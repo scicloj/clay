@@ -1,11 +1,9 @@
-(ns scicloj.clay.v1.tool.html.table
+(ns scicloj.clay.v1.html.table
   "Interactive table visualisations."
-  (:require [schema.core :as s]
-            [hiccup.core :as hiccup]
-            [hiccup.page :as page]
+  (:require [hiccup.core :as hiccup]
             [hiccup.element :as elem]
-            [cheshire.core :as cheshire]
-            [scicloj.clay.v1.tool.html.cdn :as cdn])
+            [jsonista.core :as jsonista]
+            [scicloj.clay.v1.html.cdn :as cdn])
   (:import java.io.File
            java.util.UUID))
 
@@ -46,9 +44,10 @@
 (defn datatables-js [datatables-options table-id]
   (->> (str "$(function() {
                $(\"#" table-id "\").DataTable("
-                (cheshire/generate-string (merge datatables-default-options
-                                             datatables-options))
-                ");"
+            (jsonista/write-value-as-string
+             (merge datatables-default-options
+                    datatables-options))
+            ");"
             "});")))
 
 (def datatables-css

@@ -1,8 +1,7 @@
-(ns scicloj.clay.v1.tool.html.vega
+(ns scicloj.clay.v1.html.vega
   (:require [hiccup.core :as hiccup]
             [hiccup.element :as elem]
             [cheshire.core :as cheshire]
-            [zinc.util.vis.cdn :as cdn]
             [clojure.walk :refer [postwalk]])
   (:import java.util.UUID))
 

@@ -1,4 +1,4 @@
-(ns scicloj.clay.v1.tool.html.cdn
+(ns scicloj.clay.v1.html.cdn
   (:require [hiccup.core :as hiccup]
             [hiccup.page :as page]))
 
