@@ -6,7 +6,7 @@ A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_t
 (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 
-Clay is a small Clojure tool for a dynamic workflow involving the more serious visual tools
+Clay is a small Clojure tool for a dynamic workflow involving some of the more serious visual tools.
 
 ## Usage
 
