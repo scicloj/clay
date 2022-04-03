@@ -3,7 +3,7 @@
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.clay.v1.walk]
             [scicloj.clay.v1.tool :as tool]
-            [scicloj.clay.v1.tool.html.table :as table]))
+            [scicloj.clay.v1.html.table :as table]))
 
 (kindly/define-kind-behaviour! :kind/hiccup
   {:portal.viewer (fn [v]
