@@ -1,8 +1,10 @@
 # clay
 
-"https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-
 A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) with your favourite Clojure tools inside
+
+![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
+(credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
+
 
 Clay is a small Clojure tool for a dynamic workflow involving the more serious visual tools
 
