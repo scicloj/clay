@@ -72,25 +72,6 @@
                          dv)))}])
   :ok)
 
-(kindly/define-kind-behaviour! :kind/hiccup
-  {:clerk.viewer (fn [v]
-                   (clerk/html v))})
-
-(kindly/define-kind-behaviour! :kind/table
-  {:clerk.viewer (fn [{:keys [row-maps row-vectors column-names]}]
-                   (clerk/table {:head column-names
-                                 :rows (or row-vectors
-                                           (map (fn [row-map]
-                                                  (map row-map column-names))
-                                                row-maps))}))})
-
-(kindly/define-kind-behaviour! :kind/table
-  {:html.viewer (fn [{:keys [row-maps row-vectors column-names]}])})
-
-(kindly/define-kind-behaviour! :kind/vega
-  {:clerk.viewer (fn [v]
-                   (clerk/vl v))})
-
 (defn show! [value code]
   (show-values! (concat (when code
                           [(clerk/code code)
@@ -106,3 +87,62 @@
     (close! [this])
     (show! [this value code]
       (show! value code))))
+
+
+(kindly/define-kind-behaviour! :kind/hiccup
+  {:clerk.viewer (fn [v]
+                   (clerk/html v))})
+
+(kindly/define-kind-behaviour! :kind/table
+  {:clerk.viewer (fn [{:keys [row-maps row-vectors column-names]}]
+                   (clerk/table {:head column-names
+                                 :rows (or row-vectors
+                                           (map (fn [row-map]
+                                                  (map row-map column-names))
+                                                row-maps))}))})
+
+(kindly/define-kind-behaviour! :kind/vega
+  {:clerk.viewer (fn [v]
+                   (clerk/vl v))})
+
+(def cytoscape
+  {:fetch-fn (fn [_ x] x)
+   :render-fn
+   '(fn [value]
+      (v/html
+       (when value
+         [v/with-d3-require {:package ["cytoscape@3.21.0"]}
+          (fn [cytoscape]
+            [:div {:style {:height "500px"}
+                   :ref (fn [el]
+                          (when el
+                            (-> value
+                                (assoc :container el)
+                                clj->js
+                                cytoscape)))}])])))})
+
+(kindly/define-kind-behaviour! :kind/cytoscape
+  {:clerk.viewer (fn [v]
+                   (clerk/with-viewer cytoscape v))})
+
+
+(def echarts
+  {:pred string?
+   :fetch-fn (fn [_ x] x)
+   :render-fn
+   '(fn [value]
+      (v/html
+       (when value
+         [v/with-d3-require {:package ["echarts@5.3.2"]}
+          (fn [echarts]
+            [:div {:style {:height "500px"}
+                   :ref (fn [el]
+                          (when el
+                            (let [chart (.init echarts el)]
+                              (-> chart
+                                  (.setOption (clj->js
+                                               value))))))}])])))})
+
+(kindly/define-kind-behaviour! :kind/echarts
+  {:clerk.viewer (fn [v]
+                   (clerk/with-viewer echarts v))})
