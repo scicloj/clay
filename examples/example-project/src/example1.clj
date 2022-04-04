@@ -1,36 +1,32 @@
-(ns example1
+;; # Clay
+
+(ns intro
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
-            [nextjournal.clerk :as clerk])
-  (:import javax.imageio.ImageIO
-           java.net.URL))
+            [nextjournal.clerk :as clerk]))
 
 (clay/start! {:tools [tools/clerk
-                      tools/portal
-                      #_tools/html]})
+                      #_tools/portal]})
 
 (comment
   (clay/restart! {:tools [tools/clerk
-                          tools/portal
-                          #_tools/html]}))
+                          tools/portal]}))
 
-;; # intro
-(+ 1 3)
 
-;; # section 1
+;; ## Kinds
 
-(defonce clay-image
-  (-> "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-      (URL.)
-      (ImageIO/read)))
+;; ## Hiccup
 
-clay-image
+
+;; ## Delays
 
 (delay
   (Thread/sleep 500)
   (+ 1 2))
+
+;; ## Tests
 
 (-> 2
     (+ 3)
@@ -39,6 +35,8 @@ clay-image
 (-> 2
     (+ 3)
     (clay/check = 5))
+
+;; ## Images
 
 (import java.awt.image.BufferedImage
         java.awt.Color
@@ -58,6 +56,8 @@ clay-image
   (-> [:div [:h2 "hi......."]]
       (kindly/consider kind/hiccup)))
 
+;; ## Tables
+
 (-> {:row-vectors (for [i (range 9)]
                     [i (rand)])
      :column-names [:x :y]}
@@ -68,6 +68,8 @@ clay-image
                  {:x i
                   :y (rand)})}
     (kindly/consider kind/table))
+
+;; ## Vega and Vega-Lite
 
 (def vega-lite-spec
   (memoize
@@ -88,10 +90,17 @@ clay-image
            :fill {:field "z", :type "nominal"}}}
          (kindly/consider kind/vega)))))
 
+(vega-lite-spec 9)
+
+;; ## Nesting
+
 (-> (->> [10 100 1000]
          (map (fn [n]
                 [:div {:style {:width "400px"}}
-                 [:h1 (str "n=" n)]
+                 [:h3 (str "n=" n)]
                  (vega-lite-spec n)]))
          (into [:div]))
     (kindly/consider kind/hiccup))
+
+
+:bye
