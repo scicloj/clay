@@ -1,5 +1,5 @@
 (ns scicloj.clay.v1.checks
-  (:require [scicloj.kindly.v2.behaviours :as behaviours]
+  (:require [scicloj.kindly.v2.api :as kindly]
             [nextjournal.clerk :as clerk]))
 
 (defn bool->symbol [bool]
@@ -19,7 +19,7 @@
    (-> check
        check-boolean->hiccup)])
 
-(behaviours/define-kind-behaviour!
+(kindly/define-kind-behaviour!
   :kind/check
   {:portal.viewer (fn [value-and-check]
                     (->> value-and-check
