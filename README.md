@@ -12,27 +12,6 @@ Clay is a small Clojure tool for a dynamic workflow involving some of the more s
 
 Coming soon
 
-## Development
-
-Run the project's tests.
-
-    $ clojure -T:build test
-
-Run the project's CI pipeline and build a JAR.
-
-    $ clojure -T:build ci
-
-Install it locally (requires the `ci` task be run first):
-
-    $ clojure -T:build install
-
-Deploy it to Clojars -- needs `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment
-variables (requires the `ci` task be run first):
-
-    $ clojure -T:build deploy
-
-Your library will be deployed to org.scicloj/clay on clojars.org by default.
-
 ## License
 
 Copyright © 2022 Scicloj
