@@ -324,3 +324,8 @@
 ;; We are also looking into creating a template that would allow users to easily create projects with Clay.
 
 :bye
+
+
+(comment
+  (clerk/build-static-app!
+   {:paths ["notebooks/intro.clj"]}))
