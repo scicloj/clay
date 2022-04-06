@@ -8,9 +8,7 @@ A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_t
 
 Clay is a small Clojure tool for a dynamic workflow involving some of the more serious visual tools.
 
-## Usage
-
-Coming soon
+[Intro](https://scicloj.github.io/clay/#/notebooks/intro.clj)
 
 ## License
 
