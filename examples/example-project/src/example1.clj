@@ -1,4 +1,4 @@
-(ns intro
+(ns example1
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]))
 
