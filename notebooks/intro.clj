@@ -141,16 +141,21 @@
 
 ;; ## Useful kinds defined in Clay
 
-;; ### Hiccup
+;; ### Naive
 
+;; The naive kind just behaves as usual, in any tool.
+
+(-> {:x 9}
+    kind/naive)
+
+;; ### Hiccup
 
 (-> [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
          {:color "#7F5F3F"}}
      "hello"]
     kind/hiccup)
 
-
-;; ## Images
+;; ### Images
 
 (import java.awt.image.BufferedImage
         java.awt.Color
