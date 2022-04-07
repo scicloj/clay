@@ -29,11 +29,10 @@
 
 ;; ### The stack
 
-;; Clay is part of the Scinojure stack, consisting of the following layers:
+;; Clay is part of a stack of libraries seeking easy experience with common data-centric tasks.
 ;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library  for specifying the kind of way different things should be viewed
 ;; - [Clay](https://github.com/scicloj/clay) - a dynamic workflow for visual exploration & documentation, combining different tools using Kindly
-;; - [Noj](https://github.com/scicloj/noj) (short for Scinojure) - a turneky setup for common data-science needs using Kindly and Clay
-
+;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations, which is Kindly-aware, and thus fits nicely with Clay
 
 ;; ## Setup
 
@@ -310,10 +309,6 @@
 ;; $ clojure -T:build deploy
 
 ;; Your library will be deployed to org.scicloj/clay on clojars.org by default.
-
-;; ## Discussion
-
-;; Please visit the [#noj-dev](https://clojurians.zulipchat.com/#narrow/stream/321125-noj-dev) stream at the Clojurians Zulip chat.
 
 ;; ## Planned features
 
