@@ -23,7 +23,7 @@
 
 ;; Achieving such compatibility across tools in common cases should not limit the use of the tools in any case. In all cases, it should be possible to use the best of the amazing features of tools such as Portal & Clerk.
 
-;; * Flow with the REPL.
+;; * **Flow** with the REPL.
 
 ;; We wish to encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs, editing and evaluating Clojure forms.
 
@@ -324,7 +324,6 @@
 ;; We are also looking into creating a template that would allow users to easily create projects with Clay.
 
 :bye
-
 
 (comment
   (clerk/build-static-app!
