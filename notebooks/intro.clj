@@ -62,7 +62,8 @@
 ;; Clay can be started with the choice of desired tools to use:
 
 (clay/start! {:tools [tools/clerk
-                      tools/portal]})
+                      tools/portal
+                      tools/scittle]})
 
 ;; The view of those tools should open automatically (e.g., a Portal window and a Clerk tab in the browser).
 
@@ -70,7 +71,8 @@
 
 (comment
   (clay/restart! {:tools [tools/clerk
-                          tools/portal]}))
+                          tools/portal
+                          tools/scittle]}))
 
 ;; ## Tools
 
@@ -127,6 +129,7 @@
                 meta
                 :kindly/kind))))
 
+
 ;; ### Kinds through protocols
 
 ;; Another way of specifying kind is implementing the Kindness protocol. For example, the Java `BufferedImage` class implements it in order to support viewing images.
@@ -174,15 +177,18 @@
 
 ;; ### Tables
 
-(-> {:column-names [:x :y]
+(-> {:column-names [:preferred-language :age]
      :row-vectors (for [i (range 99)]
-                    [i (rand)])}
+                    [(["clojure" "clojurescript" "babashka"]
+                      (rand-int 3))
+                     (rand-int 100)])}
     (kindly/consider kind/table))
 
-(-> {:column-names [:x :y]
+(-> {:column-names [:preferred-language :age]
      :row-maps (for [i (range 99)]
-                 {:x i
-                  :y (rand)})}
+                 {:preferred-language (["clojure" "clojurescript" "babashka"]
+                                       (rand-int 3))
+                  :age (rand-int 100)})}
     (kindly/consider kind/table))
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
@@ -268,7 +274,6 @@
 (-> 2
     (+ 3)
     (clay/check = 4))
-
 
 (-> 2
     (+ 3)

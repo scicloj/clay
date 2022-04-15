@@ -28,7 +28,10 @@
    :clerk.viewer (fn [value-and-check]
                    (->> value-and-check
                         value-and-check->hiccup
-                        clerk/html))})
+                        clerk/html))
+   :scittle.viewer (fn [value-and-check]
+                     (->> value-and-check
+                          value-and-check->hiccup))})
 
 (defn check [value & predicate-and-args]
   (-> {:value value

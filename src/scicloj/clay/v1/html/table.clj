@@ -8,12 +8,22 @@
            java.util.UUID))
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
-  [:table
-   [:thead (into [:tr] (map (fn [x] [:th x])
-                                  column-names))]
-   [:tbody (map #(into [:tr]
-                      (map (fn [x] [:td x]) %))
-                row-vectors)]])
+  [:table {:width "100%"}
+   [:thead  {:style {:background-color "#c0c0c0"}}
+    (->> column-names
+         (mapv (fn [x] [:th x]))
+         (into [:tr]))]
+   (->> row-vectors
+        (map-indexed
+         (fn [i row]
+           (->> row
+                (mapv (fn [x] [:td x]))
+                (into [:tr {:style
+                            {:background-color
+                             (if (even? i)
+                               "#e0e0e0" "#f0f0f0")}}]))))
+        vec
+        (into [:tbody]))])
 
 (defn row-maps->table-hiccup
   ([row-maps]

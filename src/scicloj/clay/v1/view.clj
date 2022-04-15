@@ -1,6 +1,7 @@
 (ns scicloj.clay.v1.view
   (:require [scicloj.clay.v1.tool :as tool]
-            [scicloj.clay.v1.view.image]))
+            [scicloj.clay.v1.view.image]
+            [scicloj.kindly.v2.api :as kindly]))
 
 (defn setup! [tools config]
   (doseq [tool tools]
@@ -28,7 +29,10 @@
                        (re-matches #".*nextjournal.clerk/show!.*"))
                   (-> form
                       meta
-                      :kind/hidden))
+                      :kind/hidden)
+                  (-> value
+                      kindly/kind
+                      (= :kind/hidden)))
       (let [value-to-show (deref-if-needed value)
             code-to-show nil #_(when-not (-> form
                                              meta
