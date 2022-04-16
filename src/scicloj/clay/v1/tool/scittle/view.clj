@@ -8,7 +8,11 @@
    (maybe-apply-viewer value (kindly/kind value)))
   ([value kind]
    (if-let [viewer (-> kind kindly/kind->behaviour :scittle.viewer)]
-     (viewer value)
+     (let [new-value (viewer value)
+           new-kind (kindly/kind new-value)]
+       (if (some-> new-kind (not= kind))
+         (maybe-apply-viewer new-value new-kind)
+         new-value))
      value)))
 
 (declare prepare-vector)
