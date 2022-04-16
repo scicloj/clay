@@ -173,7 +173,7 @@
            (apply #(.drawLine ^SunGraphics2D g %1 %2 %3 %4))))
     bi))
 
-(repeatedly 4 #(a-piece-of-random-art (inc (rand-int 100))))
+(repeatedly 4 #(a-piece-of-random-art (+ 20 (rand-int 90))))
 
 ;; ### Tables
 
