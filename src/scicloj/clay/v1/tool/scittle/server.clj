@@ -40,13 +40,12 @@
 (defonce *stop-server! (atom nil))
 
 (defn core-http-server []
-  (httpkit/run-server #'routes {:port port}))
-
+  (httpkit/run-server #'routes {:port (:port @*state)}))
 
 (defn open! []
-  (let [url (str "http://localhost:" port "/")]
+  (let [url (str "http://localhost:" (:port @*state) "/")]
     (reset! *stop-server! (core-http-server))
-    (println "serving" url)
+    (println "serving scittle at " url)
     (browse/browse-url url)))
 
 (defn close! []
