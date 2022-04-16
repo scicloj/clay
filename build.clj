@@ -4,7 +4,7 @@
             [org.corfield.build :as bb]))
 
 (def lib 'org.scicloj/clay)
-(def version "1-alpha2")
+(def version "1-alpha3")
 #_ ; alternatively, use MAJOR.MINOR.COMMITS:
 (def version (format "1.0.%s" (b/git-count-revs nil)))
 

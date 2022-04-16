@@ -22,5 +22,11 @@
     (show! [this value code]
       (server/show! value code))))
 
+(defn show-widget!
+  ([widget]
+   (server/show-widget! widget))
+  ([widget options]
+   (server/show-widget! widget options)))
+
 ;; It is convenient to refresh all clients on re-evaluation.
 (server/broadcast! "refresh")
