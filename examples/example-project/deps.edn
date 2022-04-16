@@ -1,7 +1,7 @@
 {:deps {}
  :paths ["src"]
  :aliases {:clay
-           {:extra-deps {org.scicloj/clay {:mvn/version "1-alpha2-SNAPSHOT"}
+           {:extra-deps {org.scicloj/clay {:mvn/version "1-alpha2"}
                          cider/cider-nrepl {:mvn/version "0.28.3"}}
             :main-opts
             ["-m" "nrepl.cmdline"

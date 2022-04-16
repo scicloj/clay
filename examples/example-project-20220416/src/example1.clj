@@ -1,5 +1,7 @@
 ;; # Clay
 
+;; Notes for the 2022-04-16 Clojure Asia talk
+
 ;; ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
 ;; (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
@@ -23,7 +25,6 @@
 ;; - [Bayesian optimization tutorial](https://nextjournal.com/generateme/bayesian-optimization) ([source](https://nextjournal.com/generateme/bayesian-optimization)) - written in [Nextjournal](https://nextjournal.com/)
 ;; - [scicloj.ml tutorials](https://github.com/scicloj/scicloj.ml-tutorials#tutorials-for-sciclojml) ([source](https://github.com/scicloj/scicloj.ml-tutorials/tree/main/src/scicloj/ml)) - written in [Notespace v3](https://github.com/scicloj/notespace/blob/master/doc/v3.md)
 ;; - [Clojure2d color tutorial](https://clojure2d.github.io/clojure2d/docs/notebooks/index.html#/notebooks/color.clj) ([source](https://github.com/Clojure2D/clojure2d/blob/master/notebooks/color.clj)) - written in [Clerk](https://github.com/nextjournal/)
-
 
 ;;[tweet](https://twitter.com/quoll/status/1513339079974428674)
 
@@ -84,15 +85,9 @@
                           tools/scittle]}))
 
 
-(+ 1 9)
+;; ## Kinds of views
 
-
-;; ## Kinds
-
-;; The naive kind just behaves as usual, in any tool.
-
-(-> {:x 9}
-    kind/naive)
+{:x 9}
 
 ;; ### Hiccup
 
@@ -116,7 +111,7 @@
            (apply #(.drawLine ^SunGraphics2D g %1 %2 %3 %4))))
     bi))
 
-(repeatedly 4 #(a-piece-of-random-art (inc (rand-int 100))))
+(repeatedly 4 #(a-piece-of-random-art (+ 20 (rand-int 90))))
 
 ;; ### Tables
 
@@ -274,7 +269,6 @@
 
 
 
-
 ;; ## Near future
 
 ;; - project templates
@@ -293,14 +287,11 @@
 ;; - getting involved
 
 
-;; ## Exploration
+;; ## Exploration -- some image processing
 
 (def image1
   (-> "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-      #_"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/WMEE-exp2019-%28113%29.jpg/2880px-WMEE-exp2019-%28113%29.jpg"
-      #_"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Clojure_logo.svg/1920px-Clojure_logo.svg.png"
       util.image/load-buffered-image))
-
 
 (defn region-mean [image-tensor y x radius]
   (let [[height width color-components] (dtype/shape image-tensor)]
@@ -362,6 +353,7 @@
        (let [*state (r/atom {})]
          (fn []
            [:div
+            [:b [:big "please click the image"]]
             [echarts
              {:graphic [{:type :image
                          :style {:image (:image data)}}]}
@@ -373,11 +365,11 @@
             (when-let [{:keys [colors]} @*state]
               [:div
                [:p (pr-str colors)]
-               [:b [:big "point"]]
+               [:b [:big "point color"]]
                [:div {:style {:width (:width data)
                               :background (:point colors)}}
                 [:h1 (:point colors)]]
-               [:b [:big "region"]]
+               [:b [:big "region average color"]]
                [:div {:style {:width (:width data)
                               :background (:region colors)}}
                 [:h1 (:region colors)]]])])))]
