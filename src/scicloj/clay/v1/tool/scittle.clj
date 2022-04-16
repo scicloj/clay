@@ -10,7 +10,8 @@
             [clojure.string :as string]
             [cognitect.transit :as transit]
             [clojure.java.browse :as browse]
-            [scicloj.clay.v1.html.table :as table]))
+            [scicloj.clay.v1.html.table :as table]
+            [clojure.java.io :as io]))
 
 (def port 1971)
 
@@ -122,6 +123,7 @@
      [:link {:rel "apple-touch-icon" :href "data:,"}]
      ;; [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
 
+     (element/link-to "https://unpkg.com/react@17/umd/react.production.min.js")
      [:script {:crossorigin nil :src "https://unpkg.com/react@17/umd/react.production.min.js"}]
      [:script {:crossorigin nil :src "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"}]
      [:script {:src "https://cdn.jsdelivr.net/gh/borkdude/scittle@0.0.1/js/scittle.js" :type "application/javascript"}]
@@ -137,9 +139,15 @@
      [:script {:src "https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"}]
      [:link {:rel "stylesheet"
              :href "https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"}]
-     ;; [:link {:rel "stylesheet"
-     ;;         :href "https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css"}]
-     ;; [:script {:src "https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"}]
+     [:script {:type "text/javascript"}
+      (-> "highlight/highlight.min.js"
+          io/resource
+          slurp)]
+     [:style
+      (-> "highlight/styles/tokyo-night-light.min.css"
+          io/resource
+          slurp)]
+     [:link {:rel "stylesheet" :href ""}]
      [:link {:rel "stylesheet"
              :href "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css"}]
      [:script {:src "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"}]
@@ -162,7 +170,16 @@
              (string/join "\n"))]]]
      (when reveal?
        [:script {:type "application/x-scittle"}
-        (pr-str '(.initialize js/Reveal (clj->js {:hash true})))])]]))
+        (pr-str '(.initialize js/Reveal (clj->js {:hash true})))])
+     [:script {:type "text/javascript"}
+      "hljs.highlightAll();"]]]))
+
+
+(defn code [string]
+  [:pre [:code.language-clojure string]])
+
+(defn structure-mark [string]
+  [:big string])
 
 (def *state
   (atom {:widgets []
@@ -202,6 +219,8 @@
     (s))
   (reset! *stop-server! nil))
 
+(kindly/define-kind! :kind/hidden)
+
 (defn show-widget!
   ([widget]
    (show-widget! widget nil))
@@ -211,7 +230,8 @@
           :widgets [widget]
           :data data
           :fns fns)
-   (broadcast! "refresh")))
+   (broadcast! "refresh")
+   (kind/hidden [:ok])))
 
 (defn reveal! [state]
   (future (Thread/sleep 2000)
@@ -234,7 +254,7 @@
 (declare prepare-div)
 
 (defn prepare-naive [value]
-  [:code (pr-str value)])
+  (code (pr-str value)))
 
 (defn div? [v]
   (and (vector? v)
@@ -245,9 +265,10 @@
     (cond (div? value) (prepare-div value)
           kind (maybe-apply-viewer value kind)
           (vector? value) (prepare-vector value)
-          (sequential? value) (prepare-seq value)
+          (seq? value) (prepare-seq value)
           (map? value) (prepare-map value)
           :else (prepare-naive value))))
+
 
 (defn prepare-div [v]
   (let [kind (kindly/kind v)]
@@ -273,25 +294,25 @@
 
 (defn prepare-vector [value]
   [:div
-   [:code "["]
+   (structure-mark "[")
    (->> value
         (map prepare)
         (into [:div
                {:style {:margin-left "10%"}}]))
-   [:code "]"]])
+   (structure-mark "]")])
 
 (defn prepare-seq [value]
   [:div
-   [:code "("]
+   (structure-mark "(")
    (->> value
         (map prepare)
         (into [:div
                {:style {:margin-left "10%"}}]))
-   [:code ")"]])
+   (structure-mark ")")])
 
 (defn prepare-map [value]
   [:div
-   [:code "{"]
+   (structure-mark "{")
    (->> value
         (map (fn [[k v]]
                [:div
@@ -299,7 +320,7 @@
                 (prepare v)]))
         (into [:div
                {:style {:margin-left "10%"}}]))
-   [:code "}"]])
+   (structure-mark "}")])
 
 (defn show! [value code]
   (-> value
@@ -319,7 +340,7 @@
 
 (kindly/define-kind-behaviour! :kind/naive
   {:scittle.viewer (fn [v]
-                     [:code (pr-str v)])})
+                     (code (pr-str v)))})
 
 (kindly/define-kind-behaviour! :kind/hiccup
   {:scittle.viewer (fn [v] v)})
@@ -357,15 +378,5 @@
 (comment
   (open!)
 
-  *state
-
-  :bafsd
-
-  *state
-
-  (reveal! {:widgets  [[:div [:code "13"]]
-                       [:div [:code "13"]]
-                       [:div [:h1 "............"]]]})
-
-
-  )
+  (show-widget!
+   (code "{:x (range 9)}")))
