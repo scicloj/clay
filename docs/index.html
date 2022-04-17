@@ -1489,7 +1489,7 @@ strings:i,keywords:u}}}})();hljs.registerLanguage("c",e)})();</script><script sr
 <p><h3>Kinds through protocols</h3></p>
 </div><div>
 <p><p>Another way of specifying kind is implementing the Kindness protocol. For example, the Java <code>BufferedImage</code> class implements it in order to support viewing images.</p></p>
-</div><pre><code class="language-clojure">(import java.awt.image.BufferedImage)</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">#:nippy{:unthawable {:type :serializable, :cause :quarantined, :class-name "java.lang.Class", :content #object["[B" 0x694caf2c "[B@694caf2c"]}}</code></pre><pre><code class="language-clojure">(->> (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)
+</div><pre><code class="language-clojure">(import java.awt.image.BufferedImage)</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">#:nippy{:unthawable {:type :serializable, :cause :quarantined, :class-name "java.lang.Class", :content #object["[B" 0x6b82253a "[B@6b82253a"]}}</code></pre><pre><code class="language-clojure">(->> (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)
      (satisfies? kindness/Kindness))</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">true</code></pre><pre><code class="language-clojure">(-> (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)
     kindly/kind)</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">:kind/buffered-image</code></pre><div>
 <p><h2>Useful kinds defined in Clay</h2></p>
@@ -1507,7 +1507,7 @@ strings:i,keywords:u}}}})();hljs.registerLanguage("c",e)})();</script><script sr
 <p><h3>Images</h3></p>
 </div><pre><code class="language-clojure">(import java.awt.image.BufferedImage
         java.awt.Color
-        sun.java2d.SunGraphics2D)</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">#:nippy{:unthawable {:type :serializable, :cause :quarantined, :class-name "java.lang.Class", :content #object["[B" 0x558f20ce "[B@558f20ce"]}}</code></pre><pre><code class="language-clojure">(defn a-piece-of-random-art [n]
+        sun.java2d.SunGraphics2D)</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">#:nippy{:unthawable {:type :serializable, :cause :quarantined, :class-name "java.lang.Class", :content #object["[B" 0x75eaab4 "[B@75eaab4"]}}</code></pre><pre><code class="language-clojure">(defn a-piece-of-random-art [n]
   (let [bi (BufferedImage. n n BufferedImage/TYPE_INT_RGB)
         g  (-> (.createGraphics ^BufferedImage bi))]
     (dotimes [t 100]
@@ -1590,9 +1590,9 @@ strings:i,keywords:u}}}})();hljs.registerLanguage("c",e)})();</script><script sr
 <p><p>This is handy for slow example snippets and explorations, that one would typically not like to slow down the evaluation of the whole namespace, but would like to visualize them on demand and also include in them in the final document.</p></p>
 </div><pre><code class="language-clojure">(delay
   (Thread/sleep 500)
-  (+ 1 2))</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">#delay[{:status :ready, :val 3} 0x59ea7e9a]</code></pre><pre><code class="language-clojure">(delay
+  (+ 1 2))</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">3</code></pre><pre><code class="language-clojure">(delay
   (-> [:div [:big "hi......."]]
-      (kindly/consider kind/hiccup)))</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">#delay[{:status :ready, :val [:div [:big "hi......."]]} 0x53b17bbe]</code></pre><div>
+      (kindly/consider kind/hiccup)))</code></pre><div id="widget114"></div><div>
 <p><h2>Tests</h2></p>
 </div><div>
 <p><p>The <code>clay/check</code> function allows to define tests that render accordingly, marking their failure or success.</p></p>
@@ -1666,6 +1666,8 @@ strings:i,keywords:u}}}})();hljs.registerLanguage("c",e)})();</script><script sr
 (dom/render (fn [] widget101) (.getElementById js/document "widget101"))
 (def widget104 [echarts (quote {:xAxis {:data ["Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"]}, :yAxis {}, :series [{:type "bar", :color ["#7F5F3F"], :data [23 24 18 25 27 28 25]}]})])
 (dom/render (fn [] widget104) (.getElementById js/document "widget104"))
+(def widget114 [:div [:big "hi......."]])
+(dom/render (fn [] widget114) (.getElementById js/document "widget114"))
 (def widget118 [:div 5 [:div [:big [:big [:big {:style {:color "darkred"}} "❌"]]]]])
 (dom/render (fn [] widget118) (.getElementById js/document "widget118"))
 (def widget120 [:div 5 [:div [:big [:big [:big {:style {:color "darkgreen"}} "✓"]]]]])

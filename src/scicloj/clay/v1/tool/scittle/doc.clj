@@ -1,6 +1,7 @@
 (ns scicloj.clay.v1.tool.scittle.doc
   (:require [scicloj.kindly.v2.kind :as kind]
             [nextjournal.clerk :as clerk]
+            [scicloj.clay.v1.view]
             [scicloj.clay.v1.tool.scittle.view :as view]
             [scicloj.clay.v1.tool.scittle.server :as server]
             [scicloj.clay.v1.tool.scittle.widget :as widget]
@@ -33,6 +34,7 @@
                                   (-> v
                                       :nextjournal.clerk/var-from-def
                                       (or v))))
+                               scicloj.clay.v1.view/deref-if-needed
                                view/prepare)]
                     :markdown [(-> block
                                    :text
