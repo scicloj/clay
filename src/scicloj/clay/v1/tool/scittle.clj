@@ -31,7 +31,7 @@
 
 (defn show-doc!
   ([path]
-   (doc/show-doc!))
+   (doc/show-doc! path))
   ([path options]
    (doc/show-doc! path options)))
 
