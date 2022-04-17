@@ -342,10 +342,14 @@
 
 ;; ## Planned features
 
-;; One of the things we are experimenting with is an additional Tool for plain html rendering, that would allow rendering static web pages, presentation slides, etc., and also conveniently embedding views of many Javascript visualization libraries with no trouble.
+;; - a quick-start project template
 
-;; Such functionality is supported by the upcoming version 2 of [Oz](https://github.com/metasoarous/oz), which could be considered as a Clay Tool as well.
+;; - client-server interactive widgets (for a proof-of-concept, see [the 2022-04-16 example project](https://github.com/scicloj/clay/tree/main/examples/example-project-20220416))
 
-;; We are also looking into creating a template that would allow users to easily create projects with Clay.
+;; - slides
+
+;; - table of contents
+
+;; - more kinds of visualizations
 
 :bye

@@ -1631,11 +1631,15 @@ strings:i,keywords:u}}}})();hljs.registerLanguage("c",e)})();</script><script sr
 </div><div>
 <p><h2>Planned features</h2></p>
 </div><div>
-<p><p>One of the things we are experimenting with is an additional Tool for plain html rendering, that would allow rendering static web pages, presentation slides, etc., and also conveniently embedding views of many Javascript visualization libraries with no trouble.</p></p>
+<p><ul><li>a quick-start project template</li></ul></p>
 </div><div>
-<p><p>Such functionality is supported by the upcoming version 2 of <a href="https://github.com/metasoarous/oz">Oz</a>, which could be considered as a Clay Tool as well.</p></p>
+<p><ul><li>client-server interactive widgets (for a proof-of-concept, see <a href="https://github.com/scicloj/clay/tree/main/examples/example-project-20220416">the 2022-04-16 example project</a>)</li></ul></p>
 </div><div>
-<p><p>We are also looking into creating a template that would allow users to easily create projects with Clay.</p></p>
+<p><ul><li>slides</li></ul></p>
+</div><div>
+<p><ul><li>table of contents</li></ul></p>
+</div><div>
+<p><ul><li>more kinds of visualizations</li></ul></p>
 </div><pre><code class="language-clojure">:bye</code></pre><pre><code class="language-clojure" style="background:#f1f1f1;">:bye</code></pre></div><script type="application/x-scittle">(ns main (:require [reagent.core :as r] [reagent.dom :as dom] [ajax.core :refer [GET POST]] [clojure.string :as string]))
 (def data (quote nil))
 (clojure.core/let [scicloj.clay.v1.tool.scittle.cljs-generation/socket (js/WebSocket. (clojure.core/str "ws://localhost:" 1971))] (.addEventListener scicloj.clay.v1.tool.scittle.cljs-generation/socket "open" (clojure.core/fn [scicloj.clay.v1.tool.scittle.cljs-generation/event] (.send scicloj.clay.v1.tool.scittle.cljs-generation/socket "Hello Server!"))) (.addEventListener scicloj.clay.v1.tool.scittle.cljs-generation/socket "message" (clojure.core/fn [scicloj.clay.v1.tool.scittle.cljs-generation/event] (clojure.core/case (.-data scicloj.clay.v1.tool.scittle.cljs-generation/event) "refresh" (.reload js/location) (clojure.core/println [:unknown-ws-message (.-data scicloj.clay.v1.tool.scittle.cljs-generation/event)])))))
