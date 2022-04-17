@@ -10,7 +10,8 @@
             [clojure.java.browse :as browse]
             [scicloj.clay.v1.html.table :as table]
             [clojure.java.io :as io]
-            [scicloj.clay.v1.tool.scittle.server :as server]))
+            [scicloj.clay.v1.tool.scittle.server :as server]
+            [scicloj.clay.v1.tool.scittle.doc :as doc]))
 
 (def tool
   (reify tool/Tool
@@ -22,11 +23,17 @@
     (show! [this value code]
       (server/show! value code))))
 
-(defn show-widget!
-  ([widget]
-   (server/show-widget! widget))
-  ([widget options]
-   (server/show-widget! widget options)))
+(defn show-widgets!
+  ([widgets]
+   (server/show-widgets! widgets))
+  ([widgets options]
+   (server/show-widgets! widgets options)))
+
+(defn show-doc!
+  ([path]
+   (doc/show-doc!))
+  ([path options]
+   (doc/show-doc! path options)))
 
 ;; It is convenient to refresh all clients on re-evaluation.
 (server/broadcast! "refresh")

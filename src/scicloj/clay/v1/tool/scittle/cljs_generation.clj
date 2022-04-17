@@ -1,4 +1,5 @@
-(ns scicloj.clay.v1.tool.scittle.cljs-generation)
+(ns scicloj.clay.v1.tool.scittle.cljs-generation
+  (:require [scicloj.clay.v1.tool.scittle.widget :as widget]))
 
 (def datatables-cljs
   '(defn datatables [table]
@@ -52,60 +53,59 @@
 
 (def cytoscape-cljs
   '(defn cytoscape
-     [value]
-     (fn []
-       [:dib
-        [:div
-         {:style {:height "500px"}
-          :ref (fn [el]
-                 (when el
-                   (-> value
-                       (assoc :container el)
-                       clj->js
-                       js/cytoscape)))}]])))
+     ([value]
+      (cytoscape value {:style {:height "500px"}}))
+     ([value {:keys [style]}]
+      [:div
+       {:style style
+        :ref (fn [el]
+               (when el
+                 (-> value
+                     (assoc :container el)
+                     clj->js
+                     js/cytoscape)))}])))
 
 
 (defn widgets-cljs [widgets data port]
-  (let [widget-id (str (java.util.UUID/randomUUID))]
-    (concat ['(ns main
-                (:require [reagent.core :as r]
-                          [reagent.dom :as dom]
-                          [ajax.core :refer [GET POST]]
-                          [clojure.string :as string]))
-             (list 'def 'data
-                   (list 'quote data))
-             (list 'def 'widget-id widget-id)
-             `(let [socket (js/WebSocket. (str "ws://localhost:" ~port))]
-                (.addEventListener socket "open" (fn [event]
-                                                   (.send socket "Hello Server!")))
-                (.addEventListener socket "message" (fn [event]
-                                                      (case (.-data event)
-                                                        "refresh" (.reload js/location)
-                                                        (println [:unknown-ws-message (.-data event)])))))
+  (concat ['(ns main
+              (:require [reagent.core :as r]
+                        [reagent.dom :as dom]
+                        [ajax.core :refer [GET POST]]
+                        [clojure.string :as string]))
+           (list 'def 'data
+                 (list 'quote data))
+           `(let [socket (js/WebSocket. (str "ws://localhost:" ~port))]
+              (.addEventListener socket "open" (fn [event]
+                                                 (.send socket "Hello Server!")))
+              (.addEventListener socket "message" (fn [event]
+                                                    (case (.-data event)
+                                                      "refresh" (.reload js/location)
+                                                      (println [:unknown-ws-message (.-data event)])))))
 
-             '(defn compute [[fname & args] result-state result-path]
-                (POST "/compute"
-                      {:headers {"Accept" #_"application/transit+json" "application/json"}
-                       :params (pr-str {:fname fname
-                                        :args args})
-                       :handler (fn [response]
-                                  (swap! result-state
-                                         assoc-in
-                                         result-path (read-string response)))
-                       :error-handler (fn [e]
-                                        (.log js/console (str e)))}))]
-            [datatables-cljs
-             vega-cljs
-             echarts-cljs
-             cytoscape-cljs]
-            (->> widgets
-                 (map-indexed
-                  (fn [i widget]
+           '(defn compute [[fname & args] result-state result-path]
+              (POST "/compute"
+                    {:headers {"Accept" #_"application/transit+json" "application/json"}
+                     :params (pr-str {:fname fname
+                                      :args args})
+                     :handler (fn [response]
+                                (swap! result-state
+                                       assoc-in
+                                       result-path (read-string response)))
+                     :error-handler (fn [e]
+                                      (.log js/console (str e)))}))]
+          [datatables-cljs
+           vega-cljs
+           echarts-cljs
+           cytoscape-cljs]
+          (->> widgets
+               (map-indexed
+                (fn [i widget]
+                  (when-not (widget/plain-html? widget)
                     (let [widget-name (str "widget" i)
                           widget-symbol (symbol (str "widget" i))]
                       [(list 'def widget-symbol widget)
                        (list 'dom/render
                              (list 'fn []
                                    widget-symbol)
-                             (list '.getElementById 'js/document widget-name))])))
-                 (apply concat)))))
+                             (list '.getElementById 'js/document widget-name))]))))
+               (apply concat))))

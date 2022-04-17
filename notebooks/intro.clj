@@ -1,6 +1,7 @@
 ;; # Clay
 
 ;; ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
+;;
 ;; (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 ;; ## What is it?
@@ -173,7 +174,7 @@
            (apply #(.drawLine ^SunGraphics2D g %1 %2 %3 %4))))
     bi))
 
-(repeatedly 4 #(a-piece-of-random-art (+ 20 (rand-int 90))))
+(a-piece-of-random-art (+ 40 (rand-int 90)))
 
 ;; ### Tables
 
@@ -216,27 +217,33 @@
 
 ;; ### [Cytoscape.js](https://js.cytoscape.org/)
 
-(kind/cytoscape
- {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
-                     {:data {:id "b"}}
-                     {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
-                     {:data {:id "d"} :position {:x 215 :y 175}}
-                     {:data {:id "e"}}
-                     {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
-             :edges [{:data {:id "ad" :source "a" :target "d"}}
-                     {:data {:id "eb" :source "e" :target "b"}}]}
-  :style [{:selector "node"
-           :css {:content "data(id)"
-                 :text-valign "center"
-                 :text-halign "center"}}
-          {:selector "parent"
-           :css {:text-valign "top"
-                 :text-halign "center"}}
-          {:selector "edge"
-           :css {:curve-style "bezier"
-                 :target-arrow-shape "triangle"}}]
-  :layout {:name "preset"
-           :padding 5}})
+(def cytoscape-example
+  {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
+                      {:data {:id "b"}}
+                      {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
+                      {:data {:id "d"} :position {:x 215 :y 175}}
+                      {:data {:id "e"}}
+                      {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
+              :edges [{:data {:id "ad" :source "a" :target "d"}}
+                      {:data {:id "eb" :source "e" :target "b"}}]}
+   :style [{:selector "node"
+            :css {:content "data(id)"
+                  :text-valign "center"
+                  :text-halign "center"}}
+           {:selector "parent"
+            :css {:text-valign "top"
+                  :text-halign "center"}}
+           {:selector "edge"
+            :css {:curve-style "bezier"
+                  :target-arrow-shape "triangle"}}]
+   :layout {:name "preset"
+            :padding 5}})
+
+(kind/cytoscape cytoscape-example)
+
+(kind/cytoscape [cytoscape-example
+                 {:style {:height 100
+                          :width 100}}])
 
 ;; ### [Apache Echarts](https://echarts.apache.org/)
 
@@ -302,21 +309,22 @@
 ;; The Clay project was created using [build-clj](https://github.com/seancorfield/build-clj).
 
 ;; Run the project's tests.
-
+;; ```
 ;; $ clojure -T:build test
-
+;; ```
 ;; Run the project's CI pipeline and build a JAR.
-
+;; ```
 ;; $ clojure -T:build ci
-
+;; ```
 ;; Install it locally (requires the `ci` task be run first):
-
+;; ```
 ;; $ clojure -T:build install
-
+;; ```
 ;; Deploy it to Clojars -- needs `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment
 ;; variables (requires the `ci` task be run first):
-
+;; ```
 ;; $ clojure -T:build deploy
+;; ```
 
 ;; Your library will be deployed to org.scicloj/clay on clojars.org by default.
 

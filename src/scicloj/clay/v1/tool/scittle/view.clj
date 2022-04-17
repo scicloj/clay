@@ -1,7 +1,11 @@
 (ns scicloj.clay.v1.tool.scittle.view
-  (:require [scicloj.clay.v1.tool.scittle.hiccups :as hiccups]
+  (:require [scicloj.clay.v1.tool.scittle.widget :as widget]
             [scicloj.kindly.v2.api :as kindly]
-            [scicloj.clay.v1.html.table :as table]))
+            [scicloj.clay.v1.html.table :as table]
+            #_[clarktown.core :as clarktown]
+            [commonmark-hiccup.core :as commonmark-hiccup]
+            [clojure.string :as string]))
+
 
 (defn maybe-apply-viewer
   ([value]
@@ -20,9 +24,6 @@
 (declare prepare-map)
 (declare prepare-div)
 
-(defn prepare-naive [value]
-  (hiccups/code (pr-str value)))
-
 (defn div? [v]
   (and (vector? v)
        (-> v first (= :div))))
@@ -34,7 +35,7 @@
           (vector? value) (prepare-vector value)
           (seq? value) (prepare-seq value)
           (map? value) (prepare-map value)
-          :else (prepare-naive value))))
+          :else (widget/naive value))))
 
 
 (defn prepare-div [v]
@@ -60,48 +61,88 @@
         (maybe-apply-viewer kind))))
 
 (defn prepare-vector [value]
-  [:div
-   (hiccups/structure-mark "[")
-   (->> value
-        (map prepare)
-        (into [:div
-               {:style {:margin-left "10%"}}]))
-   (hiccups/structure-mark "]")])
+  (if (->> value
+           (some kindly/kind))
+    [:div
+     (widget/structure-mark "[")
+     (->> value
+          (map prepare)
+          (into [:div
+                 {:style {:margin-left "10%"}}]))
+     (widget/structure-mark "]")]
+    ;; else
+    (widget/naive value)))
 
 (defn prepare-seq [value]
-  [:div
-   (hiccups/structure-mark "(")
-   (->> value
-        (map prepare)
-        (into [:div
-               {:style {:margin-left "10%"}}]))
-   (hiccups/structure-mark ")")])
+  (if (->> value
+           (some kindly/kind))
+    [:div
+     (widget/structure-mark "(")
+     (->> value
+          (map prepare)
+          (into [:div
+                 {:style {:margin-left "10%"}}]))
+     (widget/structure-mark ")")]
+    ;; else
+    (widget/naive value)))
 
 (defn prepare-map [value]
-  [:div
-   (hiccups/structure-mark "{")
-   (->> value
-        (map (fn [[k v]]
-               [:div
-                (prepare k)
-                (prepare v)]))
-        (into [:div
-               {:style {:margin-left "10%"}}]))
-   (hiccups/structure-mark "}")])
+  (if (or (->> value
+               vals
+               (some kindly/kind))
+          (->> value
+               keys
+               (some kindly/kind)))
+    [:div
+     (widget/structure-mark "{")
+     (->> value
+          (map (fn [[k v]]
+                 [:div
+                  (prepare k)
+                  (prepare v)]))
+          (into [:div
+                 {:style {:margin-left "10%"}}]))
+     (widget/structure-mark "}")]
+    ;; else
+    (widget/naive value)))
+
+(defn expand-options-if-vector [component-symbol options]
+  (cond ;;
+    (vector? options)
+    (->> options
+         (map (fn [option]
+                (list 'quote option)))
+         (into [component-symbol]))
+    ;;
+    (map? options)
+    [component-symbol (list 'quote options)]))
 
 
 (kindly/define-kind-behaviour! :kind/naive
-  {:scittle.viewer (fn [v]
-                     (hiccups/code (pr-str v)))})
+  {:scittle.viewer widget/naive})
 
 (kindly/define-kind-behaviour! :kind/hiccup
   {:scittle.viewer (fn [v] v)})
 
+(kindly/define-kind-behaviour! :kind/md
+  {:scittle.viewer
+   (fn [v]
+     (->> v
+          (map (fn [md]
+                 (->> md
+                      commonmark-hiccup/markdown->html
+                      (format "\n<p>%s</p>\n"))))
+          (string/join "\n")
+          (vector :div)
+          widget/mark-plain-html))})
+
 (kindly/define-kind-behaviour! :kind/table
   {:scittle.viewer (fn [table-spec]
-                     ['datatables
-                      (-> table-spec
-                          table/->table-hiccup)])})
+                     [:div {:style
+                            {:border-style "ridge"}}
+                      ['datatables
+                       (-> table-spec
+                           table/->table-hiccup)]])})
 
 (kindly/define-kind-behaviour! :kind/vega
   {:scittle.viewer (fn [spec]
@@ -109,15 +150,11 @@
                       ['vega (list 'quote spec)]])})
 
 (kindly/define-kind-behaviour! :kind/cytoscape
-  {:scittle.viewer (fn [spec]
-                     [:div
-                      ['cytoscape (list 'quote spec)]])})
+  {:scittle.viewer  (partial
+                     expand-options-if-vector
+                     'cytoscape)})
 
 (kindly/define-kind-behaviour! :kind/echarts
-  {:scittle.viewer (fn [option]
-                     (if (map? option)
-                       ['echarts (list 'quote option)]
-                       (->> option
-                            (map (fn [op]
-                                   (list 'quote op)))
-                            (into ['echarts]))))})
+  {:scittle.viewer (partial
+                    expand-options-if-vector
+                    'echarts)})

@@ -5,7 +5,10 @@
         metosin/jsonista {:mvn/version "0.3.5"}
         org.clojure/core.async {:mvn/version "1.1.587"}
         nrepl/nrepl       {:mvn/version "0.9.0"}
-        org.scicloj/kindly {:mvn/version "2-alpha2"}}
+        org.scicloj/kindly {:mvn/version "2-alpha2"}
+        commonmark-hiccup {:mvn/version "0.2.0"}
+        ;; com.github.askonomm/clarktown {:mvn/version "1.1.2"}
+        }
  :aliases
  {:build {:deps {io.github.seancorfield/build-clj
                  {:git/tag "v0.6.4" :git/sha "c21cfde"}}

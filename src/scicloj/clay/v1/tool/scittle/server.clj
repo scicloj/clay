@@ -53,13 +53,13 @@
     (s))
   (reset! *stop-server! nil))
 
-(defn show-widget!
-  ([widget]
-   (show-widget! widget nil))
-  ([widget {:keys [fns data]}]
+(defn show-widgets!
+  ([widgets]
+   (show-widgets! widgets nil))
+  ([widgets {:keys [fns data]}]
    (swap! *state
           assoc
-          :widgets [widget]
+          :widgets widgets
           :data data
           :fns fns)
    (broadcast! "refresh")
@@ -76,7 +76,8 @@
 (defn show! [value code]
   (-> value
       view/prepare
-      show-widget!))
+      vector
+      show-widgets!))
 
 (comment
   (close!)
