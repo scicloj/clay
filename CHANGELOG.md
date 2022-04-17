@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [1-alpha6-SNAPSHOT]
 - updated scittle version
+- more customizable document rendering
 
 ## [1-alpha5] - 2022-04-18
 - fixed handling delays on scittle document rendering

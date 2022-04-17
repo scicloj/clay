@@ -17,34 +17,38 @@
 (defn show-doc!
   ([path]
    (show-doc! path nil))
-  ([path {:keys [hide-code?]}]
-   (->> path
-        clerk-eval
-        :blocks
-        (mapcat (fn [block]
-                  (case (:type block)
-                    :code [(when-not hide-code?
-                             (-> block
-                                 :text
-                                 widget/code))
-                           (-> block
-                               :result
-                               :nextjournal/value
-                               ((fn [v]
-                                  (-> v
-                                      :nextjournal.clerk/var-from-def
-                                      (or v))))
-                               scicloj.clay.v1.view/deref-if-needed
-                               view/prepare)]
-                    :markdown [(-> block
+  ([path {:keys [hide-code? hide-nils? hide-vars?]}]
+   (cond->> path
+     true clerk-eval
+     true :blocks
+     true (mapcat (fn [block]
+                    (case (:type block)
+                      :code [(when-not hide-code?
+                               (-> block
                                    :text
                                    vector
-                                   kind/md
-                                   view/prepare)])))
-        (filter (complement :nippy/unthawable))
-        server/show-widgets!)))
+                                   kind/code))
+                             (-> block
+                                 :result
+                                 :nextjournal/value
+                                 ((fn [v]
+                                    (-> v
+                                        :nextjournal.clerk/var-from-def
+                                        (or v))))
+                                 scicloj.clay.v1.view/deref-if-needed)]
+                      :markdown [(-> block
+                                     :text
+                                     vector
+                                     kind/md)])))
+     hide-nils? (filter some?)
+     hide-vars? (filter (complement var?))
+     true (filter (complement :nippy/unthawable))
+     true (map view/prepare)
+     true server/show-widgets!)))
 
 
 (comment
   (show-doc! "notebooks/intro.clj")
   )
+
+(+ 1 2)

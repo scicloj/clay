@@ -165,3 +165,10 @@
   {:scittle.viewer (partial
                     expand-options-if-vector
                     'echarts)})
+
+(kindly/define-kind-behaviour! :kind/code
+  {:scittle.viewer (fn [codes]
+                     (->> codes
+                          (map widget/code)
+                          (into [:div])
+                          widget/mark-plain-html))})
