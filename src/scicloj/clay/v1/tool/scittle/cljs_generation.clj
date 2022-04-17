@@ -11,7 +11,7 @@
                         (-> el
                             js/$
                             (.DataTable (clj->js {:sPaginationType "full_numbers"
-                                                  :bSort false}))))})
+                                                  :order []}))))})
          thead
          tbody]])))
 
