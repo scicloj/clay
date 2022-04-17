@@ -97,9 +97,16 @@
      (widget/structure-mark "{")
      (->> value
           (map (fn [[k v]]
-                 [:div
-                  (prepare k)
-                  (prepare v)]))
+                 (if (->> [k v]
+                          (some kindly/kind))
+                   [:div
+                    (prepare k)
+                    (prepare v)]
+                   ;; else
+                   (->> [k v]
+                        (map pr-str)
+                        (string/join " ")
+                        widget/clojure))))
           (into [:div
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "}")]
