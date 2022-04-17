@@ -53,6 +53,12 @@
     (s))
   (reset! *stop-server! nil))
 
+(defn write-html! [path]
+  (->> @*state
+       page/page
+       (spit path))
+  (-> [:ok] (kindly/consider :kind/hidden)))
+
 (defn show-widgets!
   ([widgets]
    (show-widgets! widgets nil))
@@ -63,8 +69,7 @@
           :data data
           :fns fns)
    (broadcast! "refresh")
-   (-> [:ok]
-       (kindly/consider :kind/hidden))))
+   (-> [:ok] (kindly/consider :kind/hidden))))
 
 #_(defn reveal! [state]
     (future (Thread/sleep 2000)

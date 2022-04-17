@@ -341,4 +341,5 @@
 
 (comment
   (scittle/show-doc! "notebooks/intro.clj")
+  (scittle/write-html! "docs/index.html")
   (clerk/build-static-app! {:paths ["notebooks/intro.clj"]}))

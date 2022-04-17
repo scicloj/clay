@@ -35,5 +35,9 @@
   ([path options]
    (doc/show-doc! path options)))
 
+(defn write-html!
+  [path]
+  (server/write-html! path))
+
 ;; It is convenient to refresh all clients on re-evaluation.
 (server/broadcast! "refresh")
