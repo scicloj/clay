@@ -36,9 +36,9 @@
               :integrity "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
               :crossorigin "anonymous"}]
     (hiccup.page/include-js
-     "https://cdn.jsdelivr.net/gh/borkdude/scittle@0.0.1/js/scittle.js"
-     "https://cdn.jsdelivr.net/gh/borkdude/scittle@0.0.1/js/scittle.reagent.js"
-     "https://cdn.jsdelivr.net/gh/borkdude/scittle@0.0.1/js/scittle.cljs-ajax.js"
+     "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
+     "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
+     "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js"
      "https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"
      "https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js"
      "https://cdn.jsdelivr.net/npm/vega@5.22.1"
