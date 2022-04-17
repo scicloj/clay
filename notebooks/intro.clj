@@ -344,7 +344,7 @@
 
 ;; - a quick-start project template
 
-;; - client-server interactive widgets (for a proof-of-concept, see [the 2022-04-16 example project](https://github.com/scicloj/clay/tree/main/examples/example-project-20220416))
+;; - client-server interactive widgets (for a proof-of-concept, see [the 2022-04-16 example project](https://github.com/scicloj/clay/tree/main/examples/example-project-20220416) and the [Clojure-Asia talk](https://www.youtube.com/watch?v=gFNPtgAw36k).)
 
 ;; - slides
 
