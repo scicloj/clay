@@ -6,7 +6,7 @@
 
 ;; ## What is it?
 
-;; [Clay](https://github.com/scicloj/clay) is a tiny Clojure tool offering a dynamic workflow using some of the more serious visual tools such as [Portal](https://github.com/djblue/portal) and [Clerk](https://github.com/nextjournal/clerk). Here, by visual tools we mean tools for data visualization and literate programming.
+;; [Clay](https://github.com/scicloj/clay) is a tiny Clojure tool offering a dynamic workflow using some of the more serious visual tools & librariessuch as [Portal](https://github.com/djblue/portal), [Clerk](https://github.com/nextjournal/clerk), and [Scittle](https://github.com/babashka/scittle). Here, by visual tools we mean tools for data visualization and literate programming.
 
 ;; It is one of the fruits of our explorations at the [visual-tools-group](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
@@ -33,7 +33,7 @@
 ;; Clay is part of a stack of libraries seeking easy experience with common data-centric tasks.
 ;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library  for specifying the kind of way different things should be viewed
 ;; - [Clay](https://github.com/scicloj/clay) - a dynamic workflow for visual exploration & documentation, combining different tools using Kindly
-;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations, which is Kindly-aware, and thus fits nicely with Clay
+;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations, which is Kindly-aware, and thus fits nicely with Clay (and provides the necessary bridge to [Hanami](https://github.com/jsa-aerial/hanami) plots and [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset/)/[Tablecloth](https://github.com/scicloj/tablecloth) datasets)
 
 ;; ## Setup
 
@@ -67,7 +67,7 @@
                       tools/portal
                       tools/scittle]})
 
-;; The view of those tools should open automatically (e.g., a Portal window and a Clerk tab in the browser).
+;; The view of those tools should open automatically (e.g., a Portal window, a Clerk tab in the browser, and a Clay tab with a Scittle-based HTML page).
 
 ;; Clay can also be restarted with a new choice of tools:
 
@@ -75,6 +75,17 @@
   (clay/restart! {:tools [tools/clerk
                           tools/portal
                           tools/scittle]}))
+
+;; Static rendering can be done either in Clerk,
+
+(comment
+  (clerk/build-static-app! {:paths ["notebooks/intro.clj"]}))
+
+;; .. or to a Scittle-based HTML file.
+
+(comment
+  (do (scittle/show-doc! "notebooks/intro.clj")
+      (scittle/write-html! "docs/index.html")))
 
 ;; ## Tools
 
@@ -338,8 +349,3 @@
 ;; We are also looking into creating a template that would allow users to easily create projects with Clay.
 
 :bye
-
-(comment
-  (scittle/show-doc! "notebooks/intro.clj")
-  (scittle/write-html! "docs/index.html")
-  (clerk/build-static-app! {:paths ["notebooks/intro.clj"]}))
