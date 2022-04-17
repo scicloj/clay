@@ -55,6 +55,7 @@
 (ns intro
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]
+            [scicloj.clay.v1.tool.scittle :as scittle]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
             [scicloj.kindly.v2.kindness :as kindness]
@@ -339,5 +340,5 @@
 :bye
 
 (comment
-  (clerk/build-static-app!
-   {:paths ["notebooks/intro.clj"]}))
+  (scittle/show-doc! "notebooks/intro.clj")
+  (clerk/build-static-app! {:paths ["notebooks/intro.clj"]}))
