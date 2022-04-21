@@ -5,7 +5,8 @@
             [scicloj.clay.v1.tool.scittle.view :as view]
             [scicloj.clay.v1.tool.scittle.server :as server]
             [scicloj.clay.v1.tool.scittle.widget :as widget]
-            [taoensso.nippy :as nippy]))
+            [taoensso.nippy :as nippy]
+            [clojure.string :as string]))
 
 (defn clerk-eval
   [file]
@@ -17,7 +18,8 @@
 (defn show-doc!
   ([path]
    (show-doc! path nil))
-  ([path {:keys [hide-code? hide-nils? hide-vars?]}]
+  ([path {:keys [hide-code? hide-nils? hide-vars?
+                 title]}]
    (cond->> path
      true clerk-eval
      true :blocks
@@ -44,7 +46,11 @@
      hide-vars? (filter (complement var?))
      true (filter (complement :nippy/unthawable))
      true (map view/prepare)
-     true server/show-widgets!)))
+     true (#(server/show-widgets! % {:title (or (-> path
+                                                    (string/split #"/")
+                                                    last
+                                                    (string/split #"\.")
+                                                    first))})))))
 
 
 (comment

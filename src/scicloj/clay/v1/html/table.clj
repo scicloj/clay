@@ -9,7 +9,7 @@
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
   [:table {:width "100%"}
-   [:thead  {:style {:background-color "#c0c0c0"}}
+   [:thead  {:style {:background-color "#d0d0d0"}}
     (->> column-names
          (mapv (fn [x] [:th x]))
          (into [:tr]))]
@@ -21,7 +21,7 @@
                 (into [:tr {:style
                             {:background-color
                              (if (even? i)
-                               "#e0e0e0" "#f0f0f0")}}]))))
+                               "#f7f7f7" "#f0f0f0")}}]))))
         vec
         (into [:tbody]))])
 

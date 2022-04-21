@@ -5,7 +5,7 @@
             [scicloj.clay.v1.tool.scittle.cljs-generation :as cljs-generation]
             [scicloj.clay.v1.tool.scittle.widget :as widget]))
 
-(defn page [{:keys [widgets data reveal? port]}]
+(defn page [{:keys [widgets data reveal? port title]}]
   (when-not port
     (throw (ex-info "missing port")))
   (hiccup.page/html5
@@ -55,7 +55,7 @@
        "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"))
     (hiccup.page/include-css
      "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css")
-    [:title "Clay"]]
+    [:title (or title "Clay")]]
    [:body  {:style {:background "#f1f1f1"
                     :font-family "'Roboto', sans-serif"
                     :width "90%"

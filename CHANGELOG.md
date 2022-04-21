@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [1-alpha6-SNAPSHOT]
+## [1-alpha6] - 2022-04-21
 - updated scittle version
 - more customizable document rendering
+- more sensible table rendering
 
 ## [1-alpha5] - 2022-04-18
 - fixed handling delays on scittle document rendering

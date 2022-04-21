@@ -147,9 +147,18 @@
   {:scittle.viewer (fn [table-spec]
                      [:div {:style
                             {:border-style "ridge"}}
-                      ['datatables
-                       (-> table-spec
-                           table/->table-hiccup)]])})
+                      (let [hiccup (table/->table-hiccup
+                                    table-spec)]
+                        (if (or (some-> table-spec
+                                        :row-maps
+                                        count
+                                        (> 20))
+                                (some-> table-spec
+                                        :row-vectors
+                                        count
+                                        (> 20)))
+                          ['datatables hiccup]
+                          hiccup))])})
 
 (kindly/define-kind-behaviour! :kind/vega
   {:scittle.viewer (fn [spec]

@@ -62,12 +62,13 @@
 (defn show-widgets!
   ([widgets]
    (show-widgets! widgets nil))
-  ([widgets {:keys [fns data]}]
+  ([widgets {:keys [fns data title]}]
    (swap! *state
           assoc
           :widgets widgets
           :data data
-          :fns fns)
+          :fns fns
+          :title title)
    (broadcast! "refresh")
    (-> [:ok] (kindly/consider :kind/hidden))))
 
