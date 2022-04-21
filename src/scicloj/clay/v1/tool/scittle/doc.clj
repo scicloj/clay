@@ -1,6 +1,7 @@
 (ns scicloj.clay.v1.tool.scittle.doc
   (:require [scicloj.kindly.v2.kind :as kind]
             [nextjournal.clerk :as clerk]
+            [nextjournal.markdown.transform]
             [scicloj.clay.v1.view]
             [scicloj.clay.v1.tool.scittle.view :as view]
             [scicloj.clay.v1.tool.scittle.server :as server]
@@ -39,9 +40,9 @@
                                         (or v))))
                                  scicloj.clay.v1.view/deref-if-needed)]
                       :markdown [(-> block
-                                     :text
-                                     vector
-                                     kind/md)])))
+                                     :doc
+                                     nextjournal.markdown.transform/->hiccup
+                                     kind/hiccup)])))
      hide-nils? (filter some?)
      hide-vars? (filter (complement var?))
      true (filter (complement :nippy/unthawable))
@@ -56,5 +57,3 @@
 (comment
   (show-doc! "notebooks/intro.clj")
   )
-
-(+ 1 2)
