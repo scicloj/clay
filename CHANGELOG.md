@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [1-alpha7] - 2022-04-22
 - updated clerk version
+- handling naive printing of values better
 
 ## [1-alpha6] - 2022-04-21
 - updated scittle version

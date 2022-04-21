@@ -89,6 +89,14 @@
       (show! value code))))
 
 
+(kindly/define-kind-behaviour! :kind/naive
+  {:clerk.viewer (fn [v]
+                   (->> v
+                        println
+                        with-out-str
+                        (vector :pre)
+                        clerk/html))})
+
 (kindly/define-kind-behaviour! :kind/hiccup
   {:clerk.viewer (fn [v]
                    (clerk/html v))})

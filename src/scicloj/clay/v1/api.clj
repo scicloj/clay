@@ -15,3 +15,11 @@
 
 (defn restart! [config ]
   (pipeline/restart! config))
+
+(defmacro capture-print
+  [& body]
+  `(scicloj.kindly.v2.kind/code
+    [(let [s# (new java.io.StringWriter)]
+       (binding [*out* s#]
+         ~@body
+         (str s#)))]))

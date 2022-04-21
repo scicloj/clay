@@ -30,5 +30,6 @@
 
 (defn naive [value]
   (-> value
-      pr-str
+      println
+      with-out-str
       clojure))
