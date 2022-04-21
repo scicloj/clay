@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [1-alpha7] - 2022-04-22
+- updated clerk version
+
 ## [1-alpha6] - 2022-04-21
 - updated scittle version
 - more customizable document rendering
