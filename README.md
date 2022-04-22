@@ -2,15 +2,16 @@
 
 A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) with your favourite Clojure tools inside
 
-![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
-(credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
-
+[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 
 Clay is a small Clojure tool for a dynamic workflow involving some of the more serious visual tools.
 
 ## [Intro](https://scicloj.github.io/clay/#/notebooks/intro.clj)
 
 ## [Clojure Asia talk 2022-04-16](https://www.youtube.com/watch?v=gFNPtgAw36k)
+
+![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
+(credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 
 ##  Scicloj
