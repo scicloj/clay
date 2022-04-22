@@ -23,6 +23,8 @@
       dv)
     v))
 
+(kindly/define-kind! :kind/hidden)
+
 (defn show! [value code tools]
   (let [form (read-string code)]
     (when-not (or (->> code

@@ -69,23 +69,36 @@
 
 ;; The view of those tools should open automatically (e.g., a Portal window, a Clerk tab in the browser, and a Clay tab with a Scittle-based HTML page).
 
-;; Clay can also be restarted with a new choice of tools:
+;; ## A few useful actions
+
+;; Restarting with a new choice of tools:
 
 (comment
   (clay/restart! {:tools [tools/clerk
                           tools/portal
                           tools/scittle]}))
 
-;; Static rendering can be done either in Clerk,
+;; Showing the usual Clerk view of a whole namespace:
+
+(comment
+  (kind/hidden
+   [(clerk/show! "notebooks/intro.clj")]))
+
+;; Static rendering in Clerk:
 
 (comment
   (clerk/build-static-app! {:paths ["notebooks/intro.clj"]}))
 
-;; .. or to a Scittle-based HTML file.
+;; Showing the whole namespace using Scittle:
+(comment
+  (scittle/show-doc! "notebooks/intro.clj"))
+
+;; Writing the Scittle-based document:
 
 (comment
   (do (scittle/show-doc! "notebooks/intro.clj")
       (scittle/write-html! "docs/index.html")))
+
 
 ;; ## Tools
 
