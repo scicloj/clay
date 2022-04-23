@@ -1416,12 +1416,12 @@ nav[data-toggle='toc'] .nav .nav {
            ["-m" "nrepl.cmdline"
             "--middleware" "[scicloj.clay.v1.nrepl/middleware,cider.nrepl/cider-middleware]"
             "-i"]}}
-</pre><p>One needs to run their REPL with the defined <code>clay</code> alias, using the <code>-M:clay</code> option. In Calva, this will be offered automatically on jack-in.</p><h4 id="CIDER">CIDER</h4><p>In <a href="https://docs.cider.mx/cider/index.html">CIDER</a>, there is no need to an alias, as one can inject middleware to the Clojure command line. This way is preferrable, since it does not require to override the <code>:main-opts</code> as in the alias way. It can be configured using <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html">.dir-locals.el</a> by adding the condition:</p><pre class="viewer-code not-prose">(clojure-mode
+</pre><p>One needs to run their REPL with the defined <code>clay</code> alias, using the <code>-M:clay</code> option. In Calva, this will be offered automatically on jack-in.</p><h4 id="CIDER">CIDER</h4><p>In <a href="https://docs.cider.mx/cider/index.html">CIDER</a>, there is no need to use an alias, as one can inject middleware to the Clojure command line. This way is preferrable, since it does not require to override the <code>:main-opts</code> as in the alias way. It can be configured using <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html">.dir-locals.el</a> by adding the condition:</p><pre class="viewer-code not-prose">(clojure-mode
  .
  ((eval
    .
    (add-to-list 'cider-jack-in-nrepl-middlewares "scicloj.clay.v1.nrepl/middleware"))))
-</pre><p>-- see the example project above.</p><h4 id="Project%20Template">Project Template</h4><p>(coming soon)</p><h3 id="Leiningen%20projects">Leiningen projects</h3><p>(documentation still missing)</p><p>Now, we can write a namespace and play with Clay.</p></div><div><pre class="card"><code class="language-clojure bg-light">(ns intro
+</pre><p>-- see the example project above.</p><h4 id="Project%20Template">Project Template</h4><p>(coming soon)</p><h3 id="Leiningen%20projects">Leiningen projects</h3><p>(documentation still missing)</p><h2 id="Starting%20a%20Clay%20namespace">Starting a Clay namespace</h2><p>Now, we can write a namespace and play with Clay.</p></div><div><pre class="card"><code class="language-clojure bg-light">(ns intro
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]
             [scicloj.clay.v1.tool.scittle :as scittle]

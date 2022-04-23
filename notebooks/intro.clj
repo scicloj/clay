@@ -57,7 +57,7 @@
 
 ;; #### CIDER
 
-;; In [CIDER](https://docs.cider.mx/cider/index.html), there is no need to an alias, as one can inject middleware to the Clojure command line. This way is preferrable, since it does not require to override the `:main-opts` as in the alias way. It can be configured using [.dir-locals.el](https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html) by adding the condition:
+;; In [CIDER](https://docs.cider.mx/cider/index.html), there is no need to use an alias, as one can inject middleware to the Clojure command line. This way is preferrable, since it does not require to override the `:main-opts` as in the alias way. It can be configured using [.dir-locals.el](https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html) by adding the condition:
 ;; ```
 ;; (clojure-mode
 ;;  .
@@ -74,6 +74,8 @@
 ;; ### Leiningen projects
 
 ;; (documentation still missing)
+
+;; ## Starting a Clay namespace
 
 ;; Now, we can write a namespace and play with Clay.
 
