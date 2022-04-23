@@ -33,7 +33,7 @@
 ;; Clay is part of a stack of libraries seeking easy experience with common data-centric tasks.
 ;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library  for specifying the kind of way different things should be viewed
 ;; - [Clay](https://github.com/scicloj/clay) - a dynamic workflow for visual exploration & documentation, combining different tools using Kindly
-;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations, which is Kindly-aware, and thus fits nicely with Clay (and provides the necessary bridge to [Hanami](https://github.com/jsa-aerial/hanami) plots and [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset/)/[Tablecloth](https://github.com/scicloj/tablecloth) datasets)
+;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations on top of [Hanami](https://github.com/jsa-aerial/hanami), which is Kindly-aware, and thus fits nicely with Clay
 
 ;; ## Setup
 
