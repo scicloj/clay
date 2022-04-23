@@ -6,6 +6,7 @@
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]
             [scicloj.clay.v1.tool.scittle :as scittle]
+            [scicloj.clay.v1.view.dataset]
             [scicloj.viz.api :as viz]
             [tablecloth.api :as tc]))
 
