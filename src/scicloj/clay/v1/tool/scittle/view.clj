@@ -30,14 +30,17 @@
        (-> v first (= :div))))
 
 (defn prepare [value]
-  (let [kind (kindly/kind value)]
-    (cond (div? value) (prepare-div value)
-          kind (maybe-apply-viewer value kind)
-          (vector? value) (prepare-vector value)
-          (seq? value) (prepare-seq value)
-          (map? value) (prepare-map value)
-          :else (widget/naive value))))
-
+  (-> (let [kind (kindly/kind value)]
+        (cond (div? value) (prepare-div value)
+              kind (maybe-apply-viewer value kind)
+              (vector? value) (prepare-vector value)
+              (seq? value) (prepare-seq value)
+              (map? value) (prepare-map value)
+              :else (widget/naive value)))
+      ;; keep all metadata except for maybe the kind,
+      ;; that might have been replaced
+      (vary-meta merge
+                 (-> value meta (dissoc :kindly/kind)))))
 
 (defn prepare-div [v]
   (let [kind (kindly/kind v)]
