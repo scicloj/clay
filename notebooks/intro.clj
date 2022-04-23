@@ -37,7 +37,12 @@
 
 ;; ## Setup
 
-;; For Clay to work, it is necessary to add its relevant nREPL middleware, typically through an alias of the `deps.edn` file. See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project).
+;; For Clay to work, it is necessary to add its relevant nREPL middleware, which allows it to listen to user evaluations. This is needed only for enjoying Clay's dynamic interaction. For static rendering, it is not needed.
+
+;; ### Deps projects
+
+;; #### Calva
+;; In [Calva](https://calva.io/), this can be done through an alias of the `deps.edn` file. See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project).
 
 ;; ```clj
 ;; :aliases {:clay
@@ -48,7 +53,27 @@
 ;;             "-i"]}}
 ;; ```
 
-;; Then, one needs to run their REPL with the defined `clay` alias, using the `-M:clay` option. In Calva, this will be offered automatically on jack-in. In CIDER, this can be configured using [.dir-locals.el](https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html) -- see the example project above.
+;; One needs to run their REPL with the defined `clay` alias, using the `-M:clay` option. In Calva, this will be offered automatically on jack-in.
+
+;; #### CIDER
+
+;; In [CIDER](https://docs.cider.mx/cider/index.html), there is no need to an alias, as one can inject middleware to the Clojure command line. This way is preferrable, since it does not require to override the `:main-opts` as in the alias way. It can be configured using [.dir-locals.el](https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html) by adding the condition:
+;; ```
+;; (clojure-mode
+;;  .
+;;  ((eval
+;;    .
+;;    (add-to-list 'cider-jack-in-nrepl-middlewares "scicloj.clay.v1.nrepl/middleware"))))
+;; ```
+;; -- see the example project above.
+
+;; #### Project Template
+
+;; (coming soon)
+
+;; ### Leiningen projects
+
+;; (documentation still missing)
 
 ;; Now, we can write a namespace and play with Clay.
 
@@ -216,6 +241,23 @@
                                        (rand-int 3))
                   :age (rand-int 100)})}
     (kindly/consider kind/table))
+
+;; ### Datasets
+;; The `scicloj.clay.v1.view.dataset` namespace (which requires the [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) dependency to work) takes care of the necessary setup for datasets to render properly.
+
+(require '[tablecloth.api :as tc]
+         '[scicloj.clay.v1.view.dataset])
+
+(-> {:x (range 6)
+     :y [:A :B :C :A :B :C]}
+    tc/dataset)
+
+;; #### Known issues
+
+;; With the current Markdown implementation used by `tool/scittle` (based on [Cybermonday](https://github.com/kiranshila/cybermonday)), brackets inside datasets cells are not visible.
+
+(tc/dataset {:x [1 [2 3] 4]
+             :y [:A :B :C]})
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
