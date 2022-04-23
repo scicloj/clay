@@ -19,8 +19,9 @@
 
 (defmacro capture-print
   [& body]
-  `(scicloj.kindly.v2.kind/code
+  `(scicloj.kindly.v2.kind/naive
     [(let [s# (new java.io.StringWriter)]
        (binding [*out* s#]
          ~@body
+         (println s#)
          (str s#)))]))
