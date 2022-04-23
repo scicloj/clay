@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [1-alpha9] - 2022-04-23
-- various aesthetics changes: bootswatch, tables, markdown, table-of-contents, etc.
+- various aesthetics changes: bootswatch, tables, tech.ml.dadaset datasets, markdown, table-of-contents, etc.
 
 ## [1-alpha8] - 2022-04-22
 - making sure kind/hidden is defined
