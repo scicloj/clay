@@ -7,9 +7,29 @@
   (:import java.io.File
            java.util.UUID))
 
+(def style
+  "
+table {
+  border-style: thin;
+}
+th, td {
+  padding: 6px;
+}
+td {
+  text-align: left;
+}
+th {
+  text-align: center;
+  background-color: #ddd;
+}
+tr:nth-child(even) {
+  background-color: #f6f6f6;
+}
+")
+
 (defn row-vectors->table-hiccup [column-names row-vectors]
-  [:table {:width "100%"}
-   [:thead  {:style {:background-color "#d0d0d0"}}
+  [:table {:class :table}
+   [:thead
     (->> column-names
          (mapv (fn [x] [:th x]))
          (into [:tr]))]
@@ -17,11 +37,10 @@
         (map-indexed
          (fn [i row]
            (->> row
-                (mapv (fn [x] [:td x]))
-                (into [:tr {:style
-                            {:background-color
-                             (if (even? i)
-                               "#f7f7f7" "#f0f0f0")}}]))))
+                (mapv (fn [x] [:td (-> x
+                                       println
+                                       with-out-str)]))
+                (into [:tr]))))
         vec
         (into [:tbody]))])
 

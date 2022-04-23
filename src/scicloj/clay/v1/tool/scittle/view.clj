@@ -2,9 +2,10 @@
   (:require [scicloj.clay.v1.tool.scittle.widget :as widget]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.clay.v1.html.table :as table]
-            #_[clarktown.core :as clarktown]
-            [commonmark-hiccup.core :as commonmark-hiccup]
+            [cybermonday.core :as cybermonday]
             [clojure.string :as string]))
+
+
 
 
 (defn maybe-apply-viewer
@@ -131,34 +132,46 @@
 (kindly/define-kind-behaviour! :kind/hiccup
   {:scittle.viewer (fn [v] v)})
 
+(defn render-md [v]
+  (->> v
+       ((fn [v]
+          (if (vector? v) v [v])))
+       (map (fn [md]
+              (->> md
+                   println
+                   with-out-str
+                   cybermonday/parse-md
+                   :body)))
+       (into [:div])
+       widget/mark-plain-html))
+
 (kindly/define-kind-behaviour! :kind/md
+  {:scittle.viewer render-md})
+
+
+(kindly/define-kind-behaviour! :kind/table-md
   {:scittle.viewer
    (fn [v]
-     (->> v
-          (map (fn [md]
-                 (->> md
-                      commonmark-hiccup/markdown->html
-                      (format "\n<p>%s</p>\n"))))
-          (string/join "\n")
-          (vector :div)
-          widget/mark-plain-html))})
+     [:code (render-md v)])})
 
 (kindly/define-kind-behaviour! :kind/table
-  {:scittle.viewer (fn [table-spec]
-                     [:div {:style
-                            {:border-style "ridge"}}
-                      (let [hiccup (table/->table-hiccup
-                                    table-spec)]
-                        (if (or (some-> table-spec
-                                        :row-maps
-                                        count
-                                        (> 20))
-                                (some-> table-spec
-                                        :row-vectors
-                                        count
-                                        (> 20)))
-                          ['datatables hiccup]
-                          hiccup))])})
+  {:scittle.viewer
+   (fn [table-spec]
+     [:div
+      (let [hiccup (table/->table-hiccup
+                    table-spec)]
+        (if (or (some-> table-spec
+                        :row-maps
+                        count
+                        (> 20))
+                (some-> table-spec
+                        :row-vectors
+                        count
+                        (> 20)))
+          ['datatables hiccup]
+          hiccup))])})
+
+
 
 (kindly/define-kind-behaviour! :kind/vega
   {:scittle.viewer (fn [spec]

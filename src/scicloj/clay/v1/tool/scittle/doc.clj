@@ -26,23 +26,29 @@
      true :blocks
      true (mapcat (fn [block]
                     (case (:type block)
-                      :code [(when-not hide-code?
+                      :code (when-not
+                                (-> block
+                                    :form
+                                    meta
+                                    :kind/hidden)
+                              [(when-not hide-code?
+                                 (-> block
+                                     :text
+                                     vector
+                                     kind/code))
                                (-> block
-                                   :text
-                                   vector
-                                   kind/code))
-                             (-> block
-                                 :result
-                                 :nextjournal/value
-                                 ((fn [v]
-                                    (-> v
-                                        :nextjournal.clerk/var-from-def
-                                        (or v))))
-                                 scicloj.clay.v1.view/deref-if-needed)]
-                      :markdown [(-> block
-                                     :doc
-                                     nextjournal.markdown.transform/->hiccup
-                                     kind/hiccup)])))
+                                   :result
+                                   :nextjournal/value
+                                   ((fn [v]
+                                      (-> v
+                                          :nextjournal.clerk/var-from-def
+                                          (or v))))
+                                   scicloj.clay.v1.view/deref-if-needed)])
+                      :markdown [(some-> block
+                                         :doc
+                                         nextjournal.markdown.transform/->hiccup
+                                         kind/hiccup
+                                         widget/mark-plain-html)])))
      hide-nils? (filter some?)
      hide-vars? (filter (complement var?))
      true (filter (complement :nippy/unthawable))
@@ -55,5 +61,4 @@
 
 
 (comment
-  (show-doc! "notebooks/intro.clj")
-  )
+  (show-doc! "notebooks/intro.clj"))
