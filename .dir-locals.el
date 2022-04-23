@@ -1,4 +1,9 @@
-((clojure-mode
+((nil
+  .
+  ((cider-clojure-cli-aliases
+    .
+    "dev")))
+ (clojure-mode
   .
   ((eval
     .
