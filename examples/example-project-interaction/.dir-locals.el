@@ -1,3 +1,5 @@
-((nil
+((clojure-mode
   .
-  ((cider-clojure-cli-global-options . "-M:clay"))))
+  ((eval
+    .
+    (add-to-list 'cider-jack-in-nrepl-middlewares "scicloj.clay.v1.nrepl/middleware")))))
