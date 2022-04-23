@@ -11,16 +11,14 @@
 
 (defn code [string]
   (mark-plain-html
-   [:pre
-    [:code.language-clojure
-     #_{:style {:background "#ddd"}}
+   [:pre.card
+    [:code.language-clojure.bg-light
      string]]))
 
 (defn clojure [string]
   (mark-plain-html
    [:pre
     [:code.language-clojure
-     {:style {:background "#f1f1f1"}}
      string]]))
 
 (defn structure-mark [string]
