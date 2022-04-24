@@ -26,7 +26,6 @@
                   (.catch (fn [err] (println (str "vegaEmbed error: " err))))))}]))
 
 
-
 (def echarts-cljs
   '(defn echarts
      ([echart-option]
@@ -66,7 +65,14 @@
                      js/cytoscape)))}])))
 
 
-(defn widgets-cljs [widgets data port]
+(def special-libs-cljs
+  {'datatables datatables-cljs
+   'vega vega-cljs
+   'echarts echarts-cljs
+   'cytoscape cytoscape-cljs})
+
+
+(defn widgets-cljs [{:keys [widgets data port special-libs]}]
   (concat ['(ns main
               (:require [reagent.core :as r]
                         [reagent.dom :as dom]
@@ -93,10 +99,8 @@
                                        result-path (read-string response)))
                      :error-handler (fn [e]
                                       (.log js/console (str e)))}))]
-          [datatables-cljs
-           vega-cljs
-           echarts-cljs
-           cytoscape-cljs]
+          (->> special-libs
+               (map special-libs-cljs))
           (->> widgets
                (map-indexed
                 (fn [i widget]

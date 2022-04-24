@@ -7,25 +7,7 @@
   (:import java.io.File
            java.util.UUID))
 
-(def style
-  "
-table {
-  border-style: thin;
-}
-th, td {
-  padding: 6px;
-}
-td {
-  text-align: left;
-}
-th {
-  text-align: center;
-  background-color: #ddd;
-}
-tr:nth-child(even) {
-  background-color: #f6f6f6;
-}
-")
+
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
   [:table {:class :table}
