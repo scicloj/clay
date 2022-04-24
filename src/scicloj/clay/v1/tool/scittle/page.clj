@@ -75,13 +75,7 @@
                                  #_"highlight/styles/nord.min.css"
                                  io/resource
                                  slurp)]
-
-
-
-                            [:link {:rel "stylesheet"
-                                    :href "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-                                    :integrity "sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
-                                    :crossorigin "anonymous"}]
+                            (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
                             [:style "
 code {
   font-family: Fira Code,Consolas,courier new;
@@ -120,7 +114,7 @@ code {
                                 [:div.col-sm-3
                                  [:nav.sticky-top {:id "toc"
                                                    :data-toggle "toc"}]])
-                              [:div {:class (when toc?
+                              [:div {:class (if toc?
                                               "col-sm-9"
                                               "col-sm-12")}
                                [:div
@@ -132,13 +126,14 @@ code {
                                            widget
                                            [:div {:id (str "widget" i)}])))
                                       (into [:div]))]]]]]
-                            [:script {:src "https://code.jquery.com/jquery-3.6.0.min.js"
-                                      :integrity "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-                                      :crossorigin "anonymous"}]
-                            [:script
-                             {:src "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                              :integrity "sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                              :crossorigin "anonymous"}]
+                            (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
+                                                  "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
+                                                  "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                                                  "https://unpkg.com/react@17/umd/react.production.min.js"
+                                                  "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+                                                  "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
+                                                  "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
+                                                  "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
                             (when toc?
                               (js-from-local-copies
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
@@ -146,15 +141,6 @@ code {
                              (-> "highlight/highlight.min.js"
                                  io/resource
                                  slurp)]
-                            [:script {:crossorigin nil :src "https://unpkg.com/react@17/umd/react.production.min.js"}]
-                            [:script {:crossorigin nil :src "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"}]
-                            [:script {:src "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                                      :integrity "sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
-                                      :crossorigin "anonymous"}]
-                            (js-from-local-copies
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :js special-lib-resources))
                                  distinct
