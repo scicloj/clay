@@ -54,7 +54,6 @@
 (defn page [{:keys [widgets data port title toc?]}]
   (let [special-libs (->> widgets
                           special-libs-in-form)]
-    (Thread/sleep 3000)
     (when-not port
       (throw (ex-info "missing port")))
     (-> (hiccup.page/html5 [:head
