@@ -83,10 +83,6 @@
                                     :href "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
                                     :integrity "sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
                                     :crossorigin "anonymous"}]
-                            (css-from-local-copies
-                             #_"https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
-                             #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-                             "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css")
                             [:style "
 code {
   font-family: Fira Code,Consolas,courier new;
@@ -110,30 +106,6 @@ code {
                                  (mapcat (comp :from-the-web :css special-lib-resources))
                                  distinct
                                  (apply hiccup.page/include-css))
-                            [:script {:type "text/javascript"}
-                             (-> "highlight/highlight.min.js"
-                                 io/resource
-                                 slurp)]
-                            [:script {:crossorigin nil :src "https://unpkg.com/react@17/umd/react.production.min.js"}]
-                            [:script {:crossorigin nil :src "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"}]
-                            [:script {:src "https://code.jquery.com/jquery-3.6.0.min.js"
-                                      :integrity "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-                                      :crossorigin "anonymous"}]
-                            [:script {:src "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                                      :integrity "sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
-                                      :crossorigin "anonymous"}]
-                            (js-from-local-copies
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
-                            (->> special-libs
-                                 (mapcat (comp :from-local-copy :js special-lib-resources))
-                                 distinct
-                                 (apply js-from-local-copies))
-                            (->> special-libs
-                                 (mapcat (comp :from-the-web :js special-lib-resources))
-                                 distinct
-                                 (apply hiccup.page/include-js))
                             [:title (or title "Clay")]]
                            [:body  {:style {
                                             ;;:background "#f6f6f6"
@@ -161,12 +133,37 @@ code {
                                            widget
                                            [:div {:id (str "widget" i)}])))
                                       (into [:div]))]]]]]
+                            [:script {:src "https://code.jquery.com/jquery-3.6.0.min.js"
+                                      :integrity "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+                                      :crossorigin "anonymous"}]
                             [:script
                              {:src "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                               :integrity "sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                               :crossorigin "anonymous"}]
+                            (when toc?
+                              (js-from-local-copies
+                               "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
+                            [:script {:type "text/javascript"}
+                             (-> "highlight/highlight.min.js"
+                                 io/resource
+                                 slurp)]
+                            [:script {:crossorigin nil :src "https://unpkg.com/react@17/umd/react.production.min.js"}]
+                            [:script {:crossorigin nil :src "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"}]
+                            [:script {:src "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
+                                      :integrity "sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
+                                      :crossorigin "anonymous"}]
                             (js-from-local-copies
-                             "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js")
+                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
+                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
+                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
+                            (->> special-libs
+                                 (mapcat (comp :from-local-copy :js special-lib-resources))
+                                 distinct
+                                 (apply js-from-local-copies))
+                            (->> special-libs
+                                 (mapcat (comp :from-the-web :js special-lib-resources))
+                                 distinct
+                                 (apply hiccup.page/include-js))
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]
                             [:script {:type "application/x-scittle"}
