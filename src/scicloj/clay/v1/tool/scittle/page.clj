@@ -122,21 +122,23 @@ code {
                                  (->> widgets
                                       (map-indexed
                                        (fn [i widget]
-                                         (if (widget/plain-html? widget)
-                                           widget
-                                           [:div {:id (str "widget" i)}])))
+                                         [:div {:style {:margin "15px"}}
+                                          (if (widget/plain-html? widget)
+                                            widget
+                                            [:div {:id (str "widget" i)}])]))
                                       (into [:div]))]]]]]
                             (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
                                                   "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                                                  "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                                                  "https://unpkg.com/react@17/umd/react.production.min.js"
-                                                  "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
-                                                  "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
-                                                  "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
-                                                  "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
+                                                  "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
                             (when toc?
                               (js-from-local-copies
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
+                            (js-from-local-copies
+                             "https://unpkg.com/react@17/umd/react.production.min.js"
+                             "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
+                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
+                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
                             [:script {:type "text/javascript"}
                              (-> "highlight/highlight.min.js"
                                  io/resource
