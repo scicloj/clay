@@ -51,7 +51,7 @@
        (filter special-libs-set)
        distinct))
 
-(defn page [{:keys [widgets data port title]}]
+(defn page [{:keys [widgets data port title toc?]}]
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (Thread/sleep 3000)
@@ -95,7 +95,13 @@ code {
   padding: 2px;
   .bg-light;
 }"]
-                            [:style styles/boostrap-toc]
+                            (when toc?
+                              (css-from-local-copies
+                               #_"https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
+                               #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+                               "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
+                            (when toc?
+                              [:style styles/boostrap-toc])
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :css special-lib-resources))
                                  distinct
@@ -139,10 +145,13 @@ code {
                                     :data-target "#toc"}
                             [:div.container
                              [:div.row
-                              [:div.col-sm-3
-                               [:nav.sticky-top {:id "toc"
-                                                 :data-toggle "toc"}]]
-                              [:div.col-sm-9
+                              (when toc?
+                                [:div.col-sm-3
+                                 [:nav.sticky-top {:id "toc"
+                                                   :data-toggle "toc"}]])
+                              [:div {:class (when toc?
+                                              "col-sm-9"
+                                              "col-sm-12")}
                                [:div
                                 [:div
                                  (->> widgets

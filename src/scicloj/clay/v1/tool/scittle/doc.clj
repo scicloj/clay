@@ -19,7 +19,7 @@
 (defn show-doc!
   ([path]
    (show-doc! path nil))
-  ([path {:keys [hide-code? hide-nils? hide-vars?
+  ([path {:keys [hide-code? hide-nils? hide-vars? hide-toc?
                  title]}]
    (cond->> path
      true clerk-eval
@@ -57,8 +57,8 @@
                                                     (string/split #"/")
                                                     last
                                                     (string/split #"\.")
-                                                    first))})))))
-
+                                                    first))
+                                     :toc? (not hide-toc?)})))))
 
 (comment
   (show-doc! "notebooks/intro.clj"))

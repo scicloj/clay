@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file. This change
 - scittle tool: 
   - refactoring of page generation 
   - optional loading of special widgets
-  - making the generated html more standalone (relying on less web resources)
+  - more self-contained generated html (relying on less web resources)
+  - made table-of-contents optional
 
 ## [1-alpha9] - 2022-04-23
 - various aesthetics changes: bootswatch, tables, tech.ml.dadaset datasets, markdown, table-of-contents, etc.
