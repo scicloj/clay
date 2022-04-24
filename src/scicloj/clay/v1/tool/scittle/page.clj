@@ -5,19 +5,37 @@
             [scicloj.clay.v1.tool.scittle.cljs-generation :as cljs-generation]
             [scicloj.clay.v1.tool.scittle.widget :as widget]
             [scicloj.clay.v1.tool.scittle.styles :as styles]
+            [scicloj.clay.v1.tool.scittle.resource :as resource]
             [scicloj.clay.v1.html.table :as table]))
 
 (def special-libs-set
   #{'datatables 'vega 'echarts 'cytoscape})
 
 (def special-lib-resources
-  {'vega {:js ["https://cdn.jsdelivr.net/npm/vega@5.22.1"
-               "https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"
-               "https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"]}
-   'datatables {:js ["https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"]
-                :css ["https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"]}
-   'echarts {:js ["https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"]}
-   'cytoscape {:js ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js"]}})
+  {'vega {:js {:from-local-copy
+               ["https://cdn.jsdelivr.net/npm/vega@5.22.1"
+                "https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"
+                "https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"]}}
+   'datatables {:js {:from-the-web
+                     ["https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"]}
+                :css {:from-the-web
+                      ["https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"]}}
+   'echarts {:js {:from-local-copy
+                  ["https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"]}}
+   'cytoscape {:js {:from-local-copy
+                    ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js"]}}})
+
+(defn js-from-local-copies [& urls]
+  (->> urls
+       (map resource/get)
+       (map (partial vector :script {:type "text/javascript"}))
+       (into [:div])))
+
+(defn css-from-local-copies [& urls]
+  (->> urls
+       (map resource/get)
+       (map (partial vector :style))
+       (into [:div])))
 
 (defn special-libs-in-form [f]
   (->> f
@@ -65,7 +83,7 @@
                                     :href "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
                                     :integrity "sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
                                     :crossorigin "anonymous"}]
-                            (hiccup.page/include-css
+                            (css-from-local-copies
                              #_"https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
                              #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
                              "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css")
@@ -79,7 +97,11 @@ code {
 }"]
                             [:style styles/boostrap-toc]
                             (->> special-libs
-                                 (mapcat (comp :css special-lib-resources))
+                                 (mapcat (comp :from-local-copy :css special-lib-resources))
+                                 distinct
+                                 (apply css-from-local-copies))
+                            (->> special-libs
+                                 (mapcat (comp :from-the-web :css special-lib-resources))
                                  distinct
                                  (apply hiccup.page/include-css))
                             [:script {:type "text/javascript"}
@@ -94,12 +116,16 @@ code {
                             [:script {:src "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
                                       :integrity "sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY="
                                       :crossorigin "anonymous"}]
-                            (hiccup.page/include-js
+                            (js-from-local-copies
                              "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
                              "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
                              "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
                             (->> special-libs
-                                 (mapcat (comp :js special-lib-resources))
+                                 (mapcat (comp :from-local-copy :js special-lib-resources))
+                                 distinct
+                                 (apply js-from-local-copies))
+                            (->> special-libs
+                                 (mapcat (comp :from-the-web :js special-lib-resources))
                                  distinct
                                  (apply hiccup.page/include-js))
                             [:title (or title "Clay")]]
@@ -130,7 +156,7 @@ code {
                              {:src "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
                               :integrity "sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
                               :crossorigin "anonymous"}]
-                            (hiccup.page/include-js
+                            (js-from-local-copies
                              "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js")
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]

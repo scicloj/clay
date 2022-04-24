@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [1-alpha10] - 2022-04-24
-- scittle tool: optional loading of special widgets, refactoring of page generation 
+- scittle tool: 
+  - refactoring of page generation 
+  - optional loading of special widgets
+  - making the generated html more standalone (relying on less web resources)
 
 ## [1-alpha9] - 2022-04-23
 - various aesthetics changes: bootswatch, tables, tech.ml.dadaset datasets, markdown, table-of-contents, etc.
