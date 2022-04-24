@@ -6,7 +6,7 @@
 
 ;; ## What is it?
 
-;; [Clay](https://github.com/scicloj/clay) is a tiny Clojure tool offering a dynamic workflow using some of the more serious visual tools & librariessuch as [Portal](https://github.com/djblue/portal), [Clerk](https://github.com/nextjournal/clerk), and [Scittle](https://github.com/babashka/scittle). Here, by visual tools we mean tools for data visualization and literate programming.
+;; [Clay](https://github.com/scicloj/clay) is a tiny Clojure tool offering a dynamic workflow using some of the more serious visual tools & libraries such as [Portal](https://github.com/djblue/portal), [Clerk](https://github.com/nextjournal/clerk), and [Scittle](https://github.com/babashka/scittle). Here, by visual tools we mean tools for data visualization and literate programming.
 
 ;; It is one of the fruits of our explorations at the [visual-tools-group](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
@@ -403,9 +403,7 @@
 
 ;; - client-server interactive widgets (for a proof-of-concept, see [the 2022-04-16 example project](https://github.com/scicloj/clay/tree/main/examples/example-project-20220416) and the [Clojure-Asia talk](https://www.youtube.com/watch?v=gFNPtgAw36k).)
 
-;; - slides
-
-;; - table of contents
+;; - presentation slides
 
 ;; - more kinds of visualizations
 
