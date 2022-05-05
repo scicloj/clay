@@ -156,11 +156,15 @@
 
 ;; There are a few ways to attach a kind to a value.
 
-;; ### Kinds through metadata
+;; ### Value kind metadata
+
+;; Let us look into this example in [Hiccup](https://github.com/weavejester/hiccup) notation.
 
 (def some-hiccup
   [:p {:style {:color "#c9a465"}}
    [:big "hello"]])
+
+;; We wish to tell Clay that it is of kind `hiccup`.
 
 ;; Let us specify the kind for this value. We'll do it in three ways: by calling a kind, by considering it (using `kindly/consider`), or by considering the corresponding keyword.
 
@@ -168,7 +172,7 @@
  (-> some-hiccup (kindly/consider kind/hiccup))
  (-> some-hiccup (kindly/consider :kind/hiccup))]
 
-;; Notice how in all cases, the view is affected accordingly, as we just told Clay to treat the value as [Hiccup](https://github.com/weavejester/hiccup) notation for rendering HTML.
+;; Notice how in all cases, the view is affected accordingly, as we just told Clay to treat the value as Hiccup notation for rendering HTML.
 
 ;; Let us check the kind in all these cases:
 
@@ -187,7 +191,9 @@
                 meta
                 :kindly/kind))))
 
-;; Metadata can also applied to the code itself (rather than the resulting value). (This option currently does not work in the `clerk` tool.)
+;; ### Code kind metadata
+
+;; Kind metadata can also attached to the code itself (rather than the resulting value).
 
 ^:kind/hiccup
 some-hiccup
@@ -195,9 +201,11 @@ some-hiccup
 ^{:kind/hiccup true}
 some-hiccup
 
-;; ### Kinds through protocols
+;; (This option currently does not work in the `clerk` tool.)
 
-;; Another way of specifying kind is implementing the Kindness protocol. For example, the Java `BufferedImage` class implements it in order to support viewing images.
+;; ### Kindness protocol
+
+;; Another way of specifying kind is implementing the `Kindness` protocol. For example, the Java `BufferedImage` class implements it in order to support viewing images.
 
 (import java.awt.image.BufferedImage)
 
