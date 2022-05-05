@@ -1,7 +1,11 @@
 (ns scicloj.clay.v1.tool.clerk
   (:require [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
+            [babashka.fs :as fs]
             [nextjournal.clerk :as clerk]
+            [nextjournal.clerk.hashing :as hashing]
+            [nextjournal.clerk.viewer :as v]
+            [nextjournal.clerk.config :as config]
             [scicloj.clay.v1.walk]
             [nextjournal.clerk.webserver :as webserver]
             [nextjournal.clerk.view :as view]
@@ -154,3 +158,34 @@
 (kindly/define-kind-behaviour! :kind/echarts
   {:clerk.viewer (fn [v]
                    (clerk/with-viewer echarts v))})
+
+
+;; Patching Clerk to pass metadata freely:
+
+(ns nextjournal.clerk)
+
+(defn read+eval-cached [results-last-run ->hash doc-visibility codeblock]
+  (let [{:keys [ns-effect? form var]} codeblock
+        no-cache?      (or ns-effect?
+                           (hashing/no-cache? form))
+        hash           (when-not no-cache? (or (get ->hash (if var var form))
+                                               (hashing/hash-codeblock ->hash codeblock)))
+        digest-file    (when hash (->cache-file (str "@" hash)))
+        cas-hash       (when (and digest-file (fs/exists? digest-file)) (slurp digest-file))
+        visibility     (if-let [fv (hashing/->visibility form)] fv doc-visibility)
+        cached-result? (and (not no-cache?)
+                            cas-hash
+                            (-> cas-hash ->cache-file fs/exists?))
+        opts-from-form-meta (-> (meta form)
+                                #_(select-keys [::viewer ::viewers ::width])
+                                v/normalize-viewer-opts
+                                maybe-eval-viewers)]
+    (fs/create-dirs config/cache-dir)
+    (-> (cond-> (or (when-let [result-last-run (and (not no-cache?) (get-in results-last-run [hash :nextjournal/value]))]
+                      (wrapped-with-metadata result-last-run visibility hash))
+                    (when cached-result?
+                      (lookup-cached-result var hash cas-hash visibility))
+                    (eval+cache! form hash digest-file var no-cache? visibility))
+          (seq opts-from-form-meta)
+          (merge opts-from-form-meta))
+        #_(#(do (println [:debug %]) %)))))
