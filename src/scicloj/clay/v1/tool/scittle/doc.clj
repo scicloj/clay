@@ -22,49 +22,47 @@
    (show-doc! path nil))
   ([path {:keys [hide-code? hide-nils? hide-vars? hide-toc?
                  title]}]
-   (let [kinds (kindly/kinds-set)]
-     (->> path
-          clerk-eval
-          :blocks
-          (mapcat (fn [block]
-                    (case (:type block)
-                      :code (when-not (-> block
-                                          :form
-                                          meta
-                                          :kind/hidden)
-                              (-> (concat (when-not hide-code?
-                                            [(-> block
-                                                 :text
-                                                 vector
-                                                 kind/code
-                                                 view/prepare)])
-                                          (let [value (-> block
-                                                          :result
-                                                          :nextjournal/value
-                                                          ((fn [v]
-                                                             (-> v
-                                                                 :nextjournal.clerk/var-from-def
-                                                                 (or v))))
-                                                          scicloj.clay.v1.view/deref-if-needed)]
-                                            (when-not (or (and hide-nils? (nil? value))
-                                                          (and hide-vars? (var? value))
-                                                          (:nippy/unthawable value))
-                                              [(->> block
-                                                    keys
-                                                    (filter kinds)
-                                                    first
-                                                    (view/prepare value))])))))
-                      :markdown [(some-> block
-                                         :doc
-                                         nextjournal.markdown.transform/->hiccup
-                                         kind/hiccup
-                                         widget/mark-plain-html)])))
-          (#(server/show-widgets! % {:title (or (-> path
-                                                    (string/split #"/")
-                                                    last
-                                                    (string/split #"\.")
-                                                    first))
-                                     :toc? (not hide-toc?)}))))))
+   (->> path
+        clerk-eval
+        :blocks
+        (mapcat (fn [block]
+                  (case (:type block)
+                    :code (when-not (-> block
+                                        :form
+                                        meta
+                                        :kind/hidden)
+                            (-> (concat (when-not hide-code?
+                                          [(-> block
+                                               :text
+                                               vector
+                                               kind/code
+                                               view/prepare)])
+                                        (let [value (-> block
+                                                        :result
+                                                        :nextjournal/value
+                                                        ((fn [v]
+                                                           (-> v
+                                                               :nextjournal.clerk/var-from-def
+                                                               (or v))))
+                                                        scicloj.clay.v1.view/deref-if-needed)]
+                                          (when-not (or (and hide-nils? (nil? value))
+                                                        (and hide-vars? (var? value))
+                                                        (:nippy/unthawable value))
+                                            [(->> block
+                                                  :text
+                                                  kindly/code->kind
+                                                  (view/prepare value))])))))
+                    :markdown [(some-> block
+                                       :doc
+                                       nextjournal.markdown.transform/->hiccup
+                                       kind/hiccup
+                                       widget/mark-plain-html)])))
+        (#(server/show-widgets! % {:title (or (-> path
+                                                  (string/split #"/")
+                                                  last
+                                                  (string/split #"\.")
+                                                  first))
+                                   :toc? (not hide-toc?)})))))
 
 
 (comment
