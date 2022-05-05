@@ -51,7 +51,6 @@
                                                           (:nippy/unthawable value))
                                               [(->> block
                                                     keys
-                                                    (#(do (println [:dbg %]) %))
                                                     (filter kinds)
                                                     first
                                                     (view/prepare value))])))))
