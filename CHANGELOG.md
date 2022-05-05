@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [1-alpha12-SNAPSHOT]
 - patched clerk to pass code metadata freely
 - support for code metadata in scittle doc preparation
+- support for extensions setup on start; added dataset, clojisr setup as extensions
 
 ## [1-alpha11] - 2022-04-24
 - scittle tool: reordered js lib rendering, added visual spacing

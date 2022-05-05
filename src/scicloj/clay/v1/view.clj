@@ -3,10 +3,6 @@
             [scicloj.clay.v1.view.image]
             [scicloj.kindly.v2.api :as kindly]))
 
-(defn setup! [tools config]
-  (doseq [tool tools]
-    (tool/setup! tool config)))
-
 (defn open! [tools]
   (doseq [tool tools]
     (tool/open! tool)))
@@ -42,7 +38,22 @@
                                  code)]
         (doseq [tool tools]
           (try
-            (tool/show! tool value-to-show code-to-show)
+            (tool/show! tool
+                        value-to-show
+                        code-to-show)
             (catch Exception e
               (println ["Exception while trying to show value:"
                         e]))))))))
+
+(defn setup-extension! [extension]
+  (try (require (:ns extension))
+       (catch Exception e
+         (throw (ex-info
+                 "Failed to setup extension. Have you included the necessary dependencies in your project?"
+                 {:extension extension})))))
+
+(defn setup! [{:keys [tools extensions] :as config}]
+  (doseq [tool tools]
+    (tool/setup! tool config))
+  (doseq [ex extensions]
+    (setup-extension! ex)))

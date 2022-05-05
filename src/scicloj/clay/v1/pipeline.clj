@@ -29,16 +29,16 @@
   (atom nil))
 
 (defn restart! [{:keys [tools] :as config}]
-  (view/setup! tools config)
+  (view/setup! config)
   (view/close! tools)
   (when-let [s (:stop @*pipeline)]
     (s))
   (reset! *pipeline (new-pipeline (create-handler tools)
                                   tools)))
 
-(defn start! [{:keys [tools] :as config}]
-  (if (:stop @*pipeline) ; already started, so just re-setup it
-    (view/setup! tools config)
+(defn start! [config]
+  (if (:stop @*pipeline) ; already started, so just re-setup
+    (view/setup! config)
     ;; actually start it
     (restart! config)))
 
