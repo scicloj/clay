@@ -5,22 +5,24 @@
 (ns example1
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]
+            [scicloj.clay.v1.extensions :as extensions]
             [scicloj.clay.v1.tool.scittle :as scittle]
-            [scicloj.clay.v1.view.dataset]
             [scicloj.viz.api :as viz]
-            [tablecloth.api :as tc]))
+            [tablecloth.api :as tc]
+            [clojisr.v1.r :as r]))
 
 ;; ## Useful commands
 
-(clay/start! {:tools [tools/clerk
-                      tools/portal
-                      tools/scittle]})
+
+(def config {:tools [tools/clerk
+                     tools/portal
+                     tools/scittle]
+             :extensions [extensions/clojisr
+                          extensions/dataset]})
+
+(clay/start! config)
 
 (comment
-  (clay/restart! {:tools [tools/clerk
-                          tools/portal
-                          tools/scittle]})
-
   (scittle/show-doc! "src/example1.clj"))
 
 ;; ## Examples
@@ -42,3 +44,5 @@
     (viz/mark-size 200)
     (viz/color :x)
     viz/viz)
+
+(r/r '(rnorm 9))

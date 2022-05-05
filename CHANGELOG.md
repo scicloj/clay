@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [1-alpha12-SNAPSHOT]
+## [1-alpha12]
 - patched clerk to pass code metadata freely
 - support for code metadata in scittle doc preparation
 - support for extensions setup on start; added dataset, clojisr setup as extensions
