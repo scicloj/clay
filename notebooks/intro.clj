@@ -187,6 +187,13 @@
                 meta
                 :kindly/kind))))
 
+;; Metadata can also applied to the code itself (rather than the resulting value). (This option currently does not work in the `clerk` tool.)
+
+^:kind/hiccup
+some-hiccup
+
+^{:kind/hiccup true}
+some-hiccup
 
 ;; ### Kinds through protocols
 
@@ -217,6 +224,8 @@
     kind/hiccup)
 
 ;; ### Images
+
+;; Images are handled automatically (technically, this works since the `BufferedImage` class implements the `Kindness` protocol).
 
 (import java.awt.image.BufferedImage
         java.awt.Color
