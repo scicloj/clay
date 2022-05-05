@@ -6,9 +6,11 @@
 
 ;; ## What is it?
 
-;; [Clay](https://github.com/scicloj/clay) is a tiny Clojure tool offering a dynamic workflow using some of the more serious visual tools & libraries such as [Portal](https://github.com/djblue/portal), [Clerk](https://github.com/nextjournal/clerk), and [Scittle](https://github.com/babashka/scittle). Here, by visual tools we mean tools for data visualization and literate programming.
+;; [Clay](https://github.com/scicloj/clay) is a Clojure tool for data visualization and literate programming, offering a dynamic workflow compabible with popular visual tools & libraries such as [Portal](https://github.com/djblue/portal), [Clerk](https://github.com/nextjournal/clerk), and [Scittle](https://github.com/babashka/scittle). Here, by visual tools we mean tools for data visualization and literate programming.
 
 ;; It is one of the fruits of our explorations at the [visual-tools-group](https://scicloj.github.io/docs/community/groups/visual-tools/).
+
+;; This document has been created using Clay.
 
 ;; ### Goals
 
@@ -82,28 +84,31 @@
 (ns intro
   (:require [scicloj.clay.v1.api :as clay]
             [scicloj.clay.v1.tools :as tools]
+            [scicloj.clay.v1.extensions :as extensions]
             [scicloj.clay.v1.tool.scittle :as scittle]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
             [scicloj.kindly.v2.kindness :as kindness]
             [nextjournal.clerk :as clerk]))
 
-;; Clay can be started with the choice of desired tools to use:
+;; Clay can be started with the choice of desired tools to use, as well as extensions that take care of viewing certain datatypes appropriately.
 
 (clay/start! {:tools [tools/clerk
                       tools/portal
-                      tools/scittle]})
+                      tools/scittle]
+              :extensions [extensions/dataset
+                           extensions/clojisr]})
 
 ;; The view of those tools should open automatically (e.g., a Portal window, a Clerk tab in the browser, and a Clay tab with a Scittle-based HTML page).
 
 ;; ## A few useful actions
 
-;; Restarting with a new choice of tools:
+;; Restarting with a new choice of tools and extensions:
 
 (comment
-  (clay/restart! {:tools [tools/clerk
-                          tools/portal
-                          tools/scittle]}))
+  (clay/restart! {:tools [tools/scittle]
+                  :extensions [extensions/dataset
+                               extensions/clojisr]}))
 
 ;; Showing the usual Clerk view of a whole namespace:
 
@@ -199,7 +204,7 @@
 
 ;; ### Naive
 
-;; The naive kind just behaves as usual, in any tool.
+;; The naive kind just uses the usual printing of the value, in any tool.
 
 (-> {:x 9}
     kind/naive)
@@ -245,10 +250,11 @@
     (kindly/consider kind/table))
 
 ;; ### Datasets
-;; The `scicloj.clay.v1.view.dataset` namespace (which requires the [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) dependency to work) takes care of the necessary setup for datasets to render properly.
+;; For [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets to render coodectly, it is necessary to use the `dataset` extension when starting Clay (see above), and to have tech.ml.dataset as a dependency of the project.
 
-(require '[tablecloth.api :as tc]
-         '[scicloj.clay.v1.view.dataset])
+;; In this example, let us create a dataset using [Tablecloth](https://github.com/scicloj/tablecloth).
+
+(require '[tablecloth.api :as tc])
 
 (-> {:x (range 6)
      :y [:A :B :C :A :B :C]}
@@ -258,8 +264,24 @@
 
 ;; With the current Markdown implementation used by `tool/scittle` (based on [Cybermonday](https://github.com/kiranshila/cybermonday)), brackets inside datasets cells are not visible.
 
-(tc/dataset {:x [1 [2 3] 4]
-             :y [:A :B :C]})
+(-> {:x [1 [2 3] 4]
+     :y [:A :B :C]}
+    tc/dataset)
+
+;; For now, cases of this kind can be handled by the user by naive rendering of the printed output:
+
+(-> {:x [1 [2 3] 4]
+     :y [:A :B :C]}
+    tc/dataset
+    kind/naive)
+
+;; ### RObjects (ClijisR)
+
+;; For [ClojisR](https://github.com/scicloj/clojisr) `RObjects` (which are Clojure handles to objects of the R language) to render coodectly, it is necessary to use the `clojisr` extension when starting Clay (see above), and to have ClojisR as a dependency of the project.
+
+(require '[clojisr.v1.r :as r])
+
+(r/r '(rnorm 9))
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
@@ -287,26 +309,26 @@
 ;; ### [Cytoscape.js](https://js.cytoscape.org/)
 
 (def cytoscape-example
-  {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
-                      {:data {:id "b"}}
-                      {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
-                      {:data {:id "d"} :position {:x 215 :y 175}}
-                      {:data {:id "e"}}
-                      {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
-              :edges [{:data {:id "ad" :source "a" :target "d"}}
-                      {:data {:id "eb" :source "e" :target "b"}}]}
-   :style [{:selector "node"
-            :css {:content "data(id)"
-                  :text-valign "center"
-                  :text-halign "center"}}
-           {:selector "parent"
-            :css {:text-valign "top"
-                  :text-halign "center"}}
-           {:selector "edge"
-            :css {:curve-style "bezier"
-                  :target-arrow-shape "triangle"}}]
-   :layout {:name "preset"
-            :padding 5}})
+{:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
+                    {:data {:id "b"}}
+                    {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
+                    {:data {:id "d"} :position {:x 215 :y 175}}
+                    {:data {:id "e"}}
+                    {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
+            :edges [{:data {:id "ad" :source "a" :target "d"}}
+                    {:data {:id "eb" :source "e" :target "b"}}]}
+ :style [{:selector "node"
+          :css {:content "data(id)"
+                :text-valign "center"
+                :text-halign "center"}}
+         {:selector "parent"
+          :css {:text-valign "top"
+                :text-halign "center"}}
+         {:selector "edge"
+          :css {:curve-style "bezier"
+                :target-arrow-shape "triangle"}}]
+ :layout {:name "preset"
+          :padding 5}})
 
 (kind/cytoscape cytoscape-example)
 
