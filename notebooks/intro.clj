@@ -39,43 +39,43 @@
 
 ;; ## Setup
 
-;; For Clay to work, it is necessary to add its relevant nREPL middleware, which allows it to listen to user evaluations. This is needed only for enjoying Clay's dynamic interaction. For static rendering, it is not needed.
+;; For Clay to work, we need to be able to inform it about code evaluations. This requires some setup specific to your editor.
+;; (This is needed only for enjoying Clay's dynamic interaction. For rendering of a whole document, it is not needed.)
 
-;; ### Deps projects
+;; If your Clojure environment is not supported yet, let us talk and make it work.
 
-;; #### Calva
-;; In [Calva](https://calva.io/), this can be done through an alias of the `deps.edn` file. See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project).
+;; ### Calva
 
-;; ```clj
-;; :aliases {:clay
-;;           {:extra-deps {cider/cider-nrepl {:mvn/version "0.28.3"}}
-;;            :main-opts
-;;            ["-m" "nrepl.cmdline"
-;;             "--middleware" "[scicloj.clay.v1.nrepl/middleware,cider.nrepl/cider-middleware]"
-;;             "-i"]}}
+;; Please add the following command to your keybindings (you may pick another key, of course). This command would evaluate a piece of code and send the result to be visualized in Clay.
+
+;; ```json
+;; {
+;;  "key": "ctrl+shift+enter",
+;;  "command": "calva.runCustomREPLCommand",
+;;  "args": "(tap> {:clay-tap? true :code-meta (meta (quote $current-form)) :code (str (quote $current-form)) :value $current-form})"
+;;  }
 ;; ```
 
-;; One needs to run their REPL with the defined `clay` alias, using the `-M:clay` option. In Calva, this will be offered automatically on jack-in.
+;; ### CIDER
 
-;; #### CIDER
+;; Please add the following to your Emacs configuration. It will make sure to inform Clay about all user evaluations of Clojure code.
 
-;; In [CIDER](https://docs.cider.mx/cider/index.html), there is no need to use an alias, as one can inject middleware to the Clojure command line. This way is preferrable, since it does not require to override the `:main-opts` as in the alias way. It can be configured using [.dir-locals.el](https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html) by adding the condition:
+
+;; ```elisp
+;; (require 'cider-mode)
+;;
+;; (defun cider-tap (&rest r) ; inspired by https://github.com/clojure-emacs/cider/issues/3094
+;;   (cons (concat "(let [__value "
+;;                 (caar r)
+;;                 "] (tap> {:clay-tap? true :code-meta (meta (quote " (caar r) ")) :value __value}) __value)")
+;;         (cdar r))))
+;;
+;; (advice-add 'cider-nrepl-request:eval
+;; :filter-args #'cider-tap)
 ;; ```
-;; (clojure-mode
-;;  .
-;;  ((eval
-;;    .
-;;    (add-to-list 'cider-jack-in-nrepl-middlewares "scicloj.clay.v1.nrepl/middleware"))))
-;; ```
-;; -- see the example project above.
 
-;; #### Project Template
-
+;; ## Project Template
 ;; (coming soon)
-
-;; ### Leiningen projects
-
-;; (documentation still missing)
 
 ;; ## Starting a Clay namespace
 
@@ -130,7 +130,6 @@
 (comment
   (do (scittle/show-doc! "notebooks/intro.clj")
       (scittle/write-html! "docs/index.html")))
-
 
 ;; ## Tools
 

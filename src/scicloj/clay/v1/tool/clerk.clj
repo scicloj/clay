@@ -76,11 +76,8 @@
                          dv)))}])
   :ok)
 
-(defn show! [value code]
-  (show-values! (concat (when code
-                          [(clerk/code code)
-                           (clerk/html [:hr])])
-                        [value])))
+(defn show! [value]
+  (show-values! [value]))
 
 (def tool
   (reify tool/Tool
@@ -89,8 +86,8 @@
     (open! [this]
       (clerk/serve! {:browse? true}))
     (close! [this])
-    (show! [this value code]
-      (show! value code))))
+    (show! [this value kind-override]
+      (show! value))))
 
 
 (kindly/define-kind-behaviour! :kind/naive

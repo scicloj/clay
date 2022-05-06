@@ -19,11 +19,4 @@
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
                       io.github.cognitect-labs/test-runner
                       {:git/tag "v0.5.0" :git/sha "48c3c67"}
-                      scicloj/tablecloth {:mvn/version "6.076"}}}
-  :clay
-  {:extra-deps {cider/cider-nrepl {:mvn/version "0.28.3"}
-                scicloj/tablecloth {:mvn/version "6.076"}}
-   :main-opts
-   ["-m" "nrepl.cmdline"
-    "--middleware" "[scicloj.clay.v1.nrepl/middleware,cider.nrepl/cider-middleware]"
-    "-i"]}}}
+                      scicloj/tablecloth {:mvn/version "6.076"}}}}}

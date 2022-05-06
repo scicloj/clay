@@ -21,26 +21,20 @@
 
 (kindly/define-kind! :kind/hidden)
 
-(defn show! [value code tools]
-  (let [form (read-string code)]
-    (when-not (or (->> code
-                       (re-matches #".*nextjournal.clerk/show!.*"))
-                  (-> form
-                      meta
-                      :kind/hidden)
-                  (-> value
-                      kindly/kind
-                      (= :kind/hidden)))
-      (let [value-to-show (deref-if-needed value)
-            code-to-show nil #_(when-not (-> form
-                                             meta
-                                             :kind/hide-code)
-                                 code)]
+(defn show! [value code-meta tools]
+  (let [kind-override (->> code-meta
+                           keys
+                           (filter (kindly/kinds-set))
+                           first)]
+    (when-not (-> kind-override
+                  (or (kindly/kind value))
+                  (= :kind/hidden))
+      (let [value-to-show (deref-if-needed value)]
         (doseq [tool tools]
           (try
             (tool/show! tool
                         value-to-show
-                        code-to-show)
+                        kind-override)
             (catch Exception e
               (println ["Exception while trying to show value:"
                         e]))))))))
@@ -52,7 +46,8 @@
                  "Failed to setup extension. Have you included the necessary dependencies in your project?"
                  {:extension extension})))))
 
-(defn setup! [{:keys [tools extensions] :as config}]
+(defn setup! [{:keys [tools extensions events-source]
+               :as config}]
   (doseq [tool tools]
     (tool/setup! tool config))
   (doseq [ex extensions]

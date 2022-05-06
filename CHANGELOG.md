@@ -1,7 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [1-alpha12]
+## [1-alpha13] - 2022-05-06
+- using `tap>` rather than nREPL middleware to listen to user evaluations
+- fixed the support for code metadata in some cases
+
+## [1-alpha12] - 2022-05-05
 - patched clerk to pass code metadata freely
 - support for code metadata in scittle doc preparation
 - support for extensions setup on start; added dataset, clojisr setup as extensions

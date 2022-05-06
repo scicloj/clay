@@ -8,6 +8,7 @@
 
 (defn handle-message [{:keys [id op] :as request}
                       {:keys [value err] :as message}]
+  ;; disabled in this version
   (when (and (= "eval" op)
              (->> request
                   :code
@@ -20,7 +21,8 @@
        {:request-id id
         :value      value
         :code (:code request)
-        :event-type :event-type/value}))))
+        :event-type :event-type/value
+        :source :nrepl}))))
 
 
 (defn middleware [f]

@@ -25,9 +25,9 @@
     (viewer value)
     value))
 
-(defn prepare [value code]
-  (let [v (if-let [code-kind (kindly/code->kind code)]
-            (maybe-apply-viewer value code-kind)
+(defn prepare [value kind-override]
+  (let [v (if kind-override
+            (maybe-apply-viewer value kind-override)
             (->> value
                  (scicloj.clay.v1.walk/postwalk
                   (fn [subvalue]
@@ -43,13 +43,11 @@
                      :portal.viewer/hiccup))
       v)))
 
-(defn show! [value code]
+(defn show! [value kind-override]
   (-> [:div
-       (when code
-         [:portal.viewer/code code])
        [:portal.viewer/inspector
         (-> value
-            (prepare code))]]
+            (prepare kind-override))]]
       (with-meta
         {:portal.viewer/default :portal.viewer/hiccup})
       portal/submit))
@@ -61,5 +59,5 @@
       (portal/open))
     (close! [this]
       (portal/close))
-    (show! [this value code]
-      (show! value code))))
+    (show! [this value kind-override]
+      (show! value kind-override))))

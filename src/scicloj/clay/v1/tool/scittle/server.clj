@@ -78,9 +78,9 @@
             (println (pr-str @*state))
             (broadcast! "refresh")))
 
-(defn show! [value code]
+(defn show! [value kind-override]
   (-> value
-      view/prepare
+      (view/prepare kind-override)
       vector
       show-widgets!))
 

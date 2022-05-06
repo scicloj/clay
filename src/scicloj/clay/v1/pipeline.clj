@@ -3,9 +3,9 @@
              :refer [<! go go-loop timeout chan thread]]
             [scicloj.clay.v1.view :as view]))
 
-(defn handle-value [{:keys [code value] :as event}
+(defn handle-value [{:keys [code-meta value] :as event}
                     tools]
-  (view/show! value code tools))
+  (view/show! value code-meta tools))
 
 (defn create-handler [tools]
   (fn [{:keys [event-type]
@@ -13,7 +13,7 @@
     (some-> event-type
             (case :event-type/value (handle-value event tools)))))
 
-(defn new-pipeline [handler tools]
+(defn new-pipeline [handler tools events-source]
   (view/open! tools)
   (let [events-channel         (async/chan 100)]
     (async/go-loop []
@@ -23,18 +23,22 @@
     {:stop (fn []
              (async/close! events-channel))
      :process (fn [event]
-                (async/>!! events-channel event))}))
+                (when (-> event :source (= events-source))
+                  (async/>!! events-channel event)))}))
 
 (defonce *pipeline
   (atom nil))
 
-(defn restart! [{:keys [tools] :as config}]
+(defn restart! [{:keys [tools events-source]
+                 :as config
+                 :or {events-source :tap}}]
   (view/setup! config)
   (view/close! tools)
   (when-let [s (:stop @*pipeline)]
     (s))
   (reset! *pipeline (new-pipeline (create-handler tools)
-                                  tools)))
+                                  tools
+                                  events-source)))
 
 (defn start! [config]
   (if (:stop @*pipeline) ; already started, so just re-setup
@@ -45,3 +49,16 @@
 (defn process! [event]
   (when-let [p (:process @*pipeline)]
     (p event)))
+
+
+(defn handle-tap [{:keys [clay-tap? code-file code-meta value]
+                   :as dbg}]
+  (when clay-tap?
+    (process!
+     {:event-type :event-type/value
+      :code (some-> code-file slurp)
+      :code-meta code-meta
+      :value value
+      :source :tap})))
+
+(add-tap #'handle-tap)
