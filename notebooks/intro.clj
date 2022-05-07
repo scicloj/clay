@@ -62,6 +62,7 @@
 
 
 ;; ```elisp
+;; ;; (inspired by: https://github.com/clojure-emacs/cider/issues/3094)
 ;; (require 'cider-mode)
 ;;
 ;; (defun cider-tap (&rest r) ; inspired by https://github.com/clojure-emacs/cider/issues/3094
