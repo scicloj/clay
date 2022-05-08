@@ -21,11 +21,21 @@
 
 (kindly/define-kind! :kind/hidden)
 
-(defn show! [value code-meta tools]
-  (let [kind-override (->> code-meta
-                           keys
-                           (filter (kindly/kinds-set))
-                           first)]
+(def hidden-form-starters
+  #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype
+    'nextjournal.clerk/show! 'clerk/show!})
+
+(defn show! [value form tools]
+  (let [kind-override (or (->> form
+                               meta
+                               keys
+                               (filter (kindly/kinds-set))
+                               first)
+                          (when (and (list? form)
+                                     (-> form
+                                         first
+                                         hidden-form-starters))
+                            :kind/hidden))]
     (when-not (-> kind-override
                   (or (kindly/kind value))
                   (= :kind/hidden))

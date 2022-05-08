@@ -3,9 +3,9 @@
              :refer [<! go go-loop timeout chan thread]]
             [scicloj.clay.v1.view :as view]))
 
-(defn handle-value [{:keys [code-meta value] :as event}
+(defn handle-value [{:keys [form value] :as event}
                     tools]
-  (view/show! value code-meta tools))
+  (view/show! value form tools))
 
 (defn create-handler [tools]
   (fn [{:keys [event-type]
@@ -51,13 +51,13 @@
     (p event)))
 
 
-(defn handle-tap [{:keys [clay-tap? code-file code-meta value]
+(defn handle-tap [{:keys [clay-tap? code-file form value]
                    :as dbg}]
   (when clay-tap?
     (process!
      {:event-type :event-type/value
       :code (some-> code-file slurp)
-      :code-meta code-meta
+      :form form
       :value value
       :source :tap})))
 

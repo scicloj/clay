@@ -52,7 +52,7 @@
 ;; {
 ;;  "key": "ctrl+shift+enter",
 ;;  "command": "calva.runCustomREPLCommand",
-;;  "args": "(tap> {:clay-tap? true :code-meta (meta (quote $current-form)) :code (str (quote $current-form)) :value $current-form})"
+;;  "args": "(tap> {:clay-tap? true :form (quote $current-form) :code (str (quote $current-form)) :value $current-form})"
 ;;  }
 ;; ```
 
@@ -68,8 +68,8 @@
 ;; (defun cider-tap (&rest r) ; inspired by https://github.com/clojure-emacs/cider/issues/3094
 ;;   (cons (concat "(let [__value "
 ;;                 (caar r)
-;;                 "] (tap> {:clay-tap? true :code-meta (meta (quote " (caar r) ")) :value __value}) __value)")
-;;         (cdar r))))
+;;                 "] (tap> {:clay-tap? true :form (quote " (caar r) ") :value __value}) __value)")
+;;         (cdar r)))
 ;;
 ;; (advice-add 'cider-nrepl-request:eval
 ;; :filter-args #'cider-tap)
