@@ -13,6 +13,13 @@ Clay is a small Clojure tool for a dynamic workflow involving some of the more s
 ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
 (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
+## Discussion
+
+The best places to discuss this project are (in this order)
+* a topic thread under the [visual-tools stream](https://clojurians.zulipchat.com/#narrow/stream/313390-visual-tools) at the Clojurians Zulip (more about chat streams [here](https://scicloj.github.io/docs/community/chat/)) 
+* a [github issue](https://github.com/scicloj/clay/issues)
+* a thread at the [visual-tools channel](https://clojurians.slack.com/archives/C02V9TL2G3V) of the Clojurians slack
+
 ## License
 
 Copyright © 2022 Scicloj
