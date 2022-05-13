@@ -2,8 +2,6 @@
 
 A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) with your favourite Clojure tools inside
 
-[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
-
 Clay is a small Clojure tool for a dynamic workflow involving some of the more serious visual tools.
 
 ## [Intro](https://scicloj.github.io/clay/)
@@ -19,6 +17,8 @@ The best places to discuss this project are (in this order)
 * a topic thread under the [visual-tools stream](https://clojurians.zulipchat.com/#narrow/stream/313390-visual-tools) at the Clojurians Zulip (more about chat streams [here](https://scicloj.github.io/docs/community/chat/)) 
 * a [github issue](https://github.com/scicloj/clay/issues)
 * a thread at the [visual-tools channel](https://clojurians.slack.com/archives/C02V9TL2G3V) of the Clojurians slack
+
+[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 
 ## License
 
