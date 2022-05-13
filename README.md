@@ -4,12 +4,11 @@ A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_t
 
 Clay is a small Clojure tool for a dynamic workflow involving some of the more serious visual tools.
 
+[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
+
 ## [Intro](https://scicloj.github.io/clay/)
 
 ## [Clojure Asia talk 2022-04-16](https://www.youtube.com/watch?v=gFNPtgAw36k)
-
-![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
-(credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 ## Discussion
 
@@ -18,7 +17,9 @@ The best places to discuss this project are (in this order)
 * a [github issue](https://github.com/scicloj/clay/issues)
 * a thread at the [visual-tools channel](https://clojurians.slack.com/archives/C02V9TL2G3V) of the Clojurians slack
 
-[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
+
+![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
+(credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 ## License
 
