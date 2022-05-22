@@ -302,50 +302,55 @@ some-hiccup
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
-(def vega-lite-spec
-  (memoize
-   (fn [n]
-     (-> {:data {:values
-                 (->> (repeatedly n #(- (rand) 0.5))
-                      (reductions +)
-                      (map-indexed (fn [x y]
-                                     {:w (rand-int 9)
-                                      :z (rand-int 9)
-                                      :x x
-                                      :y y})))},
-          :mark "point"
-          :encoding
-          {:size {:field "w" :type "quantitative"}
-           :x {:field "x", :type "quantitative"},
-           :y {:field "y", :type "quantitative"},
-           :fill {:field "z", :type "nominal"}}}
-         (kindly/consider kind/vega)))))
+(defn vega-point-plot [data]
+  (-> {:data {:values data},
+       :mark "point"
+       :encoding
+       {:size {:field "w" :type "quantitative"}
+        :x {:field "x", :type "quantitative"},
+        :y {:field "y", :type "quantitative"},
+        :fill {:field "z", :type "nominal"}}}
+      (kindly/consider kind/vega)))
 
-(vega-lite-spec 9)
+(defn random-data [n]
+  (->> (repeatedly n #(- (rand) 0.5))
+       (reductions +)
+       (map-indexed (fn [x y]
+                      {:w (rand-int 9)
+                       :z (rand-int 9)
+                       :x x
+                       :y y}))))
+
+(defn random-vega-plot [n]
+  (-> n
+      random-data
+      vega-point-plot))
+
+(random-vega-plot 9)
 
 ;; ### [Cytoscape.js](https://js.cytoscape.org/)
 
 (def cytoscape-example
-{:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
-                    {:data {:id "b"}}
-                    {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
-                    {:data {:id "d"} :position {:x 215 :y 175}}
-                    {:data {:id "e"}}
-                    {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
-            :edges [{:data {:id "ad" :source "a" :target "d"}}
-                    {:data {:id "eb" :source "e" :target "b"}}]}
- :style [{:selector "node"
-          :css {:content "data(id)"
-                :text-valign "center"
-                :text-halign "center"}}
-         {:selector "parent"
-          :css {:text-valign "top"
-                :text-halign "center"}}
-         {:selector "edge"
-          :css {:curve-style "bezier"
-                :target-arrow-shape "triangle"}}]
- :layout {:name "preset"
-          :padding 5}})
+  {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
+                      {:data {:id "b"}}
+                      {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
+                      {:data {:id "d"} :position {:x 215 :y 175}}
+                      {:data {:id "e"}}
+                      {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
+              :edges [{:data {:id "ad" :source "a" :target "d"}}
+                      {:data {:id "eb" :source "e" :target "b"}}]}
+   :style [{:selector "node"
+            :css {:content "data(id)"
+                  :text-valign "center"
+                  :text-halign "center"}}
+           {:selector "parent"
+            :css {:text-valign "top"
+                  :text-halign "center"}}
+           {:selector "edge"
+            :css {:curve-style "bezier"
+                  :target-arrow-shape "triangle"}}]
+   :layout {:name "preset"
+            :padding 5}})
 
 (kind/cytoscape cytoscape-example)
 
@@ -404,13 +409,14 @@ some-hiccup
 
 ;; Here are a few Vega-Lite specs (using the function defined above) inside a Hiccup block:
 
-(-> (->> [10 100 1000]
-         (map (fn [n]
-                [:div {:style {:width "400px"}}
-                 [:big (str "n=" n)]
-                 (vega-lite-spec n)]))
-         (into [:div]))
-    (kindly/consider kind/hiccup))
+(->> [10 100 1000]
+     (map (fn [n]
+            [:div {:style {:width "400px"}}
+             [:big (str "n=" n)]
+             (random-vega-plot n)]))
+     (into [:div])
+     kind/hiccup)
+
 
 ;; ## Development
 
