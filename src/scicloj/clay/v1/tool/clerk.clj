@@ -35,7 +35,7 @@
      {:blocks
       (->> notes
            (mapv (fn [{:keys [value]}]
-                   (view/->result
+                   (v/->result
                     *ns*
                     (get-value-with-id! value)
                     true))))}}}))
@@ -158,13 +158,29 @@
 
 
 ;; Patching Clerk to pass metadata freely:
+;; The only thing changed from below is commenting out the select-keys filter
+;; in preparing opts-from-form-meta.
+;; TODO This is a hack and should liase with Clerk team for better solution.
+;; TODO This will break again when nextjournal.clerk.analyzer code is released!!!
 
-(ns nextjournal.clerk)
+(ns nextjournal.clerk
+  (:require [babashka.fs :as fs]
+            [clojure.java.io :as io]
+            [clojure.string :as str]
+            [multihash.core :as multihash]
+            [multihash.digest :as digest]
+            [nextjournal.clerk.config :as config]
+            [nextjournal.clerk.hashing :as hashing]
+            [nextjournal.clerk.view :as view]
+            [nextjournal.clerk.viewer :as v]
+            [nextjournal.clerk.webserver :as webserver]
+            [taoensso.nippy :as nippy]))
 
-(defn read+eval-cached [results-last-run ->hash doc-visibility codeblock]
-  (let [{:keys [ns-effect? form var]} codeblock
-        no-cache?      (or ns-effect?
-                           (hashing/no-cache? form))
+
+(defn read+eval-cached [{:as _doc doc-visibility :visibility :keys [blob->result ->analysis-info ->hash]} codeblock]
+  (let [{:keys [form vars var]} codeblock
+        {:as form-info :keys [ns-effect? no-cache? freezable?]} (->analysis-info (if (seq vars) (first vars) form))
+        no-cache?      (or ns-effect? no-cache?)
         hash           (when-not no-cache? (or (get ->hash (if var var form))
                                                (hashing/hash-codeblock ->hash codeblock)))
         digest-file    (when hash (->cache-file (str "@" hash)))
@@ -174,15 +190,21 @@
                             cas-hash
                             (-> cas-hash ->cache-file fs/exists?))
         opts-from-form-meta (-> (meta form)
-                                #_(select-keys [::viewer ::viewers ::width])
+                                #_(select-keys [::viewer ::viewers ::width ::opts])
                                 v/normalize-viewer-opts
                                 maybe-eval-viewers)]
+    #_(prn :cached? (cond no-cache? :no-cache
+                          cached-result? true
+                          cas-hash :no-cas-file
+                          :else :no-digest-file)
+           :hash hash :cas-hash cas-hash :form form :var var :ns-effect? ns-effect?)
     (fs/create-dirs config/cache-dir)
-    (-> (cond-> (or (when-let [result-last-run (and (not no-cache?) (get-in results-last-run [hash :nextjournal/value]))]
-                      (wrapped-with-metadata result-last-run visibility hash))
-                    (when cached-result?
-                      (lookup-cached-result var hash cas-hash visibility))
-                    (eval+cache! form hash digest-file var no-cache? visibility))
-          (seq opts-from-form-meta)
-          (merge opts-from-form-meta))
-        #_(#(do (println [:debug %]) %)))))
+    (cond-> (or (when-let [blob->result (and (not no-cache?) (get-in blob->result [hash :nextjournal/value]))]
+                  (wrapped-with-metadata blob->result visibility hash))
+                (when (and cached-result? freezable?)
+                  (lookup-cached-result var hash cas-hash visibility))
+                (eval+cache! form-info hash digest-file visibility))
+      (seq opts-from-form-meta)
+      (merge opts-from-form-meta))))
+
+
