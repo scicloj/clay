@@ -1,16 +1,15 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.11.0"}
-        djblue/portal {:mvn/version "0.23.0"}
+        djblue/portal {:mvn/version "0.29.1"}
         io.github.nextjournal/clerk {:mvn/version "0.7.418"}
-        metosin/jsonista {:mvn/version "0.3.5"}
+        metosin/jsonista {:mvn/version "0.3.6"}
 
         org.clojure/core.async {:mvn/version "1.1.587"}
-        nrepl/nrepl       {:mvn/version "0.9.0"}
         org.scicloj/kindly {:mvn/version "2-alpha2"}
-        com.kiranshila/cybermonday {:mvn/version "0.4.182"}
+        com.kiranshila/cybermonday {:mvn/version "0.4.184"}
         org.scicloj/tempfiles {:mvn/version "1-alpha2"}}
  :aliases
- {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "6.076"}
+ {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "6.090"}
                      scicloj/clojisr {:mvn/version "1.0.0-BETA19"}}}
   :build {:deps {io.github.seancorfield/build-clj
                  {:git/tag "v0.6.4" :git/sha "c21cfde"}}
@@ -19,4 +18,4 @@
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
                       io.github.cognitect-labs/test-runner
                       {:git/tag "v0.5.0" :git/sha "48c3c67"}
-                      scicloj/tablecloth {:mvn/version "6.076"}}}}}
+                      scicloj/tablecloth {:mvn/version "6.090"}}}}}

@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [1-alpha16] - 2022-08-07
+- updated some deps
+
 ## [1-alpha15] - 2022-08-07
 - catching errors
 - pretty printing where appropriate
