@@ -88,5 +88,5 @@
   (close!)
   (open!)
 
-  (show-widget!
-   [:h1 "hi"]))
+  (show-widgets!
+   [[:h1 "hi"]]))
