@@ -1,4 +1,5 @@
-(ns scicloj.clay.v1.tool.scittle.widget)
+(ns scicloj.clay.v1.tool.scittle.widget
+  (:require [clojure.pprint :as pp]))
 
 (defn mark-plain-html [hiccup]
   (-> hiccup
@@ -28,6 +29,6 @@
 
 (defn naive [value]
   (-> value
-      println
+      pp/pprint
       with-out-str
       clojure))

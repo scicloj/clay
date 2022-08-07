@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [1-alpha15] - 2022-08-07
 - catching errors
-
+- pretty printing where appropriate
 
 ## [1-alpha14] - 2022-05-09
 - a slight change of the integration with CIDER/Calva (passing more info)
