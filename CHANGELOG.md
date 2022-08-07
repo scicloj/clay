@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [1-alpha15] - 2022-08-07
+- catching errors
+
+
 ## [1-alpha14] - 2022-05-09
 - a slight change of the integration with CIDER/Calva (passing more info)
 - making certain forms automatically hidden when showing a single value

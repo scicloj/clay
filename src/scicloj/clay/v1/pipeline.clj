@@ -54,11 +54,14 @@
 (defn handle-tap [{:keys [clay-tap? code-file form value]
                    :as dbg}]
   (when clay-tap?
-    (process!
-     {:event-type :event-type/value
-      :code (some-> code-file slurp)
-      :form form
-      :value value
-      :source :tap})))
+    (try
+      (process!
+       {:event-type :event-type/value
+        :code (some-> code-file slurp)
+        :form form
+        :value value
+        :source :tap})
+      (catch Exception e
+        (println [:error-in-clay-pipeline e])))))
 
 (add-tap #'handle-tap)
