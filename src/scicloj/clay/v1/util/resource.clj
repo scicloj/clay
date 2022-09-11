@@ -1,4 +1,4 @@
-(ns scicloj.clay.v1.tool.scittle.resource
+(ns scicloj.clay.v1.util.resource
   (:require [scicloj.tempfiles.api :as tempfiles]))
 
 (def cached-resource
