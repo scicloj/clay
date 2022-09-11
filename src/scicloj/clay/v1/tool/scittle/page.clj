@@ -5,7 +5,7 @@
             [scicloj.clay.v1.tool.scittle.cljs-generation :as cljs-generation]
             [scicloj.clay.v1.tool.scittle.widget :as widget]
             [scicloj.clay.v1.tool.scittle.styles :as styles]
-            [scicloj.clay.v1.tool.scittle.resource :as resource]
+            [scicloj.clay.v1.util.resource :as resource]
             [scicloj.clay.v1.html.table :as table]))
 
 (def special-libs-set
