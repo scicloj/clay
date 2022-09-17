@@ -94,8 +94,8 @@
 
 ;; Clay can be started with the choice of desired tools to use, as well as extensions that take care of viewing certain datatypes appropriately.
 
-(clay/start! {:tools [tools/clerk
-                      tools/portal
+(clay/start! {:tools [;; tools/clerk
+                      ;; tools/portal
                       tools/scittle]
               :extensions [extensions/dataset
                            extensions/clojisr]})
@@ -107,7 +107,8 @@
 ;; Restarting with a new choice of tools and extensions:
 
 (comment
-  (clay/restart! {:tools [tools/scittle]
+  (clay/restart! {:tools [tools/scittle
+                          tools/portal]
                   :extensions [extensions/dataset
                                extensions/clojisr]}))
 
@@ -310,7 +311,7 @@ some-hiccup
         :x {:field "x", :type "quantitative"},
         :y {:field "y", :type "quantitative"},
         :fill {:field "z", :type "nominal"}}}
-      (kindly/consider kind/vega)))
+      kind/vega))
 
 (defn random-data [n]
   (->> (repeatedly n #(- (rand) 0.5))
