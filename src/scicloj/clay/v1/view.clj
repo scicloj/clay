@@ -25,7 +25,7 @@
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype
     'nextjournal.clerk/show! 'clerk/show!})
 
-(defn show! [value form tools]
+(defn prep-for-show [{:keys [value form]}]
   (let [kind-override (or (->> form
                                meta
                                keys
@@ -40,14 +40,21 @@
                   (or (kindly/kind value))
                   (= :kind/hidden))
       (let [value-to-show (deref-if-needed value)]
-        (doseq [tool tools]
-          (try
-            (tool/show! tool
-                        value-to-show
-                        kind-override)
-            (catch Exception e
-              (println ["Exception while trying to show value:"
-                        e]))))))))
+        {:value-to-show value-to-show
+         :kind-override kind-override}))))
+
+(defn show! [value form tools]
+  (when-let [{:keys [value-to-show kind-override]}
+             (prep-for-show {:value value
+                             :form form})]
+    (doseq [tool tools]
+      (try
+        (tool/show! tool
+                    value-to-show
+                    kind-override)
+        (catch Exception e
+          (println ["Exception while trying to show value:"
+                    e]))))))
 
 (defn setup-extension! [extension]
   (try (require (:ns extension))

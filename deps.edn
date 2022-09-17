@@ -3,12 +3,13 @@
         djblue/portal {:mvn/version "0.23.0"}
         io.github.nextjournal/clerk {:mvn/version "0.7.418"}
         metosin/jsonista {:mvn/version "0.3.5"}
-
         org.clojure/core.async {:mvn/version "1.1.587"}
         nrepl/nrepl       {:mvn/version "0.9.0"}
         org.scicloj/kindly {:mvn/version "2-alpha2"}
         com.kiranshila/cybermonday {:mvn/version "0.4.182"}
-        org.scicloj/tempfiles {:mvn/version "1-alpha2"}}
+        org.scicloj/tempfiles {:mvn/version "1-alpha2"}
+        carocad/parcera {:mvn/version "0.11.6"}
+        org.antlr/antlr4-runtime {:mvn/version "4.7.1"}}
  :aliases
  {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "6.076"}
                      scicloj/clojisr {:mvn/version "1.0.0-BETA19"}}}
