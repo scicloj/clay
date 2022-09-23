@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.tool.scittle.view
   (:require [scicloj.clay.v2.tool.scittle.widget :as widget]
-            [scicloj.kindly.v2.api :as kindly]
+            [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.html.table :as table]
             [cybermonday.core :as cybermonday]
             [clojure.string :as string]))

@@ -84,9 +84,9 @@
             [scicloj.clay.v2.tools :as tools]
             [scicloj.clay.v2.extensions :as extensions]
             [scicloj.clay.v2.tool.scittle :as scittle]
-            [scicloj.kindly.v2.api :as kindly]
-            [scicloj.kindly.v2.kind :as kind]
-            [scicloj.kindly.v2.kindness :as kindness]))
+            [scicloj.kindly.v3.api :as kindly]
+            [scicloj.kindly.v3.kind :as kind]
+            [scicloj.kindly.v3.kindness :as kindness]))
 
 ;; Clay can be started with the choice of desired tools to use, as well as extensions that take care of viewing certain datatypes appropriately.
 

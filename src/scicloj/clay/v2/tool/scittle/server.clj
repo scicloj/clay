@@ -2,7 +2,7 @@
   (:require [org.httpkit.server :as httpkit]
             [cognitect.transit :as transit]
             [clojure.java.browse :as browse]
-            [scicloj.kindly.v2.api :as kindly]
+            [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.tool.scittle.page :as page]
             [scicloj.clay.v2.tool.scittle.view :as view]))
 

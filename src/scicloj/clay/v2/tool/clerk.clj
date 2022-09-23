@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.tool.clerk
-  (:require [scicloj.kindly.v2.api :as kindly]
-            [scicloj.kindly.v2.kind :as kind]
+  (:require [scicloj.kindly.v3.api :as kindly]
+            [scicloj.kindly.v3.kind :as kind]
             [babashka.fs :as fs]
             [nextjournal.clerk :as clerk]
             [nextjournal.clerk.hashing :as hashing]

@@ -2,7 +2,7 @@
   (:require [scicloj.clay.v2.checks :as checks]
             [scicloj.clay.v2.pipeline :as pipeline]
             [scicloj.clay.v2.view.image]
-            [scicloj.kindly.v2.api :as kindly]))
+            [scicloj.kindly.v3.api :as kindly]))
 
 (->> [:kind/naive :kind/hiccup :kind/vega :kind/vega-lite :kind/table]
      (run! kindly/define-kind!))
@@ -18,7 +18,7 @@
 
 (defmacro capture-print
   [& body]
-  `(scicloj.kindly.v2.kind/naive
+  `(scicloj.kindly.v3.kind/naive
     [(let [s# (new java.io.StringWriter)]
        (binding [*out* s#]
          ~@body

@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.view
   (:require [scicloj.clay.v2.tool :as tool]
             [scicloj.clay.v2.view.image]
-            [scicloj.kindly.v2.api :as kindly]))
+            [scicloj.kindly.v3.api :as kindly]))
 
 (defn open! [tools]
   (doseq [tool tools]
@@ -19,7 +19,7 @@
       dv)
     v))
 
-(kindly/define-kind! :kind/hidden)
+(kindly/add-kind! :kind/hidden)
 
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype
@@ -29,7 +29,7 @@
   (let [kind-override (or (->> form
                                meta
                                keys
-                               (filter (kindly/kinds-set))
+                               (filter (kindly/known-kinds))
                                first)
                           (when (and (list? form)
                                      (-> form

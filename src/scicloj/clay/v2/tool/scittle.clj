@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.tool.scittle
-  (:require [scicloj.kindly.v2.api :as kindly]
-            [scicloj.kindly.v2.kind :as kind]
-            [scicloj.kindly.v2.kindness :as kindness]
+  (:require [scicloj.kindly.v3.api :as kindly]
+            [scicloj.kindly.v3.kind :as kind]
+            [scicloj.kindly.v3.kindness :as kindness]
             [scicloj.clay.v2.walk]
             [scicloj.clay.v2.tool :as tool]
             [hiccup.core :as hiccup]

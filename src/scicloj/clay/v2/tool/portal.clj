@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.tool.portal
   (:require [portal.api :as portal]
-            [scicloj.kindly.v2.api :as kindly]
+            [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.walk]
             [scicloj.clay.v2.tool :as tool]
             [scicloj.clay.v2.html.table :as table]))

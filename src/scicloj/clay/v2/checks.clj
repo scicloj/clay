@@ -1,5 +1,5 @@
 (ns scicloj.clay.v2.checks
-  (:require [scicloj.kindly.v2.api :as kindly]))
+  (:require [scicloj.kindly.v3.api :as kindly]))
 
 (defn bool->symbol [bool]
   [:big [:big (if bool
@@ -18,15 +18,15 @@
    (-> check
        check-boolean->hiccup)])
 
-(kindly/define-kind-behaviour!
-  :kind/check
-  {:portal.viewer (fn [value-and-check]
-                    (->> value-and-check
-                         value-and-check->hiccup
-                         (vector :portal.viewer/hiccup)))
-   :scittle.viewer (fn [value-and-check]
-                     (->> value-and-check
-                          value-and-check->hiccup))})
+#_(kindly/define-kind-behaviour!
+    :kind/check
+    {:portal.viewer (fn [value-and-check]
+                      (->> value-and-check
+                           value-and-check->hiccup
+                           (vector :portal.viewer/hiccup)))
+     :scittle.viewer (fn [value-and-check]
+                       (->> value-and-check
+                            value-and-check->hiccup))})
 
 (defn check [value & predicate-and-args]
   (-> {:value value
