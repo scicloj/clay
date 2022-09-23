@@ -80,10 +80,10 @@
 ;; Now, we can write a namespace and play with Clay.
 
 (ns intro
-  (:require [scicloj.clay.v1.api :as clay]
-            [scicloj.clay.v1.tools :as tools]
-            [scicloj.clay.v1.extensions :as extensions]
-            [scicloj.clay.v1.tool.scittle :as scittle]
+  (:require [scicloj.clay.v2.api :as clay]
+            [scicloj.clay.v2.tools :as tools]
+            [scicloj.clay.v2.extensions :as extensions]
+            [scicloj.clay.v2.tool.scittle :as scittle]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
             [scicloj.kindly.v2.kindness :as kindness]))
