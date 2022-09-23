@@ -22,8 +22,7 @@
 (kindly/add-kind! :kind/hidden)
 
 (def hidden-form-starters
-  #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype
-    'nextjournal.clerk/show! 'clerk/show!})
+  #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
 
 (defn prep-for-show [{:keys [value form]}]
   (let [kind-override (or (->> form
