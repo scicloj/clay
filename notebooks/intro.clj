@@ -6,7 +6,7 @@
 
 ;; ## What is it?
 
-;; [Clay](https://github.com/scicloj/clay) is a Clojure tool for data visualization and literate programming, offering a dynamic workflow compabible with popular visual tools & libraries such as [Portal](https://github.com/djblue/portal), [Clerk](https://github.com/nextjournal/clerk), and [Scittle](https://github.com/babashka/scittle). Here, by visual tools we mean tools for data visualization and literate programming.
+;; [Clay](https://github.com/scicloj/clay) is a Clojure tool for data visualization and literate programming, offering a dynamic workflow aiming to be compatible with other popular visual tools & libraries.
 
 ;; It is one of the fruits of our explorations at the [visual-tools-group](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
@@ -89,14 +89,11 @@
             [scicloj.clay.v1.tool.scittle :as scittle]
             [scicloj.kindly.v2.api :as kindly]
             [scicloj.kindly.v2.kind :as kind]
-            [scicloj.kindly.v2.kindness :as kindness]
-            [nextjournal.clerk :as clerk]))
+            [scicloj.kindly.v2.kindness :as kindness]))
 
 ;; Clay can be started with the choice of desired tools to use, as well as extensions that take care of viewing certain datatypes appropriately.
 
-(clay/start! {:tools [;; tools/clerk
-                      ;; tools/portal
-                      tools/scittle]
+(clay/start! {:tools [tools/scittle]
               :extensions [extensions/dataset
                            extensions/clojisr]})
 
@@ -107,21 +104,9 @@
 ;; Restarting with a new choice of tools and extensions:
 
 (comment
-  (clay/restart! {:tools [tools/scittle
-                          tools/portal]
+  (clay/restart! {:tools [tools/scittle]
                   :extensions [extensions/dataset
                                extensions/clojisr]}))
-
-;; Showing the usual Clerk view of a whole namespace:
-
-(comment
-  (kind/hidden
-   [(clerk/show! "notebooks/intro.clj")]))
-
-;; Static rendering in Clerk:
-
-(comment
-  (clerk/build-static-app! {:paths ["notebooks/intro.clj"]}))
 
 ;; Showing the whole namespace using Scittle:
 (comment

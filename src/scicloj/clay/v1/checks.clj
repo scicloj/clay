@@ -1,6 +1,5 @@
 (ns scicloj.clay.v1.checks
-  (:require [scicloj.kindly.v2.api :as kindly]
-            [nextjournal.clerk :as clerk]))
+  (:require [scicloj.kindly.v2.api :as kindly]))
 
 (defn bool->symbol [bool]
   [:big [:big (if bool
@@ -25,10 +24,6 @@
                     (->> value-and-check
                          value-and-check->hiccup
                          (vector :portal.viewer/hiccup)))
-   :clerk.viewer (fn [value-and-check]
-                   (->> value-and-check
-                        value-and-check->hiccup
-                        clerk/html))
    :scittle.viewer (fn [value-and-check]
                      (->> value-and-check
                           value-and-check->hiccup))})
