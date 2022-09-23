@@ -16,33 +16,30 @@
 
 ;; * *Easily* **explore & share** things for others to *easily* **pick & use**.
 
-;; Small examples, library tutorials, research reports, etc., should be easily shareable as code that renders to visual documents. Not only sharing things should be obvious, but also using the shared things.
+;;   * Small examples, library tutorials, research reports, etc., should be shareable as code that renders to visual documents, that others can use.
 
 ;; * In **common** use cases, have **compatible** experiences at the relevant tools.
 
-;; Common visualizations such as images, tables, Vega/Vega-Lite plots, plain Clojure data structures, etc., should be describeable in a way that can just work in all relevant tools (e.g., Portal, Clerk) without any code change between tools.
-
-;; * In **all** use cases, be able to use **the best** tools.
-
-;; Achieving such compatibility across tools in common cases should not limit the use of the tools in any case. In all cases, it should be possible to use the best of the amazing features of tools such as Portal & Clerk.
+;;   * Common visualizations such as images, tables, Vega/Vega-Lite plots, plain Clojure data structures, etc., should be describeable in a way that other visual tools can interpret correctly.
 
 ;; * **Flow** with the REPL.
 
-;; We wish to encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs, editing and evaluating Clojure forms.
+;;   * We wish to encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs, editing and evaluating Clojure forms.
 
 ;; ### The stack
 
 ;; Clay is part of a stack of libraries seeking easy experience with common data-centric tasks.
-;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library  for specifying the kind of way different things should be viewed
-;; - [Clay](https://github.com/scicloj/clay) - a dynamic workflow for visual exploration & documentation, combining different tools using Kindly
+;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library  for specifying the kind of way things should be viewed
+;; - [Clay](https://github.com/scicloj/clay) - a dynamic workflow for visual exploration & documentation
 ;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations on top of [Hanami](https://github.com/jsa-aerial/hanami), which is Kindly-aware, and thus fits nicely with Clay
 
 ;; ## Setup
 
-;; For Clay to work, we need to be able to inform it about code evaluations. This requires some setup specific to your editor.
-;; (This is needed only for enjoying Clay's dynamic interaction. For rendering of a whole document, it is not needed.)
-
-;; If your Clojure environment is not supported yet, let us talk and make it work.
+;; For rendering documents like this one with Clay, one only needs to add it as a dependency to your project.
+;;
+;; To enjoy Clay's dynamic interaction, it is also needed to inform it about code evaluations. This requires some setup at the editor.
+;;
+;; See some suggested setup at popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
 
 ;; ### Calva
 
