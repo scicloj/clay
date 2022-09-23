@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha1-SNAPSHOT]
 - rendeding documents without relying on Clerk
+- switched to clay.v2 namespaces
 
 ## [1-alpha15] - 2022-08-07
 - catching errors
