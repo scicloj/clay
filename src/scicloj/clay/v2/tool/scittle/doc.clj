@@ -1,6 +1,5 @@
 (ns scicloj.clay.v2.tool.scittle.doc
   (:require [scicloj.kindly.v3.kind :as kind]
-            ;; [nextjournal.clerk :as clerk]
             [nextjournal.markdown.transform]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.view :as view]

@@ -20,11 +20,7 @@
 
 #_(kindly/define-kind-behaviour!
     :kind/check
-    {:portal.viewer (fn [value-and-check]
-                      (->> value-and-check
-                           value-and-check->hiccup
-                           (vector :portal.viewer/hiccup)))
-     :scittle.viewer (fn [value-and-check]
+    {:scittle.viewer (fn [value-and-check]
                        (->> value-and-check
                             value-and-check->hiccup))})
 

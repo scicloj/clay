@@ -10,19 +10,6 @@
 
 (kindly/define-kind-behaviour!
   :kind/dataset
-  {:portal.viewer (fn [v]
-                    [:portal.viewer/table
-                     (seq (tmd/mapseq-reader v))])})
-
-(kindly/define-kind-behaviour!
-  :kind/dataset
-  {:clerk.viewer (fn [v]
-                   #:nextjournal{:value {:head (tmd/column-names v)
-                                         :rows (vec (tmd/rowvecs v))}
-                                 :viewer :table})})
-
-(kindly/define-kind-behaviour!
-  :kind/dataset
   {:scittle.viewer (fn [v]
                      (-> v
                          println
