@@ -19,13 +19,13 @@
        (map (fn [form]
               (let [{:keys [line column
                             end-line end-column
-                            source]}
+                            code]}
                     (meta form)]
                 (when line ; skip forms with no location info
                   {:method :tools-reader
                    :region [line column
                             end-line end-column]
-                   :source source
+                   :code (-> form meta :source)
                    :meta (meta form)
                    :form form}))))
        (filter some?)))
@@ -41,8 +41,8 @@
                 ;; code blocks, that tools.reader does not
                 ;; provide location info for.
                 (some->> (when (#{:number :string :symbol :keyword :comment}
-                              node-type)
-                           {:source (first node-contents)})
+                                node-type)
+                           {:code (first node-contents)})
                          (merge {:method :parcera
                                  :region (->> node
                                               meta
@@ -65,13 +65,13 @@
                               last
                               :region
                               (drop 2))))
-   :source (->> comment-blocks-sorted-by-region
-                (map :source)
-                (string/join "\n"))
+   :code (->> comment-blocks-sorted-by-region
+              (map :code)
+              (string/join "\n"))
    :comment? true})
 
-(defn ->notes [source]
-  (->> source
+(defn ->notes [code]
+  (->> code
        ((juxt read-by-tools-reader read-by-parcera))
        (apply concat)
        (group-by :region)
@@ -95,9 +95,9 @@
                      (assoc :gen g)))))))
 
 
-(defn ->safe-notes [source]
+(defn ->safe-notes [code]
   (try
-    (->notes source)
+    (->notes code)
     (catch Exception e
       (println :invalid-notes (-> e
                                   Throwable->map

@@ -31,6 +31,7 @@
          value1))
      value)))
 
+
 (declare prepare-vector)
 (declare prepare-seq)
 (declare prepare-map)
@@ -51,6 +52,8 @@
            (seq? value) (prepare-seq value)
            (map? value) (prepare-map value)
            :else (widget/pprint value)))))
+
+
 
 (defn prepare-value [v]
   (prepare {:value v}))
@@ -165,14 +168,13 @@
 
 (add-viewer!
  :kind/md
- {:scittle.viewer render-md})
+ render-md)
 
 
 (add-viewer!
  :kind/table-md
- {:scittle.viewer
-  (fn [v]
-    [:code (render-md v)])})
+ (fn [v]
+   [:code (render-md v)]))
 
 (add-viewer!
  :kind/table

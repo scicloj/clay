@@ -19,9 +19,6 @@
       dv)
     v))
 
-(def hidden-form-starters
-  #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
-
 (defn show! [context tools]
   (when-not (-> context
                 :value

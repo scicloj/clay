@@ -81,29 +81,18 @@
 
 (ns intro
   (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.clay.v2.tools :as tools]
-            [scicloj.clay.v2.extensions :as extensions]
             [scicloj.clay.v2.tool.scittle :as scittle]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.kindly.v3.kind :as kind]
             [scicloj.kindly.v3.kindness :as kindness]))
 
-;; Clay can be started with the choice of desired tools to use, as well as extensions that take care of viewing certain datatypes appropriately.
+;; Let us start Clay.
 
-(clay/start! {:tools [tools/scittle]
-              :extensions [extensions/dataset
-                           extensions/clojisr]})
+(clay/start!)
 
 ;; The view of those tools should open automatically (e.g., a Portal window, a Clerk tab in the browser, and a Clay tab with a Scittle-based HTML page).
 
 ;; ## A few useful actions
-
-;; Restarting with a new choice of tools and extensions:
-
-(comment
-  (clay/restart! {:tools [tools/scittle]
-                  :extensions [extensions/dataset
-                               extensions/clojisr]}))
 
 ;; Showing the whole namespace using Scittle:
 (comment
@@ -114,10 +103,6 @@
 (comment
   (do (scittle/show-doc! "notebooks/intro.clj")
       (scittle/write-html! "docs/index.html")))
-
-;; ## Tools
-
-;; Tools (e.g., `tools/clerk` and `tools/portal` above) are reifications of the `Tool` protocol, that defines common behaviours of tools.
 
 ;; ## Interaction
 
@@ -275,14 +260,6 @@ some-hiccup
      :y [:A :B :C]}
     tc/dataset
     kind/pprint)
-
-;; ### RObjects (ClijisR)
-
-;; For [ClojisR](https://github.com/scicloj/clojisr) `RObjects` (which are Clojure handles to objects of the R language) to render coodectly, it is necessary to use the `clojisr` extension when starting Clay (see above), and to have ClojisR as a dependency of the project.
-
-(require '[clojisr.v1.r :as r])
-
-(r/r '(rnorm 9))
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
