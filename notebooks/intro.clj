@@ -162,7 +162,8 @@
 (->> [(-> some-hiccup kind/hiccup)
       (-> some-hiccup (kindly/consider kind/hiccup))
       (-> some-hiccup (kindly/consider :kind/hiccup))]
-     (map kindly/kind))
+     (map (fn [value]
+            (kindly/advice {:value value}))))
 
 ;; Actually, in all these cases, the kind is represeted using metadata attached to the value:
 
@@ -195,17 +196,17 @@ some-hiccup
 (->> (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)
      (satisfies? kindness/Kindness))
 
-(-> (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)
-    kindly/kind)
+(-> {:value (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)}
+    kindly/advice)
 
 ;; ## Useful kinds defined in Clay
 
-;; ### Naive
+;; ### PPrint
 
-;; The naive kind just uses the usual printing of the value, in any tool.
+;; The pprint kind means the value should be pretty-printed.
 
 (-> {:x 9}
-    kind/naive)
+    kind/pprint)
 
 ;; ### Hiccup
 
@@ -268,12 +269,12 @@ some-hiccup
      :y [:A :B :C]}
     tc/dataset)
 
-;; For now, cases of this kind can be handled by the user by naive rendering of the printed output:
+;; For now, cases of this kind can be handled by the user by just printing the value:
 
 (-> {:x [1 [2 3] 4]
      :y [:A :B :C]}
     tc/dataset
-    kind/naive)
+    kind/pprint)
 
 ;; ### RObjects (ClijisR)
 

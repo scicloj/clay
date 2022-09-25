@@ -20,8 +20,8 @@
       (server/open!))
     (close! [this]
       (server/close!))
-    (show! [this value kind-override]
-      (server/show! value kind-override))))
+    (show! [this context]
+      (server/show! context))))
 
 (defn show-widgets!
   ([widgets]

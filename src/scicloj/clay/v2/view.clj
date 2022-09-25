@@ -19,40 +19,20 @@
       dv)
     v))
 
-(kindly/add-kind! :kind/hidden)
-
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
 
-(defn prep-for-show [{:keys [value form]}]
-  (let [kind-override (or (->> form
-                               meta
-                               keys
-                               (filter (kindly/known-kinds))
-                               first)
-                          (when (and (list? form)
-                                     (-> form
-                                         first
-                                         hidden-form-starters))
-                            :kind/hidden))]
-    (when-not (-> kind-override
-                  (or (kindly/kind value))
-                  (= :kind/hidden))
-      (let [value-to-show (deref-if-needed value)]
-        {:value-to-show value-to-show
-         :kind-override kind-override}))))
-
-(defn show! [value form tools]
-  (when-let [{:keys [value-to-show kind-override]}
-             (prep-for-show {:value value
-                             :form form})]
+(defn show! [context tools]
+  (when-not (-> context
+                :value
+                meta
+                :kindly/kind
+                (= :kind/hidden))
     (doseq [tool tools]
       (try
-        (tool/show! tool
-                    value-to-show
-                    kind-override)
+        (tool/show! tool context)
         (catch Exception e
-          (println ["Exception while trying to show value:"
+          (println ["Exception while trying to show a value:"
                     e]))))))
 
 (defn setup-extension! [extension]

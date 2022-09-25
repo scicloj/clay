@@ -5,7 +5,7 @@
 
 (defn handle-value [{:keys [form value] :as event}
                     tools]
-  (view/show! value form tools))
+  (view/show! event tools))
 
 (defn create-handler [tools]
   (fn [{:keys [event-type]

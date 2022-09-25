@@ -6,4 +6,4 @@
 (extend-protocol kindness/Kindness
   clojisr.v1.robject.RObject
   (kind [robject]
-    :kind/naive))
+    :kind/pprint))

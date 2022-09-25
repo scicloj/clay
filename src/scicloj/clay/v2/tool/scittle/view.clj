@@ -5,19 +5,30 @@
             [cybermonday.core :as cybermonday]
             [clojure.string :as string]))
 
+(def *kind->viewer
+  (atom {}))
 
+(defn add-viewer!
+  [kind viewer]
+  (kindly/add-kind! kind)
+  (swap! *kind->viewer assoc kind viewer))
 
+(defn value->kind [v]
+  (-> {:value v}
+      kindly/advice
+      :kind))
 
 (defn maybe-apply-viewer
-  ([value]
-   (maybe-apply-viewer value (kindly/kind value)))
-  ([value kind]
-   (if-let [viewer (-> kind kindly/kind->behaviour :scittle.viewer)]
-     (let [new-value (viewer value)
-           new-kind (kindly/kind new-value)]
-       (if (some-> new-kind (not= kind))
-         (maybe-apply-viewer new-value new-kind)
-         new-value))
+  ([{:as context
+     :keys [value kind]}]
+   (if-let [viewer (@*kind->viewer kind)]
+     (let [value1 (viewer value)
+           kind1 (value->kind value1)]
+       (if (some-> kind1 (not= kind))
+         (maybe-apply-viewer (assoc context
+                                    :value value1
+                                    :kind kind1))
+         value1))
      value)))
 
 (declare prepare-vector)
@@ -29,87 +40,85 @@
   (and (vector? v)
        (-> v first (= :div))))
 
+
 (defn prepare
-  ([value]
-   (prepare value nil))
-  ([value kind-override]
-   (-> (let [kind (or kind-override
-                      (kindly/kind value))]
-         (cond (div? value) (prepare-div value)
-               kind (maybe-apply-viewer value kind)
-               (vector? value) (prepare-vector value)
-               (seq? value) (prepare-seq value)
-               (map? value) (prepare-map value)
-               :else (widget/naive value)))
-       ;; keep all metadata except for maybe the kind,
-       ;; that might have been replaced
-       (vary-meta merge
-                  (-> value meta (dissoc :kindly/kind))))))
+  ([context]
+   (let [{:as context1
+          :keys [value kind]} (kindly/advice context)]
+     (cond kind (maybe-apply-viewer context1)
+           (div? value) (prepare-div value)
+           (vector? value) (prepare-vector value)
+           (seq? value) (prepare-seq value)
+           (map? value) (prepare-map value)
+           :else (widget/pprint value)))))
+
+(defn prepare-value [v]
+  (prepare {:value v}))
 
 (defn prepare-div [v]
-  (let [kind (kindly/kind v)]
+  (let [kind (value->kind v)]
     (-> (let [r (rest v)
               fr (first r)]
           (if (map? fr)
             (->> r
                  rest
                  (map (fn [subv]
-                        (if (or (kindly/kind subv)
+                        (if (or (value->kind subv)
                                 (div? subv))
-                          (prepare subv)
+                          (prepare-value subv)
                           subv)))
                  (into [:div fr]))
             (->> r
                  (map (fn [subv]
-                        (if (or (kindly/kind subv)
+                        (if (or (value->kind subv)
                                 (div? subv))
-                          (prepare subv)
+                          (prepare-value subv)
                           subv)))
                  (into [:div]))))
         (maybe-apply-viewer kind))))
 
 (defn prepare-vector [value]
   (if (->> value
-           (some kindly/kind))
+           (some value->kind))
     [:div
      (widget/structure-mark "[")
      (->> value
-          (map prepare)
+          (map prepare-value)
           (into [:div
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "]")]
     ;; else
-    (widget/naive value)))
+    (widget/pprint value)))
 
 (defn prepare-seq [value]
   (if (->> value
-           (some kindly/kind))
+           (some value->kind))
     [:div
      (widget/structure-mark "(")
      (->> value
-          (map prepare)
+          (map prepare-value)
           (into [:div
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark ")")]
     ;; else
-    (widget/naive value)))
+    (widget/pprint value)))
 
 (defn prepare-map [value]
   (if (or (->> value
                vals
-               (some kindly/kind))
+               (some value->kind))
           (->> value
                keys
-               (some kindly/kind)))
+               (some value->kind)))
     [:div
      (widget/structure-mark "{")
      (->> value
           (map (fn [[k v]]
                  (if (->> [k v]
-                          (some kindly/kind))
+                          (some value->kind))
                    [:div
-                    (prepare k)
-                    (prepare v)]
+                    (prepare-value k)
+                    (prepare-value v)]
                    ;; else
                    (->> [k v]
                         (map pr-str)
@@ -119,7 +128,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "}")]
     ;; else
-    (widget/naive value)))
+    (widget/pprint value)))
 
 (defn expand-options-if-vector [component-symbol options]
   (cond ;;
@@ -133,11 +142,13 @@
     [component-symbol (list 'quote options)]))
 
 
-(kindly/define-kind-behaviour! :kind/naive
-  {:scittle.viewer widget/naive})
+(add-viewer!
+ :kind/pprint
+ widget/pprint)
 
-(kindly/define-kind-behaviour! :kind/hiccup
-  {:scittle.viewer (fn [v] v)})
+(add-viewer!
+ :kind/hiccup
+ (fn [v] v))
 
 (defn render-md [v]
   (->> v
@@ -152,52 +163,68 @@
        (into [:div])
        widget/mark-plain-html))
 
-(kindly/define-kind-behaviour! :kind/md
-  {:scittle.viewer render-md})
+(add-viewer!
+ :kind/md
+ {:scittle.viewer render-md})
 
 
-(kindly/define-kind-behaviour! :kind/table-md
-  {:scittle.viewer
-   (fn [v]
-     [:code (render-md v)])})
+(add-viewer!
+ :kind/table-md
+ {:scittle.viewer
+  (fn [v]
+    [:code (render-md v)])})
 
-(kindly/define-kind-behaviour! :kind/table
-  {:scittle.viewer
-   (fn [table-spec]
-     [:div
-      (let [hiccup (table/->table-hiccup
-                    table-spec)]
-        (if (or (some-> table-spec
-                        :row-maps
-                        count
-                        (> 20))
-                (some-> table-spec
-                        :row-vectors
-                        count
-                        (> 20)))
-          ['datatables hiccup]
-          hiccup))])})
+(add-viewer!
+ :kind/table
+ (fn [table-spec]
+   [:div
+    (let [hiccup (table/->table-hiccup
+                  table-spec)]
+      (if (or (some-> table-spec
+                      :row-maps
+                      count
+                      (> 20))
+              (some-> table-spec
+                      :row-vectors
+                      count
+                      (> 20)))
+        ['datatables hiccup]
+        hiccup))]))
 
+(add-viewer!
+ :kind/vega
+ (fn [spec]
+   [:div
+    ['vega (list 'quote spec)]]))
 
+(add-viewer!
+ :kind/cytoscape
+ (partial
+  expand-options-if-vector
+  'cytoscape))
 
-(kindly/define-kind-behaviour! :kind/vega
-  {:scittle.viewer (fn [spec]
-                     [:div
-                      ['vega (list 'quote spec)]])})
+(add-viewer!
+ :kind/echarts
+ (partial
+  expand-options-if-vector
+  'echarts))
 
-(kindly/define-kind-behaviour! :kind/cytoscape
-  {:scittle.viewer  (partial
-                     expand-options-if-vector
-                     'cytoscape)})
+(add-viewer!
+ :kind/code
+ (fn [codes]
+   (->> codes
+        (map widget/code)
+        (into [:div])
+        widget/mark-plain-html)))
 
-(kindly/define-kind-behaviour! :kind/echarts
-  {:scittle.viewer (partial
-                    expand-options-if-vector
-                    'echarts)})
-
-(kindly/define-kind-behaviour! :kind/code
-  {:scittle.viewer (fn [codes]
-                     (->> codes
-                          (map widget/code)
-                          (into [:div])
-                          widget/mark-plain-html))})
+(add-viewer!
+ :kind/dataset
+ (fn [v]
+   (-> v
+       println
+       with-out-str
+       vector
+       (kindly/consider :kind/table-md))
+   #_(-> {:column-names (tmd/column-names v)
+          :row-vectors (vec (tmd/rowvecs v))}
+         (kindly/consider :kind/table))))

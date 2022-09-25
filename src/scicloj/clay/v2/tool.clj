@@ -4,4 +4,4 @@
   (setup! [this config])
   (open! [this])
   (close! [this])
-  (show! [this value kind-override]))
+  (show! [this context]))

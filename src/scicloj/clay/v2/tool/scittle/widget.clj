@@ -27,7 +27,7 @@
    [:div string]
    #_[:big string]))
 
-(defn naive [value]
+(defn pprint [value]
   (-> value
       pp/pprint
       with-out-str
