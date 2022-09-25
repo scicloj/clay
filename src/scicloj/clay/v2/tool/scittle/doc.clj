@@ -18,7 +18,7 @@
 (defn show-doc!
   ([path]
    (show-doc! path nil))
-  ([path {:keys [hide-code? hide-nils? hide-vars? hide-toc?
+  ([path {:keys [hide-code? hide-nils? hide-vars?
                  title toc?]}]
    (-> path
        slurp
@@ -33,7 +33,7 @@
                                  eval
                                  view/deref-if-needed)))))
             (mapcat (fn [{:as note
-                          :keys [comment? code form]}]
+                          :keys [comment? code form value]}]
                       (if comment?
                         [(-> code
                              (string/split #"\n")
@@ -52,58 +52,16 @@
                          (when-not (or
                                     (and (sequential? form)
                                          (-> form first hidden-form-starters))
-                                    (-> note :form meta :kind/hidden))
+                                    (-> note :form meta :kind/hidden)
+                                    (and hide-nils? (nil? value))
+                                    (and hide-vars? (var? value))
+                                    (:nippy/unthawable value))
                            [:div (-> note
                                      (select-keys [:value :code :form])
                                      scittle.view/prepare)])]))))
        doall
-       (#(scittle.server/show-widgets! % {:title path
+       (#(scittle.server/show-widgets! % {:title (or title path)
                                           :toc? toc?})))))
-
-
-
-#_
-(let [path "notebook/intro.clj"
-      {:keys [hide-code? hide-nils? hide-vars? hide-toc? title]} nil]
-  (->> path
-       clerk-eval
-       :blocks
-       (mapcat (fn [block]
-                 (case (:type block)
-                   :code (when-not (-> block
-                                       :form
-                                       meta
-                                       :kind/hidden)
-                           (-> (concat (when-not hide-code?
-                                         [(-> block
-                                              :text
-                                              vector
-                                              kind/code
-                                              view/prepare)])
-                                       (let [value (-> block
-                                                       :result
-                                                       :nextjournal/value
-                                                       ((fn [v]
-                                                          (-> v
-                                                              :nextjournal.clerk/var-from-def
-                                                              (or v))))
-                                                       scicloj.clay.v1.view/deref-if-needed)]
-                                         (when-not (or (and hide-nils? (nil? value))
-                                                       (and hide-vars? (var? value))
-                                                       (:nippy/unthawable value))
-                                           [(->> block
-                                                 :text
-                                                 kindly/code->kind
-                                                 (view/prepare value))])))))
-                   :markdown [(some-> block
-                                      :doc
-                                      nextjournal.markdown.transform/->hiccup
-                                      kind/hiccup
-                                      widget/mark-plain-html)])))))
-
-
-
-
 
 
 
