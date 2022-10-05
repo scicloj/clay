@@ -125,7 +125,8 @@ code {
                                          [:div {:style {:margin "15px"}}
                                           (if (widget/plain-html? widget)
                                             widget
-                                            [:div {:id (str "widget" i)}])]))
+                                            [:div {:id (str "widget" i)}
+                                             "..."])]))
                                       (into [:div]))]]]]]
                             (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
                                                   "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
