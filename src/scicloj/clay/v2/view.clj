@@ -35,9 +35,10 @@
 (defn setup-extension! [extension]
   (try (require (:ns extension))
        (catch Exception e
-         (throw (ex-info
-                 "Failed to setup extension. Have you included the necessary dependencies in your project?"
-                 {:extension extension})))))
+         (-> ["Extension unavailable:"
+              (select-keys extension [:name :info])]
+             pr-str
+             println))))
 
 (defn setup! [{:keys [tools extensions events-source]
                :as config}]
