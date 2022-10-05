@@ -29,15 +29,5 @@
   ([widgets options]
    (server/show-widgets! widgets options)))
 
-(defn show-doc!
-  ([path]
-   (doc/show-doc! path))
-  ([path options]
-   (doc/show-doc! path options)))
-
-(defn write-html!
-  [path]
-  (server/write-html! path))
-
 ;; It is convenient to refresh all clients on re-evaluation.
 (server/broadcast! "refresh")

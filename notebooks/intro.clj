@@ -11,11 +11,10 @@
 
 ;; ## What is it?
 
-;; [Clay](https://github.com/scicloj/clay) is a Clojure tool for data visualization and literate programming, offering a dynamic workflow aiming to be compatible with other popular visual tools & libraries.
+;; [Clay](https://github.com/scicloj/clay) is a Clojure tool for data visualization and literate programming,
+;; which is compatible with the [Kindly](https://github.com/scicloj/kindly) convention.
 
 ;; It is one of the fruits of our explorations at the [visual-tools-group](https://scicloj.github.io/docs/community/groups/visual-tools/).
-
-;; This document has been created using Clay.
 
 ;; ### Goals
 
@@ -34,17 +33,17 @@
 ;; ### The stack
 
 ;; Clay is part of a stack of libraries seeking easy experience with common data-centric tasks.
-;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library  for specifying the kind of way things should be viewed
+;; - [Kindly](https://github.com/scicloj/kindly) - a tiny library for specifying the kind of way things should be viewed
 ;; - [Clay](https://github.com/scicloj/clay) - a dynamic workflow for visual exploration & documentation
 ;; - [Viz.clj](https://github.com/scicloj/viz.clj) - a (work-in-progress) library for easy data visualizations on top of [Hanami](https://github.com/jsa-aerial/hanami), which is Kindly-aware, and thus fits nicely with Clay
 
 ;; ## Setup
 
-;; For rendering documents like this one with Clay, one only needs to add it as a dependency to your project.
+;; For rendering documents like this one with Clay, one only needs to add Clay as a dependency to your project.
 ;;
 ;; To enjoy Clay's dynamic interaction, it is also needed to inform it about code evaluations. This requires some setup at the editor.
 ;;
-;; See some suggested setup at popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
+;; See some suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
 
 ;; ### Calva
 
@@ -86,7 +85,6 @@
 
 (ns intro
   (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.clay.v2.tool.scittle :as scittle]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.kindly.v3.kind :as kind]
             [scicloj.kindly.v3.kindness :as kindness]))
@@ -95,19 +93,19 @@
 
 (clay/start!)
 
-;; The view of those tools should open automatically (e.g., a Portal window, a Clerk tab in the browser, and a Clay tab with a Scittle-based HTML page).
+;; The browser view should open automatically.
 
 ;; ## A few useful actions
 
-;; Showing the whole namespace using Scittle:
+;; Showing the whole namespace:
 (comment
-  (scittle/show-doc! "notebooks/intro.clj"))
+  (clay/show-doc! "notebooks/intro.clj"))
 
-;; Writing the Scittle-based document:
+;; Writing the document:
 
 (comment
-  (do (scittle/show-doc! "notebooks/intro.clj")
-      (scittle/write-html! "docs/index.html")))
+  (do (clay/show-doc! "notebooks/intro.clj")
+      (clay/write-html! "docs/index.html")))
 
 ;; ## Interaction
 
