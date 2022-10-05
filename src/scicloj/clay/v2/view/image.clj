@@ -14,7 +14,6 @@
 (scittle.view/add-viewer!
  :kind/buffered-image
  (fn [image]
-   [:img {:style {:width "100%"}
-          :src (-> image
+   [:img {:src (-> image
                    util.image/buffered-image->byte-array
                    util.image/byte-array->data-uri)}]))
