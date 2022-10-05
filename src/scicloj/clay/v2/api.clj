@@ -22,10 +22,12 @@
    (-> {:tools [tools/scittle]
         :extensions [extensions/dataset]}
        (merge config)
-       pipeline/start!)))
+       pipeline/start!)
+   [:ok]))
 
 (defn restart! [config ]
-  (pipeline/restart! config))
+  (pipeline/restart! config)
+  [:ok])
 
 (defmacro capture-print
   [& body]
