@@ -1,7 +1,12 @@
 ;; # Clay
 
-;; ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
-;;
+^:kindly/hide-code?
+(with-meta
+  [:img
+   {:style {:width "300px"}
+    :src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
+    :alt "quaternary clay in Estonia"}]
+  {:kindly/kind :kind/hiccup})
 ;; (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 ;; ## What is it?
@@ -236,8 +241,6 @@ some-hiccup
     (kindly/consider kind/table))
 
 ;; ### Datasets
-;; For [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets to render coodectly, it is necessary to use the `dataset` extension when starting Clay (see above), and to have tech.ml.dataset as a dependency of the project.
-
 ;; In this example, let us create a dataset using [Tablecloth](https://github.com/scicloj/tablecloth).
 
 (require '[tablecloth.api :as tc])
