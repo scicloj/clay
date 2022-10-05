@@ -7,10 +7,10 @@
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
             [scicloj.clay.v2.tool.scittle.widget :as scittle.widget]
             [scicloj.clay.v2.read]
-            [taoensso.nippy :as nippy]
             [clojure.string :as string]
             [nextjournal.markdown :as md]
-            [nextjournal.markdown.transform :as md.transform]))
+            [nextjournal.markdown.transform :as md.transform]
+            [hiccup.core :as hiccup]))
 
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
@@ -41,9 +41,9 @@
                                   (string/join "\n"))
                              md/parse
                              md.transform/->hiccup
-                             kind/hiccup
-                             #_scittle.widget/mark-plain-html)]
-                        [(when-not hide-code?
+                             scittle.widget/mark-plain-html)]
+                        [(when-not (or hide-code?
+                                       (-> form meta :kindly/hide-code?))
                            (-> {:value (-> note
                                            :code
                                            vector)
@@ -54,14 +54,12 @@
                                          (-> form first hidden-form-starters))
                                     (-> note :form meta :kind/hidden)
                                     (and hide-nils? (nil? value))
-                                    (and hide-vars? (var? value))
-                                    (:nippy/unthawable value))
+                                    (and hide-vars? (var? value)))
                            [:div (-> note
                                      (select-keys [:value :code :form])
                                      scittle.view/prepare)])]))))
        doall
-       (#(scittle.server/show-widgets! % {:title (or title path)
-                                          :toc? toc?})))))
+       (#(scittle.server/show-widgets! % {:title (or title path) :toc? toc?})))))
 
 
 
