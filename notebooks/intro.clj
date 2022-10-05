@@ -109,103 +109,46 @@
 
 ;; ## Interaction
 
-;; Clay is not supposed to interfere with the usual way of using tools. One can keep submitting values to Portal, showing files in Clerk, evaluating forms in CIDER or Calva, etc.
-
-;; But Clay adds something: it listens to user evaluations and reflects them visually in the chosen tools.
-
-;; If one has started Clay with `tools/clerk` and `tools/portal`, then after evaluation, the corresponding views (Clerk browser tab, Portal window) should show the evaluation result.
+;; Clay listens to user evaluations and reflects them visually.
 
 (+ 1 2)
 
-;; The way things should be visualized is determined by their so-called kinds.
+;; In Emacs CIDER, after evaluation of a form (or a region),
+;; the browser view should show the evaluation result.
+
+;; In VSCode Calva, a similar effect can be achieved
+;; using the dedicated command and keybinding defined above.
 
 ;; ## Kinds
 
-;; The Kindly library allows one to attach kinds to things. Those kinds can have certain behaviours defined for different tools. Thus, the specified kinds determine the way things are viewed.
+;; The way things should be visualized is determined by the
+;; [Kindly](https://github.com/scicloj/kindly) library.
 
-;; One can check the kind of a value using the `kindly/kind` function.
+;; Clay adopts Kindly's default advice, that will be demonstrated below.
+;; However, user-defined Kindly advices should work as well.
 
-;; There are a few ways to attach a kind to a value.
+;; Kindly advises tools (like Clay) about the kind of way a given context
+;; things should be displayed, by assigning to it a so-called kind.
 
-;; ### Value kind metadata
+;; Please refer to the Kindly documentation for details about specifying
+;; and using kinds.
 
-;; Let us look into this example in [Hiccup](https://github.com/weavejester/hiccup) notation.
+;; ## Examples
 
-(def some-hiccup
-  [:p {:style {:color "#c9a465"}}
-   [:big "hello"]])
+;; ### Plain values
 
-;; We wish to tell Clay that it is of kind `hiccup`.
+;; By default, when there is no kind information provided by Kindly,
+;; values are pretty-printed.
 
-;; Let us specify the kind for this value. We'll do it in three ways: by calling a kind, by considering it (using `kindly/consider`), or by considering the corresponding keyword.
-
-[(-> some-hiccup kind/hiccup)
- (-> some-hiccup (kindly/consider kind/hiccup))
- (-> some-hiccup (kindly/consider :kind/hiccup))]
-
-;; Notice how in all cases, the view is affected accordingly, as we just told Clay to treat the value as Hiccup notation for rendering HTML.
-
-;; Let us check the kind in all these cases:
-
-(->> [(-> some-hiccup kind/hiccup)
-      (-> some-hiccup (kindly/consider kind/hiccup))
-      (-> some-hiccup (kindly/consider :kind/hiccup))]
-     (map (fn [value]
-            (kindly/advice {:value value}))))
-
-;; Actually, in all these cases, the kind is represeted using metadata attached to the value:
-
-(->> [(-> some-hiccup kind/hiccup)
-      (-> some-hiccup (kindly/consider kind/hiccup))
-      (-> some-hiccup (kindly/consider :kind/hiccup))]
-     (map (fn [v]
-            (-> v
-                meta
-                :kindly/kind))))
-
-;; ### Code kind metadata
-
-;; Kind metadata can also attached to the code itself (rather than the resulting value).
-
-^:kind/hiccup
-some-hiccup
-
-^{:kind/hiccup true}
-some-hiccup
-
-;; (This option currently does not work in the `clerk` tool.)
-
-;; ### Kindness protocol
-
-;; Another way of specifying kind is implementing the `Kindness` protocol. For example, the Java `BufferedImage` class implements it in order to support viewing images.
-
-(import java.awt.image.BufferedImage)
-
-(->> (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)
-     (satisfies? kindness/Kindness))
-
-(-> {:value (BufferedImage. 16 16 BufferedImage/TYPE_INT_RGB)}
-    kindly/advice)
-
-;; ## Useful kinds defined in Clay
-
-;; ### PPrint
-
-;; The pprint kind means the value should be pretty-printed.
-
-(-> {:x 9}
-    kind/pprint)
+{:a {:b (range 9)}}
 
 ;; ### Hiccup
 
-(-> [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
-         {:color "#7F5F3F"}}
-     "hello"]
-    kind/hiccup)
+[:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
+     {:color "#7F5F3F"}}
+ "hello"]
 
 ;; ### Images
-
-;; Images are handled automatically (technically, this works since the `BufferedImage` class implements the `Kindness` protocol).
 
 (import java.awt.image.BufferedImage
         java.awt.Color
@@ -224,22 +167,29 @@ some-hiccup
 
 ;; ### Tables
 
-(-> {:column-names [:preferred-language :age]
-     :row-vectors (for [i (range 99)]
-                    [(["clojure" "clojurescript" "babashka"]
-                      (rand-int 3))
-                     (rand-int 100)])}
-    (kindly/consider kind/table))
+;; The `:kind/table` kind can be handy for an interactive table view.
 
-(-> {:column-names [:preferred-language :age]
-     :row-maps (for [i (range 99)]
-                 {:preferred-language (["clojure" "clojurescript" "babashka"]
-                                       (rand-int 3))
-                  :age (rand-int 100)})}
-    (kindly/consider kind/table))
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-vectors (for [i (range 99)]
+                 [(["clojure" "clojurescript" "babashka"]
+                   (rand-int 3))
+                  (rand-int 100)])})
+
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-maps (for [i (range 99)]
+              {:preferred-language (["clojure" "clojurescript" "babashka"]
+                                    (rand-int 3))
+               :age (rand-int 100)})})
 
 ;; ### Datasets
-;; In this example, let us create a dataset using [Tablecloth](https://github.com/scicloj/tablecloth).
+
+;; [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets use the default
+;; printing of the library, which is then rendered as Markdown
+;; (with some CSS styling).
+
+;; Let us create such a dataset using [Tablecloth](https://github.com/scicloj/tablecloth).
 
 (require '[tablecloth.api :as tc])
 
@@ -249,13 +199,13 @@ some-hiccup
 
 ;; #### Known issues
 
-;; With the current Markdown implementation used by `tool/scittle` (based on [Cybermonday](https://github.com/kiranshila/cybermonday)), brackets inside datasets cells are not visible.
+;; With the current Markdown implementation, used by Clay (based on [Cybermonday](https://github.com/kiranshila/cybermonday)), brackets inside datasets cells are not visible.
 
 (-> {:x [1 [2 3] 4]
      :y [:A :B :C]}
     tc/dataset)
 
-;; For now, cases of this kind can be handled by the user by just printing the value:
+;; For now, cases of this kind can be handled by the user by switching to the `:kind/pprint` kind.
 
 (-> {:x [1 [2 3] 4]
      :y [:A :B :C]}
@@ -346,8 +296,7 @@ some-hiccup
   (+ 1 2))
 
 (delay
-  (-> [:div [:big "hi......."]]
-      (kindly/consider kind/hiccup)))
+  [:div [:big "hi......."]])
 
 ;; ## Tests
 
