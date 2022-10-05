@@ -10,7 +10,8 @@
             [clojure.string :as string]
             [nextjournal.markdown :as md]
             [nextjournal.markdown.transform :as md.transform]
-            [hiccup.core :as hiccup]))
+            [hiccup.core :as hiccup]
+            [clojure.walk :as walk]))
 
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
@@ -38,10 +39,13 @@
                         [(-> code
                              (string/split #"\n")
                              (->> (map #(string/replace % #"^;*" ""))
-                                  (string/join "\n"))
-                             md/parse
-                             md.transform/->hiccup
-                             scittle.widget/mark-plain-html)]
+                                  (string/join "\n")
+                                  md/parse
+                                  md.transform/->hiccup
+                                  ;; TODO: How to handle these better?
+                                  ;; (:<> does not work in plain hiccup)
+                                  (walk/postwalk-replace {:<> :div})
+                                  scittle.widget/mark-plain-html))]
                         [(when-not (or hide-code?
                                        (-> form meta :kindly/hide-code?))
                            (-> {:value (-> note
@@ -60,7 +64,6 @@
                                      scittle.view/prepare)])]))))
        doall
        (#(scittle.server/show-widgets! % {:title (or title path) :toc? toc?})))))
-
 
 
 
