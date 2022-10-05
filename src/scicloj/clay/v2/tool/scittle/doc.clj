@@ -61,6 +61,7 @@
                                     (and hide-vars? (var? value)))
                            [:div (-> note
                                      (select-keys [:value :code :form])
+                                     (update :value view/deref-if-needed)
                                      scittle.view/prepare)])]))))
        doall
        (#(scittle.server/show-widgets! % {:title (or title path) :toc? toc?})))))

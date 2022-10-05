@@ -25,12 +25,15 @@
                 meta
                 :kindly/kind
                 (= :kind/hidden))
-    (doseq [tool tools]
-      (try
-        (tool/show! tool context)
-        (catch Exception e
-          (println ["Exception while trying to show a value:"
-                    e]))))))
+    (let [context-to-show
+          (-> context
+              (update :value deref-if-needed))]
+      (doseq [tool tools]
+        (try
+          (tool/show! tool context-to-show)
+          (catch Exception e
+            (println ["Exception while trying to show a value:"
+                      e])))))))
 
 (defn setup-extension! [extension]
   (try (require (:ns extension))
