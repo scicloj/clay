@@ -333,28 +333,4 @@ people-as-vectors
 
 ;; This would open the way for literate testing / testable documentation solutions, such as those we have been using in the past (e.g., in [tutorials](https://scicloj.github.io/clojisr/doc/clojisr/v1/tutorial-test/) of ClojisR using Notespace v2).
 
-;; ## Development
-
-;; The Clay project was created using [build-clj](https://github.com/seancorfield/build-clj).
-
-;; Run the project's tests.
-;; ```
-;; $ clojure -T:build test
-;; ```
-;; Run the project's CI pipeline and build a JAR.
-;; ```
-;; $ clojure -T:build ci
-;; ```
-;; Install it locally (requires the `ci` task be run first):
-;; ```
-;; $ clojure -T:build install
-;; ```
-;; Deploy it to Clojars -- needs `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment
-;; variables (requires the `ci` task be run first):
-;; ```
-;; $ clojure -T:build deploy
-;; ```
-
-;; Your library will be deployed to org.scicloj/clay on clojars.org by default.
-
 :bye
