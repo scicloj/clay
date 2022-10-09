@@ -332,20 +332,6 @@ people-as-vectors
 
 ;; This would open the way for literate testing / testable documentation solutions, such as those we have been using in the past (e.g., in [tutorials](https://scicloj.github.io/clojisr/doc/clojisr/v1/tutorial-test/) of ClojisR using Notespace v2).
 
-;; ## Nesting
-
-;; Different kinds of views should (eventually) nest correctly, thanks to the nesting support of Portal, Clerk, etc.
-
-;; Here are a few Vega-Lite specs (using the function defined above) inside a Hiccup block:
-
-(->> [10 100 1000]
-     (map (fn [n]
-            [:div {:style {:width "400px"}}
-             [:big (str "n=" n)]
-             (random-vega-plot n)]))
-     (into [:div]))
-
-
 ;; ## Development
 
 ;; The Clay project was created using [build-clj](https://github.com/seancorfield/build-clj).
