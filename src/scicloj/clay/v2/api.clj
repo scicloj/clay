@@ -18,19 +18,23 @@
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))
 
+(def base-config
+  {:tools [tools/scittle]
+   :extensions [extensions/dataset]})
+
 (defn start!
   ([]
    (start! {}))
   ([config]
-   (-> {:tools [tools/scittle]
-        :extensions [extensions/dataset]}
+   (-> base-config
        (merge config)
        pipeline/start!)
-   [:ok]))
+   :clay))
 
-(defn restart! [config ]
-  (pipeline/restart! config)
-  [:ok])
+(defn restart!
+  ([config]
+   (pipeline/restart! config)
+   :clay))
 
 (defmacro capture-print
   [& body]
