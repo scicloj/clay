@@ -41,7 +41,8 @@
                                   events-source)))
 
 (defn start! [config]
-  (if (:stop @*pipeline) ; already started, so just re-setup
+  (if (:stop @*pipeline)
+    ;; already started, so just re-setup
     (view/setup! config)
     ;; actually start it
     (restart! config)))
