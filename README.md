@@ -1,16 +1,14 @@
 # clay
 
-A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) with your favourite Clojure tools inside
+A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) for visual tasks
 
-Clay is a small Clojure tool for a dynamic workflow involving some of the more serious visual tools.
+Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 
 ## Resources
 
 * [Intro](https://scicloj.github.io/clay/)
-
-* [Clojure Asia talk 2022-04-16](https://www.youtube.com/watch?v=gFNPtgAw36k)
 
 * regular updates at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/)
 
