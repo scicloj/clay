@@ -343,8 +343,7 @@ people-as-vectors
             [:div {:style {:width "400px"}}
              [:big (str "n=" n)]
              (random-vega-plot n)]))
-     (into [:div])
-     kind/hiccup)
+     (into [:div]))
 
 
 ;; ## Development
