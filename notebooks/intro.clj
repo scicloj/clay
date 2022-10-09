@@ -353,14 +353,4 @@
 
 ;; Your library will be deployed to org.scicloj/clay on clojars.org by default.
 
-;; ## Planned features
-
-;; - a quick-start project template
-
-;; - client-server interactive widgets (for a proof-of-concept, see [the 2022-04-16 example project](https://github.com/scicloj/clay/tree/main/examples/example-project-20220416) and the [Clojure-Asia talk](https://www.youtube.com/watch?v=gFNPtgAw36k).)
-
-;; - presentation slides
-
-;; - more kinds of visualizations
-
 :bye
