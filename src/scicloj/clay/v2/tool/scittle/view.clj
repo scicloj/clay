@@ -51,8 +51,24 @@
            (vector? value) (prepare-vector value)
            (seq? value) (prepare-seq value)
            (map? value) (prepare-map value)
-           :else (widget/pprint value)))))
+           :else (widget/just-println value)))))
 
+
+                                        ; [:pre [:code.language-clojure "#<Atom@23b7d4be: 3>\n"]]
+
+;; {:port 1971,
+;;  :widgets [[:pre [:code.language-clojure "#<Atom@23b7d4be: 3>\n"]]],
+;;  :fns {},
+;;  :title "notebooks/intro.clj",
+;;  :toc? nil}>
+
+;; (atom 3)
+
+;; {:port 1971,
+;;  :widgets [[:pre [:code.language-clojure "#<Atom@a67b229: 3>\n"]]],
+;;  :fns {},
+;;  :title "notebooks/intro.clj",
+;;  :toc? nil}
 
 
 (defn prepare-value [v]
@@ -91,7 +107,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "]")]
     ;; else
-    (widget/pprint value)))
+    (widget/just-println value)))
 
 (defn prepare-seq [value]
   (if (->> value
@@ -104,7 +120,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark ")")]
     ;; else
-    (widget/pprint value)))
+    (widget/just-println value)))
 
 (defn prepare-map [value]
   (if (or (->> value
@@ -131,7 +147,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "}")]
     ;; else
-    (widget/pprint value)))
+    (widget/just-println value)))
 
 (defn expand-options-if-vector [component-symbol options]
   (cond ;;
@@ -144,6 +160,9 @@
     (map? options)
     [component-symbol (list 'quote options)]))
 
+(add-viewer!
+ :kind/println
+ widget/just-println)
 
 (add-viewer!
  :kind/pprint

@@ -138,11 +138,47 @@
 ;; ### Plain values
 
 ;; By default, when there is no kind information provided by Kindly,
-;; values are pretty-printed.
+;; values are printed.
 
-{:a {:b (range 9)}}
+(def people-as-maps
+  (->> (range 29)
+       (mapv (fn [i]
+               {:preferred-language (["clojure" "clojurescript" "babashka"]
+                                     (rand-int 3))
+                :age (rand-int 100)}))))
+
+(def people-as-vectors
+  (->> people-as-maps
+       (mapv (juxt :preferred-language :age))))
+
+people-as-maps
+
+people-as-vectors
+
+;; ### Pretty printing
+
+;; With the the `:kind/pprint` kind, values are pretty-printed.
+(kind/pprint people-as-maps)
+
+(kind/pprint people-as-vectors)
+
+;; ### Tables
+
+;; The `:kind/table` kind can be handy for an interactive table view.
+
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-vectors people-as-vectors})
+
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-maps people-as-maps})
+
+
 
 ;; ### Hiccup
+
+;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, is recognized automatically.
 
 [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
      {:color "#7F5F3F"}}
@@ -164,24 +200,6 @@
     bi))
 
 (a-piece-of-random-art (+ 40 (rand-int 90)))
-
-;; ### Tables
-
-;; The `:kind/table` kind can be handy for an interactive table view.
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-vectors (for [i (range 99)]
-                 [(["clojure" "clojurescript" "babashka"]
-                   (rand-int 3))
-                  (rand-int 100)])})
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-maps (for [i (range 99)]
-              {:preferred-language (["clojure" "clojurescript" "babashka"]
-                                    (rand-int 3))
-               :age (rand-int 100)})})
 
 ;; ### Datasets
 

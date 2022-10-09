@@ -27,6 +27,12 @@
    [:div string]
    #_[:big string]))
 
+(defn just-println [value]
+  (-> value
+      println
+      with-out-str
+      clojure))
+
 (defn pprint [value]
   (-> value
       pp/pprint
