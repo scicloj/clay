@@ -16,7 +16,9 @@
 
 (def *state
   (atom {:port default-port
-         :widgets []
+         :widgets [[:pre
+                    [:code.language-clojure
+                     ":ready\n"]]]
          :fns {}}))
 
 (defn routes [{:keys [:body :request-method :uri]
