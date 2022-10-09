@@ -54,47 +54,30 @@
            :else (widget/just-println value)))))
 
 
-                                        ; [:pre [:code.language-clojure "#<Atom@23b7d4be: 3>\n"]]
-
-;; {:port 1971,
-;;  :widgets [[:pre [:code.language-clojure "#<Atom@23b7d4be: 3>\n"]]],
-;;  :fns {},
-;;  :title "notebooks/intro.clj",
-;;  :toc? nil}>
-
-;; (atom 3)
-
-;; {:port 1971,
-;;  :widgets [[:pre [:code.language-clojure "#<Atom@a67b229: 3>\n"]]],
-;;  :fns {},
-;;  :title "notebooks/intro.clj",
-;;  :toc? nil}
-
-
 (defn prepare-value [v]
   (prepare {:value v}))
 
 (defn prepare-div [v]
-  (let [kind (value->kind v)]
-    (-> (let [r (rest v)
-              fr (first r)]
-          (if (map? fr)
-            (->> r
-                 rest
-                 (map (fn [subv]
-                        (if (or (value->kind subv)
-                                (div? subv))
-                          (prepare-value subv)
-                          subv)))
-                 (into [:div fr]))
-            (->> r
-                 (map (fn [subv]
-                        (if (or (value->kind subv)
-                                (div? subv))
-                          (prepare-value subv)
-                          subv)))
-                 (into [:div]))))
-        (maybe-apply-viewer kind))))
+  (maybe-apply-viewer
+   {:value (-> (let [r (rest v)
+                     fr (first r)]
+                 (if (map? fr)
+                   (->> r
+                        rest
+                        (map (fn [subv]
+                               (if (or (value->kind subv)
+                                       (div? subv))
+                                 (prepare-value subv)
+                                 subv)))
+                        (into [:div fr]))
+                   (->> r
+                        (map (fn [subv]
+                               (if (or (value->kind subv)
+                                       (div? subv))
+                                 (prepare-value subv)
+                                 subv)))
+                        (into [:div])))))
+    :kind (value->kind v)}))
 
 (defn prepare-vector [value]
   (if (->> value
