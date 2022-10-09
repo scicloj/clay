@@ -104,7 +104,8 @@
 ;; Writing the document:
 
 (comment
-  (do (clay/show-doc! "notebooks/intro.clj")
+  (do (clay/show-doc! "notebooks/intro.clj"
+                      {:toc? true})
       (clay/write-html! "docs/index.html")))
 
 ;; ## Interaction
