@@ -216,20 +216,9 @@ people-as-vectors
      :y [:A :B :C :A :B :C]}
     tc/dataset)
 
-;; #### Known issues
-
-;; With the current Markdown implementation, used by Clay (based on [Cybermonday](https://github.com/kiranshila/cybermonday)), brackets inside datasets cells are not visible.
-
 (-> {:x [1 [2 3] 4]
      :y [:A :B :C]}
     tc/dataset)
-
-;; For now, cases of this kind can be handled by the user by switching to the `:kind/pprint` kind.
-
-(-> {:x [1 [2 3] 4]
-     :y [:A :B :C]}
-    tc/dataset
-    kind/pprint)
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
