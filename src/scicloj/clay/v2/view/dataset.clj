@@ -4,11 +4,6 @@
             [scicloj.kindly.v3.kindness :as kindness]
             [scicloj.clay.v2.tool.scittle.view :as scittle.view]))
 
-(extend-protocol kindness/Kindness
-  tech.v3.dataset.impl.dataset.Dataset
-  (kind [this]
-    :kind/dataset))
-
 (scittle.view/add-viewer!
  :kind/dataset
  (fn [v]

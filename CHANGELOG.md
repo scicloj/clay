@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha3-SNAPSHOT]
+- adapting to Kindly changes
+
 ## [2-alpha2] - 2022-10-12
 - dropped the cybermonday dependency
 

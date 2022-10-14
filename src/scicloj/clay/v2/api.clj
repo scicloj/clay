@@ -13,7 +13,7 @@
 (->> [:kind/hidden :kind/pprint :kind/hiccup :kind/vega :kind/vega-lite :kind/table]
      (run! kindly/add-kind!))
 
-(kindly/set-only-advice! #'kindly.defaults/advice)
+(kindly.defaults/setup!)
 
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))
