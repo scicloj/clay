@@ -100,7 +100,7 @@ code {
                                  distinct
                                  (apply hiccup.page/include-css))
                             [:title (or title "Clay")]]
-                           [:body  {:style {:background "#ececec"
+                           [:body  {:style {:background "#fcfcfc"
                                             :font-family "'Roboto', sans-serif"
                                             :width "90%"
                                             :margin "auto"}
