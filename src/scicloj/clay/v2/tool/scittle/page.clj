@@ -78,7 +78,7 @@
                             (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
                             [:style "
 code {
-  font-family: Fira Code,Consolas,courier new;
+  font-family: Fira Code,monospace,Consolas,courier new;
   color: black;
   background-color: #f0f0f0;
   padding: 2px;
@@ -100,12 +100,10 @@ code {
                                  distinct
                                  (apply hiccup.page/include-css))
                             [:title (or title "Clay")]]
-                           [:body  {:style {
-                                            ;;:background "#f6f6f6"
-                                            ;;:font-family "'Roboto', sans-serif"
-                                            ;; :width "90%"
-                                            ;; :margin "auto"
-                                            }
+                           [:body  {:style {:background "#ececec"
+                                            :font-family "'Roboto', sans-serif"
+                                            :width "90%"
+                                            :margin "auto"}
                                     :data-spy "scroll"
                                     :data-target "#toc"}
                             [:div.container
