@@ -2,7 +2,8 @@
   (:require [scicloj.clay.v2.tool.scittle.widget :as widget]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.html.table :as table]
-            [cybermonday.core :as cybermonday]
+            [nextjournal.markdown :as md]
+            [nextjournal.markdown.transform :as md.transform]
             [clojure.string :as string]))
 
 (def *kind->viewer
@@ -163,8 +164,8 @@
               (->> md
                    println
                    with-out-str
-                   cybermonday/parse-md
-                   :body)))
+                   md/parse
+                   md.transform/->hiccup)))
        (into [:div])
        widget/mark-plain-html))
 

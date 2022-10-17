@@ -39,15 +39,15 @@
 
 ;; ## Setup
 
-;; For rendering documents like this one with Clay, one only needs to add Clay as a dependency to your project.
+;; For rendering documents like this one with Clay, you only need to add Clay as a dependency to your project.
 ;;
-;; To enjoy Clay's dynamic interaction, it is also needed to inform it about code evaluations. This requires some setup at the editor.
+;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
 ;;
-;; See some suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
+;; See the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
 
-;; ### Calva
+;; ### VSCode Calva
 
-;; Please add the following command to your keybindings (you may pick another key, of course). This command would evaluate a piece of code and send the result to be visualized in Clay.
+;; Please add the following command to your [`keybindings.json` file](https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization) at the VScode setup (you may pick another key, of course). This command would evaluate a piece of code and send the result to be visualized in Clay.
 
 ;; ```json
 ;; {
@@ -57,7 +57,7 @@
 ;;  }
 ;; ```
 
-;; ### CIDER
+;; ### Emacs CIDER
 
 ;; Please add the following to your Emacs configuration. It will make sure to inform Clay about all user evaluations of Clojure code.
 
@@ -104,12 +104,13 @@
 ;; Writing the document:
 
 (comment
-  (do (clay/show-doc! "notebooks/intro.clj")
+  (do (clay/show-doc! "notebooks/intro.clj"
+                      {:toc? true})
       (clay/write-html! "docs/index.html")))
 
 ;; ## Interaction
 
-;; Clay listens to user evaluations and reflects them visually.
+;; Clay responds to user evaluations by displaying the result visually.
 
 (+ 1 2)
 
@@ -215,20 +216,9 @@ people-as-vectors
      :y [:A :B :C :A :B :C]}
     tc/dataset)
 
-;; #### Known issues
-
-;; With the current Markdown implementation, used by Clay (based on [Cybermonday](https://github.com/kiranshila/cybermonday)), brackets inside datasets cells are not visible.
-
 (-> {:x [1 [2 3] 4]
      :y [:A :B :C]}
     tc/dataset)
-
-;; For now, cases of this kind can be handled by the user by switching to the `:kind/pprint` kind.
-
-(-> {:x [1 [2 3] 4]
-     :y [:A :B :C]}
-    tc/dataset
-    kind/pprint)
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
@@ -331,29 +321,5 @@ people-as-vectors
 ;; We are considering a so-called "doctest" setup involving such checks, so that actual Clojure tests would be derived automatically from them.
 
 ;; This would open the way for literate testing / testable documentation solutions, such as those we have been using in the past (e.g., in [tutorials](https://scicloj.github.io/clojisr/doc/clojisr/v1/tutorial-test/) of ClojisR using Notespace v2).
-
-;; ## Development
-
-;; The Clay project was created using [build-clj](https://github.com/seancorfield/build-clj).
-
-;; Run the project's tests.
-;; ```
-;; $ clojure -T:build test
-;; ```
-;; Run the project's CI pipeline and build a JAR.
-;; ```
-;; $ clojure -T:build ci
-;; ```
-;; Install it locally (requires the `ci` task be run first):
-;; ```
-;; $ clojure -T:build install
-;; ```
-;; Deploy it to Clojars -- needs `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment
-;; variables (requires the `ci` task be run first):
-;; ```
-;; $ clojure -T:build deploy
-;; ```
-
-;; Your library will be deployed to org.scicloj/clay on clojars.org by default.
 
 :bye

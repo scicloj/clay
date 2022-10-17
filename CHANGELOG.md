@@ -1,7 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha1]
+## [2-alpha3]
+- adapting to Kindly changes
+- minor visual changes
+
+## [2-alpha2] - 2022-10-12
+- dropped the cybermonday dependency
+
+## [2-alpha1] - 2022-10-07
 - rendeding documents without relying on Clerk
 - switched to clay.v2 namespaces
 - switched to kindly v3

@@ -16,9 +16,11 @@
 
 (def *state
   (atom {:port default-port
-         :widgets [[:pre
-                    [:code.language-clojure
-                     ":ready\n"]]]
+         :widgets [[:div
+                    [:p [:code (str (java.util.Date.))]]
+                    [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
+                                "Clay"]
+                         " is ready, waiting for interaction."]]]]
          :fns {}}))
 
 (defn routes [{:keys [:body :request-method :uri]
