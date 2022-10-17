@@ -39,15 +39,15 @@
 
 ;; ## Setup
 
-;; For rendering documents like this one with Clay, one only needs to add Clay as a dependency to your project.
+;; For rendering documents like this one with Clay, you only need to add Clay as a dependency to your project.
 ;;
-;; To enjoy Clay's dynamic interaction, it is also needed to inform it about code evaluations. This requires some setup at the editor.
+;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
 ;;
-;; See some suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
+;; See the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
 
-;; ### Calva
+;; ### VSCode Calva
 
-;; Please add the following command to your keybindings (you may pick another key, of course). This command would evaluate a piece of code and send the result to be visualized in Clay.
+;; Please add the following command to your [`keybindings.json` file](https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization) at the VScode setup (you may pick another key, of course). This command would evaluate a piece of code and send the result to be visualized in Clay.
 
 ;; ```json
 ;; {
@@ -57,7 +57,7 @@
 ;;  }
 ;; ```
 
-;; ### CIDER
+;; ### Emacs CIDER
 
 ;; Please add the following to your Emacs configuration. It will make sure to inform Clay about all user evaluations of Clojure code.
 
@@ -110,7 +110,7 @@
 
 ;; ## Interaction
 
-;; Clay listens to user evaluations and reflects them visually.
+;; Clay responds to user evaluations by displaying the result visually.
 
 (+ 1 2)
 
