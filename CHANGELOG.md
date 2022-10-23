@@ -1,11 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha4-SNAPSHOT] 
+## [2-alpha4]  - 2022-10-23
 - more careful kind handling in view
 - namespace cleanup & refactoring
 - added show-doc-and-write-html! to api
 - bugfix in some reader edge cases
+- make pprint the fallback case again
+- kindly update
 
 ## [2-alpha3] - 2022-10-17
 - adapting to Kindly changes
