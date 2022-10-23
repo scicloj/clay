@@ -24,15 +24,20 @@
    (-> path
        slurp
        scicloj.clay.v2.read/->safe-notes
-       (->> (map (fn [note]
-                   (if (:comment? note)
+       (->> (map (fn [{:as note
+                       :keys [comment? code form]}]
+                   (if comment?
                      note
                      (assoc
                       note
-                      :value (-> note
-                                 :form
-                                 eval
-                                 view/deref-if-needed)))))
+                      :value (if form
+                               (-> form
+                                   eval
+                                   view/deref-if-needed)
+                               (-> code
+                                   read-string
+                                   eval
+                                   view/deref-if-needed))))))
             (mapcat (fn [{:as note
                           :keys [comment? code form value]}]
                       (if comment?

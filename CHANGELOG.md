@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - more careful kind handling in view
 - namespace cleanup & refactoring
 - added show-doc-and-write-html! to api
+- bugfix in some reader edge cases
 
 ## [2-alpha3] - 2022-10-17
 - adapting to Kindly changes
