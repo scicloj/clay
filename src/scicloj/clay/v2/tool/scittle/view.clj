@@ -58,6 +58,11 @@
 (defn prepare-value [v]
   (prepare {:value v}))
 
+(defn has-kind-with-viewer? [value]
+  (some-> value
+          value->kind
+          (@*kind->viewer)))
+
 (defn prepare-div [v]
   (maybe-apply-viewer
    {:value (-> (let [r (rest v)
@@ -66,14 +71,14 @@
                    (->> r
                         rest
                         (map (fn [subv]
-                               (if (or (value->kind subv)
+                               (if (or (has-kind-with-viewer? subv)
                                        (div? subv))
                                  (prepare-value subv)
                                  subv)))
                         (into [:div fr]))
                    (->> r
                         (map (fn [subv]
-                               (if (or (value->kind subv)
+                               (if (or (has-kind-with-viewer? subv)
                                        (div? subv))
                                  (prepare-value subv)
                                  subv)))
@@ -82,7 +87,7 @@
 
 (defn prepare-vector [value]
   (if (->> value
-           (some value->kind))
+           (some has-kind-with-viewer?))
     [:div
      (widget/structure-mark "[")
      (->> value
@@ -93,9 +98,10 @@
     ;; else
     (widget/just-println value)))
 
+
 (defn prepare-seq [value]
   (if (->> value
-           (some value->kind))
+           (some has-kind-with-viewer?))
     [:div
      (widget/structure-mark "(")
      (->> value
@@ -109,10 +115,10 @@
 (defn prepare-map [value]
   (if (or (->> value
                vals
-               (some value->kind))
+               (some has-kind-with-viewer?))
           (->> value
                keys
-               (some value->kind)))
+               (some has-kind-with-viewer?)))
     [:div
      (widget/structure-mark "{")
      (->> value
