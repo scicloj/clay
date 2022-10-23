@@ -55,7 +55,7 @@
            (vector? value) (prepare-vector value)
            (seq? value) (prepare-seq value)
            (map? value) (prepare-map value)
-           :else (widget/just-println value)))))
+           :else (widget/pprint value)))))
 
 (defn prepare-value [v]
   (prepare {:value v}))
@@ -98,7 +98,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "]")]
     ;; else
-    (widget/just-println value)))
+    (widget/pprint value)))
 
 
 (defn prepare-seq [value]
@@ -112,7 +112,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark ")")]
     ;; else
-    (widget/just-println value)))
+    (widget/pprint value)))
 
 (defn prepare-map [value]
   (if (or (->> value
@@ -139,7 +139,7 @@
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "}")]
     ;; else
-    (widget/just-println value)))
+    (widget/pprint value)))
 
 (defn expand-options-if-vector [component-symbol options]
   (cond ;;
