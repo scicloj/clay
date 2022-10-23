@@ -4,7 +4,10 @@
             [scicloj.clay.v2.html.table :as table]
             [nextjournal.markdown :as md]
             [nextjournal.markdown.transform :as md.transform]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [scicloj.clay.v2.util.image :as util.image])
+  (:import java.awt.image.BufferedImage
+           javax.imageio.ImageIO))
 
 (def *kind->viewer
   (atom {}))
@@ -53,7 +56,6 @@
            (seq? value) (prepare-seq value)
            (map? value) (prepare-map value)
            :else (widget/just-println value)))))
-
 
 (defn prepare-value [v]
   (prepare {:value v}))
@@ -239,3 +241,11 @@
    #_(-> {:column-names (tmd/column-names v)
           :row-vectors (vec (tmd/rowvecs v))}
          (kindly/consider :kind/table))))
+
+
+(add-viewer!
+ :kind/buffered-image
+ (fn [image]
+   [:img {:src (-> image
+                   util.image/buffered-image->byte-array
+                   util.image/byte-array->data-uri)}]))
