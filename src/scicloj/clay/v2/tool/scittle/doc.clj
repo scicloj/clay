@@ -67,6 +67,18 @@
        (#(scittle.server/show-widgets! % {:title (or title path) :toc? toc?})))))
 
 
+(defn show-doc-and-write-html!
+  [path options]
+  (show-doc! path options)
+  (let [target-path (-> *ns*
+                        str
+                        (string/split #"\.")
+                        (->> (string/join "/")
+                             (format "docs/%s.html")))]
+    (scittle.server/write-html! target-path)
+    [:wrote target-path]))
 
 (comment
-  (show-doc! "notebooks/intro.clj"))
+  (show-doc-and-write-html!
+   "notebooks/intro.clj"
+   {:toc? true}))

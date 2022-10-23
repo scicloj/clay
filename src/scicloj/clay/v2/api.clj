@@ -54,3 +54,7 @@
 (defn write-html!
   [path]
   (scittle.server/write-html! path))
+
+(defn show-doc-and-write-html!
+  [path options]
+  (scittle.doc/show-doc-and-write-html! path options))
