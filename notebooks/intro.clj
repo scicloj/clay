@@ -102,11 +102,10 @@
   (clay/show-doc! "notebooks/intro.clj"))
 
 ;; Writing the document:
-
 (comment
-  (do (clay/show-doc! "notebooks/intro.clj"
-                      {:toc? true})
-      (clay/write-html! "docs/index.html")))
+  (clay/show-doc-and-write-html!
+   "notebooks/intro.clj"
+   {:toc? true}))
 
 ;; ## Interaction
 
@@ -187,20 +186,12 @@ people-as-vectors
 
 ;; ### Images
 
-(import java.awt.image.BufferedImage
-        java.awt.Color
-        sun.java2d.SunGraphics2D)
+(import javax.imageio.ImageIO
+        java.net.URL)
 
-(defn a-piece-of-random-art [n]
-  (let [bi (BufferedImage. n n BufferedImage/TYPE_INT_RGB)
-        g  (-> (.createGraphics ^BufferedImage bi))]
-    (dotimes [t 100]
-      (->> #(rand-int n)
-           (repeatedly 4)
-           (apply #(.drawLine ^SunGraphics2D g %1 %2 %3 %4))))
-    bi))
-
-(a-piece-of-random-art (+ 40 (rand-int 90)))
+(->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
+     (URL.)
+     (ImageIO/read))
 
 ;; ### Datasets
 
