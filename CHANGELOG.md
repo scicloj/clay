@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha5]  - 2022-10-27
+- kindly version update
+
 ## [2-alpha4]  - 2022-10-23
 - more careful kind handling in view
 - namespace cleanup & refactoring
