@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha6]  - 2022-10-29
+- adapting to the extraction of kindly-default out of kindly
+
 ## [2-alpha5]  - 2022-10-27
 - kindly version update
 

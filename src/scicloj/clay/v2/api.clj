@@ -2,7 +2,6 @@
   (:require [scicloj.clay.v2.checks :as checks]
             [scicloj.clay.v2.pipeline :as pipeline]
             [scicloj.kindly.v3.api :as kindly]
-            [scicloj.kindly.v3.defaults :as kindly.defaults]
             [scicloj.clay.v2.tools :as tools]
             [scicloj.clay.v2.extensions :as extensions]
             [scicloj.clay.v2.tool.scittle]
@@ -10,10 +9,6 @@
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
             [clojure.string :as string]))
 
-(->> [:kind/hidden :kind/pprint :kind/hiccup :kind/vega :kind/vega-lite :kind/table]
-     (run! kindly/add-kind!))
-
-(kindly.defaults/setup!)
 
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))

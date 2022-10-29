@@ -1,5 +1,6 @@
 {:deps {scicloj/tablecloth {:mvn/version "6.102"}
         org.scicloj/viz.clj {:mvn/version "1-alpha5"}
         scicloj/clojisr {:mvn/version "1.0.0-BETA20"}
-        org.scicloj/clay {:mvn/version "2-alpha2"}}
+        org.scicloj/clay {:mvn/version "2-alpha2"}
+        org.scicloj/kindly-default {:mvn/version "1-alpha2"}}
  :paths ["src"]}

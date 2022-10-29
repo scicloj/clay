@@ -87,7 +87,10 @@
   (:require [scicloj.clay.v2.api :as clay]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.kindly.v3.kind :as kind]
-            [scicloj.kindly.v3.kindness :as kindness]))
+            [scicloj.kindly-default.v1.api :as kindly-default]))
+
+;; Initialize Kindly's [default](https://github.com/scicloj/kindly-default).
+(kindly-default/setup!)
 
 ;; Let us start Clay.
 
