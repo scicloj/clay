@@ -232,15 +232,17 @@
 
 (add-viewer!
  :kind/dataset
- (fn [v]
-   (-> v
-       println
-       with-out-str
-       vector
-       (kindly/consider :kind/table-md))
-   #_(-> {:column-names (tmd/column-names v)
-          :row-vectors (vec (tmd/rowvecs v))}
-         (kindly/consider :kind/table))))
+ widget/pprint
+ ;; Avoiding this till we fix the layout problem with missing values.
+ #_(fn [v]
+     (-> v
+         println
+         with-out-str
+         vector
+         (kindly/consider :kind/table-md))
+     #_(-> {:column-names (tmd/column-names v)
+            :row-vectors (vec (tmd/rowvecs v))}
+           (kindly/consider :kind/table))))
 
 
 (add-viewer!
