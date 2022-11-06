@@ -85,5 +85,5 @@
 
 (comment
   (show-doc-and-write-html!
-   "notebooks/intro.clj"
+   "notebooks/index.clj"
    {:toc? true}))
