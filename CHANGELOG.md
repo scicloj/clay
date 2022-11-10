@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha8]  - 2022-11-10
+## [2-alpha9]  - 2022-11-10
 - adapting to Kindly changes - returning multiple contexts
 - bugfix: using fallback viewer
 
