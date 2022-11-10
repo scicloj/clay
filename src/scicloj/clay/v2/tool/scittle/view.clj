@@ -20,6 +20,8 @@
 (defn value->kind [v]
   (-> {:value v}
       kindly/advice
+      ;; TODO: handle multiple contexts more wisely
+      first
       :kind))
 
 (defn maybe-apply-viewer
@@ -49,7 +51,10 @@
 (defn prepare
   ([context]
    (let [{:as context1
-          :keys [value kind]} (kindly/advice context)]
+          :keys [value kind]} (-> context
+                                  kindly/advice
+                                  ;; TODO: handle multiple contexts more wisely
+                                  first)]
      (cond kind (maybe-apply-viewer context1)
            (div? value) (prepare-div value)
            (vector? value) (prepare-vector value)
