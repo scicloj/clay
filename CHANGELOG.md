@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha8]  - 2022-11-10
 - adapting to Kindly changes - returning multiple contexts
+- bugfix: using fallback viewer
 
 ## [2-alpha8]  - 2022-11-06
 - updated Kindly deps

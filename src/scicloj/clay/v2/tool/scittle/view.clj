@@ -35,7 +35,8 @@
                                     :value value1
                                     :kind kind1))
          value1))
-     value)))
+     (let [fallback-viewer (@*kind->viewer :kind/pprint)]
+       (fallback-viewer value)))))
 
 
 (declare prepare-vector)
