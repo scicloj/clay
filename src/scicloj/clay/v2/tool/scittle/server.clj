@@ -6,6 +6,7 @@
             [scicloj.clay.v2.tool.scittle.page :as page]
             [scicloj.clay.v2.tool.scittle.view :as view]))
 
+
 (def default-port 1971)
 
 (defonce *clients (atom #{}))
@@ -15,13 +16,19 @@
     (httpkit/send! ch msg)))
 
 (def *state
-  (atom {:port default-port
+  (atom {:port nil
          :widgets [[:div
                     [:p [:code (str (java.util.Date.))]]
                     [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
                                 "Clay"]
                          " is ready, waiting for interaction."]]]]
          :fns {}}))
+
+(defn get-free-port []
+  ;; https://gist.github.com/apeckham/78da0a59076a4b91b1f5acf40a96de69
+  (let [socket (java.net.ServerSocket. 0)]
+    (.close socket)
+    (.getLocalPort socket)))
 
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
@@ -43,12 +50,15 @@
 
 (defonce *stop-server! (atom nil))
 
-(defn core-http-server []
-  (httpkit/run-server #'routes {:port (:port @*state)}))
+(defn core-http-server [port]
+  (httpkit/run-server #'routes {:port port}))
 
 (defn open! []
-  (let [url (str "http://localhost:" (:port @*state) "/")]
-    (reset! *stop-server! (core-http-server))
+  (let [port (get-free-port)
+        url (str "http://localhost:" port "/")
+        server (core-http-server port)]
+    (swap! *state assoc :port port)
+    (reset! *stop-server! port)
     (println "serving scittle at " url)
     (browse/browse-url url)))
 
