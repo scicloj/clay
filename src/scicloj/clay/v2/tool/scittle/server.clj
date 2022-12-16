@@ -25,10 +25,13 @@
          :fns {}}))
 
 (defn get-free-port []
-  ;; https://gist.github.com/apeckham/78da0a59076a4b91b1f5acf40a96de69
-  (let [socket (java.net.ServerSocket. 0)]
-    (.close socket)
-    (.getLocalPort socket)))
+  (loop [port 1971]
+    ;; Check if the port is free:
+    ;; (https://codereview.stackexchange.com/a/31591)
+    (or (try (do (.close (java.net.ServerSocket. port))
+                 port)
+             (catch Exception e nil))
+        (recur (inc port)))))
 
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]

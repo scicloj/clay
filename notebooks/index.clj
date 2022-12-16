@@ -98,6 +98,10 @@
    "notebooks/index.clj"
    {:toc? true}))
 
+;; Reopening the Clay view in the browser (in case you closed the browser tab previously opened by `clay/start!`)
+(comment
+  (clay/browse!))
+
 ;; These can be conveniently bound to functions and keys at your editor (to b documented soon).
 
 ;; ## Interaction
