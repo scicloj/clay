@@ -14,16 +14,16 @@
 (def special-lib-resources
   {'vega {:js {:from-local-copy
                ["https://cdn.jsdelivr.net/npm/vega@5.22.1"
-                "https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"
-                "https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"]}}
+                "https://cdn.jsdelivr.net/npm/vega-lite@5.6.0"
+                "https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"]}}
    'datatables {:js {:from-the-web
                      ["https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"]}
                 :css {:from-the-web
                       ["https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"]}}
    'echarts {:js {:from-local-copy
-                  ["https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"]}}
+                  ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
    'cytoscape {:js {:from-local-copy
-                    ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js"]}}})
+                    ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls
