@@ -53,3 +53,15 @@
 (defn show-doc-and-write-html!
   [path options]
   (scittle.doc/show-doc-and-write-html! path options))
+
+(defn browse!
+  []
+  (scittle.server/browse!))
+
+(defn port
+  []
+  (scittle.server/port))
+
+(defn url
+  []
+  (scittle.server/url))

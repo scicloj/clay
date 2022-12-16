@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha11]  - 2022-12-16
+- extended the API with a few url-related functions
+
+
 ## [2-alpha10]  - 2022-12-08
 - making sure the selected communication port is free
 

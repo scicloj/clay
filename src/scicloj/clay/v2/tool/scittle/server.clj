@@ -53,14 +53,26 @@
 (defn core-http-server [port]
   (httpkit/run-server #'routes {:port port}))
 
+(defn port->url [port]
+  (str "http://localhost:" port "/"))
+
+(defn port []
+  (:port @*state))
+
+(defn url []
+  (port->url (port)))
+
+(defn browse! []
+  (browse/browse-url (url)))
+
 (defn open! []
   (let [port (get-free-port)
-        url (str "http://localhost:" port "/")
         server (core-http-server port)]
     (swap! *state assoc :port port)
     (reset! *stop-server! port)
-    (println "serving scittle at " url)
-    (browse/browse-url url)))
+    (println "serving scittle at " (port->url port))
+    (browse!)))
+
 
 (defn close! []
   (when-let [s @*stop-server!]
