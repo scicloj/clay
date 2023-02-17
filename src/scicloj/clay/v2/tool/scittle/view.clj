@@ -217,6 +217,12 @@
     ['vega (list 'quote spec)]]))
 
 (add-viewer!
+ :kind/vega-lite
+ (fn [spec]
+   [:div
+    ['vega (list 'quote spec)]]))
+
+(add-viewer!
  :kind/cytoscape
  (partial
   expand-options-if-vector

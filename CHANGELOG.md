@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha13-SHAPSHOT]
+- supporting :kind/vega-lite 
+
 ## [2-alpha12]  - 2022-12-17
 - more consistent choice of ports
 

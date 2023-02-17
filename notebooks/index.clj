@@ -216,7 +216,7 @@ people-as-vectors
         :x {:field "x", :type "quantitative"},
         :y {:field "y", :type "quantitative"},
         :fill {:field "z", :type "nominal"}}}
-      kind/vega))
+      kind/vega-lite))
 
 (defn random-data [n]
   (->> (repeatedly n #(- (rand) 0.5))
@@ -227,12 +227,12 @@ people-as-vectors
                        :x x
                        :y y}))))
 
-(defn random-vega-plot [n]
+(defn random-vega-lite-plot [n]
   (-> n
       random-data
-      vega-point-plot))
+      vega-lite-point-plot))
 
-(random-vega-plot 9)
+(random-vega-lite-plot 9)
 
 ;; ### [Cytoscape.js](https://js.cytoscape.org/)
 
@@ -284,6 +284,7 @@ people-as-vectors
 (delay
   (Thread/sleep 500)
   (+ 1 2))
+
 
 (delay
   [:div [:big "hi......."]])
