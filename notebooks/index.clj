@@ -208,7 +208,7 @@ people-as-vectors
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
-(defn vega-point-plot [data]
+(defn vega-lite-point-plot [data]
   (-> {:data {:values data},
        :mark "point"
        :encoding
