@@ -9,7 +9,7 @@
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
         http-kit/http-kit {:mvn/version "2.7.0-alpha1"}
         com.cognitect/transit-clj {:mvn/version "1.0.329"}
-        io.github.nextjournal/markdown {:mvn/version "0.4.126"}
+        io.github.nextjournal/markdown {:mvn/version "0.5.144"}
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}}
  :aliases {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "6.076"}
                               org.scicloj/kindly-default {:mvn/version "1-alpha5"}}}

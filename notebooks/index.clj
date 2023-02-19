@@ -206,6 +206,10 @@ people-as-vectors
      :y [:A :B :C]}
     tc/dataset)
 
+(-> [{:x 1 :y 2 :z 3}
+     {:y 4 :z 5}]
+    tc/dataset)
+
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
 (defn vega-lite-point-plot [data]

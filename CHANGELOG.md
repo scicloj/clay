@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha13-SHAPSHOT]
 - supporting :kind/vega-lite 
+- using markdown again when printing datasets (following fix https://github.com/nextjournal/markdown/issues/12)
 
 ## [2-alpha12]  - 2022-12-17
 - more consistent choice of ports
