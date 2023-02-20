@@ -178,8 +178,7 @@
               (->> md
                    println
                    with-out-str
-                   md/parse
-                   md.transform/->hiccup)))
+                   md/->hiccup)))
        (into [:div])
        widget/mark-plain-html))
 
