@@ -11,8 +11,8 @@
         com.cognitect/transit-clj {:mvn/version "1.0.329"}
         io.github.nextjournal/markdown {:mvn/version "0.5.144"}
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}}
- :aliases {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "6.076"}
-                              org.scicloj/kindly-default {:mvn/version "1-alpha5"}}}
+ :aliases {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "7.000-beta-27"}
+                              org.scicloj/kindly-default {:mvn/version "1-alpha6"}}}
            :build {:deps {io.github.seancorfield/build-clj
                           {:git/tag "v0.6.4" :git/sha "c21cfde"}}
                    :ns-default build}
