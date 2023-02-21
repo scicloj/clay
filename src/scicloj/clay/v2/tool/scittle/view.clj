@@ -198,14 +198,10 @@
    [:div
     (let [hiccup (table/->table-hiccup
                   table-spec)]
-      (if (or (some-> table-spec
-                      :row-maps
-                      count
-                      (> 20))
-              (some-> table-spec
-                      :row-vectors
-                      count
-                      (> 20)))
+      (if (-> hiccup
+              last ; the :tbody part
+              count
+              (> 20)) ; a big table
         ['datatables hiccup]
         hiccup))]))
 

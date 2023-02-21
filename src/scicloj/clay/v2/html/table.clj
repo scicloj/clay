@@ -41,13 +41,25 @@
      ;; else
      (row-maps->table-hiccup row-maps))))
 
-(defn ->table-hiccup [{:keys [row-maps row-vectors column-names]}]
-  (assert column-names)
-  (if row-vectors
-    (row-vectors->table-hiccup column-names row-vectors)
-    (do
-      (assert row-maps)
-      (row-maps->table-hiccup column-names row-maps))))
+(defn dataset->table-hiccup [dataset]
+  (->> dataset
+       vals
+       (apply map vector)
+       (row-vectors->table-hiccup (keys dataset))))
+
+(defn ->table-hiccup [dataset-or-options]
+  (if (-> dataset-or-options
+          class
+          str
+          (= "class tech.v3.dataset.impl.dataset.Dataset"))
+    (dataset->table-hiccup dataset-or-options)
+    (let [{:keys [row-maps row-vectors column-names]} dataset-or-options]
+      (assert column-names)
+      (if row-vectors
+        (row-vectors->table-hiccup column-names row-vectors)
+        (do
+          (assert row-maps)
+          (row-maps->table-hiccup column-names row-maps))))))
 
 (def datatables-default-options
   {:sPaginationType "full_numbers"})

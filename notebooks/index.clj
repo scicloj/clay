@@ -159,37 +159,6 @@ people-as-vectors
 
 (kind/pprint people-as-vectors)
 
-;; ### Tables
-
-;; The `:kind/table` kind can be handy for an interactive table view.
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-vectors people-as-vectors})
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-maps people-as-maps})
-
-
-;; ### Hiccup
-
-;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, can be specified by kind:
-
-(kind/hiccup
- [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
-                  {:color "#7F5F3F"}}
-              "hello"]]])
-
-;; ### Images
-
-(import javax.imageio.ImageIO
-        java.net.URL)
-
-(->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-     (URL.)
-     (ImageIO/read))
-
 ;; ### Datasets
 
 ;; [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets currently use the default printing of the library.
@@ -209,6 +178,48 @@ people-as-vectors
 (-> [{:x 1 :y 2 :z 3}
      {:y 4 :z 5}]
     tc/dataset)
+
+(-> people-as-maps
+    tc/dataset)
+
+(-> people-as-maps
+    tc/dataset
+    vals
+    (->> (apply map vector)))
+
+;; ### Tables
+
+;; The `:kind/table` kind can be handy for an interactive table view.
+
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-vectors people-as-vectors})
+
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-maps people-as-maps})
+
+(-> people-as-maps
+    tc/dataset
+    kind/table)
+
+;; ### Hiccup
+
+;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, can be specified by kind:
+
+(kind/hiccup
+ [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
+                  {:color "#7F5F3F"}}
+              "hello"]]])
+
+;; ### Images
+
+(import javax.imageio.ImageIO
+        java.net.URL)
+
+(->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
+     (URL.)
+     (ImageIO/read))
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 

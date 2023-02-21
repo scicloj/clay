@@ -1,7 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha13-SHAPSHOT]
+## [2-alpha14]  - 2023-02-21
+- table view support for datasets
+
+## [2-alpha13]  - 2023-02-20
 - supporting :kind/vega-lite 
 - using markdown again when printing datasets (following fix https://github.com/nextjournal/markdown/issues/12)
 
