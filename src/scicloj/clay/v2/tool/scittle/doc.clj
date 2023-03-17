@@ -5,7 +5,9 @@
             [scicloj.clay.v2.view :as view]
             [scicloj.clay.v2.tool.scittle.view :as scittle.view]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
+            [scicloj.clay.v2.tool.scittle.write :as scittle.write]
             [scicloj.clay.v2.tool.scittle.widget :as scittle.widget]
+            [scicloj.clay.v2.tool.scittle.page :as scittle.page]
             [scicloj.clay.v2.read]
             [clojure.string :as string]
             [nextjournal.markdown :as md]
@@ -16,9 +18,7 @@
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
 
-(defn show-doc!
-  ([path]
-   (show-doc! path nil))
+(defn gen-doc
   ([path {:keys [hide-code? hide-nils? hide-vars?
                  title toc?]}]
    (-> path
@@ -41,49 +41,67 @@
             (mapcat (fn [{:as note
                           :keys [comment? code form value]}]
                       (if comment?
-                        [(-> code
-                             (string/split #"\n")
-                             (->> (map #(string/replace % #"^;*" ""))
-                                  (string/join "\n")
-                                  md/parse
-                                  md.transform/->hiccup
-                                  ;; TODO: How to handle these better?
-                                  ;; (:<> does not work in plain hiccup)
-                                  (walk/postwalk-replace {:<> :div})
-                                  scittle.widget/mark-plain-html))]
+                        [(let [markdown
+                               (-> code
+                                   (string/split #"\n")
+                                   (->> (map #(-> %
+                                                  (string/replace
+                                                   #"^;+\s*" "")
+                                                  (string/replace
+                                                   #"^#" "\n#")))
+                                        (string/join "\n")))]
+                           (->> markdown
+                                md/parse
+                                md.transform/->hiccup
+                                ;; TODO: How to handle these better?
+                                ;; (:<> does not work in plain hiccup)
+                                (walk/postwalk-replace {:<> :div})
+                                scittle.widget/mark-plain-html
+                                (#(vary-meta
+                                   %
+                                   assoc
+                                   :clay/original-markdown markdown))))]
                         [(when-not (or hide-code?
                                        (-> form meta :kindly/hide-code?))
                            (-> {:value (-> note
                                            :code
                                            vector)
                                 :kind :kind/code}
-                               scittle.view/prepare))
+                               scittle.view/prepare
+                               (#(vary-meta
+                                  %
+                                  assoc
+                                  :clay/original-code (-> note
+                                                          :code)))))
                          (when-not (or
                                     (and (sequential? form)
                                          (-> form first hidden-form-starters))
                                     (-> note :form meta :kind/hidden)
                                     (and hide-nils? (nil? value))
                                     (and hide-vars? (var? value)))
-                           [:div (-> note
-                                     (select-keys [:value :code :form])
-                                     (update :value view/deref-if-needed)
-                                     scittle.view/prepare)])]))))
-       doall
-       (#(scittle.server/show-widgets! % {:title (or title path) :toc? toc?})))))
+                           (-> note
+                               (select-keys [:value :code :form])
+                               (update :value view/deref-if-needed)
+                               scittle.view/prepare
+                               scittle.widget/in-div ; TODO: was this needed?
+                               ))]))))
+       doall)))
 
+(defn show-doc!
+  ([path]
+   (show-doc! path nil))
+  ([path {:keys [title toc?]
+          :as options}]
+   (let [doc (gen-doc path options)]
+     (-> doc
+         (scittle.server/show-widgets!
+          {:title (or title path)
+           :toc? toc?})))))
 
-(defn show-doc-and-write-html!
-  [path options]
+(defn show-doc-and-write!
+  [path {:keys [format]
+         :as options}]
   (show-doc! path options)
-  (let [target-path (-> *ns*
-                        str
-                        (string/split #"\.")
-                        (->> (string/join "/")
-                             (format "docs/%s.html")))]
-    (scittle.server/write-html! target-path)
-    [:wrote target-path]))
-
-(comment
-  (show-doc-and-write-html!
-   "notebooks/index.clj"
-   {:toc? true}))
+  (case format
+    :quarto (scittle.server/write-quarto!)
+    :html (scittle.server/write-html!)))

@@ -104,7 +104,7 @@
           (->> widgets
                (map-indexed
                 (fn [i widget]
-                  (when-not (widget/plain-html? widget)
+                  (when-not (widget/check widget :clay/plain-html?)
                     (let [widget-name (str "widget" i)
                           widget-symbol (symbol (str "widget" i))]
                       [(list 'def widget-symbol widget)

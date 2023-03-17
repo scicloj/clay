@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.tool.scittle.page
   (:require [clojure.java.io :as io]
             [clojure.string :as string]
+            [hiccup.core :as hiccup]
             [hiccup.page]
             [scicloj.clay.v2.tool.scittle.cljs-generation :as cljs-generation]
             [scicloj.clay.v2.tool.scittle.widget :as widget]
@@ -55,7 +56,7 @@
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (when-not port
-      (throw (ex-info "missing port")))
+      (throw (ex-info "missing port" {})))
     (-> (hiccup.page/html5 [:head
                             [:meta {:charset "UTF-8"}]
                             [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
@@ -121,7 +122,7 @@ code {
                                       (map-indexed
                                        (fn [i widget]
                                          [:div {:style {:margin "15px"}}
-                                          (if (widget/plain-html? widget)
+                                          (if (widget/check widget :clay/plain-html?)
                                             widget
                                             [:div {:id (str "widget" i)}
                                              "..."])]))
@@ -133,8 +134,8 @@ code {
                               (js-from-local-copies
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
                             (js-from-local-copies
-                             "https://unpkg.com/react@17/umd/react.production.min.js"
-                             "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+                             "https://unpkg.com/react@18/umd/react.production.min.js"
+                             "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
                              "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
                              "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
                              "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
@@ -162,3 +163,112 @@ code {
                                   (string/join "\n"))]])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
+
+
+(defn qmd [{:keys [widgets data port title]}]
+  (let [special-libs (->> widgets
+                          special-libs-in-form)]
+    (when-not port
+      (throw (ex-info "missing port")))
+    (str
+     "
+---
+format:
+  html:
+    toc: true
+code-block-background: true
+theme: morph
+---
+          "
+     "
+#
+"
+     (-> (str (hiccup/html
+               [:div
+                [:style styles/table]
+                (->> special-libs
+                     (mapcat (comp :from-local-copy :css special-lib-resources))
+                     distinct
+                     (apply css-from-local-copies))
+                (->> special-libs
+                     (mapcat (comp :from-the-web :css special-lib-resources))
+                     distinct
+                     (apply hiccup.page/include-css))])
+              (->> widgets
+                   (map-indexed
+                    (fn [i widget]
+                      (cond
+                        ;;
+                        (-> widget
+                            meta
+                            :clay/original-markdown)
+                        (-> widget
+                            meta
+                            :clay/original-markdown)
+                        ;;
+                        (-> widget
+                            meta
+                            :clay/original-code)
+                        (->> widget
+                             meta
+                             :clay/original-code
+                             (format "
+
+<div style=\"background:#bbb\">
+```clojure
+%s
+```
+</div>
+
+"))
+                        ;;
+                        ;;
+                        (widget/check widget :clay/printed-clojure?)
+                        (->> widget
+                             meta
+                             :clay/text
+                             (format "
+
+```clojure
+%s
+```
+
+"))
+                        ;;
+                        (widget/check widget :clay/plain-html?)
+                        (hiccup/html widget)
+                        ;;
+                        :else
+                        (hiccup/html
+                         [:div {:id (str "widget" i)}
+                          "..."]))))
+                   (string/join "\n"))
+              (hiccup/html
+               [:div
+                (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
+                                      "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
+                                      #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
+                (js-from-local-copies
+                 "https://unpkg.com/react@17/umd/react.production.min.js"
+                 "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+                 "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
+                 "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
+                 "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
+                (->> special-libs
+                     (mapcat (comp :from-local-copy :js special-lib-resources))
+                     distinct
+                     (apply js-from-local-copies))
+                (->> special-libs
+                     (mapcat (comp :from-the-web :js special-lib-resources))
+                     distinct
+                     (apply hiccup.page/include-js))
+                [:script {:type "application/x-scittle"}
+                 (->> {:widgets widgets
+                       :data data
+                       :port port
+                       :special-libs special-libs}
+                      cljs-generation/widgets-cljs
+                      (map pr-str)
+                      (string/join "\n"))]]))
+         (string/replace #"<table>"
+                         "<table class='table table-hover'>")))))

@@ -1,40 +1,55 @@
 (ns scicloj.clay.v2.tool.scittle.widget
   (:require [clojure.pprint :as pp]))
 
-(defn mark-plain-html [hiccup]
-  (-> hiccup
-      (vary-meta assoc :clay/plain-html true)))
+(defn mark [hiccup & keywords]
+  (reduce (fn [h kw]
+            (-> h
+                (vary-meta assoc kw true)))
+          hiccup
+          keywords))
 
-(defn plain-html? [hiccup]
+(defn mark-plain-html [hiccup]
+  (mark hiccup :clay/plain-html?))
+
+(defn check [hiccup kw]
   (-> hiccup
       meta
-      :clay/plain-html))
+      kw))
 
 (defn code [string]
-  (mark-plain-html
-   [:pre.card
-    [:code.language-clojure.bg-light
-     string]]))
+  (-> [:pre.card
+       [:code.language-clojure.bg-light
+        string]]
+      (mark :clay/plain-html?
+            :clay/source-clojure?)))
 
-(defn clojure [string]
-  (mark-plain-html
-   [:pre
-    [:code.language-clojure
-     string]]))
+(defn printed-clojure [string]
+  (-> [:pre
+       [:code.language-clojure
+        string]]
+      (mark :clay/plain-html?
+            :clay/printed-clojure?)
+      (vary-meta
+       assoc :clay/text string)))
 
 (defn structure-mark [string]
-  (mark-plain-html
-   [:div string]
-   #_[:big string]))
+  (-> [:div string]
+      #_[:big string]
+      mark-plain-html))
 
 (defn just-println [value]
   (-> value
       println
       with-out-str
-      clojure))
+      printed-clojure))
 
 (defn pprint [value]
   (-> value
       pp/pprint
       with-out-str
-      clojure))
+      printed-clojure))
+
+(defn in-div [widget]
+  (with-meta
+    [:div widget]
+    (meta widget)))

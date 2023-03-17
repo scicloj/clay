@@ -140,7 +140,7 @@
                    (->> [k v]
                         (map pr-str)
                         (string/join " ")
-                        widget/clojure))))
+                        widget/printed-clojure))))
           (into [:div
                  {:style {:margin-left "10%"}}]))
      (widget/structure-mark "}")]
@@ -180,7 +180,7 @@
                    with-out-str
                    md/->hiccup)))
        (into [:div])
-       widget/mark-plain-html))
+       (#(widget/mark % :clay/plain-html?))))
 
 (add-viewer!
  :kind/md

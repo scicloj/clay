@@ -13,8 +13,6 @@
 
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly/) convention.
 
-;; It is one of the fruits of our explorations at the [visual-tools-group](https://scicloj.github.io/docs/community/groups/visual-tools/).
-
 ;; ### Goals
 
 ;; - Easily explore & share things for others to easily pick & use.
@@ -108,7 +106,7 @@
 
 ;; Clay responds to user evaluations by displaying the result visually.
 
-(+ 1 2)
+(+ 1111 2222)
 
 ;; In Emacs CIDER, after evaluation of a form (or a region),
 ;; the browser view should show the evaluation result.
@@ -161,7 +159,7 @@ people-as-vectors
 
 ;; ### Datasets
 
-;; [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets currently use the default printing of the library.
+;; [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets currently use the default printing of the library,
 
 ;; Let us create such a dataset using [Tablecloth](https://github.com/scicloj/tablecloth).
 
@@ -181,11 +179,6 @@ people-as-vectors
 
 (-> people-as-maps
     tc/dataset)
-
-(-> people-as-maps
-    tc/dataset
-    vals
-    (->> (apply map vector)))
 
 ;; ### Tables
 

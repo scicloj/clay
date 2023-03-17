@@ -4,8 +4,10 @@
             [clojure.java.browse :as browse]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.tool.scittle.page :as page]
-            [scicloj.clay.v2.tool.scittle.view :as view]))
-
+            [scicloj.clay.v2.tool.scittle.view :as view]
+            [clojure.java.shell :as sh]
+            [clojure.string :as string]
+            [clojure.java.io :as io]))
 
 (def default-port 1971)
 
@@ -15,7 +17,7 @@
   (doseq [ch @*clients]
     (httpkit/send! ch msg)))
 
-(def *state
+(defonce *state
   (atom {:port nil
          :widgets [[:div
                     [:p [:code (str (java.util.Date.))]]
@@ -40,8 +42,13 @@
                              :on-close (fn [ch _reason] (swap! *clients disj ch))
                              :on-receive (fn [_ch msg])})
     (case [request-method uri]
-      [:get "/"] {:body (page/page @*state)
+      [:get "/"] {:body (or (some-> @*state
+                                    :quarto-html-path
+                                    slurp)
+                            (page/page @*state))
                   :status 200}
+      [:get "/favicon.ico"] {:body nil
+                             :status 200}
       [:post "/compute"] (let [{:keys [fname args]} (-> body
                                                         (transit/reader :json)
                                                         transit/read
@@ -49,7 +56,12 @@
                                f (-> @*state :fns (get fname))]
                            {:body (pr-str (when (and f args)
                                             (apply f args)))
-                            :status 200}))))
+                            :status 200})
+      ;; else
+      {:body (->> uri
+                  (str "docs")
+                  slurp)
+       :status 200})))
 
 (defonce *stop-server! (atom nil))
 
@@ -82,12 +94,6 @@
     (s))
   (reset! *stop-server! nil))
 
-(defn write-html! [path]
-  (->> @*state
-       page/page
-       (spit path))
-  (-> [:ok] (kindly/consider :kind/hidden)))
-
 (defn show-widgets!
   ([widgets]
    (show-widgets! widgets nil))
@@ -95,6 +101,8 @@
    (swap! *state
           (fn [state]
             (-> state
+                (assoc :quarto-html-path nil)
+                (assoc :date (java.util.Date.))
                 (assoc :widgets widgets)
                 (merge options))))
    (broadcast! "refresh")
@@ -113,9 +121,47 @@
       vector
       show-widgets!))
 
-(comment
-  (close!)
-  (open!)
+(defn ns->target-path [the-ns ext]
+  (format "docs/%s%s"
+          (-> the-ns
+              str
+              (string/split #"\.")
+              (->> (string/join "/")))
+          ext))
 
-  (show-widgets!
-   [[:h1 "hi"]]))
+(defn now []
+  (java.util.Date.))
+
+(defn write-html!
+  ([]
+   (write-html! (ns->target-path *ns* ".html")))
+  ([path]
+   (io/make-parents path)
+   (->> @*state
+        page/page
+        (spit path))
+   (println [:wrote path (now)])
+   (-> [:wrote path]
+       (kindly/consider :kind/hidden))))
+
+(defn write-quarto! []
+  (let [qmd-path (ns->target-path *ns* "_quarto.qmd")
+        html-path (-> qmd-path
+                      (string/replace #"\.qmd$" ".html"))]
+
+    (io/make-parents qmd-path)
+    (->> @*state
+         :date
+         (vector :state-date)
+         println)
+    (->> @*state
+         page/qmd
+         (spit qmd-path))
+    (println [:wrote qmd-path (now)])
+    (->> (sh/sh "quarto" "render" qmd-path)
+         ((juxt :err :out))
+         (mapv println))
+    (println [:created html-path (now)])
+    (swap! *state assoc :quarto-html-path html-path)
+    (broadcast! "refresh")
+    :ok))

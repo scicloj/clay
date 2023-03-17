@@ -7,6 +7,7 @@
             [scicloj.clay.v2.tool.scittle]
             [scicloj.clay.v2.tool.scittle.doc :as scittle.doc]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
+            [scicloj.clay.v2.tool.scittle.write :as scittle.write]
             [clojure.string :as string]))
 
 
@@ -50,9 +51,21 @@
   [path]
   (scittle.server/write-html! path))
 
+(defn show-doc-and-write!
+  [path options]
+  (scittle.doc/show-doc-and-write! path options))
+
 (defn show-doc-and-write-html!
   [path options]
-  (scittle.doc/show-doc-and-write-html! path options))
+  (->> {:format :html}
+       (merge options)
+       (scittle.doc/show-doc-and-write! path)))
+
+(defn show-doc-and-write-quarto!
+  [path options]
+  (->> {:format :quarto}
+       (merge options)
+       (scittle.doc/show-doc-and-write! path)))
 
 (defn browse!
   []

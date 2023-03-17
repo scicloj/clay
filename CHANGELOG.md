@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha15-SNAPSHOT]
+- experimental quarto support
+
 ## [2-alpha14]  - 2023-02-21
 - table view support for datasets
 
