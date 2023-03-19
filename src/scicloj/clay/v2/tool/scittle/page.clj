@@ -136,9 +136,10 @@ code {
                             (js-from-local-copies
                              "https://unpkg.com/react@18/umd/react.production.min.js"
                              "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
-                             "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
+                             "https://scicloj.github.io/scittle/js/scittle.js"
+                             "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
+                             "https://scicloj.github.io/scittle/js/scittle.reagent.js"
+                             "https://scicloj.github.io/scittle/js/scittle.mathbox.js")
                             [:script {:type "text/javascript"}
                              (-> "highlight/highlight.min.js"
                                  io/resource
@@ -251,9 +252,10 @@ theme: morph
                 (js-from-local-copies
                  "https://unpkg.com/react@17/umd/react.production.min.js"
                  "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
-                 "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.js"
-                 "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.cljs-ajax.js"
-                 "https://cdn.jsdelivr.net/npm/scittle@0.1.2/dist/scittle.reagent.js")
+                 "https://scicloj.github.io/scittle/js/scittle.js"
+                 "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
+                 "https://scicloj.github.io/scittle/js/scittle.reagent.js"
+                 "https://scicloj.github.io/scittle/js/scittle.mathbox.js")
                 (->> special-libs
                      (mapcat (comp :from-local-copy :js special-lib-resources))
                      distinct

@@ -281,6 +281,45 @@ people-as-vectors
             :color ["#7F5F3F"]
             :data [23 24 18 25 27 28 25]}]})
 
+;; ## MathBox.cljs
+
+;; inspired by [the official MathBox.cljs tutorial](https://mathbox.mentat.org/)
+(kind/hiccup
+ '(require
+   (quote [mathbox.core :as mathbox])
+   (quote [mathbox.primitives :as mb])))
+
+(kind/hiccup
+ '(defn Data []
+    [mathbox.primitives/Interval
+     {:expr (fn [emit x _i t]
+              (emit x (Math/sin (+ x t))))
+      :width 64
+      :channels 2}]))
+
+(kind/hiccup
+ '(defn Curve []
+    [:<>
+     [Data]
+     [mathbox.primitives/Line {:width 5
+                               :color "#3090FF"}]]))
+
+(kind/hiccup
+ '[mathbox.core/MathBox
+   {:container {:style {:height "400px" :width "100%"}}
+    :focus 3}
+   [mathbox.primitives/Camera {:position [0 0 3]
+                               :proxy true}]
+   [mathbox.primitives/Cartesian
+    {:range [[-2 2] [-1 1]]
+     :scale [2 1]}
+
+    [mathbox.primitives/Axis {:axis 1 :width 3 :color "black"}]
+    [mathbox.primitives/Axis {:axis 2 :width 3 :color "black"}]
+    [mathbox.primitives/Grid {:width 2 :divideX 20 :divideY 10}]
+    [Curve]]])
+
+
 ;; ## Delays
 
 ;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
