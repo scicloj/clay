@@ -5,7 +5,6 @@
             [scicloj.clay.v2.view :as view]
             [scicloj.clay.v2.tool.scittle.view :as scittle.view]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
-            [scicloj.clay.v2.tool.scittle.write :as scittle.write]
             [scicloj.clay.v2.tool.scittle.widget :as scittle.widget]
             [scicloj.clay.v2.tool.scittle.page :as scittle.page]
             [scicloj.clay.v2.read]

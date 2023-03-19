@@ -7,7 +7,6 @@
             [scicloj.clay.v2.tool.scittle]
             [scicloj.clay.v2.tool.scittle.doc :as scittle.doc]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
-            [scicloj.clay.v2.tool.scittle.write :as scittle.write]
             [clojure.string :as string]))
 
 
