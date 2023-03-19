@@ -281,7 +281,7 @@ people-as-vectors
             :color ["#7F5F3F"]
             :data [23 24 18 25 27 28 25]}]})
 
-;; ## MathBox.cljs
+;; ### MathBox.cljs
 
 ;; inspired by [the official MathBox.cljs tutorial](https://mathbox.mentat.org/)
 (kind/hiccup
