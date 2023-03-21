@@ -286,8 +286,8 @@ people-as-vectors
 ;; inspired by [the official MathBox.cljs tutorial](https://mathbox.mentat.org/)
 (kind/hiccup
  '(require
-   (quote [mathbox.core :as mathbox])
-   (quote [mathbox.primitives :as mb])))
+   '[mathbox.core :as mathbox]
+   '[mathbox.primitives :as mb]))
 
 (kind/hiccup
  '(defn Data []
