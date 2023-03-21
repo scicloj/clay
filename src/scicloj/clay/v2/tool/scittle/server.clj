@@ -26,6 +26,17 @@
                          " is ready, waiting for interaction."]]]]
          :fns {}}))
 
+(def default-options
+  {:quarto {:format {:html {:toc true}}
+            :code-block-background true
+            :theme :morph}})
+
+(defn swap-options! [f & args]
+  (apply swap! *state update :options f args)
+  :ok)
+
+(swap-options! (constantly default-options))
+
 (defn get-free-port []
   (loop [port 1971]
     ;; Check if the port is free:

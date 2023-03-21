@@ -7,7 +7,8 @@
             [scicloj.clay.v2.tool.scittle.widget :as widget]
             [scicloj.clay.v2.tool.scittle.styles :as styles]
             [scicloj.clay.v2.util.resource :as resource]
-            [scicloj.clay.v2.html.table :as table]))
+            [scicloj.clay.v2.html.table :as table]
+            [clj-yaml.core :as yaml]))
 
 (def special-libs-set
   #{'datatables 'vega 'echarts 'cytoscape})
@@ -166,21 +167,17 @@ code {
                         "<table class='table table-hover'>"))))
 
 
-(defn qmd [{:keys [widgets data port title]}]
+(defn qmd [{:keys [widgets data port title options]}]
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (when-not port
       (throw (ex-info "missing port")))
     (str
-     "
----
-format:
-  html:
-    toc: true
-code-block-background: true
-theme: morph
----
-          "
+     (->> options
+          :quarto
+          yaml/generate-string
+          (format "\n---\n%s\n---\n"))
+
      "
 #
 "

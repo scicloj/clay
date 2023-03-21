@@ -77,3 +77,13 @@
 (defn url
   []
   (scittle.server/url))
+
+(defn swap-options! [f & args]
+  (apply scittle.server/swap-options!
+         f args))
+
+(defn reset-options!
+  ([]
+   (reset-options!  scittle.server/default-options))
+  ([options]
+   (scittle.server/swap-options! (constantly options))))

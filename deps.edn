@@ -10,7 +10,8 @@
         http-kit/http-kit {:mvn/version "2.7.0-alpha1"}
         com.cognitect/transit-clj {:mvn/version "1.0.329"}
         io.github.nextjournal/markdown {:mvn/version "0.5.144"}
-        hiccup/hiccup {:mvn/version "2.0.0-alpha2"}}
+        hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
+        clj-commons/clj-yaml {:mvn/version "1.0.26"}}
  :aliases {:dev {:extra-deps {scicloj/tablecloth {:mvn/version "7.000-beta-27"}
                               org.scicloj/kindly-default {:mvn/version "1-alpha6"}}}
            :build {:deps {io.github.seancorfield/build-clj
