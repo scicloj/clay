@@ -50,21 +50,21 @@
   [path]
   (scittle.server/write-html! path))
 
-(defn show-doc-and-write!
-  [path options]
-  (scittle.doc/show-doc-and-write! path options))
+;; (defn show-doc-and-write!
+;;   [path options]
+;;   (scittle.doc/show-doc-and-write! path options))
 
 (defn show-doc-and-write-html!
   [path options]
   (->> {:format :html}
        (merge options)
-       (scittle.doc/show-doc-and-write! path)))
+       (scittle.doc/show-doc-and-write-html! path)))
 
 (defn show-doc-and-write-quarto!
   [path options]
   (->> {:format :quarto}
        (merge options)
-       (scittle.doc/show-doc-and-write! path)))
+       (scittle.doc/gen-doc-and-write-quarto! path)))
 
 (defn browse!
   []

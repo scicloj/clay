@@ -19,12 +19,24 @@
 
 (defonce *state
   (atom {:port nil
-         :widgets [[:div
-                    [:p [:code (str (java.util.Date.))]]
-                    [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
-                                "Clay"]
-                         " is ready, waiting for interaction."]]]]
+         :widgets nil
          :fns {}}))
+
+(defn set-widgets! [widgets]
+  (swap! *state assoc :widgets widgets))
+
+(def welcome-widget
+  [:div
+   [:p [:code (str (java.util.Date.))]]
+   [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
+               "Clay"]
+        " is ready, waiting for interaction."]]])
+
+(set-widgets! [welcome-widget])
+
+(comment
+  (set-widgets! [welcome-widget welcome-widget])
+  (broadcast! "refresh"))
 
 (def default-options
   {:quarto {:format {:html {:toc true}}
@@ -36,6 +48,9 @@
   :ok)
 
 (swap-options! (constantly default-options))
+
+(defn reset-quarto-html-path! [path]
+  (swap! *state assoc :quarto-html-path path))
 
 (defn get-free-port []
   (loop [port 1971]
@@ -60,13 +75,14 @@
                   :status 200}
       [:get "/favicon.ico"] {:body nil
                              :status 200}
-      [:post "/compute"] (let [{:keys [fname args]} (-> body
-                                                        (transit/reader :json)
-                                                        transit/read
-                                                        read-string)
-                               f (-> @*state :fns (get fname))]
-                           {:body (pr-str (when (and f args)
-                                            (apply f args)))
+      [:post "/compute"] (let [{:keys [form]} (-> body
+                                                  (transit/reader :json)
+                                                  transit/read
+                                                  read-string)]
+                           (println [:compute form (java.util.Date.)])
+                           {:body (-> form
+                                      eval
+                                      pr-str)
                             :status 200})
       ;; else
       {:body (->> uri
@@ -155,19 +171,15 @@
    (-> [:wrote path]
        (kindly/consider :kind/hidden))))
 
-(defn write-quarto! []
+(defn write-quarto! [widgets]
   (let [qmd-path (ns->target-path *ns* "_quarto.qmd")
         html-path (-> qmd-path
                       (string/replace #"\.qmd$" ".html"))]
 
     (io/make-parents qmd-path)
-    (->> @*state
-         :date
-         (vector :state-date)
-         println)
-    (->> @*state
-         page/qmd
-         (spit qmd-path))
+    (-> @*state
+        (page/qmd widgets)
+        (->> (spit qmd-path)))
     (println [:wrote qmd-path (now)])
     (->> (sh/sh "quarto" "render" qmd-path)
          ((juxt :err :out))

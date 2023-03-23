@@ -88,17 +88,29 @@
                                                       "refresh" (.reload js/location)
                                                       (println [:unknown-ws-message (.-data event)])))))
 
-           '(defn compute [[fname & args] result-state result-path]
-              (POST "/compute"
-                    {:headers {"Accept" #_"application/transit+json" "application/json"}
-                     :params (pr-str {:fname fname
-                                      :args args})
-                     :handler (fn [response]
-                                (swap! result-state
-                                       assoc-in
-                                       result-path (read-string response)))
-                     :error-handler (fn [e]
-                                      (.log js/console (str e)))}))]
+           '(def *cache
+              (r/atom {}))
+           '(defn compute [form]
+              (if-let [result (@*cache form)]
+                result
+                (do (POST "/compute"
+                          {:headers {"Accept" "application/json"}
+                           :params (pr-str {:form form})
+                           :handler (fn [response]
+                                      (swap! *cache
+                                             assoc
+                                             form (read-string response))
+                                      (.log
+                                       js/console
+                                       (pr-str @*cache)))
+                           :error-handler (fn [e]
+                                            (.log
+                                             js/console
+                                             (str "error on compute: " e)))})
+                    [:div
+                     [:p "computing"]
+                     [:pre [:code (pr-str form)]]
+                     [:div.loader]])))]
           (->> special-libs
                (map special-libs-cljs))
           (->> widgets

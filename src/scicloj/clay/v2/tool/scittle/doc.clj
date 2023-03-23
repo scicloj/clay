@@ -97,10 +97,22 @@
           {:title (or title path)
            :toc? toc?})))))
 
-(defn show-doc-and-write!
-  [path {:keys [format]
-         :as options}]
+(defn show-doc-and-write-html!
+  [path options]
   (show-doc! path options)
-  (case format
-    :quarto (scittle.server/write-quarto!)
-    :html (scittle.server/write-html!)))
+  (scittle.server/write-html!))
+
+(defn gen-doc-and-write-quarto!
+  [path {:keys [title]
+         :as options}]
+  (scittle.server/set-widgets!
+   [[:div
+     [:p "generating Quarto document for "]
+     [:p [:code path]]
+     [:div.loader]]])
+  (scittle.server/reset-quarto-html-path! nil)
+  (scittle.server/broadcast! "refresh")
+  (->> options
+       (merge {:title (or title path)})
+       (gen-doc path)
+       (scittle.server/write-quarto!)))

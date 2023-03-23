@@ -70,6 +70,7 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 "
                             [:style styles/table]
+                            [:style styles/loader]
                             [:style
                              (-> #_"highlight/styles/tokyo-night-light.min.css"
                                  #_"highlight/styles/stackoverflow-light.min.css"
@@ -167,7 +168,8 @@ code {
                         "<table class='table table-hover'>"))))
 
 
-(defn qmd [{:keys [widgets data port title options]}]
+(defn qmd [{:keys [data port title options]}
+           widgets]
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (when-not port
@@ -184,6 +186,7 @@ code {
      (-> (str (hiccup/html
                [:div
                 [:style styles/table]
+                [:style styles/loader]
                 (->> special-libs
                      (mapcat (comp :from-local-copy :css special-lib-resources))
                      distinct
