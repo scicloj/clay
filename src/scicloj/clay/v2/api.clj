@@ -40,7 +40,7 @@
          (println s#)
          (str s#)))]))
 
-(defn show-doc!
+(defn show-namespace!
   ([path]
    (scittle.doc/show-doc! path))
   ([path options]
@@ -50,17 +50,13 @@
   [path]
   (scittle.server/write-html! path))
 
-;; (defn show-doc-and-write!
-;;   [path options]
-;;   (scittle.doc/show-doc-and-write! path options))
-
-(defn show-doc-and-write-html!
+(defn show-namespace-and-write-html!
   [path options]
   (->> {:format :html}
        (merge options)
        (scittle.doc/show-doc-and-write-html! path)))
 
-(defn show-doc-and-write-quarto!
+(defn generate-and-show-namespace-quarto!
   [path options]
   (->> {:format :quarto}
        (merge options)

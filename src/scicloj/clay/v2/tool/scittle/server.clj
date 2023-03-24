@@ -20,10 +20,36 @@
 (defonce *state
   (atom {:port nil
          :widgets nil
-         :fns {}}))
+         :fns {}
+         :counter 0}))
+
+(defn counter-watch [key atom old-value new-value]
+  (->> [old-value new-value]
+       (map :counter)
+       ((fn [[x y]]
+          (if (not= x y)
+            (println [x y]))))))
+
+(defonce once1
+  (add-watch *state :watcher #'counter-watch))
+
+(defn swap-state! [f & args]
+  (-> *state
+      (swap!
+       (fn [state]
+         (-> state
+             (#(apply f % args)))))))
+
+(defn swap-state-and-increment! [f & args]
+  (swap-state!
+   (fn [state]
+     (-> state
+         (update :counter inc)
+         (#(apply f % args))))))
+
 
 (defn set-widgets! [widgets]
-  (swap! *state assoc :widgets widgets))
+  (swap-state-and-increment! assoc :widgets widgets))
 
 (def welcome-widget
   [:div
@@ -44,13 +70,13 @@
             :theme :morph}})
 
 (defn swap-options! [f & args]
-  (apply swap! *state update :options f args)
+  (apply swap-state! update :options f args)
   :ok)
 
 (swap-options! (constantly default-options))
 
 (defn reset-quarto-html-path! [path]
-  (swap! *state assoc :quarto-html-path path))
+  (swap-state! assoc :quarto-html-path path))
 
 (defn get-free-port []
   (loop [port 1971]
@@ -73,6 +99,10 @@
                                     slurp)
                             (page/page @*state))
                   :status 200}
+      [:get "/counter"] {:body (-> @*state
+                                   :counter
+                                   str)
+                         :status 200}
       [:get "/favicon.ico"] {:body nil
                              :status 200}
       [:post "/compute"] (let [{:keys [form]} (-> body
@@ -110,7 +140,7 @@
 (defn open! []
   (let [port (get-free-port)
         server (core-http-server port)]
-    (swap! *state assoc :port port)
+    (swap-state! assoc :port port)
     (reset! *stop-server! port)
     (println "serving scittle at " (port->url port))
     (browse!)))
@@ -125,13 +155,13 @@
   ([widgets]
    (show-widgets! widgets nil))
   ([widgets options]
-   (swap! *state
-          (fn [state]
-            (-> state
-                (assoc :quarto-html-path nil)
-                (assoc :date (java.util.Date.))
-                (assoc :widgets widgets)
-                (merge options))))
+   (swap-state-and-increment!
+    (fn [state]
+      (-> state
+          (assoc :quarto-html-path nil)
+          (assoc :date (java.util.Date.))
+          (assoc :widgets widgets)
+          (merge options))))
    (broadcast! "refresh")
    (-> [:ok] (kindly/consider :kind/hidden))))
 
@@ -185,6 +215,11 @@
          ((juxt :err :out))
          (mapv println))
     (println [:created html-path (now)])
-    (swap! *state assoc :quarto-html-path html-path)
+    (swap-state! assoc :quarto-html-path html-path)
     (broadcast! "refresh")
     :ok))
+
+(defn show-message! [hiccup]
+  (set-widgets! [hiccup])
+  (reset-quarto-html-path! nil)
+  (broadcast! "refresh"))

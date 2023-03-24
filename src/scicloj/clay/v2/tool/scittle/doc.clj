@@ -89,8 +89,14 @@
 (defn show-doc!
   ([path]
    (show-doc! path nil))
-  ([path {:keys [title toc?]
+  ([path {:keys [title toc? custom-message]
           :as options}]
+   (scittle.server/show-message!
+    (or custom-message
+        [:div
+         [:p "showing document for "]
+         [:p [:code path]]
+         [:div.loader]]))
    (let [doc (gen-doc path options)]
      (-> doc
          (scittle.server/show-widgets!
@@ -99,19 +105,24 @@
 
 (defn show-doc-and-write-html!
   [path options]
-  (show-doc! path options)
+  (-> options
+      (assoc :custom-message
+             [:div
+              [:p "showing document for "]
+              [:p [:code path]]
+              [:p "and then writing as html file"]
+              [:div.loader]])
+      (->> (show-doc! path)))
   (scittle.server/write-html!))
 
 (defn gen-doc-and-write-quarto!
   [path {:keys [title]
          :as options}]
-  (scittle.server/set-widgets!
-   [[:div
-     [:p "generating Quarto document for "]
-     [:p [:code path]]
-     [:div.loader]]])
-  (scittle.server/reset-quarto-html-path! nil)
-  (scittle.server/broadcast! "refresh")
+  (scittle.server/show-message!
+   [:div
+    [:p "generating Quarto document for "]
+    [:p [:code path]]
+    [:div.loader]])
   (->> options
        (merge {:title (or title path)})
        (gen-doc path)

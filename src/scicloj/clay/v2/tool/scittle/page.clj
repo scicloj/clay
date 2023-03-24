@@ -53,7 +53,7 @@
        (filter special-libs-set)
        distinct))
 
-(defn page [{:keys [widgets data port title toc?]}]
+(defn page [{:keys [widgets data port title toc? counter]}]
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (when-not port
@@ -160,7 +160,8 @@ code {
                              (->> {:widgets widgets
                                    :data data
                                    :port port
-                                   :special-libs special-libs}
+                                   :special-libs special-libs
+                                   :server-counter counter}
                                   cljs-generation/widgets-cljs
                                   (map pr-str)
                                   (string/join "\n"))]])
@@ -168,7 +169,7 @@ code {
                         "<table class='table table-hover'>"))))
 
 
-(defn qmd [{:keys [data port title options]}
+(defn qmd [{:keys [data port title options counter]}
            widgets]
   (let [special-libs (->> widgets
                           special-libs-in-form)]
@@ -268,7 +269,8 @@ code {
                  (->> {:widgets widgets
                        :data data
                        :port port
-                       :special-libs special-libs}
+                       :special-libs special-libs
+                       :server-counter counter}
                       cljs-generation/widgets-cljs
                       (map pr-str)
                       (string/join "\n"))]]))

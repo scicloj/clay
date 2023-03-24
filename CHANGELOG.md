@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha15-SNAPSHOT]
 - experimental quarto support
 - using the Scicloj Scittle fork for MathBox.cljs support
+- a more graceful user experience around main actions
+- updated API entry points for a few of the main actions
 
 ## [2-alpha14]  - 2023-02-21
 - table view support for datasets

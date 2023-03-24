@@ -72,21 +72,39 @@
    'cytoscape cytoscape-cljs})
 
 
-(defn widgets-cljs [{:keys [widgets data port special-libs]}]
+(defn widgets-cljs [{:keys [server-counter widgets data port special-libs]}]
   (concat ['(ns main
               (:require [reagent.core :as r]
                         [reagent.dom :as dom]
                         [ajax.core :refer [GET POST]]
                         [clojure.string :as string]))
+           '(defn refresh-page []
+              (.reload js/location))
+           (list 'GET "/counter"
+                 {:handler (list
+                            'fn '[response]
+                            (list 'when
+                                  (list 'not= 'response
+                                        `(str ~server-counter))
+                                  '(refresh-page)
+                                  ;; (list 'js/alert (list 'pr-str
+                                  ;;                       [:not=
+                                  ;;                        'response
+                                  ;;                        `(str ~server-counter)]))
+                                  ))
+                  :error-handler '(fn [e]
+                                    (.log
+                                     js/console
+                                     (str "error on counter: " e)))})
            (list 'def 'data
                  (list 'quote data))
-           `(let [socket (js/WebSocket. (str "ws://localhost:" ~port))]
-              (.addEventListener socket "open" (fn [event]
-                                                 (.send socket "Hello Server!")))
-              (.addEventListener socket "message" (fn [event]
-                                                    (case (.-data event)
-                                                      "refresh" (.reload js/location)
-                                                      (println [:unknown-ws-message (.-data event)])))))
+           (list 'let ['socket `(js/WebSocket. (str "ws://localhost:" ~port))]
+                 '(.addEventListener socket "open" (fn [event]
+                                                     (.send socket "Hello Server!")))
+                 '(.addEventListener socket "message" (fn [event]
+                                                        (case (.-data event)
+                                                          "refresh" (refresh-page)
+                                                          (println [:unknown-ws-message (.-data event)])))))
 
            '(def *cache
               (r/atom {}))
