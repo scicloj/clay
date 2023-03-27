@@ -8,6 +8,7 @@
             [scicloj.clay.v2.tool.scittle.widget :as scittle.widget]
             [scicloj.clay.v2.tool.scittle.page :as scittle.page]
             [scicloj.clay.v2.read]
+            [scicloj.clay.v2.path :as path]
             [clojure.string :as string]
             [nextjournal.markdown :as md]
             [nextjournal.markdown.transform :as md.transform]
@@ -94,8 +95,8 @@
    (scittle.server/show-message!
     (or custom-message
         [:div
-         [:p "showing document for "]
-         [:p [:code path]]
+         [:p "showing document for "
+          [:code (path/path->filename path)]]
          [:div.loader]]))
    (let [doc (gen-doc path options)]
      (-> doc
@@ -108,8 +109,8 @@
   (-> options
       (assoc :custom-message
              [:div
-              [:p "showing document for "]
-              [:p [:code path]]
+              [:p "showing document for "
+               [:code (path/path->filename path)]]
               [:p "and then writing as html file"]
               [:div.loader]])
       (->> (show-doc! path)))
@@ -120,8 +121,8 @@
          :as options}]
   (scittle.server/show-message!
    [:div
-    [:p "generating Quarto document for "]
-    [:p [:code path]]
+    [:p "generating Quarto document for "
+     [:code (path/path->filename path)]]
     [:div.loader]])
   (->> options
        (merge {:title (or title path)})
