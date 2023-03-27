@@ -5,6 +5,7 @@
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.tool.scittle.page :as page]
             [scicloj.clay.v2.tool.scittle.view :as view]
+            [scicloj.clay.v2.path :as path]
             [clojure.java.shell :as sh]
             [clojure.string :as string]
             [clojure.java.io :as io]))
@@ -115,9 +116,13 @@
                                       pr-str)
                             :status 200})
       ;; else
-      {:body (->> uri
-                  (str "docs")
-                  slurp)
+      {:body (let [base-path (or (some-> @*state
+                                         :quarto-html-path
+                                         path/path->parent)
+                                 "docs")]
+               (->> uri
+                    (str base-path)
+                    slurp))
        :status 200})))
 
 (defonce *stop-server! (atom nil))
