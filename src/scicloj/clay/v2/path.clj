@@ -3,7 +3,6 @@
             [clojure.string :as string])
   (:import (java.nio.file LinkOption)))
 
-
 (defn real-path [path]
   (let [file (io/file path)]
     (when (.exists file)
@@ -12,3 +11,14 @@
           (.toPath)
           (.toRealPath (into-array LinkOption []))
           str))))
+
+
+(defn path->filename [path]
+  (-> path
+      io/file
+      (.getName)))
+
+(defn path->parent [path]
+  (-> path
+      io/file
+      (.getParent)))
