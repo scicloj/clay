@@ -67,8 +67,7 @@
 
 (def default-options
   {:quarto {:format {:html {:toc true}}
-            :code-block-background true
-            :theme :morph}})
+            :code-block-background true}})
 
 (defn swap-options! [f & args]
   (apply swap-state! update :options f args)
