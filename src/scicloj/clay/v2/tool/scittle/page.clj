@@ -188,6 +188,12 @@ code {
                [:div
                 [:style styles/table]
                 [:style styles/loader]
+                [:style "
+.printedClojure .sourceCode {
+  background-color: transparent;
+  border-style: none;
+}
+"]
                 (->> special-libs
                      (mapcat (comp :from-local-copy :css special-lib-resources))
                      distinct
@@ -216,7 +222,7 @@ code {
                              :clay/original-code
                              (format "
 
-<div style=\"background:#bbb\">
+<div class=\"originalCode\">
 ```clojure
 %s
 ```
@@ -230,11 +236,11 @@ code {
                              meta
                              :clay/text
                              (format "
-
+<div class=\"printedClojure\">
 ```clojure
 %s
 ```
-
+</div>
 "))
                         ;;
                         (widget/check widget :clay/plain-html?)
