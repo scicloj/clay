@@ -1,0 +1,57 @@
+
+(defun clay/start ()
+  (interactive)
+  (cider-interactive-eval "
+    (require '[scicloj.clay.v2.api])
+    (scicloj.clay.v2.api/start!)")
+  t)
+
+(defun clay/show-namespace ()
+  (interactive)
+  (clay/start)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/show-namespace! \"" filename "\" {})")))))
+
+(defun clay/show-namespace-and-write-html ()
+  (interactive)
+  (clay/start)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/show-namespace-and-write-html! \"" filename "\" {:toc? true})")))))
+
+(defun clay/generate-and-show-namespace-quarto ()
+  (interactive)
+  (clay/start)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/generate-and-show-namespace-quarto! \"" filename "\" {})")))))
+
+(defun clay/send (code)
+  (clay/start)
+  (cider-interactive-notify-and-eval
+   (concat "(let [__value "
+           code
+           "] (tap> {:clay-tap? true :form (quote " code ") :value __value}) __value)")))
+
+(defun clay/send-last-sexp ()
+  (interactive)
+  (clay/start)
+  (clay/send (cider-last-sexp)))
+
+(defun clay/send-defun-at-point ()
+  (interactive)
+  (clay/start)
+  (clay/send (thing-at-point 'defun)))
