@@ -210,9 +210,12 @@ people-as-vectors
 (import javax.imageio.ImageIO
         java.net.URL)
 
-(->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-     (URL.)
-     (ImageIO/read))
+(defonce image
+  (->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
+       (URL.)
+       (ImageIO/read)))
+
+image
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
