@@ -73,41 +73,13 @@
 
 
 (defn widgets-cljs [{:keys [server-counter widgets data port special-libs]}]
-  (concat ['(ns main
+  (concat ['(ns scicloj.clay
               (:require [reagent.core :as r]
-                        [reagent.dom :as dom]
-                        [ajax.core :refer [GET POST]]
-                        [clojure.string :as string]))
-           '(defn refresh-page []
-              (.reload js/location))
-           (list 'GET "/counter"
-                 {:handler (list
-                            'fn '[response]
-                            (list 'when
-                                  (list 'not= 'response
-                                        `(str ~server-counter))
-                                  '(refresh-page)
-                                  ;; (list 'js/alert (list 'pr-str
-                                  ;;                       [:not=
-                                  ;;                        'response
-                                  ;;                        `(str ~server-counter)]))
-                                  ))
-                  :error-handler '(fn [e]
-                                    (.log
-                                     js/console
-                                     (str "error on counter: " e)))})
-           (list 'def 'data
-                 (list 'quote data))
-           (list 'let ['socket `(js/WebSocket. (str "ws://localhost:" ~port))]
-                 '(.addEventListener socket "open" (fn [event]
-                                                     (.send socket "Hello Server!")))
-                 '(.addEventListener socket "message" (fn [event]
-                                                        (case (.-data event)
-                                                          "refresh" (refresh-page)
-                                                          (println [:unknown-ws-message (.-data event)])))))
-
+                        [ajax.core :refer [GET POST]]))
            '(def *cache
               (r/atom {}))
+           '(defn reset-cache! [m]
+              (reset! *cache m))
            '(defn compute [form]
               (if-let [result (@*cache form)]
                 result
@@ -128,7 +100,35 @@
                     [:div
                      [:p "computing"]
                      [:pre [:code (pr-str form)]]
-                     [:div.loader]])))]
+                     [:div.loader]])))
+           '(defn refresh-page []
+              (.reload js/location))
+           '(ns main
+              (:require [reagent.core :as r]
+                        [reagent.dom :as dom]
+                        [ajax.core :refer [GET POST]]
+                        [clojure.string :as string]
+                        [scicloj.clay :as clay]))
+           (list 'GET "/counter"
+                 {:handler (list
+                            'fn '[response]
+                            (list 'when
+                                  (list 'not= 'response
+                                        `(str ~server-counter))
+                                  '(clay/refresh-page)))
+                  :error-handler '(fn [e]
+                                    (.log
+                                     js/console
+                                     (str "error on counter: " e)))})
+           (list 'def 'data
+                 (list 'quote data))
+           (list 'let ['socket `(js/WebSocket. (str "ws://localhost:" ~port))]
+                 '(.addEventListener socket "open" (fn [event]
+                                                     (.send socket "Hello Server!")))
+                 '(.addEventListener socket "message" (fn [event]
+                                                        (case (.-data event)
+                                                          "refresh" (clay/refresh-page)
+                                                          (println [:unknown-ws-message (.-data event)])))))]
           (->> special-libs
                (map special-libs-cljs))
           (->> widgets
