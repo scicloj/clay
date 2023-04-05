@@ -46,22 +46,20 @@
 ;; ### Emacs CIDER
 ;; **(to be updated soon)**
 ;;
-;; Please add the following to your Emacs configuration. It will make sure to inform Clay about all user evaluations of Clojure code.
-
-
-;; ```elisp
-;; ;; (inspired by: https://github.com/clojure-emacs/cider/issues/3094)
-;; (require 'cider-mode)
+;; Please load [clay.el](https://github.com/scicloj/clay/blob/main/clay.el) at your Emacs config.
 ;;
-;; (defun cider-tap (&rest r) ; inspired by https://github.com/clojure-emacs/cider/issues/3094
-;;   (cons (concat "(let [__value "
-;;                 (caar r)
-;;                 "] (tap> {:clay-tap? true :form (quote " (caar r) ") :value __value}) __value)")
-;;         (cdar r)))
+;; It offers the following functions, that you may wish to create keybindings for:
 ;;
-;; (advice-add 'cider-nrepl-request:eval
-;; :filter-args #'cider-tap)
-;; ```
+;; |name|function|
+;; |--|--|
+;; |`clay/start`|start clay if not started yet|
+;; |`clay/show-namespace`|save clj buffer and render it in the browser view|
+;; |`clay/show-namespace-and-write-html`|save clj buffer, render it in the browser view, and save the result as html|
+;; |`clay/generate-and-show-namespace-quarto`|(experimental) save clj buffer, generate an html document using Quarto, and show it in the browser view|
+;; |`clay/send`|send a single clj form to be rendered in the browser view|
+;; |`clay/send-last-sexp`|send the last s-expression|
+;; |`clay/send-defun-at-point`|send the [defun-at-point](https://www.emacswiki.org/emacs/ThingAtPoint)|
+
 
 ;; ## Starting a Clay namespace
 
