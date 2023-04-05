@@ -42,9 +42,7 @@
 (defun clay/send (code)
   (clay/start)
   (cider-interactive-notify-and-eval
-   (concat "(let [__value "
-           code
-           "] (tap> {:clay-tap? true :form (quote " code ") :value __value}) __value)")))
+   (concat "(scicloj.clay.v2.api/handle-form! (quote " code "))")))
 
 (defun clay/send-last-sexp ()
   (interactive)

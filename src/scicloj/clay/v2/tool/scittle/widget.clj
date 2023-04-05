@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.tool.scittle.widget
-  (:require [clojure.pprint :as pp]))
+  (:require [clojure.pprint :as pp]
+            [clojure.string :as string]))
 
 (defn mark [hiccup & keywords]
   (reduce (fn [h kw]
@@ -32,6 +33,11 @@
       (vary-meta
        assoc :clay/text string)))
 
+(defn escape [string]
+  (-> string
+      (string/escape
+       {\< "&lt;" \> "&gt;"})))
+
 (defn structure-mark [string]
   (-> [:div string]
       #_[:big string]
@@ -41,12 +47,14 @@
   (-> value
       println
       with-out-str
+      escape
       printed-clojure))
 
 (defn pprint [value]
   (-> value
       pp/pprint
       with-out-str
+      escape
       printed-clojure))
 
 (defn in-div [widget]

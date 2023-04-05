@@ -31,7 +31,7 @@
 
 (defn restart! [{:keys [tools events-source]
                  :as config
-                 :or {events-source :tap}}]
+                 :or {events-source :api}}]
   (view/setup! config)
   (view/close! tools)
   (when-let [s (:stop @*pipeline)]
@@ -51,18 +51,27 @@
   (when-let [p (:process @*pipeline)]
     (p event)))
 
+(defn handle-form! [form]
+  (try
+    (process!
+     {:event-type :event-type/value
+      :form form
+      :value (eval form)
+      :source :api})
+    (catch Exception e
+      (println [:error-in-clay-pipeline e]))))
 
-(defn handle-tap [{:keys [clay-tap? code-file form value]
-                   :as dbg}]
-  (when clay-tap?
-    (try
-      (process!
-       {:event-type :event-type/value
-        :code (some-> code-file slurp)
-        :form form
-        :value value
-        :source :tap})
-      (catch Exception e
-        (println [:error-in-clay-pipeline e])))))
+;; (defn handle-tap [{:keys [clay-tap?  form value]
+;;                    :as dbg}]
+;;   (when clay-tap?
+;;     (try
+;;       (process!
+;;        {:event-type :event-type/value
+;;         :code (some->  slurp)
+;;         :form form
+;;         :value value
+;;         :source :tap})
+;;       (catch Exception e
+;;         (println [:error-in-clay-pipeline e])))))
 
-(add-tap #'handle-tap)
+;; (add-tap #'handle-tap)

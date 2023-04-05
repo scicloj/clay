@@ -39,7 +39,7 @@
 ;; {
 ;;  "key": "ctrl+shift+enter",
 ;;  "command": "calva.runCustomREPLCommand",
-;;  "args": "(tap> {:clay-tap? true :form (quote $current-form) :code (str (quote $current-form)) :value $current-form})"
+;;  "args": "(scicloj.clay.v2.api/handle-form! (quote $current-form))"
 ;;  }
 ;; ```
 

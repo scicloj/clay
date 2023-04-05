@@ -83,3 +83,6 @@
    (reset-options!  scittle.server/default-options))
   ([options]
    (scittle.server/swap-options! (constantly options))))
+
+(defn handle-form! [form]
+  (pipeline/handle-form! form))
