@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha15-SNAPSHOT]
+## [2-alpha15] - 2023-04-05
 - experimental quarto support
 - using the Scicloj Scittle fork for MathBox.cljs support
 - a more graceful user experience around main actions
