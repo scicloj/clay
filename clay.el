@@ -39,9 +39,18 @@
       (cider-interactive-eval
        (concat "(scicloj.clay.v2.api/generate-and-show-namespace-quarto! \"" filename "\" {})")))))
 
+(defun clay/cider-interactive-notify-and-eval (code)
+  (interactive)
+  (cider-interactive-eval
+   code
+   (cider-interactive-eval-handler nil (point))
+   nil
+   nil))
+
 (defun clay/send (code)
+  (interactive)
   (clay/start)
-  (cider-interactive-notify-and-eval
+  (clay/cider-interactive-notify-and-eval
    (concat "(scicloj.clay.v2.api/handle-form! (quote " code "))")))
 
 (defun clay/send-last-sexp ()
