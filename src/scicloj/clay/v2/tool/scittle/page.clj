@@ -11,7 +11,7 @@
             [clj-yaml.core :as yaml]))
 
 (def special-libs-set
-  #{'datatables 'vega 'echarts 'cytoscape})
+  #{'datatables 'vega 'echarts 'cytoscape 'plotly})
 
 (def special-lib-resources
   {'vega {:js {:from-local-copy
@@ -25,7 +25,9 @@
    'echarts {:js {:from-local-copy
                   ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
    'cytoscape {:js {:from-local-copy
-                    ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"]}}})
+                    ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"]}}
+   'plotly {:js {:from-local-copy
+                 ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls

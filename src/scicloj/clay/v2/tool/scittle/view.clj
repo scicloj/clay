@@ -230,6 +230,12 @@
   'echarts))
 
 (add-viewer!
+ :kind/plotly
+ (partial
+  expand-options-if-vector
+  'plotly))
+
+(add-viewer!
  :kind/code
  (fn [codes]
    (->> codes

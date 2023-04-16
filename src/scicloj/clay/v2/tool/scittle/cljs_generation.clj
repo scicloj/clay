@@ -30,11 +30,12 @@
   '(defn echarts
      ([echart-option]
       (echarts echart-option nil))
-     ([echart-option {:keys [on register-map]
+     ([echart-option {:keys [on register-map div-style]
+                      :or {:div-style {:height 500}}
                       :as options}]
       (fn []
         [:div
-         {:style {:height "500px"}
+         {:style div-style
           :ref (fn [el]
                  (when el
                    (when-let [[map-name map-options] register-map]
@@ -65,12 +66,22 @@
                      js/cytoscape)))}])))
 
 
+(def plotly-cljs
+  '(defn plotly
+     [{:keys [data]}]
+     [:div
+      {:ref (fn [el]
+              (when el
+                (.newPlot js/Plotly
+                          el
+                          (clj->js data)
+                          )))}]))
 (def special-libs-cljs
   {'datatables datatables-cljs
    'vega vega-cljs
    'echarts echarts-cljs
-   'cytoscape cytoscape-cljs})
-
+   'cytoscape cytoscape-cljs
+   'plotly plotly-cljs})
 
 (defn widgets-cljs [{:keys [server-counter widgets data port special-libs]}]
   (concat ['(ns scicloj.clay
