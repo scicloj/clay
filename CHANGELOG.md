@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha17-SNAPSHOT]
+## [2-alpha17] - 2023-04-16
 - ignoring missing source maps till we figure this problem out
 - plotly support, customizable echarts element height
 - serving binary files correctly
