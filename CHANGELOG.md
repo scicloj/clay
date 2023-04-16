@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha17-SNAPSHOT]
 - ignoring missing source maps till we figure this problem out
 - plotly support, customizable echarts element height
+- serving binary files correctly
 
 ## [2-alpha16] - 2023-04-06
 - simplified the way forms are sent to Clay (avoiding `tap>`)

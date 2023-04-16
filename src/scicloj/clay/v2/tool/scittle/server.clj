@@ -120,9 +120,10 @@
                                          :quarto-html-path
                                          path/path->parent)
                                  "docs")]
+               (println [:uri uri])
                (try (->> uri
                          (str base-path)
-                         slurp)
+                         (java.io.FileInputStream.))
                     (catch java.io.FileNotFoundException e
                       ;; Ignoring missing source maps.
                       ;; TODO: Figure this problem out.
@@ -130,6 +131,7 @@
                         nil
                         (throw e)))))
        :status 200})))
+
 
 (defonce *stop-server! (atom nil))
 
