@@ -232,16 +232,20 @@ code {
                                      (-> widget
                                          meta
                                          :clay/original-code))]
-                          (->> code
-                               (format "
-
+                          (if (= code "")
+                            "
+```
+```
+"
+                            (->> code
+                                 (format "
 <div class=\"originalCode\">
 ```clojure
 %s
 ```
 </div>
 
-")))
+"))))
                         ;;
                         ;;
                         (widget/check widget :clay/printed-clojure?)
