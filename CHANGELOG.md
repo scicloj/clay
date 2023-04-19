@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha18] - 2023-04-19
+## [2-alpha18-SNAPSHOT]
 - handling hidden code blocks differently in the quarto pathway, to avoid quarto slowness
 
 ## [2-alpha17] - 2023-04-16
