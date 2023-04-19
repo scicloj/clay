@@ -120,7 +120,7 @@
                                          :quarto-html-path
                                          path/path->parent)
                                  "docs")]
-               (println [:uri uri])
+               #_(println [:uri uri])
                (try (->> uri
                          (str base-path)
                          (java.io.FileInputStream.))
