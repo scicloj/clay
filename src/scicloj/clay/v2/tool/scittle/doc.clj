@@ -61,18 +61,18 @@
                                    %
                                    assoc
                                    :clay/original-markdown markdown))))]
-                        [(when-not (or hide-code?
-                                       (-> form meta :kindly/hide-code?))
-                           (-> {:value (-> note
-                                           :code
-                                           vector)
-                                :kind :kind/code}
-                               scittle.view/prepare
-                               (#(vary-meta
-                                  %
-                                  assoc
-                                  :clay/original-code (-> note
-                                                          :code)))))
+                        [(-> {:value (-> note
+                                         :code
+                                         vector)
+                              :kind :kind/code}
+                             scittle.view/prepare
+                             (#(vary-meta
+                                %
+                                assoc
+                                :clay/original-code (-> note
+                                                        :code)
+                                :clay/hide-code? (or hide-code?
+                                                     (-> form meta :kindly/hide-code?)))))
                          (when-not (or
                                     (and (sequential? form)
                                          (-> form first hidden-form-starters))

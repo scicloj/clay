@@ -126,8 +126,14 @@ code {
                                       (map-indexed
                                        (fn [i widget]
                                          [:div {:style {:margin "15px"}}
-                                          (if (widget/check widget :clay/plain-html?)
+                                          (cond
+                                            (-> widget meta :clay/hide-code?)
+                                            nil
+                                            ;;
+                                            (widget/check widget :clay/plain-html?)
                                             widget
+                                            ;;
+                                            :else
                                             [:div {:id (str "widget" i)}
                                              "..."])]))
                                       (into [:div]))]]]]]
@@ -219,10 +225,15 @@ code {
                         (-> widget
                             meta
                             :clay/original-code)
-                        (->> widget
-                             meta
-                             :clay/original-code
-                             (format "
+                        (let [code (if (-> widget
+                                           meta
+                                           :clay/hide-code?)
+                                     ""
+                                     (-> widget
+                                         meta
+                                         :clay/original-code))]
+                          (->> code
+                               (format "
 
 <div class=\"originalCode\">
 ```clojure
@@ -230,7 +241,7 @@ code {
 ```
 </div>
 
-"))
+")))
                         ;;
                         ;;
                         (widget/check widget :clay/printed-clojure?)
