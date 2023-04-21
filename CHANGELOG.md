@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha18-SNAPSHOT]
+## [2-alpha18] - 2023-04-21
 - handling hidden code blocks differently in the quarto pathway, to avoid quarto slowness
 - added Emmy, tmdjs support
 
