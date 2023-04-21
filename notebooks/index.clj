@@ -320,6 +320,29 @@ image
         (when (:open? @*state)
           [Main])]))])
 
+;; ## Emmy
+(kind/hiccup
+ '(require '[emmy.env :as e :refer [D]]))
+
+(kind/hiccup
+ [:div
+  '(-> 'x
+       ((D e/cube))
+       e/simplify
+       e/->infix)])
+
+;; ## tmdjs
+(kind/hiccup
+ '(require '[tech.v3.dataset :as tmd]))
+
+(kind/hiccup
+ '[(fn []
+     [:div
+      (-> {:x [1 2 3]}
+          tmd/->dataset
+          :x
+          pr-str)])])
+
 
 ;; ## Delays
 

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha18-SNAPSHOT]
 - handling hidden code blocks differently in the quarto pathway, to avoid quarto slowness
+- added Emmy, tmdjs support
 
 ## [2-alpha17] - 2023-04-16
 - ignoring missing source maps till we figure this problem out
