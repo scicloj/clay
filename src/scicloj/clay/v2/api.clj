@@ -86,3 +86,6 @@
 
 (defn handle-form! [form]
   (pipeline/handle-form! form))
+
+(defn handle-value! [value]
+  (pipeline/handle-value! value))

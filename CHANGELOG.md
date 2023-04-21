@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha20-SNAPSHOT]
+- minor API extension: handling a value
+
 ## [2-alpha19] - 2023-04-21
 - Katex support
 

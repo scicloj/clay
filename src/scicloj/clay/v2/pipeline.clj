@@ -61,6 +61,15 @@
     (catch Exception e
       (println [:error-in-clay-pipeline e]))))
 
+(defn handle-value! [value]
+  (try
+    (process!
+     {:event-type :event-type/value
+      :value value
+      :source :api})
+    (catch Exception e
+      (println [:error-in-clay-pipeline e]))))
+
 ;; (defn handle-tap [{:keys [clay-tap?  form value]
 ;;                    :as dbg}]
 ;;   (when clay-tap?
