@@ -74,14 +74,23 @@
               (when el
                 (.newPlot js/Plotly
                           el
-                          (clj->js data)
-                          )))}]))
+                          (clj->js data))))}]))
+
+(def katex-cljs
+  '(defn katex
+     [tex-string]
+     [:div
+      {:dangerouslySetInnerHTML
+       {:__html (.renderToString js/katex
+                                 tex-string)}}]))
+
 (def special-libs-cljs
   {'datatables datatables-cljs
    'vega vega-cljs
    'echarts echarts-cljs
    'cytoscape cytoscape-cljs
-   'plotly plotly-cljs})
+   'plotly plotly-cljs
+   'katex katex-cljs})
 
 (defn widgets-cljs [{:keys [server-counter widgets data port special-libs]}]
   (concat ['(ns scicloj.clay

@@ -320,7 +320,24 @@ image
         (when (:open? @*state)
           [Main])]))])
 
-;; ## Emmy
+;; ### plotly
+(kind/hiccup
+ '[plotly
+   {:data [{:x [0 1 3 2]
+            :y [0 6 4 5]
+            :z [0 8 9 7]
+            :type :scatter3d
+            :mode :lines+markers
+            :opacity 0.5
+            :line {:width 5}
+            :marker {:size 4
+                     :colorscale :Viridis}}]}])
+
+;; ### Katex
+(kind/hiccup
+ '[katex "1+x^2"])
+
+;; ### Emmy
 (kind/hiccup
  '(require '[emmy.env :as e :refer [D]]))
 
@@ -331,7 +348,14 @@ image
        e/simplify
        e/->infix)])
 
-;; ## tmdjs
+(kind/hiccup
+ '[katex
+   (-> 'x
+       ((D e/cube))
+       e/simplify
+       e/->infix)])
+
+;; ### tmdjs
 (kind/hiccup
  '(require '[tech.v3.dataset :as tmd]))
 
@@ -342,7 +366,6 @@ image
           tmd/->dataset
           :x
           pr-str)])])
-
 
 ;; ## Delays
 

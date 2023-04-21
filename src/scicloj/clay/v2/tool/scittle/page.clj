@@ -11,7 +11,7 @@
             [clj-yaml.core :as yaml]))
 
 (def special-libs-set
-  #{'datatables 'vega 'echarts 'cytoscape 'plotly})
+  #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex})
 
 (def special-lib-resources
   {'vega {:js {:from-local-copy
@@ -27,7 +27,11 @@
    'cytoscape {:js {:from-local-copy
                     ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"]}}
    'plotly {:js {:from-local-copy
-                 ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}})
+                 ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}
+   'katex {:js {:from-local-copy
+                ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.js"]}
+           :css {:from-local-copy
+                 ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.css"]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls
