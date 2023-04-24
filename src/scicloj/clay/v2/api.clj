@@ -9,6 +9,17 @@
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
             [clojure.string :as string]))
 
+(def ^:dynamic *in-api-call?* false)
+
+(def invisible-ok
+  (kindly/consider
+   [:ok]
+   :kind/void))
+
+(defmacro avoid-recursion [& forms]
+  `(do (if-not *in-api-call?*
+         (binding [*in-api-call?* true]
+           ~@forms))))
 
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))
@@ -24,7 +35,7 @@
    (-> base-config
        (merge config)
        pipeline/start!)
-   :clay))
+   invisible-ok))
 
 (defn restart!
   ([config]
@@ -42,9 +53,12 @@
 
 (defn show-namespace!
   ([path]
-   (scittle.doc/show-doc! path))
+   (show-namespace! path nil))
   ([path options]
-   (scittle.doc/show-doc! path options)))
+   (avoid-recursion
+    (start!)
+    (scittle.doc/show-doc! path options))
+   invisible-ok))
 
 (defn write-html!
   [path]
@@ -52,15 +66,17 @@
 
 (defn show-namespace-and-write-html!
   [path options]
-  (->> {:format :html}
-       (merge options)
-       (scittle.doc/show-doc-and-write-html! path)))
+  (avoid-recursion
+   (->> {:format :html}
+        (merge options)
+        (scittle.doc/show-doc-and-write-html! path))))
 
 (defn generate-and-show-namespace-quarto!
   [path options]
-  (->> {:format :quarto}
-       (merge options)
-       (scittle.doc/gen-doc-and-write-quarto! path)))
+  (avoid-recursion
+   (->> {:format :quarto}
+        (merge options)
+        (scittle.doc/gen-doc-and-write-quarto! path))))
 
 (defn browse!
   []
@@ -85,7 +101,10 @@
    (scittle.server/swap-options! (constantly options))))
 
 (defn handle-form! [form]
-  (pipeline/handle-form! form))
+  (avoid-recursion
+   (pipeline/handle-form! form))
+  invisible-ok)
 
 (defn handle-value! [value]
-  (pipeline/handle-value! value))
+  (pipeline/handle-value! value)
+  invisible-ok)

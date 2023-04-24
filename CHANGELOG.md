@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - allowing to hide code by value metadata
 - handling :kind/void
 - passing :kind/md more directly to quarto
+- avoiding recursion in API calls
 
 ## [2-alpha19] - 2023-04-21
 - Katex support
