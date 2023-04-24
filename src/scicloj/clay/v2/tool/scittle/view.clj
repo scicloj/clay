@@ -167,8 +167,8 @@
  widget/pprint)
 
 (add-viewer!
- :kind/hiccup
- (fn [v] v))
+ :kind/void
+ (constantly nil))
 
 (defn render-md [v]
   (->> v
