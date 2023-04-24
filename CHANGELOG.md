@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - minor API extension: handling a value
 - allowing to hide code by value metadata
 - handling :kind/void
+- passing :kind/md more directly to quarto
 
 ## [2-alpha19] - 2023-04-21
 - Katex support

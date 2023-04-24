@@ -85,7 +85,16 @@
                                (update :value view/deref-if-needed)
                                scittle.view/prepare
                                scittle.widget/in-div ; TODO: was this needed?
-                               ))]))))
+                               ((fn [ctx]
+                                  (if (-> note :value meta :kindly/kind (= :kind/md))
+                                    (-> ctx
+                                        (vary-meta
+                                         assoc
+                                         :clay/original-markdown
+                                         (->> note
+                                              :value
+                                              (string/join "\n"))))
+                                    ctx)))))]))))
        doall)))
 
 (defn show-doc!
@@ -103,7 +112,8 @@
      (-> doc
          (scittle.server/show-widgets!
           {:title (or title path)
-           :toc? toc?})))))
+           :toc? toc?})))
+   :ok))
 
 (defn show-doc-and-write-html!
   [path options]
