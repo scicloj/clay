@@ -167,6 +167,10 @@
  widget/pprint)
 
 (add-viewer!
+ :kind/hiccup
+ (fn [v] v))
+
+(add-viewer!
  :kind/void
  (constantly nil))
 
