@@ -372,13 +372,38 @@ image
 
 
 ;; ### 3dmol
+
+;; (experimental)
+
 (kind/hiccup
  ['three-d-mol-viewer
   {:data-pdb "2POR"}])
 
 (kind/hiccup
- ['three-d-mol
-  {:pdb (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
+ ['(fn [{:keys [pdb-data]}]
+     [:div
+      {:style {:width "100%"
+               :height "500px"
+               :position "relative"}
+       :ref (fn [el]
+              (let [config (clj->js
+                            {:backgroundColor "0xffffff"})
+                    viewer (.createViewer js/$3Dmol el #_config)]
+                (.setViewStyle viewer (clj->js
+                                       {:style "outline"}))
+                (.addModelsAsFrames viewer pdb-data "pdb")
+                (.addSphere viewer (clj->js
+                                    {:center {:x 0
+                                              :y 0
+                                              :z 0}
+                                     :radius 1
+                                     :color "green"}))
+                (.zoomTo viewer)
+                (.render viewer)
+                (.zoom viewer 0.8 2000)))}
+      ;; need to keep this symbol to let Clay infer the necessary dependency
+      'three-d-mol])
+  {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
 
 ;; ## Delays
 
