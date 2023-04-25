@@ -11,7 +11,8 @@
             [clj-yaml.core :as yaml]))
 
 (def special-libs-set
-  #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex})
+  #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex
+    'three-d-mol 'three-d-mol-viewer})
 
 (def special-lib-resources
   {'vega {:js {:from-local-copy
@@ -31,7 +32,11 @@
    'katex {:js {:from-local-copy
                 ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.js"]}
            :css {:from-local-copy
-                 ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.css"]}}})
+                 ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.css"]}}
+   'three-d-mol {:js {:from-local-copy
+                      ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
+   'three-d-mol-viewer {:js {:from-local-copy
+                             ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls

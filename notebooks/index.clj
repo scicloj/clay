@@ -367,6 +367,27 @@ image
           :x
           pr-str)])])
 
+
+;; ### 3dmol
+(kind/hiccup
+ ['three-d-mol-viewer
+  {:data-pdb "2POR"}])
+
+(def data-urls
+  {"2POR" "https://files.rcsb.org/download/2POR.pdb"})
+
+(defonce data-from-url
+  (memoize
+   (fn [id]
+     (-> id
+         data-urls
+         slurp))))
+
+(kind/hiccup
+ ['three-d-mol
+  {:pdb (data-from-url "2POR")}])
+
+
 ;; ## Delays
 
 ;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.

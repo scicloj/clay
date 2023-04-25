@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha22-SNAPSHOT]
+- 3dmol support
+
 ## [2-alpha21] - 2023-04-24
 - passing :kind/code more directly to quarto for better rendering
 - bugfix: bringing back the handling of :kind/hiccup, which was dropped by mistake

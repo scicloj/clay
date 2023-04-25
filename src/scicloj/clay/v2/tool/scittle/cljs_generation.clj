@@ -84,13 +84,76 @@
        {:__html (.renderToString js/katex
                                  tex-string)}}]))
 
+
+(def three-d-mol-viewer-cljs
+  '(defn three-d-mol-viewer
+     [{:keys [data-pdb]}]
+     [:div {:style {:height "400px"
+                    :width "400px"
+                    :position :relative}
+            :class "viewer_3Dmoljs"
+            :data-pdb data-pdb
+            :data-backgroundcolor "0xffffff"
+            :data-style "stick"
+            :data-ui true}]))
+
+
+(def three-d-mol-cljs
+  '(defn three-d-mol
+     [{:keys [pdb]}]
+     [:div
+      {:style {:width "100%"
+               :height "500px"
+               :position "relative"}
+       :ref (fn [el]
+              (let [config (clj->js
+                            {:backgroundColor "0xffffff"})
+                    viewer (.createViewer js/$3Dmol el config)]
+                (.setViewStyle viewer (cljs->js
+                                       {:style "outline"}))
+                (.addModelsAsFrames viewer pdb "pdb")
+                (.addSphere viewer (clj->js
+                                    {:center {:x 0
+                                              :y 0
+                                              :z 0}
+                                     :radius 3
+                                     :color "green"}))
+                (.zoomTo viewer)
+                (.render viewer)
+                (.zoom viewer 0.8 2000)))}]))
+
+(def three-d-mol-cljs
+  '(defn three-d-mol
+     [{:keys [pdb]}]
+     [:div
+      {:style {:width "100%"
+               :height "500px"
+               :position "relative"}
+       :ref (fn [el]
+              (let [config (clj->js
+                            {:backgroundColor "0xffffff"})
+                    viewer (.createViewer js/$3Dmol el config)]
+                (.addModelsAsFrames viewer pdb "pdb")
+                (.addSphere viewer (clj->js
+                                    {:center {:x 0
+                                              :y 0
+                                              :z 0}
+                                     :radius 4
+                                     :color "green"}))
+                (.zoomTo viewer)
+                (.render viewer)
+                (.zoom viewer 0.8 2000)))}]))
+
+
 (def special-libs-cljs
   {'datatables datatables-cljs
    'vega vega-cljs
    'echarts echarts-cljs
    'cytoscape cytoscape-cljs
    'plotly plotly-cljs
-   'katex katex-cljs})
+   'katex katex-cljs
+   'three-d-mol three-d-mol-cljs
+   'three-d-mol-viewer three-d-mol-viewer-cljs})
 
 (defn widgets-cljs [{:keys [server-counter widgets data port special-libs]}]
   (concat ['(ns scicloj.clay
