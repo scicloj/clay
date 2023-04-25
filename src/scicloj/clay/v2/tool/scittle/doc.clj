@@ -94,6 +94,16 @@
                                          (->> note
                                               :value
                                               (string/join "\n"))))
+                                    ctx)))
+                               ((fn [ctx]
+                                  (if (-> note :value meta :kindly/kind (= :kind/code))
+                                    (-> ctx
+                                        (vary-meta
+                                         assoc
+                                         :clay/original-code
+                                         (->> note
+                                              :value
+                                              (string/join "\n"))))
                                     ctx)))))]))))
        doall)))
 
