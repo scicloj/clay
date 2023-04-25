@@ -71,6 +71,9 @@
             [scicloj.kindly.v3.kind :as kind]
             [scicloj.kindly-default.v1.api :as kindly-default]))
 
+(defonce memoized-slurp
+  (memoize slurp))
+
 ;; Initialize Kindly's [default](https://github.com/scicloj/kindly-default).
 (kindly-default/setup!)
 
@@ -373,20 +376,9 @@ image
  ['three-d-mol-viewer
   {:data-pdb "2POR"}])
 
-(def data-urls
-  {"2POR" "https://files.rcsb.org/download/2POR.pdb"})
-
-(defonce data-from-url
-  (memoize
-   (fn [id]
-     (-> id
-         data-urls
-         slurp))))
-
 (kind/hiccup
  ['three-d-mol
-  {:pdb (data-from-url "2POR")}])
-
+  {:pdb (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
 
 ;; ## Delays
 
