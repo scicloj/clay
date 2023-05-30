@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha23] - 2023-05-30
+- clojute.test support
+
 ## [2-alpha22] - 2023-04-25
 - 3dmol support
 

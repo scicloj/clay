@@ -7,7 +7,8 @@
             [scicloj.clay.v2.tool.scittle]
             [scicloj.clay.v2.tool.scittle.doc :as scittle.doc]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.test]))
 
 (def ^:dynamic *in-api-call?* false)
 
@@ -23,6 +24,10 @@
 
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))
+
+(defn is-> [value predicate & args]
+  (clojure.test/is (apply predicate value args))
+  value)
 
 (def base-config
   {:tools [tools/scittle]

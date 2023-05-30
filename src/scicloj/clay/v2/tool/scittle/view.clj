@@ -266,3 +266,22 @@
    [:img {:src (-> image
                    util.image/buffered-image->byte-array
                    util.image/byte-array->data-uri)}]))
+
+(defn bool->hiccup [bool]
+  [:div
+   [:big [:big (if bool
+                 [:big {:style {:color "darkgreen"}}
+                  "✓"]
+                 [:big {:style {:color "darkred"}}
+                  "❌"])]]])
+
+(add-viewer!
+ :kind/test
+ (fn [t]
+   (let [ret (-> t
+                 meta
+                 :test
+                 (#(%)))]
+     (if (boolean? ret)
+       (bool->hiccup ret)
+       (prepare-value ret)))))
