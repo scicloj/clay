@@ -426,7 +426,8 @@ image
 
 ;; Clay offers a few features supporting the use of standard Clojure tests.
 
-(require '[clojure.test :refer [deftest is]])
+(require '[clojure.test :refer [deftest is]]
+         '[scicloj.clay.v2.api :refer [is->]])
 
 ;; Tests returning a boolean value (as they usually do, ending with a check)
 ;; are rendered displaying that value as a clear x (failure) or v (success) mark:
@@ -456,24 +457,12 @@ image
 (deftest mytest3
   (-> 2
       (+ 3)
-      (clay/is-> > 4)
+      (is-> > 4)
       (* 10)
-      (clay/is-> = 50)
+      (is-> = 50)
       (* 10)))
 
 ;; These features open the way for literate testing / testable documentation solutions, such as those we have been using in the past (e.g., in [tutorials](https://scicloj.github.io/clojisr/doc/clojisr/v1/tutorial-test/) of ClojisR using Notespace v2).
-
-;; ### clay/check
-
-;; The `clay/check` experimental function allows to define checks on values that render accordingly, displaying the value as well as its failure or success, as well as the value.
-
-(-> 2
-    (+ 3)
-    (clay/check = 4))
-
-(-> 2
-    (+ 3)
-    (clay/check = 5))
 
 
 :bye
