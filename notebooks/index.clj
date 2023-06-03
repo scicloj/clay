@@ -81,6 +81,11 @@
 
 (clay/start!)
 
+(clay/swap-options!
+ assoc
+ :remote-repo {:git-url "https://github.com/scicloj/clay"
+               :branch "main"})
+
 ;; These initializations can also be done in a `user.clj` file, making them available for all namespaces in the project.
 
 ;; The browser view should open automatically.
