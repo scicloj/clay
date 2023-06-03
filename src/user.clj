@@ -8,7 +8,7 @@
 ;; Start Clay.
 (clay/start!)
 
-;; (clay/swap-options!
-;;  assoc
-;;  :remote-repo {:git-url "https://github.com/scicloj/clay"
-;;                :branch "main"})
+(clay/swap-options!
+ assoc
+ :remote-repo {:git-url "https://github.com/scicloj/clay"
+               :branch "main"})
