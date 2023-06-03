@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha25] - 2023-06-04
+- catching a possible Exception in the method to recognize the current file
+
 ## [2-alpha24] - 2023-06-04
 - added souce info-line to the generated doc'
 

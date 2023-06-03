@@ -20,19 +20,21 @@
 
 
 (defn info-line []
-  (let [file-path (-> (path/current-ns-file-path)
-                      path/path-relative-to-repo)
+  (let [file-path (try (-> (path/current-ns-file-path)
+                           path/path-relative-to-repo)
+                       (catch Exception e nil))
         git-url (some-> (scittle.server/options)
                         :remote-repo
                         (path/file-git-url file-path))]
     (-> [:div
          [:hr]
-         [:code [:small
-                 "(source: "
-                 (if git-url
-                   [:a {:href git-url} file-path]
-                   file-path)
-                 ")"]]]
+         (when file-path
+           [:code [:small
+                   "(source: "
+                   (if git-url
+                     [:a {:href git-url} file-path]
+                     file-path)
+                   ")"]])]
         (with-meta
           {:plain-html? true}))))
 
