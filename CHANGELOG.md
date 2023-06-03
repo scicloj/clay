@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha24] - 2023-06-04
+- added souce info-line to the generated doc'
+
 ## [2-alpha23] - 2023-05-30
 - clojute.test support
 

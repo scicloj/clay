@@ -105,6 +105,9 @@
   ([options]
    (scittle.server/swap-options! (constantly options))))
 
+(defn options []
+  (scittle.server/options))
+
 (defn handle-form! [form]
   (avoid-recursion
    (pipeline/handle-form! form))

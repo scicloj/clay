@@ -18,8 +18,32 @@
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
 
+
+(defn info-line []
+  (let [file-path (-> (path/current-ns-file-path)
+                      path/path-relative-to-repo)
+        git-url (some-> (scittle.server/options)
+                        :remote-repo
+                        (path/file-git-url file-path))]
+    (-> [:div
+         [:hr]
+         [:code [:small
+                 "(source: "
+                 (if git-url
+                   [:a {:href git-url} file-path]
+                   file-path)
+                 ")"]]]
+        (with-meta
+          {:plain-html? true}))))
+
+(comment
+  (-> "notebooks/index.clj"
+      (gen-doc {})
+      (->> (map (juxt meta identity)))))
+
 (defn gen-doc
-  ([path {:keys [hide-code? hide-nils? hide-vars?
+  ([path {:keys [hide-info-line?
+                 hide-code? hide-nils? hide-vars?
                  title toc?]}]
    (-> path
        slurp
@@ -105,7 +129,17 @@
                                               :value
                                               (string/join "\n"))))
                                     ctx)))))]))))
+       ((fn [items]
+          (if hide-info-line?
+            items
+            (let [il (info-line)]
+              (concat [il]
+                      items
+                      [il])))))
        doall)))
+
+
+
 
 (defn show-doc!
   ([path]

@@ -127,7 +127,7 @@
                     (catch java.io.FileNotFoundException e
                       ;; Ignoring missing source maps.
                       ;; TODO: Figure this problem out.
-                      (if (.endsWith uri ".map")
+                      (if (.endsWith ^String uri ".map")
                         nil
                         (throw e)))))
        :status 200})))
@@ -236,3 +236,6 @@
   (set-widgets! [hiccup])
   (reset-quarto-html-path! nil)
   (broadcast! "refresh"))
+
+(defn options []
+  (:options @*state))
