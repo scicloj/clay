@@ -15,26 +15,23 @@
             [hiccup.core :as hiccup]
             [clojure.walk :as walk]))
 
+
 (def hidden-form-starters
   #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
 
-
-(defn info-line []
-  (let [file-path (try (-> (path/current-ns-file-path)
-                           path/path-relative-to-repo)
-                       (catch Exception e nil))
+(defn info-line [absolute-file-path]
+  (let [relative-file-path (path/path-relative-to-repo
+                            absolute-file-path)
         git-url (some-> (scittle.server/options)
                         :remote-repo
-                        (path/file-git-url file-path))]
+                        (path/file-git-url relative-file-path))]
     (-> [:div
-         [:hr]
-         (when file-path
-           [:code [:small
-                   "(source: "
-                   (if git-url
-                     [:a {:href git-url} file-path]
-                     file-path)
-                   ")"]])]
+         (when relative-file-path
+           [:code
+            [:small
+             (if git-url
+               [:a {:href git-url} relative-file-path]
+               relative-file-path)]])]
         (with-meta
           {:plain-html? true}))))
 
@@ -134,10 +131,12 @@
        ((fn [items]
           (if hide-info-line?
             items
-            (let [il (info-line)]
-              (concat [il]
+            (let [il (info-line path)]
+              (concat [il
+                       [:hr]]
                       items
-                      [il])))))
+                      [[:hr]
+                       il])))))
        doall)))
 
 
@@ -164,12 +163,12 @@
 (defn show-doc-and-write-html!
   [path options]
   (-> options
-      (assoc :custom-message
-             [:div
-              [:p "showing document for "
-               [:code (path/path->filename path)]]
-              [:p "and then writing as html file"]
-              [:div.loader]])
+      (assoc :custom-message [:div
+                              [:p "showing document for "
+                               [:code (path/path->filename path)]]
+                              [:p "and then writing as html file"]
+                              [:div.loader]]
+             :path path)
       (->> (show-doc! path)))
   (scittle.server/write-html!))
 
@@ -181,7 +180,9 @@
     [:p "generating Quarto document for "
      [:code (path/path->filename path)]]
     [:div.loader]])
-  (->> options
-       (merge {:title (or title path)})
-       (gen-doc path)
-       (scittle.server/write-quarto!)))
+  (-> options
+      (assoc
+       :title (or title path)
+       :path path)
+      (->> (gen-doc path))
+      scittle.server/write-quarto!))

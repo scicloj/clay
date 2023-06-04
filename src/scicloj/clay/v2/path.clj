@@ -55,10 +55,6 @@
         (string/replace (str gp "/")
                         ""))))
 
-(defmacro current-ns-file-path []
-  `(do (def x# 9)
-       (-> #'x# meta :file)))
-
 (defn file-git-url [{:keys [git-url branch]
                      :as repo}
                     file-path]
