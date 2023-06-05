@@ -111,22 +111,29 @@
               (:require [reagent.core :as r]
                         [ajax.core :refer [GET POST]]))
            '(def *cache
-              (r/atom {}))
-           '(defn reset-cache! [m]
-              (reset! *cache m))
+              (r/atom {:map {}
+                       :vec []}))
+           '(defn reset-cache! [kv-pairs]
+              (reset! *cache
+                      {:map (if (map? kv-pairs)
+                              kv-pairs
+                              (into {} kv-pairs))
+                       :vec kv-pairs}))
            '(defn compute [form]
-              (if-let [result (@*cache form)]
+              (if-let [result (-> @*cache
+                                  :map
+                                  (get form))]
                 result
                 (do (POST "/compute"
                           {:headers {"Accept" "application/json"}
                            :params (pr-str {:form form})
-                           :handler (fn [response]
-                                      (swap! *cache
-                                             assoc
-                                             form (read-string response))
-                                      (.log
-                                       js/console
-                                       (pr-str @*cache)))
+                           :handler (fn [response-edn]
+                                      (let [response (read-string response-edn)]
+                                        (swap! *cache
+                                               (fn [cache]
+                                                 (-> cache
+                                                     (update :map assoc form response)
+                                                     (update :vec conj [form response]))))))
                            :error-handler (fn [e]
                                             (.log
                                              js/console

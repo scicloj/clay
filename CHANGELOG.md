@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha27-SNAPSHOT]
 - leaflet support
+- more flexible caching (WIP)
+
 
 ## [2-alpha26] - 2023-06-04
 - simpler and more robust path handling in info-line
