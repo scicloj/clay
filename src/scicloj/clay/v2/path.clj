@@ -55,8 +55,7 @@
         (string/replace (str gp "/")
                         ""))))
 
-(defn file-git-url [{:keys [git-url branch]
-                     :as repo}
+(defn file-git-url [{:keys [git-url branch]}
                     file-path]
   (format "%s/blob/%s/%s"
           git-url
