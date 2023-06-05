@@ -29,9 +29,11 @@
          (when relative-file-path
            [:code
             [:small
-             (if git-url
-               [:a {:href git-url} relative-file-path]
-               relative-file-path)]])]
+             [:small
+              "source: "
+              (if git-url
+                [:a {:href git-url} relative-file-path]
+                relative-file-path)]]])]
         (with-meta
           {:plain-html? true}))))
 
@@ -39,6 +41,12 @@
   (-> "notebooks/index.clj"
       (gen-doc {})
       (->> (map (juxt meta identity)))))
+
+(def separator
+  [:div {:style
+         {:height "2px"
+          :width "100%"
+          :background-color "grey"}}])
 
 (defn gen-doc
   ([path {:keys [hide-info-line?
@@ -133,9 +141,9 @@
             items
             (let [il (info-line path)]
               (concat [il
-                       [:hr]]
+                       separator]
                       items
-                      [[:hr]
+                      [separator
                        il])))))
        doall)))
 
