@@ -410,6 +410,26 @@ image
       'three-d-mol])
   {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
 
+;; ### Leaflet
+
+(kind/hiccup
+ ['(fn []
+     [:div
+      {:style {:width "100%"
+               :height "500px"}
+       :ref (fn [el]
+              (let [m (-> js/L
+                          (.map el)
+                          (.setView (clj->js [52.5274319 13.4004289])
+                                    19))]
+                (-> js/L
+                    (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                (clj->js {:maxZoom 19
+                                          :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
+                    (.addTo m))))}
+      'leaflet])])
+
+
 ;; ## Delays
 
 ;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
