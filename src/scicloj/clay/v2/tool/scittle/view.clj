@@ -184,7 +184,7 @@
                    with-out-str
                    md/->hiccup)))
        (into [:div])
-       (#(widget/mark % :clay/plain-html?))))
+       widget/mark-plain-html))
 
 (add-viewer!
  :kind/md
@@ -268,12 +268,13 @@
                    util.image/byte-array->data-uri)}]))
 
 (defn bool->hiccup [bool]
-  [:div
-   [:big [:big (if bool
-                 [:big {:style {:color "darkgreen"}}
-                  "✓"]
-                 [:big {:style {:color "darkred"}}
-                  "❌"])]]])
+  (widget/mark-plain-html
+   [:div
+    [:big [:big (if bool
+                  [:big {:style {:color "darkgreen"}}
+                   "✓"]
+                  [:big {:style {:color "darkred"}}
+                   "❌"])]]]))
 
 (add-viewer!
  :kind/test

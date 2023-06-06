@@ -42,10 +42,11 @@
       (->> (map (juxt meta identity)))))
 
 (def separator
-  [:div {:style
-         {:height "2px"
-          :width "100%"
-          :background-color "grey"}}])
+  (scittle.widget/mark-plain-html
+   [:div {:style
+          {:height "2px"
+           :width "100%"
+           :background-color "grey"}}]))
 
 (defn gen-doc
   ([path {:keys [hide-info-line?
@@ -134,7 +135,8 @@
                                          (->> note
                                               :value
                                               (string/join "\n"))))
-                                    ctx)))))]))))
+                                    ctx)))))])))
+            (filter some?))
        ((fn [items]
           (if hide-info-line?
             items

@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file. This change
 - leaflet support
 - more flexible caching (WIP)
 - minor changes to info-line
-- info-line is plain-html now
+- rendering more parts as plain-html 
+
 
 ## [2-alpha26] - 2023-06-04
 - simpler and more robust path handling in info-line
