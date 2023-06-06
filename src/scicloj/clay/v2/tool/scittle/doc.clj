@@ -25,17 +25,16 @@
         git-url (some-> (scittle.server/options)
                         :remote-repo
                         (path/file-git-url relative-file-path))]
-    (-> [:div
-         (when relative-file-path
-           [:code
-            [:small
-             [:small
-              "source: "
-              (if git-url
-                [:a {:href git-url} relative-file-path]
-                relative-file-path)]]])]
-        (with-meta
-          {:plain-html? true}))))
+    (scittle.widget/mark-plain-html
+     [:div
+      (when relative-file-path
+        [:code
+         [:small
+          [:small
+           "source: "
+           (if git-url
+             [:a {:href git-url} relative-file-path]
+             relative-file-path)]]])])))
 
 (comment
   (-> "notebooks/index.clj"
