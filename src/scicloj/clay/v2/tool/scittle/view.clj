@@ -172,7 +172,9 @@
 
 (add-viewer!
  :kind/void
- (constantly nil))
+ (constantly
+  (widget/mark-plain-html
+   [:p ""])))
 
 (defn render-md [v]
   (->> v
