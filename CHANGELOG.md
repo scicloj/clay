@@ -1,12 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha27-SNAPSHOT]
+## [2-alpha27] - 2023-06-07
 - leaflet support
 - more flexible caching (WIP)
 - minor changes to info-line
 - rendering more parts as plain-html 
-
+- moved the `is->` function to the kindly-default library
 
 ## [2-alpha26] - 2023-06-04
 - simpler and more robust path handling in info-line

@@ -25,10 +25,6 @@
 (defn check [value & predicate-and-args]
   (apply checks/check value predicate-and-args))
 
-(defn is-> [value predicate & args]
-  (clojure.test/is (apply predicate value args))
-  value)
-
 (def base-config
   {:tools [tools/scittle]
    :extensions []})
