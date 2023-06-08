@@ -1,6 +1,6 @@
 # clay
 
-A tiny [ball of mud](https://en.wikipedia.org/wiki/Big_ball_of_mud#In_relation_to_Lisp) for visual tasks
+A tiny [ball of mud](https://wiki.c2.com/?JoelMosesOnAplAndLisp) for visual tasks
 
 Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
