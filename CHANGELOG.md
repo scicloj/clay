@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha28-SNAPSHOT]
+- minor aesthetic changes
+
 ## [2-alpha27] - 2023-06-07
 - leaflet support
 - more flexible caching (WIP)

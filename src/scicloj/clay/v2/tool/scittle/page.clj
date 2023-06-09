@@ -148,7 +148,7 @@ code {
                                             ;;
                                             :else
                                             [:div {:id (str "widget" i)}
-                                             "..."])]))
+                                             [:code "loading ..."]])]))
                                       (into [:div]))]]]]]
                             (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
                                                   "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
@@ -281,7 +281,7 @@ code {
                         :else
                         (hiccup/html
                          [:div {:id (str "widget" i)}
-                          "..."]))))
+                          [:code "loading ..."]]))))
                    (string/join "\n"))
               (hiccup/html
                [:div
