@@ -6,11 +6,13 @@ Clay is a small Clojure tool for a dynamic workflow of data visualization and li
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 
-## Resources
+## Usage
 
-* [Intro](https://scicloj.github.io/clay/)
+Add `org.scicloj/clay` as a dependency.
 
-* regular updates at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/)
+Setup and usage can be found in the [Documentation](https://scicloj.github.io/clay/).
+
+Regular updates are given at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
 ## Discussion
 

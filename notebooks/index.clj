@@ -62,6 +62,30 @@
 ;; |`clay/send-last-sexp`|send the last s-expression|
 ;; |`clay/send-defun-at-point`|send the [defun-at-point](https://www.emacswiki.org/emacs/ThingAtPoint)|
 
+;; ### IntelliJ Cursive
+;;
+;; Under preferences, search for "REPL Commands"
+;; (or use the menu IntelliJ -> Preferences -> Languages and Frameworks -> Clojure -> REPL Commands)
+;;
+;; Then add a global command, and edit it with these settings:
+;;
+;; |--|--|
+;; | Name: | Send top-level to Clay |
+;; | Before Execution: | "Do nothing" |
+;; | Execution: | Command `(scicloj.clay.v2.api/handle-form! (quote ~top-level-form))` |
+;; | Echo to REPL: | Executed form |
+;; | Execution namespace: | Current file namespace |
+;;
+;; It is useful to add 3 commands:
+;;
+;; * `(scicloj.clay.v2.api/handle-form! (quote ~top-level-form))`
+;; * `(scicloj.clay.v2.api/handle-form! (quote ~form-before-caret))`
+;; * `(scicloj.clay.v2.api/show-namespace! "~file-path")`
+;;
+;; You can then add keybindings under Preferences -> Keymap for the new commands.
+;;
+;; See the Cursive documentation on [REPL commands and substitutions](https://cursive-ide.com/userguide/repl.html#repl-commands) for more details.
+;;
 
 ;; ## Starting a Clay namespace
 
@@ -160,7 +184,7 @@ people-as-vectors
 
 ;; ### Pretty printing
 
-;; With the the `:kind/pprint` kind, this can behaviour can be made explicit (overriding other inferred kinds if necessary).
+;; With the `:kind/pprint` kind, this can behaviour can be made explicit (overriding other inferred kinds if necessary).
 (kind/pprint people-as-maps)
 
 (kind/pprint people-as-vectors)
