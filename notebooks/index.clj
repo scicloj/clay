@@ -69,18 +69,19 @@
 ;;
 ;; Then add a global command, and edit it with these settings:
 ;;
+;; |  |  |
 ;; |--|--|
 ;; | Name: | Send top-level to Clay |
 ;; | Before Execution: | "Do nothing" |
 ;; | Execution: | Command `(scicloj.clay.v2.api/handle-form! (quote ~top-level-form))` |
 ;; | Echo to REPL: | Executed form |
-;; | Execution namespace: | Current file namespace |
+;; | Execution namespace: | Current REPL namespace |
 ;;
 ;; It is useful to add 3 commands:
 ;;
 ;; * `(scicloj.clay.v2.api/handle-form! (quote ~top-level-form))`
 ;; * `(scicloj.clay.v2.api/handle-form! (quote ~form-before-caret))`
-;; * `(scicloj.clay.v2.api/show-namespace! "~file-path")`
+;; * `(scicloj.clay.v2.api/show-namespace-and-write-html! "~file-path")`
 ;;
 ;; You can then add keybindings under Preferences -> Keymap for the new commands.
 ;;
