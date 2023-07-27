@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha29-SNAPSHOT]
+- avoiding the use of local path as title (#21)
+
 ## [2-alpha28]
 - minor aesthetic changes
 

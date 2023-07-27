@@ -165,7 +165,7 @@
    (let [doc (gen-doc path options)]
      (-> doc
          (scittle.server/show-widgets!
-          {:title (or title path)
+          {:title title
            :toc? toc?})))
    :ok))
 
