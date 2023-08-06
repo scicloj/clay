@@ -2,10 +2,9 @@
   (:require [scicloj.clay.v2.tool.scittle.widget :as widget]
             [scicloj.kindly.v3.api :as kindly]
             [scicloj.clay.v2.html.table :as table]
-            [nextjournal.markdown :as md]
-            [nextjournal.markdown.transform :as md.transform]
             [clojure.string :as string]
-            [scicloj.clay.v2.util.image :as util.image])
+            [scicloj.clay.v2.util.image :as util.image]
+            [clojure.walk :as walk])
   (:import java.awt.image.BufferedImage
            javax.imageio.ImageIO))
 
@@ -15,7 +14,8 @@
 (defn add-viewer!
   [kind viewer]
   (kindly/add-kind! kind)
-  (swap! *kind->viewer assoc kind viewer))
+  (swap! *kind->viewer assoc kind viewer)
+  [:ok])
 
 (defn value->kind [v]
   (-> {:value v}
@@ -24,139 +24,30 @@
       first
       :kind))
 
-(defn maybe-apply-viewer
-  ([{:as context
-     :keys [value kind]}]
-   (if-let [viewer (@*kind->viewer kind)]
-     (let [value1 (viewer value)
-           kind1 (value->kind value1)]
-       (if (some-> kind1 (not= kind))
-         (maybe-apply-viewer (assoc context
-                                    :value value1
-                                    :kind kind1))
-         value1))
-     (let [fallback-viewer (@*kind->viewer :kind/pprint)]
-       (fallback-viewer value)))))
 
+(defn prepare [context {:keys [fallback-viewer]}]
+  (let [{:keys [value kind]} (-> context
+                                 kindly/advice
+                                 ;; TODO: handle multiple inferred contexts more wisely
+                                 first)]
+    (when-let [viewer (-> kind
+                          (@*kind->viewer)
+                          (or fallback-viewer))]
+      (viewer value))))
 
-(declare prepare-vector)
-(declare prepare-seq)
-(declare prepare-map)
-(declare prepare-div)
+(defn prepare-or-pprint [context]
+  (prepare context {:fallback-viewer widget/pprint}))
 
-(defn div? [v]
-  (and (vector? v)
-       (-> v first (= :div))))
+(defn prepare-or-str [context]
+  (prepare context {:fallback-viewer str}))
 
-
-(defn prepare
-  ([context]
-   (let [{:as context1
-          :keys [value kind]} (-> context
-                                  kindly/advice
-                                  ;; TODO: handle multiple contexts more wisely
-                                  first)]
-     (cond kind (maybe-apply-viewer context1)
-           (div? value) (prepare-div value)
-           (vector? value) (prepare-vector value)
-           (seq? value) (prepare-seq value)
-           (map? value) (prepare-map value)
-           :else (widget/pprint value)))))
-
-(defn prepare-value [v]
-  (prepare {:value v}))
+(defn prepare-or-keep [context]
+  (prepare context {:fallback-viewer identity}))
 
 (defn has-kind-with-viewer? [value]
   (some-> value
           value->kind
           (@*kind->viewer)))
-
-(defn prepare-div [v]
-  (maybe-apply-viewer
-   {:value (-> (let [r (rest v)
-                     fr (first r)]
-                 (if (map? fr)
-                   (->> r
-                        rest
-                        (map (fn [subv]
-                               (if (or (has-kind-with-viewer? subv)
-                                       (div? subv))
-                                 (prepare-value subv)
-                                 subv)))
-                        (into [:div fr]))
-                   (->> r
-                        (map (fn [subv]
-                               (if (or (has-kind-with-viewer? subv)
-                                       (div? subv))
-                                 (prepare-value subv)
-                                 subv)))
-                        (into [:div])))))
-    :kind (value->kind v)}))
-
-(defn prepare-vector [value]
-  (if (->> value
-           (some has-kind-with-viewer?))
-    [:div
-     (widget/structure-mark "[")
-     (->> value
-          (map prepare-value)
-          (into [:div
-                 {:style {:margin-left "10%"}}]))
-     (widget/structure-mark "]")]
-    ;; else
-    (widget/pprint value)))
-
-
-(defn prepare-seq [value]
-  (if (->> value
-           (some has-kind-with-viewer?))
-    [:div
-     (widget/structure-mark "(")
-     (->> value
-          (map prepare-value)
-          (into [:div
-                 {:style {:margin-left "10%"}}]))
-     (widget/structure-mark ")")]
-    ;; else
-    (widget/pprint value)))
-
-(defn prepare-map [value]
-  (if (or (->> value
-               vals
-               (some has-kind-with-viewer?))
-          (->> value
-               keys
-               (some has-kind-with-viewer?)))
-    [:div
-     (widget/structure-mark "{")
-     (->> value
-          (map (fn [[k v]]
-                 (if (->> [k v]
-                          (some value->kind))
-                   [:div
-                    (prepare-value k)
-                    (prepare-value v)]
-                   ;; else
-                   (->> [k v]
-                        (map pr-str)
-                        (string/join " ")
-                        widget/printed-clojure))))
-          (into [:div
-                 {:style {:margin-left "10%"}}]))
-     (widget/structure-mark "}")]
-    ;; else
-    (widget/pprint value)))
-
-(defn expand-options-if-vector [component-symbol options]
-  (cond ;;
-    (vector? options)
-    (->> options
-         (map (fn [option]
-                (list 'quote option)))
-         (into [component-symbol]))
-    ;;
-    (map? options)
-    [component-symbol (list 'quote options)]))
 
 (add-viewer!
  :kind/println
@@ -167,49 +58,63 @@
  widget/pprint)
 
 (add-viewer!
- :kind/hiccup
- (fn [v] v))
-
-(add-viewer!
  :kind/void
  (constantly
   (widget/mark-plain-html
    [:p ""])))
 
-(defn render-md [v]
-  (->> v
-       ((fn [v]
-          (if (vector? v) v [v])))
-       (map (fn [md]
-              (->> md
-                   println
-                   with-out-str
-                   md/->hiccup)))
-       (into [:div])
-       widget/mark-plain-html))
-
 (add-viewer!
  :kind/md
- render-md)
-
-
-(add-viewer!
- :kind/table-md
- (fn [v]
-   [:code (render-md v)]))
+ widget/md)
 
 (add-viewer!
  :kind/table
  (fn [table-spec]
    [:div
-    (let [hiccup (table/->table-hiccup
-                  table-spec)]
+    (let [pre-hiccup (table/->table-hiccup
+                      table-spec)
+          hiccup (->> pre-hiccup
+                      (walk/prewalk (fn [elem]
+                                      (if (and (vector? elem)
+                                               (-> elem first (= :td)))
+                                        ;; a table data cell - handle it
+                                        (-> elem
+                                            (update
+                                             1
+                                             (fn [value]
+                                               (prepare-or-str
+                                                {:value value}))))
+                                        ;; else - keep it
+                                        elem))))]
       (if (-> hiccup
               last ; the :tbody part
               count
               (> 20)) ; a big table
         ['datatables hiccup]
         hiccup))]))
+
+(defn view-sequentially [value open-mark close-mark]
+  (if (->> value
+           (some has-kind-with-viewer?))
+    (let [prepared-parts (->> value
+                              (map (fn [subvalue]
+                                     (prepare-or-pprint {:value subvalue}))))]
+      (if (->> prepared-parts
+               (some (fn [part]
+                       (-> part meta :clay/printed-clojure? not))))
+        ;; some parts are not just printed values - handle recursively
+        [:div
+         (widget/structure-mark open-mark)
+         (into [:div {:style {}}]
+               prepared-parts)
+         (widget/structure-mark close-mark)]
+        ;; else -- just print the whole value
+        (widget/pprint value)))
+    ;; else -- just print the whole value
+    (widget/pprint value)))
+
+
+
 
 (add-viewer!
  :kind/vega
@@ -222,6 +127,17 @@
  (fn [spec]
    [:div
     ['vega (list 'quote spec)]]))
+
+(defn expand-options-if-vector [component-symbol options]
+  (cond ;;
+    (vector? options)
+    (->> options
+         (map (fn [option]
+                (list 'quote option)))
+         (into [component-symbol]))
+    ;;
+    (map? options)
+    [component-symbol (list 'quote options)]))
 
 (add-viewer!
  :kind/cytoscape
@@ -252,15 +168,10 @@
 (add-viewer!
  :kind/dataset
  (fn [v]
-   (-> v
-       println
-       with-out-str
-       vector
-       (kindly/consider :kind/table-md))
-   #_(-> {:column-names (tmd/column-names v)
-          :row-vectors (vec (tmd/rowvecs v))}
-         (kindly/consider :kind/table))))
-
+   [:code (-> v
+              println
+              with-out-str
+              widget/md)]))
 
 (add-viewer!
  :kind/buffered-image
@@ -287,4 +198,101 @@
                  (#(%)))]
      (if (boolean? ret)
        (bool->hiccup ret)
-       (prepare-value ret)))))
+       (prepare-or-pprint {:value ret})))))
+
+(add-viewer!
+ :kind/map
+ (fn [t]
+   [:p "NA"]))
+
+(defn spy [x tag]
+  (clojure.pprint/pprint [tag x])
+  x)
+
+(add-viewer!
+ :kind/map
+ (fn [value]
+   (if (->> value
+            (apply concat)
+            (some has-kind-with-viewer?))
+     (let [prepared-kv-pairs (->> value
+                                  (map (fn [kv]
+                                         {:kv kv
+                                          :prepared-kv (->> kv
+                                                            (map #(prepare-or-pprint {:value %})))})))]
+       (if (->> prepared-kv-pairs
+                (map :prepared-kv)
+                (apply concat)
+                (some #(-> % meta :clay/printed-clojure? not)))
+         ;; some parts are not just printed values - handle recursively
+         [:div
+          (widget/structure-mark "{")
+          (->> prepared-kv-pairs
+               (map (fn [{:keys [kv prepared-kv]}]
+                      (if (->> prepared-kv
+                               (some #(-> % meta :clay/printed-clojure? not)))
+                        (let [[pk pv] prepared-kv]
+                          [:table
+                           [:tr
+                            [:td {:valign :top}
+                             pk]
+                            [:td [:div
+                                  {:style {:margin-top "10px"
+                                           ;; :border "1px inset"
+                                           }}
+                                  pv]]]])
+                        ;; else
+                        (->> kv
+                             (map pr-str)
+                             (string/join " ")
+                             widget/printed-clojure))))
+               (into [:div
+                      {:style {:margin-left "10%"
+                               :width "110%"}}]))
+          (widget/structure-mark "}")]
+         ;; else -- just print the whole value
+         (widget/pprint value)))
+     ;; else -- just print the whole value
+     (widget/pprint value))))
+
+
+(defn view-sequentially [value open-mark close-mark]
+  (if (->> value
+           (some has-kind-with-viewer?))
+    (let [prepared-parts (->> value
+                              (map (fn [subvalue]
+                                     (prepare-or-pprint {:value subvalue}))))]
+      (if (->> prepared-parts
+               (some (fn [part]
+                       (-> part meta :clay/printed-clojure? not))))
+        ;; some parts are not just printed values - handle recursively
+        [:div
+         (widget/structure-mark open-mark)
+         (into [:div {:style {:margin-left "10%"
+                              :width "110%"}}]
+               prepared-parts)
+         (widget/structure-mark close-mark)]
+        ;; else -- just print the whole value
+        (widget/pprint value)))
+    ;; else -- just print the whole value
+    (widget/pprint value)))
+
+(add-viewer!
+ :kind/vector
+ (fn [value]
+   (view-sequentially value "[" "]")))
+
+(add-viewer!
+ :kind/seq
+ (fn [value]
+   (view-sequentially value "(" ")")))
+
+(add-viewer!
+ :kind/set
+ (fn [value]
+   (println [:value value])
+   (view-sequentially value "#{" "}")))
+
+(add-viewer!
+ :kind/hiccup
+ identity)

@@ -1,6 +1,8 @@
 (ns scicloj.clay.v2.tool.scittle.widget
   (:require [clojure.pprint :as pp]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [nextjournal.markdown :as md]
+            [clojure.walk :as walk]))
 
 (defn mark [hiccup & keywords]
   (reduce (fn [h kw]
@@ -43,6 +45,13 @@
       #_[:big string]
       mark-plain-html))
 
+(defn just-print [value]
+  (-> value
+      print
+      with-out-str
+      escape
+      printed-clojure))
+
 (defn just-println [value]
   (-> value
       println
@@ -61,3 +70,16 @@
   (with-meta
     [:div widget]
     (meta widget)))
+
+(defn md [value]
+  (->> value
+       ((fn [value]
+          (if (vector? value) value [value])))
+       (map (fn [md]
+              (->> md
+                   println
+                   with-out-str
+                   md/->hiccup
+                   (walk/postwalk-replace {:<> :p}))))
+       (into [:div])
+       mark-plain-html))

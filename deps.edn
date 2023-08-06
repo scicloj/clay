@@ -14,7 +14,7 @@
         clj-commons/clj-yaml {:mvn/version "1.0.26"}}
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {scicloj/tablecloth {:mvn/version "7.000-beta-27"}
-                              org.scicloj/kindly-default {:mvn/version "1-alpha8"}}}
+                              org.scicloj/kindly-default {:mvn/version "1-alpha10"}}}
            :build {:deps {io.github.seancorfield/build-clj
                           {:git/tag "v0.6.4" :git/sha "c21cfde"}}
                    :ns-default build}

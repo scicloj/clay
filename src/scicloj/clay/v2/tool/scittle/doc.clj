@@ -96,7 +96,7 @@
                                          :code
                                          vector)
                               :kind :kind/code}
-                             scittle.view/prepare
+                             scittle.view/prepare-or-pprint
                              (#(vary-meta
                                 %
                                 assoc
@@ -114,7 +114,7 @@
                            (-> note
                                (select-keys [:value :code :form])
                                (update :value view/deref-if-needed)
-                               scittle.view/prepare
+                               scittle.view/prepare-or-pprint
                                scittle.widget/in-div ; TODO: was this needed?
                                ((fn [ctx]
                                   (if (-> note :value meta :kindly/kind (= :kind/md))
