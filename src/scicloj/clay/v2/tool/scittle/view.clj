@@ -290,7 +290,6 @@
 (add-viewer!
  :kind/set
  (fn [value]
-   (println [:value value])
    (view-sequentially value "#{" "}")))
 
 (add-viewer!
