@@ -1,14 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha29-SNAPSHOT]
+## [2-alpha29] - 2023-08-07
 - avoiding the use of local path as title (#21)
 - refactoring the handling of kinds: 
   - adapting to kindly-default version 1-alpha10, where plain data structures have explicit kinds
   - handling hierarchy in a more clean and systematic way
 - bug fix: avoiding looking for KaTeX fonts locally (which would take more care to work correctly)
 
-## [2-alpha28]
+## [2-alpha28] 2023-06-19
 - minor aesthetic changes
 
 ## [2-alpha27] - 2023-06-07
