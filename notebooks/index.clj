@@ -26,6 +26,8 @@
 ;; For rendering documents like this one with Clay, you need to:
 ;; - add [kindly-default](https://clojars.org/org.scicloj/kindly-default) and [Clay](https://clojars.org/org.scicloj/clay) as dependencies
 ;; - call `(kindly-default/setup!)` and `(clay/start!)` (see below)
+;;
+;; See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project) for a concrete example.
 
 ;;
 ;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
