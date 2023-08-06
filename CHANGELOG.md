@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - refactoring the handling of kinds: 
   - adapting to kindly-default version 1-alpha10, where plain data structures have explicit kinds
   - handling hierarchy in a more clean and systematic way
+- bug fix: avoiding looking for KaTeX fonts locally (which would take more care to work correctly)
 
 ## [2-alpha28]
 - minor aesthetic changes

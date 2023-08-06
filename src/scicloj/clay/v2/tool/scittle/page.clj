@@ -30,9 +30,13 @@
    'plotly {:js {:from-local-copy
                  ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}
    'katex {:js {:from-local-copy
-                ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.js"]}
-           :css {:from-local-copy
-                 ["https://cdn.jsdelivr.net/npm/katex@0.16.6/dist/katex.min.css"]}}
+                ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"]}
+           :css {:from-the-web
+                 ;; fetching the KaTeX css from the web
+                 ;; to avoid fetching the fonts locally,
+                 ;; which would need a bit more care
+                 ;; (see https://katex.org/docs/font.html)
+                 ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"]}}
    'three-d-mol {:js {:from-local-copy
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
    'three-d-mol-viewer {:js {:from-local-copy
@@ -102,6 +106,7 @@ code {
   padding: 2px;
   .bg-light;
 }"]
+
                             (when toc?
                               (css-from-local-copies
                                #_"https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
