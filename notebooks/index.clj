@@ -166,7 +166,57 @@
 ;; ### Plain values
 
 ;; By default, when there is no kind information provided by Kindly,
-;; values are pretty-printed.
+;; values are simply pretty-printed.
+
+(+ 4 5)
+
+(str "abcd" "efgh")
+
+;; ### Hiccup
+
+;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, can be specified by kind:
+
+(kind/hiccup
+ [:ul
+  [:li [:p "hi"]]
+  [:li [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
+                        {:color "#7F5F3F"}}
+                    "hello"]]]]])
+
+;; As we can see, this kind is displayed by converting Hiccup to HTML.
+
+;; ### Markdown
+
+;; Markdown text (a vector of strings) can be handled using a kind too.
+
+(kind/md
+ ["
+* This is [markdown](https://www.markdownguide.org/).
+  * *Isn't it??*"
+  "
+* Here is **some more** markdown."])
+
+;; As we can see, this kind is displayed by converting Hiccup to HTML.
+
+;; ### Images
+
+;; Java BufferedImage objects are displayed as images.
+
+(import javax.imageio.ImageIO
+        java.net.URL)
+
+(defonce clay-image
+  (->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
+       (URL.)
+       (ImageIO/read)))
+
+clay-image
+
+;; ### Plain data structures
+
+;; Plain data structures (lists and sequnces, vectors, sets, maps)
+;; are pretty printed if there isn't any value inside
+;; which needs to be displayed in special kind of way.
 
 (def people-as-maps
   (->> (range 29)
@@ -179,16 +229,33 @@
   (->> people-as-maps
        (mapv (juxt :preferred-language :age))))
 
-people-as-maps
+(take 5 people-as-maps)
 
-people-as-vectors
+(take 5 people-as-vectors)
+
+(->> people-as-vectors
+     (take 5)
+     set)
+
+;; When something inside needs to be displayed in a special kind of way,
+;; the data structures are printed in a way that makes that clear.
+
+(def nestes-structure-1
+  {:vector-of-numbers [2 9 -1]
+   :vector-of-different-things ["hi"
+                                (kind/hiccup
+                                 [:big [:big "hello"]])]
+   :map-of-different-things {:markdown (kind/md ["*hi*, **hi**"])
+                             :number 9999}
+   :hiccup (kind/hiccup
+            [:big [:big "bye"]])})
+
+nestes-structure-1
 
 ;; ### Pretty printing
 
-;; With the `:kind/pprint` kind, this can behaviour can be made explicit (overriding other inferred kinds if necessary).
-(kind/pprint people-as-maps)
-
-(kind/pprint people-as-vectors)
+;; The `:kind/pprint` kind  makes sure to simply pretty-print values:
+(kind/pprint nestes-structure-1)
 
 ;; ### Datasets
 
@@ -225,30 +292,13 @@ people-as-vectors
  {:column-names [:preferred-language :age]
   :row-maps people-as-maps})
 
+(kind/table
+ {:column-names [:preferred-language :age]
+  :row-maps (take 5 people-as-maps)})
+
 (-> people-as-maps
     tc/dataset
     kind/table)
-
-;; ### Hiccup
-
-;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, can be specified by kind:
-
-(kind/hiccup
- [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
-                  {:color "#7F5F3F"}}
-              "hello"]]])
-
-;; ### Images
-
-(import javax.imageio.ImageIO
-        java.net.URL)
-
-(defonce image
-  (->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-       (URL.)
-       (ImageIO/read)))
-
-image
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
@@ -471,47 +521,3 @@ image
 
 (delay
   [:div [:big "hi......."]])
-
-;; ## Tests
-
-;; ### clojure.test
-
-;; Clay offers a few features supporting the use of standard Clojure tests.
-
-(require '[clojure.test :refer [deftest is]]
-         '[scicloj.kindly-default.v1.api :refer [is->]])
-
-;; Tests returning a boolean value (as they usually do, ending with a check)
-;; are rendered displaying that value as a clear x (failure) or v (success) mark:
-
-(def test-dataset
-  (tc/dataset {:x [1 2 3]
-               :y [4 5 6]}))
-
-(deftest mytest1
-  (-> test-dataset
-      tc/row-count
-      (= 3)
-      is))
-
-;; Tests returning a non-boolean value are rendered simply displaying that value:
-
-(deftest mytest2
-  (-> test-dataset
-      tc/row-count
-      (= 3)
-      is)
-  test-dataset)
-
-;; The `is->` function allows performing a few checks in a pipeline
-;; and returning a different value to be displayed:
-
-(deftest mytest3
-  (-> 2
-      (+ 3)
-      (is-> > 4)
-      (* 10)
-      (is-> = 50)
-      (* 10)))
-
-;; These features open the way for literate testing / testable documentation solutions, such as those we have been using in the past (e.g., in [tutorials](https://scicloj.github.io/clojisr/doc/clojisr/v1/tutorial-test/) of ClojisR using Notespace v2).
