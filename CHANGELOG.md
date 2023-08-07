@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha30] - 2023-08-07
+- bugfix: using full path in the search for git project root
+
 ## [2-alpha29] - 2023-08-07
 - avoiding the use of local path as title (#21)
 - refactoring the handling of kinds: 

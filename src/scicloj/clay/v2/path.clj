@@ -50,6 +50,7 @@
 (defn path-relative-to-repo [file-path]
   (when-let [gp (-> file-path
                     path->parent
+                    real-path
                     git-parent)]
     (-> file-path
         (string/replace (str gp "/")
