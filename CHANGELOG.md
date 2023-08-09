@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha31] - 2023-08-09
+- silently handling path-related Exceptions (which currently in Windows)
+
 ## [2-alpha30] - 2023-08-07
 - bugfix: using full path in the search for git project root
 

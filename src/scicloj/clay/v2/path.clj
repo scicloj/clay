@@ -48,10 +48,11 @@
           recur))))
 
 (defn path-relative-to-repo [file-path]
-  (when-let [gp (-> file-path
-                    path->parent
-                    real-path
-                    git-parent)]
+  (when-let [gp (try (-> file-path
+                         path->parent
+                         real-path
+                         git-parent)
+                     (catch Exception e nil))]
     (-> file-path
         (string/replace (str gp "/")
                         ""))))
