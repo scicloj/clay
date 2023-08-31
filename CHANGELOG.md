@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha32] - 2023-08-31
+- adapting to kindly v4
+- removing obsolete `checks` ns
+
 ## [2-alpha31] - 2023-08-09
 - silently handling path-related Exceptions (which currently happen in Windows)
 

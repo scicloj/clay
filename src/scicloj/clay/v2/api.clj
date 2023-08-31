@@ -1,7 +1,6 @@
 (ns scicloj.clay.v2.api
-  (:require [scicloj.clay.v2.checks :as checks]
-            [scicloj.clay.v2.pipeline :as pipeline]
-            [scicloj.kindly.v3.api :as kindly]
+  (:require [scicloj.clay.v2.pipeline :as pipeline]
+            [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.tools :as tools]
             [scicloj.clay.v2.extensions :as extensions]
             [scicloj.clay.v2.tool.scittle]
@@ -21,9 +20,6 @@
   `(do (if-not *in-api-call?*
          (binding [*in-api-call?* true]
            ~@forms))))
-
-(defn check [value & predicate-and-args]
-  (apply checks/check value predicate-and-args))
 
 (def base-config
   {:tools [tools/scittle]
@@ -45,7 +41,7 @@
 
 (defmacro capture-print
   [& body]
-  `(scicloj.kindly.v3.kind/naive
+  `(scicloj.kindly.v4.kind/pprint
     [(let [s# (new java.io.StringWriter)]
        (binding [*out* s#]
          ~@body

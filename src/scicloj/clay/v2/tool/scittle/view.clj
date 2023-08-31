@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.tool.scittle.view
   (:require [scicloj.clay.v2.tool.scittle.widget :as widget]
-            [scicloj.kindly.v3.api :as kindly]
+            [scicloj.kindly-advice.v1.api :as kindly-advice]
             [scicloj.clay.v2.html.table :as table]
             [clojure.string :as string]
             [scicloj.clay.v2.util.image :as util.image]
@@ -13,23 +13,16 @@
 
 (defn add-viewer!
   [kind viewer]
-  (kindly/add-kind! kind)
   (swap! *kind->viewer assoc kind viewer)
   [:ok])
 
 (defn value->kind [v]
   (-> {:value v}
-      kindly/advice
-      ;; TODO: handle multiple contexts more wisely
-      first
+      kindly-advice/advise
       :kind))
 
-
 (defn prepare [context {:keys [fallback-viewer]}]
-  (let [{:keys [value kind]} (-> context
-                                 kindly/advice
-                                 ;; TODO: handle multiple inferred contexts more wisely
-                                 first)]
+  (let [{:keys [value kind]} (kindly-advice/advise context)]
     (when-let [viewer (-> kind
                           (@*kind->viewer)
                           (or fallback-viewer))]

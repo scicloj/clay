@@ -1,6 +1,5 @@
 (ns scicloj.clay.v2.view
-  (:require [scicloj.clay.v2.tool :as tool]
-            [scicloj.kindly.v3.api :as kindly]))
+  (:require [scicloj.clay.v2.tool :as tool]))
 
 (defn open! [tools]
   (doseq [tool tools]

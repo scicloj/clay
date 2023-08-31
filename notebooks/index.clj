@@ -23,13 +23,8 @@
 
 ;; ## Setup
 
-;; For rendering documents like this one with Clay, you need to:
-;; - add [kindly-default](https://clojars.org/org.scicloj/kindly-default) and [Clay](https://clojars.org/org.scicloj/clay) as dependencies
-;; - call `(kindly-default/setup!)` and `(clay/start!)` (see below)
-;;
 ;; See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project) for a concrete example.
 
-;;
 ;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
 ;;
 ;; See the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
@@ -96,15 +91,11 @@
 
 (ns index
   (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.kindly.v3.api :as kindly]
-            [scicloj.kindly.v3.kind :as kind]
-            [scicloj.kindly-default.v1.api :as kindly-default]))
+            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v4.kind :as kind]))
 
 (defonce memoized-slurp
   (memoize slurp))
-
-;; Initialize Kindly's [default](https://github.com/scicloj/kindly-default).
-(kindly-default/setup!)
 
 ;; Let us start Clay.
 
@@ -242,7 +233,7 @@ clay-image
 ;; When something inside needs to be displayed in a special kind of way,
 ;; the data structures are printed in a way that makes that clear.
 
-(def nestes-structure-1
+(def nested-structure-1
   {:vector-of-numbers [2 9 -1]
    :vector-of-different-things ["hi"
                                 (kind/hiccup
@@ -252,12 +243,12 @@ clay-image
    :hiccup (kind/hiccup
             [:big [:big "bye"]])})
 
-nestes-structure-1
+nested-structure-1
 
 ;; ### Pretty printing
 
 ;; The `:kind/pprint` kind  makes sure to simply pretty-print values:
-(kind/pprint nestes-structure-1)
+(kind/pprint nested-structure-1)
 
 ;; ### Datasets
 

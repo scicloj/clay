@@ -1,8 +1,5 @@
 (ns scicloj.clay.v2.tool.scittle.doc
-  (:require [scicloj.kindly.v3.kind :as kind]
-            [nextjournal.markdown.transform]
-            [scicloj.kindly.v3.api :as kindly]
-            [scicloj.clay.v2.view :as view]
+  (:require [scicloj.clay.v2.view :as view]
             [scicloj.clay.v2.tool.scittle.view :as scittle.view]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
             [scicloj.clay.v2.tool.scittle.widget :as scittle.widget]
