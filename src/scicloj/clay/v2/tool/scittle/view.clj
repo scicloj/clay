@@ -21,12 +21,15 @@
       kindly-advice/advise
       :kind))
 
-(defn prepare [context {:keys [fallback-viewer]}]
-  (let [{:keys [value kind]} (kindly-advice/advise context)]
-    (when-let [viewer (-> kind
-                          (@*kind->viewer)
-                          (or fallback-viewer))]
-      (viewer value))))
+(defn prepare [{:as context
+                :keys [value]}
+               {:keys [fallback-viewer]}]
+  (when-let [viewer (-> context
+                        kindly-advice/advise
+                        :kind
+                        (@*kind->viewer)
+                        (or fallback-viewer))]
+    (viewer value)))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-viewer widget/pprint}))

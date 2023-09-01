@@ -4,7 +4,7 @@
 
 (ns example1
   (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.kindly.v3.kind :as kind]))
+            [scicloj.kindly.v4.kind :as kind]))
 
 ;; ## Examples
 
