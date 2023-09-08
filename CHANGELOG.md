@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha33-SNAPSHOT]
+## [2-alpha33] - 2023-09-08
 - simplifying the use of kindly advice
 - adapting to kindly ver 4-alpha3
 - changing default quarto options for performance
