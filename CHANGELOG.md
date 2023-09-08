@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha33-SNAPSHOT]
+- simplifying the use of kindly advice
+- adapting to kindly ver 4-alpha3
+
 ## [2-alpha32] - 2023-08-31
 - adapting to kindly v4
 - removing obsolete `checks` ns

@@ -170,7 +170,7 @@
               widget/md)]))
 
 (add-viewer!
- :kind/buffered-image
+ :kind/image
  (fn [image]
    [:img {:src (-> image
                    util.image/buffered-image->byte-array
