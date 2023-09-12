@@ -104,7 +104,14 @@
 (clay/swap-options!
  assoc
  :remote-repo {:git-url "https://github.com/scicloj/clay"
-               :branch "main"})
+               :branch "main"}
+ :quarto {:format {:html {:toc true
+                          :theme :spacelab
+                          :embed-resources true}}
+          :highlight-style :solarized
+          :code-block-background true
+          :embed-resources true
+          :execute {:freeze true}})
 
 ;; These initializations can also be done in a `user.clj` file, making them available for all namespaces in the project.
 
