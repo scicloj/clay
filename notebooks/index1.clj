@@ -60,26 +60,3 @@ my-images
 myplot
 
 (in-portal myplot)
-
-
-
-(in-portal
- [(kind/hiccup
-   [:div
-    [:h1 "ab"]
-    [:h2 "cd"]
-    [:img {:height 50 :width 50
-           :src "https://clojure.org/images/clojure-logo-120b.png"}]
-    [:img {:height 50 :width 50
-           :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}]])])
-
-
-(in-portal
- [(kind/hiccup
-   [:div
-    [:h1 "ab"]
-    [:h2 "cd"]
-    [:img {:height 50 :width 50
-           :src "https://clojure.org/images/clojure-logo-120b.png"}]
-    [:img {:height 50 :width 50
-           :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}]])])
