@@ -1,7 +1,5 @@
 # clay
 
-A tiny [ball of mud](https://wiki.c2.com/?JoelMosesOnAplAndLisp) for visual tasks
-
 Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
