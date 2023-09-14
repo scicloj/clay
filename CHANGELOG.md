@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha3-SNAPSHOT]
+## [2-alpha34] - 2023-09-14
 - draft support for embedded portal
 
 ## [2-alpha33] - 2023-09-08
