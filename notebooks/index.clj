@@ -518,6 +518,3 @@ nested-structure-1
 (delay
   (Thread/sleep 500)
   (+ 1 2))
-
-(delay
-  [:div [:big "hi......."]])
