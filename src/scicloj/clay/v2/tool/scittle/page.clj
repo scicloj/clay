@@ -75,7 +75,7 @@
 
 (defonce portal-dev
   (portal/url
-   (portal/open)))
+   (portal/start {})))
 
 (def portal-url (let [[host query] (string/split portal-dev #"\?")]
                   (str host "/main.js?" query)))
