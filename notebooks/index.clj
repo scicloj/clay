@@ -518,3 +518,30 @@ nested-structure-1
 (delay
   (Thread/sleep 500)
   (+ 1 2))
+
+;; ## Embedded Portal
+;; (WIP)
+
+
+{:x (range 3)}
+
+(clay/in-portal {:x (range 3)})
+
+(def my-images
+  [(-> [:img {:height 50 :width 50
+              :src "https://clojure.org/images/clojure-logo-120b.png"}]
+       kind/hiccup)
+   (-> [:img {:height 50 :width 50
+              :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}]
+       kind/hiccup)])
+
+my-images
+
+(clay/in-portal my-images)
+
+(def myplot
+  (random-vega-lite-plot 9))
+
+myplot
+
+(clay/in-portal myplot)

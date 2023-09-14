@@ -9,7 +9,7 @@
             [scicloj.clay.v2.util.resource :as resource]
             [scicloj.clay.v2.html.table :as table]
             [clj-yaml.core :as yaml]
-            [portal.api :as portal]))
+            [scicloj.clay.v2.tool.scittle.portal :as portal]))
 
 (def special-libs-set
   #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex
@@ -72,13 +72,6 @@
                      x)))
        (filter special-libs-set)
        distinct))
-
-(defonce portal-dev
-  (portal/url
-   (portal/start {})))
-
-(def portal-url (let [[host query] (string/split portal-dev #"\?")]
-                  (str host "/main.js?" query)))
 
 (defn page [{:keys [widgets data port title toc? counter]}]
   (let [special-libs (->> widgets
@@ -182,7 +175,7 @@ code {
                              (-> "highlight/highlight.min.js"
                                  io/resource
                                  slurp)]
-                            (hiccup.page/include-js portal-url)
+                            (hiccup.page/include-js portal/url)
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :js special-lib-resources))
                                  distinct
@@ -231,7 +224,7 @@ code {
   border-style: none;
 }
 "]
-                (hiccup.page/include-js portal-url)
+                (hiccup.page/include-js portal/url)
                 (->> special-libs
                      (mapcat (comp :from-local-copy :css special-lib-resources))
                      distinct

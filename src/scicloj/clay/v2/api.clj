@@ -6,6 +6,7 @@
             [scicloj.clay.v2.tool.scittle]
             [scicloj.clay.v2.tool.scittle.doc :as scittle.doc]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
+            [scicloj.clay.v2.tool.scittle.portal :as portal]
             [clojure.string :as string]
             [clojure.test]))
 
@@ -108,3 +109,6 @@
 (defn handle-value! [value]
   (pipeline/handle-value! value)
   invisible-ok)
+
+(defn in-portal [value]
+  (portal/in-portal value))
