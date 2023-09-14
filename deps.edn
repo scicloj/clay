@@ -13,11 +13,10 @@
         io.github.nextjournal/markdown {:mvn/version "0.5.144"}
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
         clj-commons/clj-yaml {:mvn/version "1.0.26"}
-        org.clojars.daslu/portal {:mvn/version "0.46.0-experimental"}}
+        org.clojars.daslu/portal {:mvn/version "0.46.0-experimental"}
+        org.scicloj/kind-portal {:mvn/version "1-alpha7"}}
  :aliases {:dev {:extra-paths ["notebooks"]
-                 :extra-deps {scicloj/tablecloth {:mvn/version "7.000-beta-27"}
-                              org.scicloj/kind-portal {:local/root "../kind-portal"}
-                              org.scicloj/noj {:local/root "../noj"}}}
+                 :extra-deps {scicloj/tablecloth {:mvn/version "7.000-beta-27"}}}
            :build {:deps {io.github.seancorfield/build-clj
                           {:git/tag "v0.6.4" :git/sha "c21cfde"}}
                    :ns-default build}
