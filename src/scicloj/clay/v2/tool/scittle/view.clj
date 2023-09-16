@@ -4,7 +4,8 @@
             [scicloj.clay.v2.html.table :as table]
             [clojure.string :as string]
             [scicloj.clay.v2.util.image :as util.image]
-            [clojure.walk :as walk])
+            [clojure.walk :as walk]
+            [jsonista.core :as jsonista])
   (:import java.awt.image.BufferedImage
            javax.imageio.ImageIO))
 
@@ -110,19 +111,21 @@
     (widget/pprint value)))
 
 
-
+(defn vega-embed [spec]
+  (widget/mark-plain-html
+   [:div
+    [:script (->> spec
+                  jsonista/write-value-as-string
+                  (format "vegaEmbed(document.currentScript.parentElement, %s);"))
+     'vega]]))
 
 (add-viewer!
  :kind/vega
- (fn [spec]
-   [:div
-    ['vega (list 'quote spec)]]))
+ vega-embed)
 
 (add-viewer!
  :kind/vega-lite
- (fn [spec]
-   [:div
-    ['vega (list 'quote spec)]]))
+ vega-embed)
 
 (defn expand-options-if-vector [component-symbol options]
   (cond ;;
