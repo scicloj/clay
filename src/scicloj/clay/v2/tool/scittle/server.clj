@@ -192,20 +192,21 @@
       vector
       show-widgets!))
 
-(defn ns->target-path [the-ns ext]
-  (format "docs/%s%s"
-          (-> the-ns
-              str
-              (string/split #"\.")
-              (->> (string/join "/")))
-          ext))
+(defn ns->target-path
+  ([base the-ns ext]
+   (str base
+        (-> the-ns
+            str
+            (string/split #"\.")
+            (->> (string/join "/")))
+        ext)))
 
 (defn now []
   (java.util.Date.))
 
 (defn write-html!
   ([]
-   (write-html! (ns->target-path *ns* ".html")))
+   (write-html! (ns->target-path "docs/" *ns* ".html")))
   ([path]
    (io/make-parents path)
    (->> @*state
@@ -216,7 +217,7 @@
        (kindly/consider :kind/hidden))))
 
 (defn write-quarto! [widgets]
-  (let [qmd-path (ns->target-path *ns* "_quarto.qmd")
+  (let [qmd-path (ns->target-path "docs/" *ns* "_quarto.qmd")
         html-path (-> qmd-path
                       (string/replace #"\.qmd$" ".html"))]
 
@@ -232,6 +233,64 @@
     (swap-state! assoc :quarto-html-path html-path)
     (broadcast! "refresh")
     :ok))
+
+
+
+(def base-quarto-config
+  "
+project:
+  type: book
+
+format:
+  html:
+    theme: cosmo
+
+book:
+  title: \"book\"
+  chapters:
+    - index.md
+")
+
+(def base-quarto-index
+  "
+---
+format:
+  html: {toc: true}
+embed-resources: true
+---
+# book index
+  ")
+
+(defn update-quarto-config! [chapter-path]
+  (let [index-path "book/index.md"
+        config-path "book/_quarto.yml"
+        current-config (if (-> config-path io/file .exists)
+                         (slurp config-path)
+                         (do (spit config-path base-quarto-config)
+                             (println [:created config-path])
+                             base-quarto-config))
+        chapter-line (str "    - " chapter-path)]
+    (when-not (-> index-path io/file .exists)
+      (spit index-path base-quarto-index)
+      (println [:created index-path]))
+    (when-not (-> current-config
+                  (string/split #"\n")
+                  (->> (some (partial = chapter-line))))
+      (->> chapter-line
+           (str current-config "\n")
+           (spit config-path))
+      (println [:updated config-path
+                :with chapter-path]))))
+
+(defn write-light-quarto! [widgets]
+  (let [chapter-path (ns->target-path "" *ns* ".qmd")
+        qmd-path (str "book/" chapter-path)]
+    (io/make-parents qmd-path)
+    (-> @*state
+        (page/light-qmd widgets)
+        (->> (spit qmd-path)))
+    (update-quarto-config! chapter-path)
+    (println [:wrote qmd-path (now)])))
 
 (defn show-message! [hiccup]
   (set-widgets! [hiccup])

@@ -76,6 +76,13 @@
         (merge options)
         (scittle.doc/gen-doc-and-write-quarto! path))))
 
+(defn generate-namespace-light-quarto!
+  [path options]
+  (avoid-recursion
+   (->> {:format :quarto}
+        (merge options)
+        (scittle.doc/gen-doc-and-write-light-quarto! path))))
+
 (defn browse!
   []
   (scittle.server/browse!))

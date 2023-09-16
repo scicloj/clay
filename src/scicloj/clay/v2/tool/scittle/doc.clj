@@ -192,3 +192,13 @@
        :path path)
       (->> (gen-doc path))
       scittle.server/write-quarto!))
+
+(defn gen-doc-and-write-light-quarto!
+  [path {:keys [title]
+         :as options}]
+  (-> options
+      (assoc
+       :title (or title path)
+       :path path)
+      (->> (gen-doc path))
+      scittle.server/write-light-quarto!))

@@ -39,6 +39,17 @@
       (cider-interactive-eval
        (concat "(scicloj.clay.v2.api/generate-and-show-namespace-quarto! \"" filename "\" {})")))))
 
+(defun clay/generate-namespace-light-quarto ()
+  (interactive)
+  (clay/start)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/generate-namespace-light-quarto! \"" filename "\" {})")))))
+
 (defun clay/cider-interactive-notify-and-eval (code)
   (cider-interactive-eval
    code

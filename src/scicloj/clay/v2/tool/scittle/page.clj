@@ -322,3 +322,98 @@ code {
                       (string/join "\n"))]]))
          (string/replace #"<table>"
                          "<table class='table table-hover'>")))))
+
+(defn signals-of-no-plain-html? [hiccup]
+  (or (special-libs-set hiccup)
+      (->> hiccup
+           flatten
+           (some #{'fn 'quote}))))
+
+(defn light-qmd [{:keys [data port title options counter]}
+                 widgets]
+  (when-not port
+    (throw (ex-info "missing port")))
+  (str
+   (->> options
+        :quarto
+        yaml/generate-string
+        (format "\n---\n%s\n---\n"))
+
+   "
+#
+"
+   (hiccup/html
+    [:style styles/table]
+    [:style "
+.printedClojure .sourceCode {
+  background-color: transparent;
+  border-style: none;
+}
+"])
+
+   (->> widgets
+        (map-indexed
+         (fn [i widget]
+           (cond
+             ;;
+             (-> widget
+                 meta
+                 :clay/original-markdown)
+             (-> widget
+                 meta
+                 :clay/original-markdown)
+             ;;
+             (-> widget
+                 meta
+                 :clay/original-code)
+             (let [code (if (-> widget
+                                meta
+                                :clay/hide-code?)
+                          ""
+                          (-> widget
+                              meta
+                              :clay/original-code))]
+               (if (= code "")
+                 "
+```
+```
+"
+                 (->> code
+                      (format "
+<div class=\"originalCode\">
+```clojure
+%s
+```
+</div>
+
+"))))
+             ;;
+             ;;
+             (widget/check widget :clay/printed-clojure?)
+             (->> widget
+                  meta
+                  :clay/text
+                  (format "
+<div class=\"printedClojure\">
+```clojure
+%s
+```
+</div>
+"))
+             ;;
+             (widget/check widget :clay/plain-html?)
+             (hiccup/html widget)
+             ;;
+             (not (signals-of-no-plain-html? widget))
+             (try
+               (hiccup/html
+                widget)
+               (catch Exception e "
+**unsupported element**
+"))
+             ;;
+             :else
+             "
+**unsupported element**
+")))
+        (string/join "\n"))))
