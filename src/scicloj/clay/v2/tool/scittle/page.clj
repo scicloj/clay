@@ -131,32 +131,7 @@ code {
                                             :margin "auto"}
                                     :data-spy "scroll"
                                     :data-target "#toc"}
-                            [:div.container
-                             [:div.row
-                              (when toc?
-                                [:div.col-sm-3
-                                 [:nav.sticky-top {:id "toc"
-                                                   :data-toggle "toc"}]])
-                              [:div {:class (if toc?
-                                              "col-sm-9"
-                                              "col-sm-12")}
-                               [:div
-                                [:div
-                                 (->> widgets
-                                      (map-indexed
-                                       (fn [i widget]
-                                         [:div {:style {:margin "15px"}}
-                                          (cond
-                                            (-> widget meta :clay/hide-code?)
-                                            nil
-                                            ;;
-                                            (widget/check widget :clay/plain-html?)
-                                            widget
-                                            ;;
-                                            :else
-                                            [:div {:id (str "widget" i)}
-                                             [:code "loading ..."]])]))
-                                      (into [:div]))]]]]]
+
                             (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
                                                   "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
                                                   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
@@ -185,6 +160,33 @@ code {
                                  (mapcat (comp :from-the-web :js special-lib-resources))
                                  distinct
                                  (apply hiccup.page/include-js))
+                            [:div.container
+                             [:div.row
+                              (when toc?
+                                [:div.col-sm-3
+                                 [:nav.sticky-top {:id "toc"
+                                                   :data-toggle "toc"}]])
+                              [:div {:class (if toc?
+                                              "col-sm-9"
+                                              "col-sm-12")}
+                               [:div
+                                [:div
+                                 (->> widgets
+                                      (map-indexed
+                                       (fn [i widget]
+                                         [:div {:style {:margin "15px"}}
+                                          (cond
+                                            (-> widget meta :clay/hide-code?)
+                                            nil
+                                            ;;
+                                            (widget/check widget :clay/plain-html?)
+                                            widget
+                                            ;; widget
+                                            ;;
+                                            :else
+                                            [:div {:id (str "widget" i)}
+                                             [:code "loading ..."]])]))
+                                      (into [:div]))]]]]]
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]
                             [:script {:type "application/x-scittle"}
@@ -234,64 +236,6 @@ code {
                      (mapcat (comp :from-the-web :css special-lib-resources))
                      distinct
                      (apply hiccup.page/include-css))])
-              (->> widgets
-                   (map-indexed
-                    (fn [i widget]
-                      (cond
-                        ;;
-                        (-> widget
-                            meta
-                            :clay/original-markdown)
-                        (-> widget
-                            meta
-                            :clay/original-markdown)
-                        ;;
-                        (-> widget
-                            meta
-                            :clay/original-code)
-                        (let [code (if (-> widget
-                                           meta
-                                           :clay/hide-code?)
-                                     ""
-                                     (-> widget
-                                         meta
-                                         :clay/original-code))]
-                          (if (= code "")
-                            "
-```
-```
-"
-                            (->> code
-                                 (format "
-<div class=\"originalCode\">
-```clojure
-%s
-```
-</div>
-
-"))))
-                        ;;
-                        ;;
-                        (widget/check widget :clay/printed-clojure?)
-                        (->> widget
-                             meta
-                             :clay/text
-                             (format "
-<div class=\"printedClojure\">
-```clojure
-%s
-```
-</div>
-"))
-                        ;;
-                        (widget/check widget :clay/plain-html?)
-                        (hiccup/html widget)
-                        ;;
-                        :else
-                        (hiccup/html
-                         [:div {:id (str "widget" i)}
-                          [:code "loading ..."]]))))
-                   (string/join "\n"))
               (hiccup/html
                [:div
                 (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
@@ -312,6 +256,64 @@ code {
                      (mapcat (comp :from-the-web :js special-lib-resources))
                      distinct
                      (apply hiccup.page/include-js))
+                (->> widgets
+                     (map-indexed
+                      (fn [i widget]
+                        (cond
+                          ;;
+                          (-> widget
+                              meta
+                              :clay/original-markdown)
+                          (-> widget
+                              meta
+                              :clay/original-markdown)
+                          ;;
+                          (-> widget
+                              meta
+                              :clay/original-code)
+                          (let [code (if (-> widget
+                                             meta
+                                             :clay/hide-code?)
+                                       ""
+                                       (-> widget
+                                           meta
+                                           :clay/original-code))]
+                            (if (= code "")
+                              "
+```
+```
+"
+                              (->> code
+                                   (format "
+<div class=\"originalCode\">
+```clojure
+%s
+```
+</div>
+
+"))))
+                          ;;
+                          ;;
+                          (widget/check widget :clay/printed-clojure?)
+                          (->> widget
+                               meta
+                               :clay/text
+                               (format "
+<div class=\"printedClojure\">
+```clojure
+%s
+```
+</div>
+"))
+                          ;;
+                          (widget/check widget :clay/plain-html?)
+                          (hiccup/html widget)
+                          ;;
+                          :else
+                          (hiccup/html
+                           [:div {:id (str "widget" i)}
+                            [:code "loading ..."]]))))
+                     (string/join "\n"))
                 [:script {:type "application/x-scittle"}
                  (->> {:widgets widgets
                        :data data
