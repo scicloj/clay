@@ -97,9 +97,7 @@
 (defonce memoized-slurp
   (memoize slurp))
 
-;; Let us start Clay.
-
-(clay/start!)
+;; Let us set up Clay.
 
 (clay/swap-options!
  assoc
