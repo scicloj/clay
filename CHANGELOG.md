@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha35-SNAPSHOT] 
 - updated deps
 - lightweight qmd generateion (WIP)
+- bugfix: missing deps in qmd generation
 
 ## [2-alpha34] - 2023-09-14
 - draft support for embedded portal

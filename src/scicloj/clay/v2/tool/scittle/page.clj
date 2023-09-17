@@ -247,7 +247,9 @@ code {
                  "https://scicloj.github.io/scittle/js/scittle.js"
                  "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
                  "https://scicloj.github.io/scittle/js/scittle.reagent.js"
-                 "https://scicloj.github.io/scittle/js/scittle.mathbox.js")
+                 "https://scicloj.github.io/scittle/js/scittle.mathbox.js"
+                 "https://scicloj.github.io/scittle/js/scittle.emmy.js"
+                 "https://scicloj.github.io/scittle/js/scittle.tmdjs.js")
                 (->> special-libs
                      (mapcat (comp :from-local-copy :js special-lib-resources))
                      distinct
