@@ -1,0 +1,8 @@
+{:customREPLCommandSnippets
+ [{:name "clay: send form"
+   :key "a"
+   :snippet "(scicloj.clay.v2.api/handle-form! (quote $current-form))"}
+ {:name "clay: show namespace"
+   :key "n"
+   :snippet "(do (println [:showing \"$current\"])(scicloj.clay.v2.api/show-namespace! \"$file\"))"} ]}
+
