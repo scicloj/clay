@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - updated deps
 - lightweight qmd generateion (WIP)
 - bugfix: missing deps in qmd generation
+- using Portal as a js library without scittle
 
 ## [2-alpha34] - 2023-09-14
 - draft support for embedded portal

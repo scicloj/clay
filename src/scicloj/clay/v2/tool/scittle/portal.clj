@@ -3,7 +3,9 @@
             [clojure.string :as string]
             [scicloj.clay.v2.util.meta :as meta]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kind-portal.v1.api :as kind-portal]))
+            [scicloj.kind-portal.v1.api :as kind-portal]
+            [scicloj.clay.v2.tool.scittle.widget :as widget]
+            [hiccup.page]))
 
 (defonce dev
   (portal/url
@@ -15,16 +17,15 @@
 
 
 (defn in-portal [value]
-  (kind/hiccup
-   ['(fn [edn-str]
-       (let [api (js/portal.extensions.vs_code_notebook.activate)]
-         [:div
-          [:div
-           {:ref (fn [el]
-                   (.renderOutputItem api
-                                      (clj->js {:mime "x-application/edn"
-                                                :text (fn [] edn-str)})
-                                      el))}]]))
-    (-> {:value value}
-        kind-portal/prepare
-        meta/pr-str-with-meta)]))
+  (->> {:value value}
+       kind-portal/prepare
+       meta/pr-str-with-meta
+       pr-str
+       (format "portal.extensions.vs_code_notebook.activate().renderOutputItem(
+                {\"mime\": \"x-application/edn\",
+                 \"text\": (() => %s)}
+                , document.currentScript.parentElement);")
+       (vector :script)
+       (vector :div)
+       kind/hiccup
+       widget/mark-plain-html))
