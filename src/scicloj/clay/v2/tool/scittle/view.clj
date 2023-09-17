@@ -114,10 +114,10 @@
 (defn vega-embed [spec]
   (widget/mark-plain-html
    [:div
+    'vega ; to help Clay realize that the Vega dependency is needed
     [:script (->> spec
                   jsonista/write-value-as-string
-                  (format "vegaEmbed(document.currentScript.parentElement, %s);"))
-     'vega]]))
+                  (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]))
 
 (add-viewer!
  :kind/vega
