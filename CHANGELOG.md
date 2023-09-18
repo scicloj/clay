@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha36-SNAPSHOT]
+- fixed typo in light quarto setup
+
 ## [2-alpha35] - 2023-09-17
 - lightweight qmd generateion (WIP)
 - updated deps

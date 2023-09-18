@@ -248,7 +248,7 @@ format:
 book:
   title: \"book\"
   chapters:
-    - index.md
+    - index.qmd
 ")
 
 (def base-quarto-index
