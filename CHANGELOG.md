@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha36-SNAPSHOT]
 - fixed typo in light quarto setup
+- light qmd generation - code cleanup
 
 ## [2-alpha35] - 2023-09-17
 - lightweight qmd generateion (WIP)

@@ -207,7 +207,7 @@ code {
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (when-not port
-      (throw (ex-info "missing port")))
+      (throw (ex-info "missing port" {})))
     (str
      (->> options
           :quarto
@@ -336,10 +336,8 @@ code {
            flatten
            (some #{'fn 'quote}))))
 
-(defn light-qmd [{:keys [data port title options counter]}
+(defn light-qmd [{:keys [data title options counter]}
                  widgets]
-  (when-not port
-    (throw (ex-info "missing port")))
   (let [special-libs (->> widgets
                           special-libs-in-form)]
     (str
