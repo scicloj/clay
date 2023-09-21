@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - fixed typo in light quarto setup
 - light qmd generation - code and output cleanup
 - info-line is only at the bottom now
+- minor change in dataset viewer
 
 ## [2-alpha35] - 2023-09-17
 - lightweight qmd generateion (WIP)
