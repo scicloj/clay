@@ -138,8 +138,8 @@
           (if hide-info-line?
             items
             (let [il (info-line path)]
-              (concat [il
-                       separator]
+              (concat #_[il
+                         separator]
                       items
                       [separator
                        il])))))
