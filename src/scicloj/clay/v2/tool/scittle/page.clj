@@ -346,9 +346,7 @@ code {
           yaml/generate-string
           (format "\n---\n%s\n---\n"))
 
-     "
-#
-"
+     ;; " "
      (hiccup/html
       [:style styles/table]
       [:style "
