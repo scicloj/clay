@@ -1,4 +1,4 @@
-;; # Clay
+;;# Clay
 
 ^:kindly/hide-code?
 (with-meta
@@ -104,11 +104,10 @@
  :remote-repo {:git-url "https://github.com/scicloj/clay"
                :branch "main"}
  :quarto {:format {:html {:toc true
-                          :theme :spacelab
-                          :embed-resources true}}
+                          :theme :spacelab}}
           :highlight-style :solarized
           :code-block-background true
-          :embed-resources true
+          :embed-resources false
           :execute {:freeze true}})
 
 ;; These initializations can also be done in a `user.clj` file, making them available for all namespaces in the project.
