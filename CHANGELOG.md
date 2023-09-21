@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - light qmd generation - code and output cleanup
 - info-line is only at the bottom now
 - minor change in dataset viewer
+- changes in target paths
 
 ## [2-alpha35] - 2023-09-17
 - lightweight qmd generateion (WIP)

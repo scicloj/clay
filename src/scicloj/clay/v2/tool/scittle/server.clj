@@ -197,6 +197,7 @@
    (str base
         (-> the-ns
             str
+            (string/replace #"-" "_")
             (string/split #"\.")
             (->> (string/join "/")))
         ext)))
@@ -217,7 +218,9 @@
        (kindly/consider :kind/hidden))))
 
 (defn write-quarto! [widgets]
-  (let [qmd-path (ns->target-path "docs/" *ns* "_quarto.qmd")
+  (let [qmd-path
+
+        (ns->target-path "docs/" *ns* "_quarto.qmd")
         html-path (-> qmd-path
                       (string/replace #"\.qmd$" ".html"))]
 
@@ -262,7 +265,7 @@ embed-resources: true
   ")
 
 (defn update-quarto-config! [chapter-path]
-  (let [index-path "book/index.md"
+  (let [index-path "book/index.qmd"
         config-path "book/_quarto.yml"
         current-config (if (-> config-path io/file .exists)
                          (slurp config-path)
