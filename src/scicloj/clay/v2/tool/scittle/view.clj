@@ -167,10 +167,11 @@
 (add-viewer!
  :kind/dataset
  (fn [v]
-   (-> v
-       println
-       with-out-str
-       widget/md)))
+   [:div
+    (-> v
+        println
+        with-out-str
+        widget/md)]))
 
 (add-viewer!
  :kind/image
