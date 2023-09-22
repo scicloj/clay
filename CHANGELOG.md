@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha37-SNAPSHOT]
+## [2-alpha37] - 2023-09-22
 - minor change in dataset viewer to improve layout
 
 ## [2-alpha36] - 2023-09-21
