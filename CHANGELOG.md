@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha38-SNAPSHOT]
+- path changes in light quarto book generation
+
 ## [2-alpha37] - 2023-09-22
 - minor change in dataset viewer to improve layout
 
