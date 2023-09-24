@@ -285,8 +285,17 @@ embed-resources: true
       (println [:updated config-path
                 :with chapter-path]))))
 
+
+
+
 (defn write-light-quarto! [widgets]
-  (let [chapter-path (ns->target-path "" *ns* "/index.qmd")
+  (let [chapter-path (if (-> *ns*
+                             str
+                             (string/split #"\.")
+                             last
+                             (= "index"))
+                       (ns->target-path "" *ns* ".qmd")
+                       (ns->target-path "" *ns* "/index.qmd"))
         qmd-path (str "book/" chapter-path)]
     (io/make-parents qmd-path)
     (-> @*state
