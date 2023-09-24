@@ -331,7 +331,7 @@ code {
 (defn signals-of-no-plain-html? [hiccup]
   (or (->> hiccup
            special-libs-in-form
-           (some (partial not= 'vega)))
+           (some (partial (complement #{'datatables 'vega}))))
       (->> hiccup
            flatten
            (some #{'fn 'quote}))))
@@ -362,6 +362,20 @@ code {
             :from-local-copy
             (apply hiccup.page/include-js)
             hiccup/html))
+     (when (special-libs 'datatables)
+       (str (->> 'datatables
+                 special-lib-resources
+                 :js
+                 :from-the-web
+                 (cons "https://code.jquery.com/jquery-3.6.0.min.js")
+                 (apply hiccup.page/include-js)
+                 hiccup/html)
+            (->> 'datatables
+                 special-lib-resources
+                 :css
+                 :from-the-web
+                 (apply hiccup.page/include-css)
+                 hiccup/html)))
      (->> widgets
           (map-indexed
            (fn [i widget]

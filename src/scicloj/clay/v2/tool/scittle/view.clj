@@ -87,7 +87,10 @@
               last ; the :tbody part
               count
               (> 20)) ; a big table
-        ['datatables hiccup]
+        (into hiccup
+              ['datatables ; to help Clay realize that th dependency is needed
+               [:script "$(document.currentScript.parentElement
+).DataTable({'sPaginationType': 'full_numbers', 'order': []});"]])
         hiccup))]))
 
 (defn view-sequentially [value open-mark close-mark]
@@ -114,7 +117,7 @@
 (defn vega-embed [spec]
   (widget/mark-plain-html
    [:div
-    'vega ; to help Clay realize that the Vega dependency is needed
+    'vega ; to help Clay realize that the dependency is needed
     [:script (->> spec
                   jsonista/write-value-as-string
                   (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]))
