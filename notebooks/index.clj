@@ -542,3 +542,11 @@ my-images
 myplot
 
 (clay/in-portal myplot)
+
+;; ## Nesting kinds in Hiccup (WIP)
+
+(kind/hiccup
+ [:div
+  (kind/md "*a plot*")
+  [:p "hello"]
+  (kind/code "{:x (1 2 [3 4])}")])

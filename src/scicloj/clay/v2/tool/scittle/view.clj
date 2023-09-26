@@ -295,6 +295,21 @@
  (fn [value]
    (view-sequentially value "#{" "}")))
 
+(def non-hiccup-kind?
+  (complement #{:kind/vector :kind/map :kind/seq :kind/set
+                :kind/hiccup}))
+
 (add-viewer!
  :kind/hiccup
- identity)
+ (fn [form]
+   (let [result (->> form
+                     (walk/postwalk
+                      (fn [subform]
+                        (let [context {:value subform}]
+                          (if (some-> context
+                                      kindly-advice/advise
+                                      :kind
+                                      non-hiccup-kind?)
+                            (prepare-or-pprint context)
+                            subform)))))]
+     result)))
