@@ -90,7 +90,7 @@
                (> 20)) ; a big table
          (into hiccup
                [[:script "new DataTable(document.currentScript.parentElement,
- {\"sPaginationType\": \"full_numbers\", \"order\": []}});"]
+ {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
                 'datatables ; to help Clay realize that th dependency is needed
                 ])
          hiccup))])))
