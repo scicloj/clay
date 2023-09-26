@@ -21,9 +21,9 @@
                 "https://cdn.jsdelivr.net/npm/vega-lite@5.6.0"
                 "https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"]}}
    'datatables {:js {:from-the-web
-                     ["https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"]}
+                     ["https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"]}
                 :css {:from-the-web
-                      ["https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"]}}
+                      ["https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"]}}
    'echarts {:js {:from-local-copy
                   ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
    'cytoscape {:js {:from-local-copy

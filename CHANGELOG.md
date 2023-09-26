@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - path changes in light quarto book generation
 - lightweight tables support
 - nesting kinds in hiccup (WIP)
+- updated datatables version
 
 ## [2-alpha37] - 2023-09-22
 - minor change in dataset viewer to improve layout
