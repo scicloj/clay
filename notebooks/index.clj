@@ -549,4 +549,6 @@ myplot
  [:div
   (kind/md "*a plot*")
   [:p "hello"]
-  (kind/code "{:x (1 2 [3 4])}")])
+  (kind/code "{:x (1 2 [3 4])}")
+  (tc/dataset {:x (range 3)
+               :y [2 4 6]})])

@@ -4,7 +4,7 @@
             [scicloj.clay.v2.html.table :as table]
             [clojure.string :as string]
             [scicloj.clay.v2.util.image :as util.image]
-            [clojure.walk :as walk]
+            [scicloj.clay.v2.walk :as claywalk]
             [jsonista.core :as jsonista])
   (:import java.awt.image.BufferedImage
            javax.imageio.ImageIO))
@@ -72,18 +72,19 @@
      (let [pre-hiccup (table/->table-hiccup
                        table-spec)
            hiccup (->> pre-hiccup
-                       (walk/prewalk (fn [elem]
-                                       (if (and (vector? elem)
-                                                (-> elem first (= :td)))
-                                         ;; a table data cell - handle it
-                                         (-> elem
-                                             (update
-                                              1
-                                              (fn [value]
-                                                (prepare-or-str
-                                                 {:value value}))))
-                                         ;; else - keep it
-                                         elem))))]
+                       (claywalk/prewalk
+                        (fn [elem]
+                          (if (and (vector? elem)
+                                   (-> elem first (= :td)))
+                            ;; a table data cell - handle it
+                            (-> elem
+                                (update
+                                 1
+                                 (fn [value]
+                                   (prepare-or-str
+                                    {:value value}))))
+                            ;; else - keep it
+                            elem))))]
        (if (-> hiccup
                last ; the :tbody part
                count
@@ -305,7 +306,7 @@
  :kind/hiccup
  (fn [form]
    (let [result (->> form
-                     (walk/postwalk
+                     (claywalk/postwalk
                       (fn [subform]
                         (let [context {:value subform}]
                           (if (some-> context
