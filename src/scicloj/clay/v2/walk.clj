@@ -5,7 +5,7 @@
 (defn walk
   [inner outer form]
   (-> (cond
-        (-> form outer class str
+        (-> form class str
             (#{"class tech.v3.dataset.impl.column.Column"
                "class tech.v3.dataset.impl.dataset.Dataset"}))
         form
