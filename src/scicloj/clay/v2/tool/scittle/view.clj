@@ -68,33 +68,36 @@
  :kind/table
  (fn [table-spec]
    (widget/mark-plain-html
-    [:div
-     (let [pre-hiccup (table/->table-hiccup
-                       table-spec)
-           hiccup (->> pre-hiccup
-                       (claywalk/prewalk
-                        (fn [elem]
-                          (if (and (vector? elem)
-                                   (-> elem first (= :td)))
-                            ;; a table data cell - handle it
-                            (-> elem
-                                (update
-                                 1
-                                 (fn [value]
-                                   (prepare-or-str
-                                    {:value value}))))
-                            ;; else - keep it
-                            elem))))]
-       (if (-> hiccup
-               last ; the :tbody part
-               count
-               (> 20)) ; a big table
-         (into hiccup
-               [[:script "new DataTable(document.currentScript.parentElement,
+    (let [pre-hiccup (table/->table-hiccup
+                      table-spec)
+          hiccup (->> pre-hiccup
+                      (claywalk/prewalk
+                       (fn [elem]
+                         (if (and (vector? elem)
+                                  (-> elem first (= :td)))
+                           ;; a table data cell - handle it
+                           (-> elem
+                               (update
+                                1
+                                (fn [value]
+                                  (prn [:DBG
+                                        value
+                                        (prepare-or-str
+                                         {:value value})])
+                                  (prepare-or-str
+                                   {:value value}))))
+                           ;; else - keep it
+                           elem))))]
+      (if (-> hiccup
+              last ; the :tbody part
+              count
+              (> 20)) ; a big table
+        (into hiccup
+              [[:script "new DataTable(document.currentScript.parentElement,
  {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
-                'datatables ; to help Clay realize that th dependency is needed
-                ])
-         hiccup))])))
+               'datatables ; to help Clay realize that th dependency is needed
+               ])
+        hiccup)))))
 
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
@@ -305,14 +308,13 @@
 (add-viewer!
  :kind/hiccup
  (fn [form]
-   (let [result (->> form
-                     (claywalk/postwalk
-                      (fn [subform]
-                        (let [context {:value subform}]
-                          (if (some-> context
-                                      kindly-advice/advise
-                                      :kind
-                                      non-hiccup-kind?)
-                            (prepare-or-pprint context)
-                            subform)))))]
-     result)))
+   (->> form
+        (claywalk/prewalk
+         (fn [subform]
+           (let [context {:value subform}]
+             (if (some-> context
+                         kindly-advice/advise
+                         :kind
+                         non-hiccup-kind?)
+               (prepare-or-pprint context)
+               subform)))))))
