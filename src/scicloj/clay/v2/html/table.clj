@@ -19,9 +19,9 @@
         (map-indexed
          (fn [i row]
            (->> row
-                (mapv (fn [x] [:td (-> x
-                                       println
-                                       with-out-str)]))
+                (mapv (fn [x] [:td x #_(-> x
+                                           println
+                                           with-out-str)]))
                 (into [:tr]))))
         vec
         (into [:tbody]))])
