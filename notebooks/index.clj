@@ -1,4 +1,5 @@
-;;# Clay
+;; .
+;; # Clay
 
 ^:kindly/hide-code?
 (with-meta
@@ -297,6 +298,8 @@ nested-structure-1
     tc/dataset
     kind/table)
 
+
+
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
 (defn vega-lite-point-plot [data]
@@ -546,9 +549,27 @@ myplot
 ;; ## Nesting kinds in Hiccup (WIP)
 
 (kind/hiccup
- [:div
-  (kind/md "*a plot*")
-  [:p "hello"]
+ [:div {:style {:background "#f5f3ff"
+                :border "solid"}}
+  [:h3 [:code ":kind/md"]]
+  (kind/md "*some text* **some more text**")
+  [:h3 [:code ":kind/code"]]
   (kind/code "{:x (1 2 [3 4])}")
-  (tc/dataset {:x (range 3)
-               :y [2 4 6]})])
+  [:h3 [:code "kind/dataset"]]
+  (tc/dataset {:x (range 33)
+               :y (map inc (range 33))})
+  [:h3 [:code "kind/table"]]
+  (kind/table
+   (tc/dataset {:x (range 33)
+                :y (map inc (range 33))}))
+  [:h3 [:code "kind/vega"]]
+  (random-vega-lite-plot 9)])
+
+;; ## Nesting kinds in Tables (WIP)
+
+(kind/table {:column-names [:x :y]
+             :row-vectors [[(kind/md "*some text* **some more text**")
+                            (kind/code "{:x (1 2 [3 4])}")]
+                           [(tc/dataset {:x (range 3)
+                                         :y (map inc (range 3))})
+                            (random-vega-lite-plot 9)]]})
