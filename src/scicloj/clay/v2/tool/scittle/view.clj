@@ -80,10 +80,6 @@
                                (update
                                 1
                                 (fn [value]
-                                  (prn [:DBG
-                                        value
-                                        (prepare-or-str
-                                         {:value value})])
                                   (prepare-or-str
                                    {:value value}))))
                            ;; else - keep it
