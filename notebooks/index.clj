@@ -551,19 +551,32 @@ myplot
 (kind/hiccup
  [:div {:style {:background "#f5f3ff"
                 :border "solid"}}
+
+  [:hr]
   [:h3 [:code ":kind/md"]]
   (kind/md "*some text* **some more text**")
+
+  [:hr]
   [:h3 [:code ":kind/code"]]
   (kind/code "{:x (1 2 [3 4])}")
+
+  [:hr]
   [:h3 [:code "kind/dataset"]]
   (tc/dataset {:x (range 33)
                :y (map inc (range 33))})
+
+  [:hr]
   [:h3 [:code "kind/table"]]
   (kind/table
    (tc/dataset {:x (range 33)
                 :y (map inc (range 33))}))
+
+  [:hr]
   [:h3 [:code "kind/vega"]]
   (random-vega-lite-plot 9)])
+
+
+
 
 ;; ## Nesting kinds in Tables (WIP)
 
