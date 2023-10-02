@@ -9,12 +9,12 @@
   (:import java.awt.image.BufferedImage
            javax.imageio.ImageIO))
 
-(def *kind->viewer
+(def *kind->preparer
   (atom {}))
 
-(defn add-viewer!
-  [kind viewer]
-  (swap! *kind->viewer assoc kind viewer)
+(defn add-preparer!
+  [kind preparer]
+  (swap! *kind->preparer assoc kind preparer)
   [:ok])
 
 (defn value->kind [v]
@@ -24,47 +24,47 @@
 
 (defn prepare [{:as context
                 :keys [value]}
-               {:keys [fallback-viewer]}]
-  (when-let [viewer (-> context
-                        kindly-advice/advise
-                        :kind
-                        (@*kind->viewer)
-                        (or fallback-viewer))]
-    (viewer value)))
+               {:keys [fallback-preparer]}]
+  (when-let [preparer (-> context
+                          kindly-advice/advise
+                          :kind
+                          (@*kind->preparer)
+                          (or fallback-preparer))]
+    (preparer value)))
 
 (defn prepare-or-pprint [context]
-  (prepare context {:fallback-viewer widget/pprint}))
+  (prepare context {:fallback-preparer widget/pprint}))
 
 (defn prepare-or-str [context]
-  (prepare context {:fallback-viewer str}))
+  (prepare context {:fallback-preparer str}))
 
 (defn prepare-or-keep [context]
-  (prepare context {:fallback-viewer identity}))
+  (prepare context {:fallback-preparer identity}))
 
-(defn has-kind-with-viewer? [value]
+(defn has-kind-with-preparer? [value]
   (some-> value
           value->kind
-          (@*kind->viewer)))
+          (@*kind->preparer)))
 
-(add-viewer!
+(add-preparer!
  :kind/println
  widget/just-println)
 
-(add-viewer!
+(add-preparer!
  :kind/pprint
  widget/pprint)
 
-(add-viewer!
+(add-preparer!
  :kind/void
  (constantly
   (widget/mark-plain-html
    [:p ""])))
 
-(add-viewer!
+(add-preparer!
  :kind/md
  widget/md)
 
-(add-viewer!
+(add-preparer!
  :kind/table
  (fn [table-spec]
    (widget/mark-plain-html
@@ -97,7 +97,7 @@
 
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
-           (some has-kind-with-viewer?))
+           (some has-kind-with-preparer?))
     (let [prepared-parts (->> value
                               (map (fn [subvalue]
                                      (prepare-or-pprint {:value subvalue}))))]
@@ -124,11 +124,11 @@
                   jsonista/write-value-as-string
                   (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]))
 
-(add-viewer!
+(add-preparer!
  :kind/vega
  vega-embed)
 
-(add-viewer!
+(add-preparer!
  :kind/vega-lite
  vega-embed)
 
@@ -143,25 +143,25 @@
     (map? options)
     [component-symbol (list 'quote options)]))
 
-(add-viewer!
+(add-preparer!
  :kind/cytoscape
  (partial
   expand-options-if-vector
   'cytoscape))
 
-(add-viewer!
+(add-preparer!
  :kind/echarts
  (partial
   expand-options-if-vector
   'echarts))
 
-(add-viewer!
+(add-preparer!
  :kind/plotly
  (partial
   expand-options-if-vector
   'plotly))
 
-(add-viewer!
+(add-preparer!
  :kind/code
  (fn [codes]
    (->> codes
@@ -169,7 +169,7 @@
         (into [:div])
         widget/mark-plain-html)))
 
-(add-viewer!
+(add-preparer!
  :kind/dataset
  (fn [v]
    [:div
@@ -178,7 +178,7 @@
         with-out-str
         widget/md)]))
 
-(add-viewer!
+(add-preparer!
  :kind/image
  (fn [image]
    [:img {:src (-> image
@@ -194,7 +194,7 @@
                   [:big {:style {:color "darkred"}}
                    "❌"])]]]))
 
-(add-viewer!
+(add-preparer!
  :kind/test
  (fn [t]
    (let [ret (-> t
@@ -205,7 +205,7 @@
        (bool->hiccup ret)
        (prepare-or-pprint {:value ret})))))
 
-(add-viewer!
+(add-preparer!
  :kind/map
  (fn [t]
    [:p "NA"]))
@@ -214,12 +214,12 @@
   (clojure.pprint/pprint [tag x])
   x)
 
-(add-viewer!
+(add-preparer!
  :kind/map
  (fn [value]
    (if (->> value
             (apply concat)
-            (some has-kind-with-viewer?))
+            (some has-kind-with-preparer?))
      (let [prepared-kv-pairs (->> value
                                   (map (fn [kv]
                                          {:kv kv
@@ -263,7 +263,7 @@
 
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
-           (some has-kind-with-viewer?))
+           (some has-kind-with-preparer?))
     (let [prepared-parts (->> value
                               (map (fn [subvalue]
                                      (prepare-or-pprint {:value subvalue}))))]
@@ -282,17 +282,17 @@
     ;; else -- just print the whole value
     (widget/pprint value)))
 
-(add-viewer!
+(add-preparer!
  :kind/vector
  (fn [value]
    (view-sequentially value "[" "]")))
 
-(add-viewer!
+(add-preparer!
  :kind/seq
  (fn [value]
    (view-sequentially value "(" ")")))
 
-(add-viewer!
+(add-preparer!
  :kind/set
  (fn [value]
    (view-sequentially value "#{" "}")))
@@ -301,7 +301,7 @@
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
                 :kind/hiccup}))
 
-(add-viewer!
+(add-preparer!
  :kind/hiccup
  (fn [form]
    (->> form
