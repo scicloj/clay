@@ -72,14 +72,23 @@
     (meta widget)))
 
 (defn md [value]
-  (->> value
-       ((fn [value]
-          (if (vector? value) value [value])))
-       (map (fn [md]
-              (->> md
-                   println
-                   with-out-str
-                   md/->hiccup
-                   (walk/postwalk-replace {:<> :p}))))
-       (into [:div])
-       mark-plain-html))
+  (-> (->> value
+           ((fn [value]
+              (if (vector? value) value [value])))
+           (map (fn [md]
+                  (->> md
+                       println
+                       with-out-str
+                       md/->hiccup
+                       (walk/postwalk-replace {:<> :p}))))
+           (into [:div])
+           mark-plain-html)
+      (vary-meta
+       assoc :clay/markdown (->> value
+                                 ((fn [value]
+                                    (if (vector? value) value [value])))
+                                 (map (fn [md]
+                                        (->> md
+                                             println
+                                             with-out-str)))
+                                 (string/join "\n")))))

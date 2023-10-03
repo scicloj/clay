@@ -272,6 +272,13 @@ code {
                           ;;
                           (-> widget
                               meta
+                              :clay/markdown)
+                          (-> widget
+                              meta
+                              :clay/markdown)
+                          ;;
+                          (-> widget
+                              meta
                               :clay/original-code)
                           (let [code (if (-> widget
                                              meta
@@ -387,6 +394,13 @@ code {
                (-> widget
                    meta
                    :clay/original-markdown)
+               ;;
+               (-> widget
+                   meta
+                   :clay/markdown)
+               (-> widget
+                   meta
+                   :clay/markdown)
                ;;
                (-> widget
                    meta

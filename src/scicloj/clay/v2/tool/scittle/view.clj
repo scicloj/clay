@@ -172,11 +172,10 @@
 (add-preparer!
  :kind/dataset
  (fn [v]
-   [:div
-    (-> v
-        println
-        with-out-str
-        widget/md)]))
+   (-> v
+       println
+       with-out-str
+       widget/md)))
 
 (add-preparer!
  :kind/image

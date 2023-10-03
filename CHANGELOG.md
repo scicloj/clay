@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - updated datatables version
 - bugfix in the custom walk function (called `outer` by mistake)
 - bugfix in nested table view - avoiding conversion to string before handling kinds
+- passing printed datasets as markdown on qmd pages
 
 ## [2-alpha37] - 2023-09-22
 - minor change in dataset viewer to improve layout
