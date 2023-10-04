@@ -1,9 +1,9 @@
 (ns scicloj.clay.v2.api
   (:require [scicloj.clay.v2.pipeline :as pipeline]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.clay.v2.tool.scittle.doc :as scittle.doc]
-            [scicloj.clay.v2.tool.scittle.server :as scittle.server]
-            [scicloj.clay.v2.tool.scittle.portal :as portal]
+            [scicloj.clay.v2.doc :as scittle.doc]
+            [scicloj.clay.v2.server :as scittle.server]
+            [scicloj.clay.v2.portal :as portal]
             [clojure.string :as string]
             [clojure.test]))
 
