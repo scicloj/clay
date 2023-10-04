@@ -1,8 +1,7 @@
 (ns scicloj.clay.v2.doc
-  (:require [scicloj.clay.v2.view :as scittle.view]
-            [scicloj.clay.v2.server :as scittle.server]
-            [scicloj.clay.v2.widget :as scittle.widget]
-            [scicloj.clay.v2.page :as scittle.page]
+  (:require [scicloj.clay.v2.prepare :as prepare]
+            [scicloj.clay.v2.server :as server]
+            [scicloj.clay.v2.widget :as widget]
             [scicloj.clay.v2.read]
             [scicloj.clay.v2.path :as path]
             [clojure.string :as string]
@@ -25,10 +24,10 @@
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo
                             absolute-file-path)
-        git-url (some-> (scittle.server/options)
+        git-url (some-> (server/options)
                         :remote-repo
                         (path/file-git-url relative-file-path))]
-    (scittle.widget/mark-plain-html
+    (widget/mark-plain-html
      [:div
       (when relative-file-path
         [:code
@@ -45,7 +44,7 @@
       (->> (map (juxt meta identity)))))
 
 (def separator
-  (scittle.widget/mark-plain-html
+  (widget/mark-plain-html
    [:div {:style
           {:height "2px"
            :width "100%"
@@ -90,7 +89,7 @@
                                 ;; TODO: How to handle these better?
                                 ;; (:<> does not work in plain hiccup)
                                 (walk/postwalk-replace {:<> :div})
-                                scittle.widget/mark-plain-html
+                                widget/mark-plain-html
                                 (#(vary-meta
                                    %
                                    assoc
@@ -99,7 +98,7 @@
                                          :code
                                          vector)
                               :kind :kind/code}
-                             scittle.view/prepare-or-pprint
+                             prepare/prepare-or-pprint
                              (#(vary-meta
                                 %
                                 assoc
@@ -117,8 +116,8 @@
                            (-> note
                                (select-keys [:value :code :form])
                                (update :value deref-if-needed)
-                               scittle.view/prepare-or-pprint
-                               scittle.widget/in-div ; TODO: was this needed?
+                               prepare/prepare-or-pprint
+                               widget/in-div ; TODO: was this needed?
                                ((fn [ctx]
                                   (if (-> note :value meta :kindly/kind (= :kind/md))
                                     (-> ctx
@@ -159,7 +158,7 @@
    (show-doc! path nil))
   ([path {:keys [title toc? custom-message]
           :as options}]
-   (scittle.server/show-message!
+   (server/show-message!
     (or custom-message
         [:div
          [:p "showing document for "
@@ -167,7 +166,7 @@
          [:div.loader]]))
    (let [doc (gen-doc path options)]
      (-> doc
-         (scittle.server/show-widgets!
+         (server/show-widgets!
           {:title title
            :toc? toc?})))
    :ok))
@@ -182,12 +181,12 @@
                               [:div.loader]]
              :path path)
       (->> (show-doc! path)))
-  (scittle.server/write-html!))
+  (server/write-html!))
 
 (defn gen-doc-and-write-quarto!
   [path {:keys [title]
          :as options}]
-  (scittle.server/show-message!
+  (server/show-message!
    [:div
     [:p "generating Quarto document for "
      [:code (path/path->filename path)]]
@@ -197,7 +196,7 @@
        :title (or title path)
        :path path)
       (->> (gen-doc path))
-      scittle.server/write-quarto!))
+      server/write-quarto!))
 
 (defn gen-doc-and-write-light-quarto!
   [path {:keys [title]
@@ -207,4 +206,4 @@
        :title (or title path)
        :path path)
       (->> (gen-doc path))
-      scittle.server/write-light-quarto!))
+      server/write-light-quarto!))

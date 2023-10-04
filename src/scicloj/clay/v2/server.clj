@@ -4,7 +4,7 @@
             [clojure.java.browse :as browse]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.page :as page]
-            [scicloj.clay.v2.view :as view]
+            [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.path :as path]
             [clojure.java.shell :as sh]
             [clojure.string :as string]
