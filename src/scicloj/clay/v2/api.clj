@@ -1,9 +1,6 @@
 (ns scicloj.clay.v2.api
   (:require [scicloj.clay.v2.pipeline :as pipeline]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.clay.v2.tools :as tools]
-            [scicloj.clay.v2.extensions :as extensions]
-            [scicloj.clay.v2.tool.scittle]
             [scicloj.clay.v2.tool.scittle.doc :as scittle.doc]
             [scicloj.clay.v2.tool.scittle.server :as scittle.server]
             [scicloj.clay.v2.tool.scittle.portal :as portal]
@@ -12,33 +9,18 @@
 
 (def ^:dynamic *in-api-call?* false)
 
-(def invisible-ok
-  (kindly/consider
-   [:ok]
-   :kind/void))
-
 (defmacro avoid-recursion [& forms]
   `(do (if-not *in-api-call?*
          (binding [*in-api-call?* true]
            ~@forms))))
 
-(def base-config
-  {:tools [tools/scittle]
-   :extensions []})
+(defn stop! []
+  (pipeline/stop!)
+  [:ok])
 
-(defn start!
-  ([]
-   (start! {}))
-  ([config]
-   (-> base-config
-       (merge config)
-       pipeline/start!)
-   invisible-ok))
-
-(defn restart!
-  ([config]
-   (pipeline/restart! config)
-   :clay))
+(defn start! []
+  (pipeline/start!)
+  [:ok])
 
 (defmacro capture-print
   [& body]
@@ -56,7 +38,7 @@
    (avoid-recursion
     (start!)
     (scittle.doc/show-doc! path options))
-   invisible-ok))
+   [:ok]))
 
 (defn write-html!
   [path]
@@ -111,11 +93,11 @@
 (defn handle-form! [form]
   (avoid-recursion
    (pipeline/handle-form! form))
-  invisible-ok)
+  [:ok])
 
 (defn handle-value! [value]
   (pipeline/handle-value! value)
-  invisible-ok)
+  [:ok])
 
 (defn in-portal [value]
   (portal/in-portal value))

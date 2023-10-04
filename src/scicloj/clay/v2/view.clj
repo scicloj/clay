@@ -1,13 +1,5 @@
 (ns scicloj.clay.v2.view
-  (:require [scicloj.clay.v2.tool :as tool]))
-
-(defn open! [tools]
-  (doseq [tool tools]
-    (tool/open! tool)))
-
-(defn close! [tools]
-  (doseq [tool tools]
-    (tool/close! tool)))
+  (:require [scicloj.clay.v2.tool.scittle.server :as server]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -17,7 +9,7 @@
       dv)
     v))
 
-(defn show! [context tools]
+(defn show! [context]
   (when-not (-> context
                 :value
                 meta
@@ -26,24 +18,8 @@
     (let [context-to-show
           (-> context
               (update :value deref-if-needed))]
-      (doseq [tool tools]
-        (try
-          (tool/show! tool context-to-show)
-          (catch Exception e
-            (println ["Exception while trying to show a value:"
-                      e])))))))
-
-(defn setup-extension! [extension]
-  (try (require (:ns extension))
-       (catch Exception e
-         (-> ["Extension unavailable:"
-              (select-keys extension [:name :info])]
-             pr-str
-             println))))
-
-(defn setup! [{:keys [tools extensions events-source]
-               :as config}]
-  (doseq [tool tools]
-    (tool/setup! tool config))
-  (doseq [ex extensions]
-    (setup-extension! ex)))
+      (try
+        (server/show! context-to-show)
+        (catch Exception e
+          (println ["Exception while trying to show a value:"
+                    e]))))))

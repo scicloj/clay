@@ -1,20 +1,9 @@
 (ns scicloj.clay.v2.pipeline
   (:require [clojure.core.async :as async
              :refer [<! go go-loop timeout chan thread]]
-            [scicloj.clay.v2.view :as view]))
+            [scicloj.clay.v2.tool.scittle.server :as server]))
 
-(defn handle-value [{:keys [form value] :as event}
-                    tools]
-  (view/show! event tools))
-
-(defn create-handler [tools]
-  (fn [{:keys [event-type]
-        :as event}]
-    (some-> event-type
-            (case :event-type/value (handle-value event tools)))))
-
-(defn new-pipeline [handler tools events-source]
-  (view/open! tools)
+(defn new-pipeline [handler]
   (let [events-channel         (async/chan 100)]
     (async/go-loop []
       (when-let [event (async/<! events-channel)]
@@ -23,29 +12,24 @@
     {:stop (fn []
              (async/close! events-channel))
      :process (fn [event]
-                (when (-> event :source (= events-source))
-                  (async/>!! events-channel event)))}))
+                (async/>!! events-channel event))}))
 
 (defonce *pipeline
   (atom nil))
 
-(defn restart! [{:keys [tools events-source]
-                 :as config
-                 :or {events-source :api}}]
-  (view/setup! config)
-  (view/close! tools)
+(defn stop! []
+  (server/close!)
   (when-let [s (:stop @*pipeline)]
-    (s))
-  (reset! *pipeline (new-pipeline (create-handler tools)
-                                  tools
-                                  events-source)))
+    (s)))
 
-(defn start! [config]
-  (if (:stop @*pipeline)
-    ;; already started, so just re-setup
-    (view/setup! config)
-    ;; actually start it
-    (restart! config)))
+(defn start! []
+  (when-not (:stop @*pipeline)
+    (server/open!)
+    (reset! *pipeline
+            (new-pipeline (fn [{:keys [event-type]
+                                :as event}]
+                            (some-> event-type
+                                    (case :event-type/value (server/show! event))))))))
 
 (defn process! [event]
   (when-let [p (:process @*pipeline)]
@@ -56,8 +40,7 @@
     (process!
      {:event-type :event-type/value
       :form form
-      :value (eval form)
-      :source :api})
+      :value (eval form)})
     (catch Exception e
       (println [:error-in-clay-pipeline e]))))
 
@@ -65,22 +48,6 @@
   (try
     (process!
      {:event-type :event-type/value
-      :value value
-      :source :api})
+      :value value})
     (catch Exception e
       (println [:error-in-clay-pipeline e]))))
-
-;; (defn handle-tap [{:keys [clay-tap?  form value]
-;;                    :as dbg}]
-;;   (when clay-tap?
-;;     (try
-;;       (process!
-;;        {:event-type :event-type/value
-;;         :code (some->  slurp)
-;;         :form form
-;;         :value value
-;;         :source :tap})
-;;       (catch Exception e
-;;         (println [:error-in-clay-pipeline e])))))
-
-;; (add-tap #'handle-tap)

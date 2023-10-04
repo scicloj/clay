@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha38]
+- major cleanup and refactoring
+
 ## [2-alpha38] - 2023-10-03
 - path changes in light quarto book generation
 - lightweight tables support

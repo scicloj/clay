@@ -7,7 +7,6 @@
             [scicloj.clay.v2.tool.scittle.widget :as widget]
             [scicloj.clay.v2.tool.scittle.styles :as styles]
             [scicloj.clay.v2.util.resource :as resource]
-            [scicloj.clay.v2.html.table :as table]
             [clj-yaml.core :as yaml]
             [scicloj.clay.v2.tool.scittle.portal :as portal]))
 
