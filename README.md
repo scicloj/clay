@@ -12,6 +12,10 @@ Setup and usage can be found in the [Documentation](https://scicloj.github.io/cl
 
 Regular updates are given at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
+## Related projects
+
+The [Claykind](https://github.com/timothypratley/claykind) project is rethinking the Clay architecture and implementation from scratch, in a new code base. Currently (Fall 2023), the two projects are being developed in coordination.
+
 ## Discussion
 
 The best places to discuss this project are (in this order)
