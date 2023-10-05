@@ -38,9 +38,6 @@
 (defn prepare-or-str [context]
   (prepare context {:fallback-preparer str}))
 
-(defn prepare-or-keep [context]
-  (prepare context {:fallback-preparer identity}))
-
 (defn has-kind-with-preparer? [value]
   (some-> value
           value->kind

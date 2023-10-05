@@ -1,7 +1,8 @@
 (ns scicloj.clay.v2.actions
-  (:require [scicloj.clay.v2.doc :as doc]
-            [scicloj.clay.v2.server :as server]
-            [scicloj.clay.v2.path :as path]))
+  (:require
+   [scicloj.clay.v2.eval :as eval]
+   [scicloj.clay.v2.path :as path]
+   [scicloj.clay.v2.server :as server]))
 
 (defn show-doc!
   ([path]
@@ -14,7 +15,7 @@
          [:p "showing document for "
           [:code (path/path->filename path)]]
          [:div.loader]]))
-   (let [doc (doc/gen-doc path options)]
+   (let [doc (eval/gen-doc path options)]
      (-> doc
          (server/show-widgets!
           {:title title
@@ -45,7 +46,7 @@
       (assoc
        :title (or title path)
        :path path)
-      (->> (doc/gen-doc path))
+      (->> (eval/gen-doc path))
       server/write-quarto!))
 
 (defn gen-doc-and-write-light-quarto!
@@ -55,5 +56,5 @@
       (assoc
        :title (or title path)
        :path path)
-      (->> (doc/gen-doc path))
+      (->> (eval/gen-doc path))
       server/write-light-quarto!))
