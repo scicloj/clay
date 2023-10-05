@@ -188,7 +188,7 @@
 
 (defn show! [context]
   (-> context
-      view/prepare-or-pprint
+      prepare/prepare-or-pprint
       vector
       show-widgets!))
 
