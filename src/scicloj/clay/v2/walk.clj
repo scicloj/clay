@@ -5,11 +5,12 @@
 (defn walk
   [inner outer form]
   (-> (cond
+        ;; Avoid walking into columns and datasets.
         (-> form class str
             (#{"class tech.v3.dataset.impl.column.Column"
                "class tech.v3.dataset.impl.dataset.Dataset"}))
         form
-        ;;
+        ;; In other cases, mimic clojure.walk.
         (list? form)
         (outer (apply list (map inner form)))
         ;;
