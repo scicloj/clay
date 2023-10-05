@@ -1,8 +1,8 @@
 (ns scicloj.clay.v2.api
   (:require [scicloj.clay.v2.pipeline :as pipeline]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.clay.v2.doc :as scittle.doc]
-            [scicloj.clay.v2.server :as scittle.server]
+            [scicloj.clay.v2.actions :as actions]
+            [scicloj.clay.v2.server :as server]
             [scicloj.clay.v2.portal :as portal]
             [clojure.string :as string]
             [clojure.test]))
@@ -37,58 +37,54 @@
   ([path options]
    (avoid-recursion
     (start!)
-    (scittle.doc/show-doc! path options))
+    (actions/show-doc! path options))
    [:ok]))
-
-(defn write-html!
-  [path]
-  (scittle.server/write-html! path))
 
 (defn show-namespace-and-write-html!
   [path options]
   (avoid-recursion
    (->> {:format :html}
         (merge options)
-        (scittle.doc/show-doc-and-write-html! path))))
+        (actions/show-doc-and-write-html! path))))
 
 (defn generate-and-show-namespace-quarto!
   [path options]
   (avoid-recursion
    (->> {:format :quarto}
         (merge options)
-        (scittle.doc/gen-doc-and-write-quarto! path))))
+        (actions/gen-doc-and-write-quarto! path))))
 
 (defn generate-namespace-light-quarto!
   [path options]
   (avoid-recursion
    (->> {:format :quarto}
         (merge options)
-        (scittle.doc/gen-doc-and-write-light-quarto! path))))
+        (actions/gen-doc-and-write-light-quarto! path))))
 
 (defn browse!
   []
-  (scittle.server/browse!))
+  (server/browse!))
 
 (defn port
   []
-  (scittle.server/port))
+  (server/port))
 
 (defn url
   []
-  (scittle.server/url))
+  (server/url))
 
 (defn swap-options! [f & args]
-  (apply scittle.server/swap-options!
+  (apply server/swap-options!
          f args))
 
 (defn reset-options!
   ([]
-   (reset-options!  scittle.server/default-options))
+   (reset-options!  server/default-options))
   ([options]
-   (scittle.server/swap-options! (constantly options))))
+   (server/swap-options! (constantly options))))
 
 (defn options []
-  (scittle.server/options))
+  (server/options))
 
 (defn handle-form! [form]
   (avoid-recursion
