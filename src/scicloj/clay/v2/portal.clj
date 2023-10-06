@@ -27,5 +27,4 @@
                 , document.currentScript.parentElement);")
        (vector :script)
        (vector :div)
-       kind/hiccup
-       widget/mark-plain-html))
+       kind/hiccup))

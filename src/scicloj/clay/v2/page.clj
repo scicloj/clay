@@ -178,7 +178,7 @@ code {
                                             (-> widget meta :clay/hide-code?)
                                             nil
                                             ;;
-                                            (widget/check widget :clay/plain-html?)
+                                            (:clay/plain-html? widget)
                                             widget
                                             ;; widget
                                             ;;
@@ -302,7 +302,7 @@ code {
 "))))
                           ;;
                           ;;
-                          (widget/check widget :clay/printed-clojure?)
+                          (:clay/printed-clojure? widget)
                           (->> widget
                                meta
                                :clay/text
@@ -314,7 +314,7 @@ code {
 </div>
 "))
                           ;;
-                          (widget/check widget :clay/plain-html?)
+                          (:clay/plain-html? widget)
                           (hiccup/html widget)
                           ;;
                           :else
@@ -427,7 +427,7 @@ code {
 "))))
                ;;
                ;;
-               (widget/check widget :clay/printed-clojure?)
+               (:clay/printed-clojure? widget)
                (->> widget
                     meta
                     :clay/text
@@ -439,7 +439,7 @@ code {
 </div>
 "))
                ;;
-               (widget/check widget :clay/plain-html?)
+               (:clay/plain-html? widget)
                (hiccup/html widget)
                ;;
                (not (signals-of-no-plain-html? widget))

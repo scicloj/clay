@@ -54,8 +54,7 @@
 (add-preparer!
  :kind/void
  (constantly
-  (widget/mark-plain-html
-   [:p ""])))
+  [:p ""]))
 
 (add-preparer!
  :kind/md
@@ -64,33 +63,35 @@
 (add-preparer!
  :kind/table
  (fn [table-spec]
-   (widget/mark-plain-html
-    (let [pre-hiccup (table/->table-hiccup
-                      table-spec)
-          hiccup (->> pre-hiccup
-                      (claywalk/prewalk
-                       (fn [elem]
-                         (if (and (vector? elem)
-                                  (-> elem first (= :td)))
-                           ;; a table data cell - handle it
-                           (-> elem
-                               (update
-                                1
-                                (fn [value]
-                                  (prepare-or-str
-                                   {:value value}))))
-                           ;; else - keep it
-                           elem))))]
-      (if (-> hiccup
-              last ; the :tbody part
-              count
-              (> 20)) ; a big table
-        (into hiccup
-              [[:script "new DataTable(document.currentScript.parentElement,
+   (let [pre-hiccup (table/->table-hiccup
+                     table-spec)
+         hiccup (->> pre-hiccup
+                     (claywalk/prewalk
+                      (fn [elem]
+                        (if (and (vector? elem)
+                                 (-> elem first (= :td)))
+                          ;; a table data cell - handle it
+                          (-> elem
+                              (update
+                               1
+                               (fn [value]
+                                 (prepare-or-str
+                                  {:value value}))))
+                          ;; else - keep it
+                          elem))))]
+     (if (-> hiccup
+             last ; the :tbody part
+             count
+             (> 20)) ; a big table
+       (into hiccup
+             [[:script "new DataTable(document.currentScript.parentElement,
  {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
-               'datatables ; to help Clay realize that th dependency is needed
-               ])
-        hiccup)))))
+              'datatables ; to help Clay realize that th dependency is needed
+              ])
+       hiccup))))
+
+(defn structure-mark [string]
+  string)
 
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
@@ -103,10 +104,10 @@
                        (-> part meta :clay/printed-clojure? not))))
         ;; some parts are not just printed values - handle recursively
         [:div
-         (widget/structure-mark open-mark)
+         (structure-mark open-mark)
          (into [:div {:style {}}]
                prepared-parts)
-         (widget/structure-mark close-mark)]
+         (structure-mark close-mark)]
         ;; else -- just print the whole value
         (widget/pprint value)))
     ;; else -- just print the whole value
@@ -114,12 +115,11 @@
 
 
 (defn vega-embed [spec]
-  (widget/mark-plain-html
-   [:div
-    'vega ; to help Clay realize that the dependency is needed
-    [:script (->> spec
-                  jsonista/write-value-as-string
-                  (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]))
+  [:div
+   'vega ; to help Clay realize that the dependency is needed
+   [:script (->> spec
+                 jsonista/write-value-as-string
+                 (format "vegaEmbed(document.currentScript.parentElement, %s);"))]])
 
 (add-preparer!
  :kind/vega
@@ -162,9 +162,8 @@
  :kind/code
  (fn [codes]
    (->> codes
-        (map widget/code)
-        (into [:div])
-        widget/mark-plain-html)))
+        (map widget/source-clojure)
+        (into [:div]))))
 
 (add-preparer!
  :kind/dataset
@@ -182,13 +181,12 @@
                    util.image/byte-array->data-uri)}]))
 
 (defn bool->hiccup [bool]
-  (widget/mark-plain-html
-   [:div
-    [:big [:big (if bool
-                  [:big {:style {:color "darkgreen"}}
-                   "✓"]
-                  [:big {:style {:color "darkred"}}
-                   "❌"])]]]))
+  [:div
+   [:big [:big (if bool
+                 [:big {:style {:color "darkgreen"}}
+                  "✓"]
+                 [:big {:style {:color "darkred"}}
+                  "❌"])]]])
 
 (add-preparer!
  :kind/test
@@ -227,7 +225,7 @@
                 (some #(-> % meta :clay/printed-clojure? not)))
          ;; some parts are not just printed values - handle recursively
          [:div
-          (widget/structure-mark "{")
+          (structure-mark "{")
           (->> prepared-kv-pairs
                (map (fn [{:keys [kv prepared-kv]}]
                       (if (->> prepared-kv
@@ -250,11 +248,12 @@
                (into [:div
                       {:style {:margin-left "10%"
                                :width "110%"}}]))
-          (widget/structure-mark "}")]
+          (structure-mark "}")]
          ;; else -- just print the whole value
          (widget/pprint value)))
      ;; else -- just print the whole value
      (widget/pprint value))))
+
 
 
 (defn view-sequentially [value open-mark close-mark]
@@ -268,11 +267,11 @@
                        (-> part meta :clay/printed-clojure? not))))
         ;; some parts are not just printed values - handle recursively
         [:div
-         (widget/structure-mark open-mark)
+         (structure-mark open-mark)
          (into [:div {:style {:margin-left "10%"
                               :width "110%"}}]
                prepared-parts)
-         (widget/structure-mark close-mark)]
+         (structure-mark close-mark)]
         ;; else -- just print the whole value
         (widget/pprint value)))
     ;; else -- just print the whole value
