@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [jsonista.core :as jsonista]))
 
 (defn source-clojure [string]
   {:hiccup [:pre.card
@@ -53,3 +54,28 @@
                   {:height "2px"
                    :width "100%"
                    :background-color "grey"}}]})
+
+(def void
+  {:md ""
+   :hicup ""})
+
+(defn structure-mark [string]
+  {:md string
+   :hiccup string})
+
+(defn vega-embed [spec]
+  {:hiccup [:div
+            'vega ; to help Clay realize that the dependency is needed
+            [:script (->> spec
+                          jsonista/write-value-as-string
+                          (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
+   :deps [:vega]})
+
+(defn reagent [component-symbol options]
+  {:reagent (cond
+              ;;
+              (vector? options)
+              (into [component-symbol] options)
+              ;;
+              (map? options)
+              [component-symbol options])})

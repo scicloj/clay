@@ -1,7 +1,6 @@
 (ns scicloj.clay.v2.prepare
   (:require
    [clojure.string :as string]
-   [jsonista.core :as jsonista]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.table :as table]
    [scicloj.clay.v2.util.image :as util.image]
@@ -55,8 +54,7 @@
 
 (add-preparer!
  :kind/void
- (constantly
-  [:p ""]))
+ (constantly item/void))
 
 (add-preparer!
  :kind/md
@@ -90,10 +88,9 @@
  {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
               'datatables ; to help Clay realize that th dependency is needed
               ])
-       hiccup))))
+       {:hiccup hiccup}))))
 
-(defn structure-mark [string]
-  string)
+
 
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
@@ -106,53 +103,31 @@
                        (-> part meta :clay/printed-clojure? not))))
         ;; some parts are not just printed values - handle recursively
         [:div
-         (structure-mark open-mark)
+         (item/structure-mark open-mark)
          (into [:div {:style {}}]
                prepared-parts)
-         (structure-mark close-mark)]
+         (item/structure-mark close-mark)]
         ;; else -- just print the whole value
         (item/pprint value)))
     ;; else -- just print the whole value
     (item/pprint value)))
 
-
-(defn vega-embed [spec]
-  [:div
-   'vega ; to help Clay realize that the dependency is needed
-   [:script (->> spec
-                 jsonista/write-value-as-string
-                 (format "vegaEmbed(document.currentScript.parentElement, %s);"))]])
-
 (add-preparer!
  :kind/vega
- vega-embed)
+ item/vega-embed)
 
 (add-preparer!
  :kind/vega-lite
- vega-embed)
-
-(defn expand-options-if-vector [component-symbol options]
-  (cond ;;
-    (vector? options)
-    (->> options
-         (map (fn [option]
-                (list 'quote option)))
-         (into [component-symbol]))
-    ;;
-    (map? options)
-    [component-symbol (list 'quote options)]))
+ item/vega-embed)
 
 (add-preparer!
  :kind/cytoscape
- (partial
-  expand-options-if-vector
-  'cytoscape))
+ (partial item/reagent 'cytoscape :cytoscape))
 
 (add-preparer!
  :kind/echarts
- (partial
-  expand-options-if-vector
-  'echarts))
+ (assoc (partial item/reagent 'echarts)
+        ))
 
 (add-preparer!
  :kind/plotly
@@ -181,14 +156,6 @@
    [:img {:src (-> image
                    util.image/buffered-image->byte-array
                    util.image/byte-array->data-uri)}]))
-
-(defn bool->hiccup [bool]
-  [:div
-   [:big [:big (if bool
-                 [:big {:style {:color "darkgreen"}}
-                  "✓"]
-                 [:big {:style {:color "darkred"}}
-                  "❌"])]]])
 
 (add-preparer!
  :kind/test
@@ -227,7 +194,7 @@
                 (some #(-> % meta :clay/printed-clojure? not)))
          ;; some parts are not just printed values - handle recursively
          [:div
-          (structure-mark "{")
+          (item/structure-mark "{")
           (->> prepared-kv-pairs
                (map (fn [{:keys [kv prepared-kv]}]
                       (if (->> prepared-kv
@@ -250,7 +217,7 @@
                (into [:div
                       {:style {:margin-left "10%"
                                :width "110%"}}]))
-          (structure-mark "}")]
+          (item/structure-mark "}")]
          ;; else -- just print the whole value
          (item/pprint value)))
      ;; else -- just print the whole value
@@ -269,11 +236,11 @@
                        (-> part meta :clay/printed-clojure? not))))
         ;; some parts are not just printed values - handle recursively
         [:div
-         (structure-mark open-mark)
+         (item/structure-mark open-mark)
          (into [:div {:style {:margin-left "10%"
                               :width "110%"}}]
                prepared-parts)
-         (structure-mark close-mark)]
+         (item/structure-mark close-mark)]
         ;; else -- just print the whole value
         (item/pprint value)))
     ;; else -- just print the whole value
