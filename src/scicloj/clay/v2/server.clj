@@ -20,7 +20,7 @@
 
 (defonce *state
   (atom {:port nil
-         :widgets nil
+         :items nil
          :fns {}
          :counter 0}))
 
@@ -49,20 +49,20 @@
          (#(apply f % args))))))
 
 
-(defn set-widgets! [widgets]
-  (swap-state-and-increment! assoc :widgets widgets))
+(defn set-items! [items]
+  (swap-state-and-increment! assoc :items items))
 
-(def welcome-widget
+(def welcome-item
   [:div
    [:p [:code (str (java.util.Date.))]]
    [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
                "Clay"]
         " is ready, waiting for interaction."]]])
 
-(set-widgets! [welcome-widget])
+(set-items! [welcome-item])
 
 (comment
-  (set-widgets! [welcome-widget welcome-widget])
+  (set-items! [welcome-item welcome-item])
   (broadcast! "refresh"))
 
 (def default-options
@@ -165,16 +165,16 @@
     (s))
   (reset! *stop-server! nil))
 
-(defn show-widgets!
-  ([widgets]
-   (show-widgets! widgets nil))
-  ([widgets options]
+(defn show-items!
+  ([items]
+   (show-items! items nil))
+  ([items options]
    (swap-state-and-increment!
     (fn [state]
       (-> state
           (assoc :quarto-html-path nil)
           (assoc :date (java.util.Date.))
-          (assoc :widgets widgets)
+          (assoc :items items)
           (merge options))))
    (broadcast! "refresh")
    (-> [:ok] (kindly/consider :kind/hidden))))
@@ -190,7 +190,7 @@
   (-> context
       prepare/prepare-or-pprint
       vector
-      show-widgets!))
+      show-items!))
 
 (defn ns->target-path
   ([base the-ns ext]
@@ -217,7 +217,7 @@
    (-> [:wrote path]
        (kindly/consider :kind/hidden))))
 
-(defn write-quarto! [widgets]
+(defn write-quarto! [items]
   (let [qmd-path
 
         (ns->target-path "docs/" *ns* "_quarto.qmd")
@@ -226,7 +226,7 @@
 
     (io/make-parents qmd-path)
     (-> @*state
-        (page/qmd widgets)
+        (page/qmd items)
         (->> (spit qmd-path)))
     (println [:wrote qmd-path (now)])
     (->> (sh/sh "quarto" "render" qmd-path)
@@ -288,7 +288,7 @@ embed-resources: true
 
 
 
-(defn write-light-quarto! [widgets]
+(defn write-light-quarto! [items]
   (let [chapter-path (if (-> *ns*
                              str
                              (string/split #"\.")
@@ -299,13 +299,13 @@ embed-resources: true
         qmd-path (str "book/" chapter-path)]
     (io/make-parents qmd-path)
     (-> @*state
-        (page/light-qmd widgets)
+        (page/light-qmd items)
         (->> (spit qmd-path)))
     (update-quarto-config! chapter-path)
     (println [:wrote qmd-path (now)])))
 
 (defn show-message! [hiccup]
-  (set-widgets! [hiccup])
+  (set-items! [hiccup])
   (reset-quarto-html-path! nil)
   (broadcast! "refresh"))
 

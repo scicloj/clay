@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.cljs-generation
-  (:require [scicloj.clay.v2.widget :as widget]))
+  (:require
+   [scicloj.clay.v2.item :as item]))
 
 (def datatables-cljs
   '(defn datatables [table]
@@ -106,7 +107,7 @@
    'katex katex-cljs
    'three-d-mol-viewer three-d-mol-viewer-cljs})
 
-(defn widgets-cljs [{:keys [server-counter widgets data port special-libs]}]
+(defn items-cljs [{:keys [server-counter items data port special-libs]}]
   (concat ['(ns scicloj.clay
               (:require [reagent.core :as r]
                         [ajax.core :refer [GET POST]]))
@@ -172,15 +173,15 @@
                                                           (println [:unknown-ws-message (.-data event)])))))]
           (->> special-libs
                (map special-libs-cljs))
-          (->> widgets
+          (->> items
                (map-indexed
-                (fn [i widget]
-                  (when-not (:clay/plain-html? widget)
-                    (let [widget-name (str "widget" i)
-                          widget-symbol (symbol (str "widget" i))]
-                      [(list 'def widget-symbol widget)
+                (fn [i item]
+                  (when-not (:clay/plain-html? item)
+                    (let [item-name (str "item" i)
+                          item-symbol (symbol (str "item" i))]
+                      [(list 'def item-symbol item)
                        (list 'dom/render
                              (list 'fn []
-                                   widget-symbol)
-                             (list '.getElementById 'js/document widget-name))]))))
+                                   item-symbol)
+                             (list '.getElementById 'js/document item-name))]))))
                (apply concat))))

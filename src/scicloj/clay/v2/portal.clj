@@ -1,11 +1,11 @@
 (ns scicloj.clay.v2.portal
-  (:require [portal.api :as portal]
-            [clojure.string :as string]
-            [scicloj.clay.v2.util.meta :as meta]
-            [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kind-portal.v1.api :as kind-portal]
-            [scicloj.clay.v2.widget :as widget]
-            [hiccup.page]))
+  (:require
+   [clojure.string :as string]
+   [hiccup.page]
+   [portal.api :as portal]
+   [scicloj.clay.v2.util.meta :as meta]
+   [scicloj.kind-portal.v1.api :as kind-portal]
+   [scicloj.kindly.v4.kind :as kind]))
 
 (defonce dev
   (portal/url

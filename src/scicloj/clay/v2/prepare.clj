@@ -1,13 +1,15 @@
 (ns scicloj.clay.v2.prepare
-  (:require [scicloj.clay.v2.widget :as widget]
-            [scicloj.kindly-advice.v1.api :as kindly-advice]
-            [scicloj.clay.v2.table :as table]
-            [clojure.string :as string]
-            [scicloj.clay.v2.util.image :as util.image]
-            [scicloj.clay.v2.walk :as claywalk]
-            [jsonista.core :as jsonista])
-  (:import java.awt.image.BufferedImage
-           javax.imageio.ImageIO))
+  (:require
+   [clojure.string :as string]
+   [jsonista.core :as jsonista]
+   [scicloj.clay.v2.item :as item]
+   [scicloj.clay.v2.table :as table]
+   [scicloj.clay.v2.util.image :as util.image]
+   [scicloj.clay.v2.walk :as claywalk]
+   [scicloj.kindly-advice.v1.api :as kindly-advice])
+  (:import
+   (java.awt.image BufferedImage)
+   (javax.imageio ImageIO)))
 
 (def *kind->preparer
   (atom {}))
@@ -33,7 +35,7 @@
     (preparer value)))
 
 (defn prepare-or-pprint [context]
-  (prepare context {:fallback-preparer widget/pprint}))
+  (prepare context {:fallback-preparer item/pprint}))
 
 (defn prepare-or-str [context]
   (prepare context {:fallback-preparer str}))
@@ -45,11 +47,11 @@
 
 (add-preparer!
  :kind/println
- widget/just-println)
+ item/just-println)
 
 (add-preparer!
  :kind/pprint
- widget/pprint)
+ item/pprint)
 
 (add-preparer!
  :kind/void
@@ -58,7 +60,7 @@
 
 (add-preparer!
  :kind/md
- widget/md)
+ item/md)
 
 (add-preparer!
  :kind/table
@@ -109,9 +111,9 @@
                prepared-parts)
          (structure-mark close-mark)]
         ;; else -- just print the whole value
-        (widget/pprint value)))
+        (item/pprint value)))
     ;; else -- just print the whole value
-    (widget/pprint value)))
+    (item/pprint value)))
 
 
 (defn vega-embed [spec]
@@ -162,7 +164,7 @@
  :kind/code
  (fn [codes]
    (->> codes
-        (map widget/source-clojure)
+        (map item/source-clojure)
         (into [:div]))))
 
 (add-preparer!
@@ -171,7 +173,7 @@
    (-> v
        println
        with-out-str
-       widget/md)))
+       item/md)))
 
 (add-preparer!
  :kind/image
@@ -244,15 +246,15 @@
                         (->> kv
                              (map pr-str)
                              (string/join " ")
-                             widget/printed-clojure))))
+                             item/printed-clojure))))
                (into [:div
                       {:style {:margin-left "10%"
                                :width "110%"}}]))
           (structure-mark "}")]
          ;; else -- just print the whole value
-         (widget/pprint value)))
+         (item/pprint value)))
      ;; else -- just print the whole value
-     (widget/pprint value))))
+     (item/pprint value))))
 
 
 
@@ -273,9 +275,9 @@
                prepared-parts)
          (structure-mark close-mark)]
         ;; else -- just print the whole value
-        (widget/pprint value)))
+        (item/pprint value)))
     ;; else -- just print the whole value
-    (widget/pprint value)))
+    (item/pprint value)))
 
 (add-preparer!
  :kind/vector

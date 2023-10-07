@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.widget
+(ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]))
 

@@ -1,13 +1,13 @@
 (ns scicloj.clay.v2.eval
-  (:require [scicloj.clay.v2.prepare :as prepare]
-            [scicloj.clay.v2.server :as server]
-            [scicloj.clay.v2.widget :as widget]
-            [scicloj.clay.v2.read]
-            [scicloj.clay.v2.path :as path]
-            [clojure.string :as string]
-            [hiccup.core :as hiccup]
-            [clojure.walk :as walk]))
-
+  (:require
+   [clojure.string :as string]
+   [clojure.walk :as walk]
+   [hiccup.core :as hiccup]
+   [scicloj.clay.v2.item :as item]
+   [scicloj.clay.v2.path :as path]
+   [scicloj.clay.v2.prepare :as prepare]
+   [scicloj.clay.v2.read]
+   [scicloj.clay.v2.server :as server]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -60,7 +60,7 @@
                      (string/replace
                       #"^#" "\n#")))
            (string/join "\n"))
-      widget/md))
+      item/md))
 
 (defn note-to-items [{:as note
                       :keys [comment? code form value]}
@@ -71,7 +71,7 @@
      (when-not (or hide-code?
                    (-> form meta :kindly/hide-code?)
                    (-> value meta :kindly/hide-code?))
-       (widget/source-clojure code))
+       (item/source-clojure code))
      ;; value
      (when-not (or
                 (and (sequential? form)
@@ -91,9 +91,9 @@
     items
     (let [il (info-line path)]
       (concat #_[il
-                 widget/separator]
+                 item/separator]
               items
-              [widget/separator
+              [item/separator
                il]))))
 
 (defn gen-doc

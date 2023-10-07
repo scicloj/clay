@@ -1,14 +1,15 @@
 (ns scicloj.clay.v2.page
-  (:require [clojure.java.io :as io]
-            [clojure.string :as string]
-            [hiccup.core :as hiccup]
-            [hiccup.page]
-            [scicloj.clay.v2.cljs-generation :as cljs-generation]
-            [scicloj.clay.v2.widget :as widget]
-            [scicloj.clay.v2.styles :as styles]
-            [scicloj.clay.v2.util.resource :as resource]
-            [clj-yaml.core :as yaml]
-            [scicloj.clay.v2.portal :as portal]))
+  (:require
+   [clj-yaml.core :as yaml]
+   [clojure.java.io :as io]
+   [clojure.string :as string]
+   [hiccup.core :as hiccup]
+   [hiccup.page]
+   [scicloj.clay.v2.cljs-generation :as cljs-generation]
+   [scicloj.clay.v2.item :as item]
+   [scicloj.clay.v2.portal :as portal]
+   [scicloj.clay.v2.styles :as styles]
+   [scicloj.clay.v2.util.resource :as resource]))
 
 (def special-libs-set
   #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex
@@ -73,8 +74,8 @@
        distinct
        set))
 
-(defn page [{:keys [widgets data port title toc? counter]}]
-  (let [special-libs (->> widgets
+(defn page [{:keys [items data port title toc? counter]}]
+  (let [special-libs (->> items
                           special-libs-in-form)]
     (when-not port
       (throw (ex-info "missing port" {})))
@@ -170,31 +171,31 @@ code {
                                               "col-sm-12")}
                                [:div
                                 [:div
-                                 (->> widgets
+                                 (->> items
                                       (map-indexed
-                                       (fn [i widget]
+                                       (fn [i item]
                                          [:div {:style {:margin "15px"}}
                                           (cond
-                                            (-> widget meta :clay/hide-code?)
+                                            (-> item meta :clay/hide-code?)
                                             nil
                                             ;;
-                                            (:clay/plain-html? widget)
-                                            widget
-                                            ;; widget
+                                            (:clay/plain-html? item)
+                                            item
+                                            ;; item
                                             ;;
                                             :else
-                                            [:div {:id (str "widget" i)}
+                                            [:div {:id (str "item" i)}
                                              [:code "loading ..."]])]))
                                       (into [:div]))]]]]]
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]
                             [:script {:type "application/x-scittle"}
-                             (->> {:widgets widgets
+                             (->> {:items items
                                    :data data
                                    :port port
                                    :special-libs special-libs
                                    :server-counter counter}
-                                  cljs-generation/widgets-cljs
+                                  cljs-generation/items-cljs
                                   (map pr-str)
                                   (string/join "\n"))]])
         (string/replace #"<table>"
@@ -202,8 +203,8 @@ code {
 
 
 (defn qmd [{:keys [data port title options counter]}
-           widgets]
-  (let [special-libs (->> widgets
+           items]
+  (let [special-libs (->> items
                           special-libs-in-form)]
     (when-not port
       (throw (ex-info "missing port" {})))
@@ -257,33 +258,33 @@ code {
                      (mapcat (comp :from-the-web :js special-lib-resources))
                      distinct
                      (apply hiccup.page/include-js))
-                (->> widgets
+                (->> items
                      (map-indexed
-                      (fn [i widget]
+                      (fn [i item]
                         (cond
                           ;;
-                          (-> widget
+                          (-> item
                               meta
                               :clay/original-markdown)
-                          (-> widget
+                          (-> item
                               meta
                               :clay/original-markdown)
                           ;;
-                          (-> widget
+                          (-> item
                               meta
                               :clay/markdown)
-                          (-> widget
+                          (-> item
                               meta
                               :clay/markdown)
                           ;;
-                          (-> widget
+                          (-> item
                               meta
                               :clay/original-code)
-                          (let [code (if (-> widget
+                          (let [code (if (-> item
                                              meta
                                              :clay/hide-code?)
                                        ""
-                                       (-> widget
+                                       (-> item
                                            meta
                                            :clay/original-code))]
                             (if (= code "")
@@ -302,8 +303,8 @@ code {
 "))))
                           ;;
                           ;;
-                          (:clay/printed-clojure? widget)
-                          (->> widget
+                          (:clay/printed-clojure? item)
+                          (->> item
                                meta
                                :clay/text
                                (format "
@@ -314,21 +315,21 @@ code {
 </div>
 "))
                           ;;
-                          (:clay/plain-html? widget)
-                          (hiccup/html widget)
+                          (:clay/plain-html? item)
+                          (hiccup/html item)
                           ;;
                           :else
                           (hiccup/html
-                           [:div {:id (str "widget" i)}
+                           [:div {:id (str "item" i)}
                             [:code "loading ..."]]))))
                      (string/join "\n"))
                 [:script {:type "application/x-scittle"}
-                 (->> {:widgets widgets
+                 (->> {:items items
                        :data data
                        :port port
                        :special-libs special-libs
                        :server-counter counter}
-                      cljs-generation/widgets-cljs
+                      cljs-generation/items-cljs
                       (map pr-str)
                       (string/join "\n"))]]))
          (string/replace #"<table>"
@@ -343,8 +344,8 @@ code {
            (some #{'fn 'quote}))))
 
 (defn light-qmd [{:keys [data title options counter]}
-                 widgets]
-  (let [special-libs (->> widgets
+                 items]
+  (let [special-libs (->> items
                           special-libs-in-form)]
     (str
      (->> options
@@ -382,33 +383,33 @@ code {
                  :from-the-web
                  (apply hiccup.page/include-css)
                  hiccup/html)))
-     (->> widgets
+     (->> items
           (map-indexed
-           (fn [i widget]
+           (fn [i item]
              (cond
                ;;
-               (-> widget
+               (-> item
                    meta
                    :clay/original-markdown)
-               (-> widget
+               (-> item
                    meta
                    :clay/original-markdown)
                ;;
-               (-> widget
+               (-> item
                    meta
                    :clay/markdown)
-               (-> widget
+               (-> item
                    meta
                    :clay/markdown)
                ;;
-               (-> widget
+               (-> item
                    meta
                    :clay/original-code)
-               (let [code (if (-> widget
+               (let [code (if (-> item
                                   meta
                                   :clay/hide-code?)
                             ""
-                            (-> widget
+                            (-> item
                                 meta
                                 :clay/original-code))]
                  (if (= code "")
@@ -427,8 +428,8 @@ code {
 "))))
                ;;
                ;;
-               (:clay/printed-clojure? widget)
-               (->> widget
+               (:clay/printed-clojure? item)
+               (->> item
                     meta
                     :clay/text
                     (format "
@@ -439,13 +440,13 @@ code {
 </div>
 "))
                ;;
-               (:clay/plain-html? widget)
-               (hiccup/html widget)
+               (:clay/plain-html? item)
+               (hiccup/html item)
                ;;
-               (not (signals-of-no-plain-html? widget))
+               (not (signals-of-no-plain-html? item))
                (try
                  (hiccup/html
-                  widget)
+                  item)
                  (catch Exception e "
 **unsupported element**
 "))

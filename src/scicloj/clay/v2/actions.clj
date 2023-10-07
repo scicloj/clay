@@ -17,7 +17,7 @@
          [:div.loader]]))
    (let [doc (eval/gen-doc path options)]
      (-> doc
-         (server/show-widgets!
+         (server/show-items!
           {:title title
            :toc? toc?})))
    :ok))
