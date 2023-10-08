@@ -3,29 +3,32 @@
             [clojure.string :as string]
             [jsonista.core :as jsonista]))
 
-(defn source-clojure [string]
-  {:hiccup [:pre.card
-            [:code.language-clojure.bg-light
-             string]]
-   :md (format "
-<div class=\"sourceClojure\">
-```clojure
+(defn clojure-code-item [{:keys [hiccup-element md-class]}]
+  (fn [strings]
+    {:hiccup (->> strings
+                  (map (fn [s]
+                         [:pre.card
+                          [hiccup-element
+                           s]]))
+                  (into [:div]))
+     :md (->> strings
+              (map (fn [s]
+                     (format "
+<div class=\"%s\">
+```clojure-code-item
 %s
 ```
 </div>
-" string)})
+" md-class s)))
+              (string/join "\n"))}))
 
-(defn printed-clojure [string]
-  {:hiccup [:pre.card
-            [:code.language-clojure
-             string]]
-   :md (format "
-<div class=\"printedClojure\">
-```clojure
-%s
-```
-</div>
-" string)})
+(def source-clojure
+  (clojure-code-item {:hiccup-element :code.language-clojure.bg-light
+                      :md-class :sourceClojure}))
+
+(def printed-clojure
+  (clojure-code-item {:hiccup-element :code.language-clojure
+                      :md-class :printedClojure}))
 
 (defn escape [string]
   (-> string
@@ -71,11 +74,11 @@
                           (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
    :deps [:vega]})
 
-(defn reagent [component-symbol options]
+(defn reagent [component-symbol data]
   {:reagent (cond
               ;;
-              (vector? options)
-              (into [component-symbol] options)
+              (vector? data)
+              (into [component-symbol] data)
               ;;
-              (map? options)
-              [component-symbol options])})
+              (map? data)
+              [component-symbol data])})

@@ -122,18 +122,15 @@
 
 (add-preparer!
  :kind/cytoscape
- (partial item/reagent 'cytoscape :cytoscape))
+ (partial item/reagent 'cytoscape))
 
 (add-preparer!
  :kind/echarts
- (assoc (partial item/reagent 'echarts)
-        ))
+ (partial item/reagent 'echarts))
 
 (add-preparer!
  :kind/plotly
- (partial
-  expand-options-if-vector
-  'plotly))
+ (partial item/reagent 'plotly))
 
 (add-preparer!
  :kind/code
