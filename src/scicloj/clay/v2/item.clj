@@ -1,11 +1,13 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]
-            [jsonista.core :as jsonista]))
+            [jsonista.core :as jsonista]
+            [scicloj.clay.v2.util.image :as util.image]))
 
-(defn clojure-code-item [{:keys [hiccup-element md-class]}]
+(defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
   (fn [strings]
-    {:hiccup (->> strings
+    {tag true
+     :hiccup (->> strings
                   (map (fn [s]
                          [:pre.card
                           [hiccup-element
@@ -23,11 +25,13 @@
               (string/join "\n"))}))
 
 (def source-clojure
-  (clojure-code-item {:hiccup-element :code.language-clojure.bg-light
+  (clojure-code-item {:tag :source-clojure
+                      :hiccup-element :code.language-clojure.bg-light
                       :md-class :sourceClojure}))
 
 (def printed-clojure
-  (clojure-code-item {:hiccup-element :code.language-clojure
+  (clojure-code-item {:tag :printed-clojure
+                      :hiccup-element :code.language-clojure
                       :md-class :printedClojure}))
 
 (defn escape [string]
@@ -82,3 +86,8 @@
               ;;
               (map? data)
               [component-symbol data])})
+
+(defn image [buffered-image]
+  {:hiccup [:img {:src (-> image
+                           util.image/buffered-image->byte-array
+                           util.image/byte-array->data-uri)}]})

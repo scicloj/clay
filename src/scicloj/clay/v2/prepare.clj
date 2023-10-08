@@ -3,12 +3,8 @@
    [clojure.string :as string]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.table :as table]
-   [scicloj.clay.v2.util.image :as util.image]
    [scicloj.clay.v2.walk :as claywalk]
-   [scicloj.kindly-advice.v1.api :as kindly-advice])
-  (:import
-   (java.awt.image BufferedImage)
-   (javax.imageio ImageIO)))
+   [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
 (def *kind->preparer
   (atom {}))
@@ -149,30 +145,16 @@
 
 (add-preparer!
  :kind/image
- (fn [image]
-   [:img {:src (-> image
-                   util.image/buffered-image->byte-array
-                   util.image/byte-array->data-uri)}]))
+ item/image)
 
 (add-preparer!
  :kind/test
  (fn [t]
-   (let [ret (-> t
-                 meta
-                 :test
-                 (#(%)))]
-     (if (boolean? ret)
-       (bool->hiccup ret)
-       (prepare-or-pprint {:value ret})))))
-
-(add-preparer!
- :kind/map
- (fn [t]
-   [:p "NA"]))
-
-(defn spy [x tag]
-  (clojure.pprint/pprint [tag x])
-  x)
+   (prepare-or-pprint
+    {:value (-> t
+                meta
+                :test
+                (#(%)))})))
 
 (add-preparer!
  :kind/map
@@ -188,33 +170,33 @@
        (if (->> prepared-kv-pairs
                 (map :prepared-kv)
                 (apply concat)
-                (some #(-> % meta :clay/printed-clojure? not)))
+                (some (complement :printed-clojure)))
          ;; some parts are not just printed values - handle recursively
-         [:div
-          (item/structure-mark "{")
-          (->> prepared-kv-pairs
-               (map (fn [{:keys [kv prepared-kv]}]
-                      (if (->> prepared-kv
-                               (some #(-> % meta :clay/printed-clojure? not)))
-                        (let [[pk pv] prepared-kv]
-                          [:table
-                           [:tr
-                            [:td {:valign :top}
-                             pk]
-                            [:td [:div
-                                  {:style {:margin-top "10px"
-                                           ;; :border "1px inset"
-                                           }}
-                                  pv]]]])
-                        ;; else
-                        (->> kv
-                             (map pr-str)
-                             (string/join " ")
-                             item/printed-clojure))))
-               (into [:div
-                      {:style {:margin-left "10%"
-                               :width "110%"}}]))
-          (item/structure-mark "}")]
+         {:hiccup [:div
+                   (item/structure-mark "{")
+                   (->> prepared-kv-pairs
+                        (map (fn [{:keys [kv prepared-kv]}]
+                               (if (->> prepared-kv
+                                        (some (complement :printed-clojure)))
+                                 (let [[pk pv] prepared-kv]
+                                   [:table
+                                    [:tr
+                                     [:td {:valign :top}
+                                      pk]
+                                     [:td [:div
+                                           {:style {:margin-top "10px"
+                                                    ;; :border "1px inset"
+                                                    }}
+                                           pv]]]])
+                                 ;; else
+                                 (->> kv
+                                      (map pr-str)
+                                      (string/join " ")
+                                      item/printed-clojure))))
+                        (into [:div
+                               {:style {:margin-left "10%"
+                                        :width "110%"}}]))
+                   (item/structure-mark "}")]}
          ;; else -- just print the whole value
          (item/pprint value)))
      ;; else -- just print the whole value
@@ -229,15 +211,14 @@
                               (map (fn [subvalue]
                                      (prepare-or-pprint {:value subvalue}))))]
       (if (->> prepared-parts
-               (some (fn [part]
-                       (-> part meta :clay/printed-clojure? not))))
+               (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively
-        [:div
-         (item/structure-mark open-mark)
-         (into [:div {:style {:margin-left "10%"
-                              :width "110%"}}]
-               prepared-parts)
-         (item/structure-mark close-mark)]
+        {:hiccup [:div
+                  (item/structure-mark open-mark)
+                  (into [:div {:style {:margin-left "10%"
+                                       :width "110%"}}]
+                        prepared-parts)
+                  (item/structure-mark close-mark)]}
         ;; else -- just print the whole value
         (item/pprint value)))
     ;; else -- just print the whole value
@@ -265,13 +246,13 @@
 (add-preparer!
  :kind/hiccup
  (fn [form]
-   (->> form
-        (claywalk/prewalk
-         (fn [subform]
-           (let [context {:value subform}]
-             (if (some-> context
-                         kindly-advice/advise
-                         :kind
-                         non-hiccup-kind?)
-               (prepare-or-pprint context)
-               subform)))))))
+   {:hiccup (->> form
+                 (claywalk/prewalk
+                  (fn [subform]
+                    (let [context {:value subform}]
+                      (if (some-> context
+                                  kindly-advice/advise
+                                  :kind
+                                  non-hiccup-kind?)
+                        (prepare-or-pprint context)
+                        subform)))))}))
