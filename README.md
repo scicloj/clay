@@ -14,6 +14,8 @@ Regular updates are given at the [visual-tools meetings](https://scicloj.github.
 
 ## Related projects
 
+[Kindly](https://github.com/scicloj/kindly) is a common ground for defining how things should be visualized, seeking compatibility across tools.
+
 The [Claykind](https://github.com/timothypratley/claykind) project is rethinking the Clay architecture and implementation from scratch, in a new code base. Currently (Fall 2023), the two projects are being developed in coordination.
 
 ## Discussion
