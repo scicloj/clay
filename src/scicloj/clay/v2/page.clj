@@ -74,6 +74,138 @@
        distinct
        set))
 
+(def font-links
+  " <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+    <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
+")
+
+(defn page-wip [{:keys [items data port title toc? counter]}]
+  (let [special-libs (distinct
+                      (concat (->> items
+                                   (map :reagent)
+                                   special-libs-in-form)
+                              (->> items
+                                   (mapcat :deps))))]
+    (when-not port
+      (throw (ex-info "missing port" {})))
+    (-> (hiccup.page/html5 [:head
+                            [:meta {:charset "UTF-8"}]
+                            [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
+                            [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
+                            font-links
+                            [:style (styles/main :table)]
+                            [:style (styles/main :loader)]
+                            [:style (styles/highlight :qtcreator-light)]
+                            (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
+                            [:style "
+"]
+
+                            (when toc?
+                              (css-from-local-copies
+                               #_"https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
+                               #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+                               "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
+                            (when toc?
+                              [:style (styles/main :boostrap-toc)])
+                            (->> special-libs
+                                 (mapcat (comp :from-local-copy :css special-lib-resources))
+                                 distinct
+                                 (apply css-from-local-copies))
+                            (->> special-libs
+                                 (mapcat (comp :from-the-web :css special-lib-resources))
+                                 distinct
+                                 (apply hiccup.page/include-css))
+                            [:title (or title "Clay")]]
+                           [:body  {:style {:background "#fcfcfc"
+                                            :font-family "'Roboto', sans-serif"
+                                            :width "90%"
+                                            :margin "auto"}
+                                    :data-spy "scroll"
+                                    :data-target "#toc"}
+
+                            (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
+                                                  "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
+                                                  "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
+                            (when toc?
+                              (js-from-local-copies
+                               "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
+                            (js-from-local-copies
+                             "https://unpkg.com/react@18/umd/react.production.min.js"
+                             "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+                             "https://scicloj.github.io/scittle/js/scittle.js"
+                             "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
+                             "https://scicloj.github.io/scittle/js/scittle.reagent.js"
+                             "https://scicloj.github.io/scittle/js/scittle.mathbox.js"
+                             "https://scicloj.github.io/scittle/js/scittle.emmy.js"
+                             "https://scicloj.github.io/scittle/js/scittle.tmdjs.js")
+                            [:script {:type "text/javascript"}
+                             (-> "highlight/highlight.min.js"
+                                 io/resource
+                                 slurp)]
+                            (hiccup.page/include-js portal/url)
+                            (->> special-libs
+                                 (mapcat (comp :from-local-copy :js special-lib-resources))
+                                 distinct
+                                 (apply js-from-local-copies))
+                            (->> special-libs
+                                 (mapcat (comp :from-the-web :js special-lib-resources))
+                                 distinct
+                                 (apply hiccup.page/include-js))
+                            [:div.container
+                             [:div.row
+                              (when toc?
+                                [:div.col-sm-3
+                                 [:nav.sticky-top {:id "toc"
+                                                   :data-toggle "toc"}]])
+                              [:div {:class (if toc?
+                                              "col-sm-9"
+                                              "col-sm-12")}
+                               [:div
+                                [:div
+                                 (->> items
+                                      (map-indexed
+                                       (fn [i item]
+                                         [:div {:style {:margin "15px"}}
+                                          (cond
+                                            (-> item meta :clay/hide-code?)
+                                            nil
+                                            ;;
+                                            (:clay/plain-html? item)
+                                            item
+                                            ;; item
+                                            ;;
+                                            :else
+                                            [:div {:id (str "item" i)}
+                                             [:code "loading ..."]])]))
+                                      (into [:div]))]]]]]
+                            [:script {:type "text/javascript"}
+                             "hljs.highlightAll();"]
+                            [:script {:type "application/x-scittle"}
+                             (->> {:items items
+                                   :data data
+                                   :port port
+                                   :special-libs special-libs
+                                   :server-counter counter}
+                                  cljs-generation/items-cljs
+                                  (map pr-str)
+                                  (string/join "\n"))]])
+        (string/replace #"<table>"
+                        "<table class='table table-hover'>"))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (defn page [{:keys [items data port title toc? counter]}]
   (let [special-libs (->> items
                           special-libs-in-form)]
@@ -90,8 +222,8 @@
     <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 "
-                            [:style styles/table]
-                            [:style styles/loader]
+                            [:style (styles/main :table)]
+                            [:style (styles/main :loader)]
                             [:style
                              (-> #_"highlight/styles/tokyo-night-light.min.css"
                                  #_"highlight/styles/stackoverflow-light.min.css"
@@ -115,7 +247,7 @@ code {
                                #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
                             (when toc?
-                              [:style styles/boostrap-toc])
+                              [:style (styles/main :boostrap-toc)])
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :css special-lib-resources))
                                  distinct
@@ -219,8 +351,8 @@ code {
 "
      (-> (str (hiccup/html
                [:div
-                [:style styles/table]
-                [:style styles/loader]
+                [:style (styles/main :table)]
+                [:style (styles/main :loader)]
                 [:style "
 .printedClojure .sourceCode {
   background-color: transparent;
@@ -355,7 +487,7 @@ code {
 
      ;; " "
      (hiccup/html
-      [:style styles/table]
+      [:style (styles/main :table)]
       [:style "
 .printedClojure .sourceCode {
   background-color: transparent;
