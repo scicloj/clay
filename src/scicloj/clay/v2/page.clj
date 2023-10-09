@@ -45,7 +45,13 @@
    'leaflet {:js {:from-local-copy
                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
              :css {:from-local-copy
-                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}})
+                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
+   'tmdjs {:js {:from-local-copy
+                ["https://scicloj.github.io/scittle/js/scittle.tmdjs.js"]}}
+   'emmy {:js {:from-local-copy
+               ["https://scicloj.github.io/scittle/js/scittle.emmy.js"]}}
+   'mathbox {:js {:from-local-copy
+                  ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls
@@ -118,7 +124,6 @@
                                             :margin "auto"}
                                     :data-spy "scroll"
                                     :data-target "#toc"}
-
                             (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
                                                   "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
                                                   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
@@ -130,10 +135,7 @@
                              "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
                              "https://scicloj.github.io/scittle/js/scittle.js"
                              "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                             "https://scicloj.github.io/scittle/js/scittle.reagent.js"
-                             "https://scicloj.github.io/scittle/js/scittle.mathbox.js"
-                             "https://scicloj.github.io/scittle/js/scittle.emmy.js"
-                             "https://scicloj.github.io/scittle/js/scittle.tmdjs.js")
+                             "https://scicloj.github.io/scittle/js/scittle.reagent.js")
                             [:script {:type "text/javascript"}
                              (-> "highlight/highlight.min.js"
                                  io/resource
@@ -270,10 +272,7 @@ code {
                              "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
                              "https://scicloj.github.io/scittle/js/scittle.js"
                              "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                             "https://scicloj.github.io/scittle/js/scittle.reagent.js"
-                             "https://scicloj.github.io/scittle/js/scittle.mathbox.js"
-                             "https://scicloj.github.io/scittle/js/scittle.emmy.js"
-                             "https://scicloj.github.io/scittle/js/scittle.tmdjs.js")
+                             "https://scicloj.github.io/scittle/js/scittle.reagent.js")
                             [:script {:type "text/javascript"}
                              (-> "highlight/highlight.min.js"
                                  io/resource
@@ -373,10 +372,7 @@ code {
                  "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
                  "https://scicloj.github.io/scittle/js/scittle.js"
                  "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                 "https://scicloj.github.io/scittle/js/scittle.reagent.js"
-                 "https://scicloj.github.io/scittle/js/scittle.mathbox.js"
-                 "https://scicloj.github.io/scittle/js/scittle.emmy.js"
-                 "https://scicloj.github.io/scittle/js/scittle.tmdjs.js")
+                 "https://scicloj.github.io/scittle/js/scittle.reagent.js")
                 (->> special-libs
                      (mapcat (comp :from-local-copy :js special-lib-resources))
                      distinct
