@@ -98,16 +98,11 @@
                             [:style (styles/main :loader)]
                             [:style (styles/highlight :qtcreator-light)]
                             (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
-                            [:style "
-"]
-
                             (when toc?
                               (css-from-local-copies
-                               #_"https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sandstone/bootstrap.min.css"
-                               #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
                             (when toc?
-                              [:style (styles/main :boostrap-toc)])
+                              [:style (styles/main :boostrap-toc-customization)])
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :css special-lib-resources))
                                  distinct
@@ -247,7 +242,7 @@ code {
                                #_"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
                             (when toc?
-                              [:style (styles/main :boostrap-toc)])
+                              [:style (styles/main :boostrap-toc-customization)])
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :css special-lib-resources))
                                  distinct
