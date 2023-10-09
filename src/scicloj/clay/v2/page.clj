@@ -166,22 +166,17 @@
                                       (map-indexed
                                        (fn [i item]
                                          [:div {:style {:margin "15px"}}
-                                          (cond
-                                            (-> item meta :clay/hide-code?)
-                                            nil
-                                            ;;
-                                            (:clay/plain-html? item)
-                                            item
-                                            ;; item
-                                            ;;
-                                            :else
+                                          (if (:reagent item)
                                             [:div {:id (str "item" i)}
-                                             [:code "loading ..."]])]))
+                                             [:code "loading ..."]]
+                                            ;; else
+                                            (:hiccup item))]))
                                       (into [:div]))]]]]]
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]
                             [:script {:type "application/x-scittle"}
-                             (->> {:items items
+                             (->> {:items (->> items
+                                               (map #(select-keys % [:reagent])))
                                    :data data
                                    :port port
                                    :special-libs special-libs
@@ -191,17 +186,6 @@
                                   (string/join "\n"))]])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
-
-
-
-
-
-
-
-
-
-
-
 
 
 
