@@ -15,3 +15,13 @@
   (-> "styles/bootstrap-toc.css"
       io/resource
       slurp))
+
+(def highlight
+  (->> [:qtcreator-light] ; TODO: add all relevant themes here
+       (map (fn [theme]
+              [theme (->> theme
+                          name
+                          (format "highlight/styles/%s.min.css")
+                          io/resource
+                          slurp)]))
+       (into {})))
