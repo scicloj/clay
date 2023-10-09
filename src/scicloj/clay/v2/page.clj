@@ -46,12 +46,19 @@
                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
              :css {:from-local-copy
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
+   'reagent {:js {:from-local-copy
+                  ["https://unpkg.com/react@18/umd/react.production.min.js"
+                   "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+                   "https://scicloj.github.io/scittle/js/scittle.js"
+                   "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
+                   "https://scicloj.github.io/scittle/js/scittle.reagent.js"]}}
    'tmdjs {:js {:from-local-copy
                 ["https://scicloj.github.io/scittle/js/scittle.tmdjs.js"]}}
    'emmy {:js {:from-local-copy
                ["https://scicloj.github.io/scittle/js/scittle.emmy.js"]}}
    'mathbox {:js {:from-local-copy
-                  ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}})
+                  ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}
+   'portal {:js {:from-local-copy [portal/url]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls
@@ -92,7 +99,9 @@
                                    (map :reagent)
                                    special-libs-in-form)
                               (->> items
-                                   (mapcat :deps))))]
+                                   (mapcat :deps))
+                              (if (some :reagent items)
+                                ['reagent])))]
     (when-not port
       (throw (ex-info "missing port" {})))
     (-> (hiccup.page/html5 [:head
@@ -130,17 +139,10 @@
                             (when toc?
                               (js-from-local-copies
                                "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
-                            (js-from-local-copies
-                             "https://unpkg.com/react@18/umd/react.production.min.js"
-                             "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
-                             "https://scicloj.github.io/scittle/js/scittle.js"
-                             "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                             "https://scicloj.github.io/scittle/js/scittle.reagent.js")
                             [:script {:type "text/javascript"}
                              (-> "highlight/highlight.min.js"
                                  io/resource
                                  slurp)]
-                            (hiccup.page/include-js portal/url)
                             (->> special-libs
                                  (mapcat (comp :from-local-copy :js special-lib-resources))
                                  distinct
