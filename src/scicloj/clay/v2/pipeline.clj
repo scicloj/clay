@@ -3,11 +3,17 @@
              :refer [<! go go-loop timeout chan thread]]
             [scicloj.clay.v2.server :as server]))
 
-(defn new-pipeline [handler]
+(defn handle-event [{:keys [event-type]
+                     :as event}]
+  (prn [:event event])
+  (some-> event-type
+          (case :event-type/value (server/show! event))))
+
+(defn new-pipeline []
   (let [events-channel         (async/chan 100)]
     (async/go-loop []
       (when-let [event (async/<! events-channel)]
-        (handler event)
+        (handle-event event)
         (recur)))
     {:stop (fn []
              (async/close! events-channel))
@@ -26,10 +32,7 @@
   (when-not (:stop @*pipeline)
     (server/open!)
     (reset! *pipeline
-            (new-pipeline (fn [{:keys [event-type]
-                                :as event}]
-                            (some-> event-type
-                                    (case :event-type/value (server/show! event))))))))
+            (new-pipeline))))
 
 (defn process! [event]
   (when-let [p (:process @*pipeline)]
