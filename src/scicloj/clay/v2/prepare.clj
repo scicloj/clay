@@ -42,11 +42,11 @@
 
 (add-preparer!
  :kind/println
- item/just-println)
+ #'item/just-println)
 
 (add-preparer!
  :kind/pprint
- item/pprint)
+ #'item/pprint)
 
 (add-preparer!
  :kind/void
@@ -54,7 +54,7 @@
 
 (add-preparer!
  :kind/md
- item/md)
+ #'item/md)
 
 (add-preparer!
  :kind/table
@@ -110,23 +110,23 @@
 
 (add-preparer!
  :kind/vega
- item/vega-embed)
+ #'item/vega-embed)
 
 (add-preparer!
  :kind/vega-lite
- item/vega-embed)
+ #'item/vega-embed)
 
 (add-preparer!
  :kind/cytoscape
- (partial item/reagent 'cytoscape))
+ (partial #'item/reagent 'cytoscape))
 
 (add-preparer!
  :kind/echarts
- (partial item/reagent 'echarts))
+ (partial #'item/reagent 'echarts))
 
 (add-preparer!
  :kind/plotly
- (partial item/reagent 'plotly))
+ (partial #'item/reagent 'plotly))
 
 (add-preparer!
  :kind/code
@@ -145,7 +145,7 @@
 
 (add-preparer!
  :kind/image
- item/image)
+ #'item/image)
 
 (add-preparer!
  :kind/test
