@@ -44,6 +44,7 @@
       println
       with-out-str
       escape
+      vector
       printed-clojure))
 
 (defn pprint [value]
@@ -51,6 +52,7 @@
       pp/pprint
       with-out-str
       escape
+      vector
       printed-clojure))
 
 (defn md [text]
