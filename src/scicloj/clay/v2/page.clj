@@ -161,6 +161,7 @@
                                               "col-sm-9"
                                               "col-sm-12")}
                                [:div
+                                (prn [:items items])
                                 (->> items
                                      (map-indexed
                                       (fn [i item]
@@ -181,15 +182,15 @@
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]
                             [:script {:type "application/x-scittle"}
-                             (->> {:items (->> items
-                                               (map #(select-keys % [:reagent])))
-                                   :data data
-                                   :port port
-                                   :special-libs special-libs
-                                   :server-counter counter}
-                                  cljs-generation/items-cljs
-                                  (map pr-str)
-                                  (string/join "\n"))]])
+                             #_(->> {:items (->> items
+                                                 (map #(select-keys % [:reagent])))
+                                     :data data
+                                     :port port
+                                     :special-libs special-libs
+                                     :server-counter counter}
+                                    cljs-generation/items-cljs
+                                    (map pr-str)
+                                    (string/join "\n"))]])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
 
