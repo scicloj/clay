@@ -173,15 +173,15 @@
                                                           (println [:unknown-ws-message (.-data event)])))))]
           (->> special-libs
                (map special-libs-cljs))
-          (->> items
-               (map-indexed
-                (fn [i item]
-                  (when-not (:clay/plain-html? item)
-                    (let [item-name (str "item" i)
-                          item-symbol (symbol (str "item" i))]
-                      [(list 'def item-symbol item)
-                       (list 'dom/render
-                             (list 'fn []
-                                   item-symbol)
-                             (list '.getElementById 'js/document item-name))]))))
-               (apply concat))))
+          #_(->> items
+                 (map-indexed
+                  (fn [i item]
+                    (when-let [{:keys [reagent]} item]
+                      (let [item-name (str "item" i)
+                            item-symbol (symbol (str "item" i))]
+                        [(list 'def item-symbol reagent)
+                         (list 'dom/render
+                               (list 'fn []
+                                     item-symbol)
+                               (list '.getElementById 'js/document item-name))]))))
+                 (apply concat))))
