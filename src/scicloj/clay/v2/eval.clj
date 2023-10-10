@@ -105,7 +105,7 @@
        slurp
        scicloj.clay.v2.read/->safe-notes
        (->> (map complete-note)
-            (map #(note-to-items % options))
+            (mapcat #(note-to-items % options))
             (remove nil?))
        (add-info-line path options)
        doall)))
