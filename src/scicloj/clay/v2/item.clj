@@ -80,11 +80,10 @@
 
 (defn vega-embed [spec]
   {:hiccup [:div
-            'vega ; to help Clay realize that the dependency is needed
             [:script (->> spec
                           jsonista/write-value-as-string
                           (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
-   :deps [:vega]})
+   :deps ['vega]})
 
 (defn reagent [component-symbol data]
   {:reagent (cond
