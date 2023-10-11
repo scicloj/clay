@@ -254,5 +254,7 @@
                                   kindly-advice/advise
                                   :kind
                                   non-hiccup-kind?)
-                        (prepare-or-pprint context)
+                        (-> context
+                            prepare-or-pprint
+                            :hiccup)
                         subform)))))}))
