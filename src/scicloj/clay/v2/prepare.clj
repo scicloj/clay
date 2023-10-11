@@ -132,8 +132,7 @@
  :kind/code
  (fn [codes]
    (->> codes
-        (map item/source-clojure)
-        (into [:div]))))
+        item/source-clojure)))
 
 (add-preparer!
  :kind/dataset
