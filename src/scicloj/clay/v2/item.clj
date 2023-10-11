@@ -5,24 +5,27 @@
             [scicloj.clay.v2.util.image :as util.image]))
 
 (defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
-  (fn [strings]
-    {tag true
-     :hiccup (->> strings
-                  (map (fn [s]
-                         [:pre.card
-                          [hiccup-element
-                           s]]))
-                  (into [:div]))
-     :md (->> strings
-              (map (fn [s]
-                     (format "
+  (fn [string-or-strings]
+    (let [strings (if (sequential? string-or-strings)
+                    string-or-strings
+                    [string-or-strings])]
+      {tag true
+       :hiccup (->> strings
+                    (map (fn [s]
+                           [:pre.card
+                            [hiccup-element
+                             s]]))
+                    (into [:div]))
+       :md (->> strings
+                (map (fn [s]
+                       (format "
 <div class=\"%s\">
 ```clojure-code-item
 %s
 ```
 </div>
 " md-class s)))
-              (string/join "\n"))}))
+                (string/join "\n"))})))
 
 (def source-clojure
   (clojure-code-item {:tag :source-clojure
@@ -44,7 +47,6 @@
       println
       with-out-str
       escape
-      vector
       printed-clojure))
 
 (defn pprint [value]
@@ -52,7 +54,6 @@
       pp/pprint
       with-out-str
       escape
-      vector
       printed-clojure))
 
 (defn md [text]
