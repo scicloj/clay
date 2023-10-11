@@ -9,7 +9,8 @@
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.portal :as portal]
    [scicloj.clay.v2.styles :as styles]
-   [scicloj.clay.v2.util.resource :as resource]))
+   [scicloj.clay.v2.util.resource :as resource]
+   [nextjournal.markdown :as md]))
 
 (def special-libs-set
   #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex
@@ -161,18 +162,23 @@
                                               "col-sm-9"
                                               "col-sm-12")}
                                [:div
-                                (prn [:items items])
                                 (->> items
                                      (map-indexed
                                       (fn [i item]
                                         [:div {:style {:margin "15px"}}
-                                         (if (:reagent item)
+                                         (cond
+                                           ;;
+                                           (:reagent item)
                                            [:div {:id (str "item" i)}
                                             [:code "loading ..."]]
-                                           ;; else
-                                           (do
-                                             (prn (:hiccup item))
-                                             (:hiccup item)))]))
+                                           ;;
+                                           (:hiccup item)
+                                           (:hiccup item)
+                                           ;;
+                                           (:md item)
+                                           (-> item
+                                               :md
+                                               md/->hiccup))]))
                                      (into [:div]))]]]]
                             (->> 'reagent
                                  special-lib-resources
