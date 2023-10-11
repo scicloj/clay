@@ -91,6 +91,6 @@
               [component-symbol data])})
 
 (defn image [buffered-image]
-  {:hiccup [:img {:src (-> image
+  {:hiccup [:img {:src (-> buffered-image
                            util.image/buffered-image->byte-array
                            util.image/byte-array->data-uri)}]})
