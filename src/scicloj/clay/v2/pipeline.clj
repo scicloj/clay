@@ -5,7 +5,6 @@
 
 (defn handle-event [{:keys [event-type]
                      :as event}]
-  (prn [:event event])
   (some-> event-type
           (case :event-type/value (server/show! event))))
 
