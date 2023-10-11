@@ -166,7 +166,8 @@
                                      (map-indexed
                                       (fn [i item]
                                         [:div {:style {:margin "15px"}}
-                                         (prepare/item->hiccup {:id (str "item" i)})]))
+                                         (prepare/item->hiccup {:id (str "item" i)}
+                                                               item)]))
                                      (into [:div]))]]]]
                             (->> 'reagent
                                  special-lib-resources
