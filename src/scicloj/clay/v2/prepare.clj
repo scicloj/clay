@@ -4,7 +4,8 @@
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.table :as table]
    [scicloj.clay.v2.walk :as claywalk]
-   [scicloj.kindly-advice.v1.api :as kindly-advice]))
+   [scicloj.kindly-advice.v1.api :as kindly-advice]
+   [nextjournal.markdown :as md]))
 
 (def *kind->preparer
   (atom {}))
@@ -258,3 +259,18 @@
                             prepare-or-pprint
                             :hiccup)
                         subform)))))}))
+
+(defn item->hiccup [item {:keys [id]}]
+  (cond
+    ;;
+    (:reagent item)
+    [:div {:id id}
+     [:code "loading ..."]]
+    ;;
+    (:hiccup item)
+    (:hiccup item)
+    ;;
+    (:md item)
+    (-> item
+        :md
+        md/->hiccup)))
