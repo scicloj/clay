@@ -4,11 +4,14 @@
             [jsonista.core :as jsonista]
             [scicloj.clay.v2.util.image :as util.image]))
 
+(defn in-vector [v]
+  (if (vector? v)
+    v
+    [v]))
+
 (defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
   (fn [string-or-strings]
-    (let [strings (if (sequential? string-or-strings)
-                    string-or-strings
-                    [string-or-strings])]
+    (let [strings (in-vector string-or-strings)]
       {tag true
        :hiccup (->> strings
                     (map (fn [s]
@@ -57,7 +60,9 @@
       printed-clojure))
 
 (defn md [text]
-  {:md text})
+  {:md (->> text
+            in-vector
+            (string/join "\n"))})
 
 (def separator
   {:hiccup [:div {:style
