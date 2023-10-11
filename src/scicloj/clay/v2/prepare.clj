@@ -20,6 +20,21 @@
       kindly-advice/advise
       :kind))
 
+(defn item->hiccup [item {:keys [id]}]
+  (cond
+    ;;
+    (:reagent item)
+    [:div {:id id}
+     [:code "loading ..."]]
+    ;;
+    (:hiccup item)
+    (:hiccup item)
+    ;;
+    (:md item)
+    (-> item
+        :md
+        md/->hiccup)))
+
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
@@ -257,20 +272,5 @@
                                   non-hiccup-kind?)
                         (-> context
                             prepare-or-pprint
-                            :hiccup)
+                            (item->hiccup nil))
                         subform)))))}))
-
-(defn item->hiccup [item {:keys [id]}]
-  (cond
-    ;;
-    (:reagent item)
-    [:div {:id id}
-     [:code "loading ..."]]
-    ;;
-    (:hiccup item)
-    (:hiccup item)
-    ;;
-    (:md item)
-    (-> item
-        :md
-        md/->hiccup)))
