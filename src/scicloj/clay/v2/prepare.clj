@@ -6,7 +6,8 @@
    [scicloj.clay.v2.walk :as claywalk]
    [scicloj.kindly-advice.v1.api :as kindly-advice]
    [nextjournal.markdown :as md]
-   [scicloj.clay.v2.portal :as portal]))
+   [scicloj.clay.v2.portal :as portal]
+   [clojure.walk]))
 
 (def *kind->preparer
   (atom {}))
@@ -32,9 +33,11 @@
     (:hiccup item)
     ;;
     (:md item)
-    (-> item
-        :md
-        md/->hiccup)))
+    (->> item
+         :md
+         md/->hiccup
+         (clojure.walk/postwalk-replace
+          {:<> :p}))))
 
 (defn prepare [{:as context
                 :keys [value]}
