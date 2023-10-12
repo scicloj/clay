@@ -25,7 +25,7 @@
     ;;
     (:reagent item)
     [:div {:id id}
-     [:code "loading ..."]]
+     [:code "reagent-based components are unsuppored in this version"]]
     ;;
     (:hiccup item)
     (:hiccup item)
