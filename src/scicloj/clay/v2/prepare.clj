@@ -7,7 +7,8 @@
    [scicloj.kindly-advice.v1.api :as kindly-advice]
    [nextjournal.markdown :as md]
    [scicloj.clay.v2.portal :as portal]
-   [clojure.walk]))
+   [clojure.walk]
+   [hiccup.core :as hiccup]))
 
 (def *kind->preparer
   (atom {}))
@@ -38,6 +39,23 @@
          md/->hiccup
          (clojure.walk/postwalk-replace
           {:<> :p}))))
+
+(defn item->md [item {:keys [id]}]
+  (cond
+    (:md item)
+    (:md item)
+    ;;
+    (:reagent item)
+    [:div {:id id}
+     [:code "reagent-based components are unsuppored in this version"]]
+    ;;
+    (:hiccup item)
+    (-> item
+        :hiccup
+        hiccup/html)))
+
+
+
 
 (defn prepare [{:as context
                 :keys [value]}
