@@ -109,27 +109,12 @@
        ;; else - a small table
        {:hiccup hiccup}))))
 
+(defn structure-mark-hiccup [mark]
+  (-> mark
+      item/structure-mark
+      :hiccup))
 
 
-(defn view-sequentially [value open-mark close-mark]
-  (if (->> value
-           (some has-kind-with-preparer?))
-    (let [prepared-parts (->> value
-                              (map (fn [subvalue]
-                                     (prepare-or-pprint {:value subvalue}))))]
-      (if (->> prepared-parts
-               (some (fn [part]
-                       (-> part meta :clay/printed-clojure? not))))
-        ;; some parts are not just printed values - handle recursively
-        [:div
-         (item/structure-mark open-mark)
-         (into [:div {:style {}}]
-               prepared-parts)
-         (item/structure-mark close-mark)]
-        ;; else -- just print the whole value
-        (item/pprint value)))
-    ;; else -- just print the whole value
-    (item/pprint value)))
 
 (add-preparer!
  :kind/vega
@@ -187,15 +172,19 @@
      (let [prepared-kv-pairs (->> value
                                   (map (fn [kv]
                                          {:kv kv
-                                          :prepared-kv (->> kv
-                                                            (map #(prepare-or-pprint {:value %})))})))]
+                                          :prepared-kv
+                                          (->> kv
+                                               (map (fn [v]
+                                                      (-> {:value v}
+                                                          prepare-or-pprint
+                                                          (item->hiccup nil)))))})))]
        (if (->> prepared-kv-pairs
                 (map :prepared-kv)
                 (apply concat)
                 (some (complement :printed-clojure)))
          ;; some parts are not just printed values - handle recursively
          {:hiccup [:div
-                   (item/structure-mark "{")
+                   (structure-mark-hiccup "{")
                    (->> prepared-kv-pairs
                         (map (fn [{:keys [kv prepared-kv]}]
                                (if (->> prepared-kv
@@ -214,17 +203,16 @@
                                  (->> kv
                                       (map pr-str)
                                       (string/join " ")
-                                      item/printed-clojure))))
+                                      item/printed-clojure
+                                      (item->hiccup nil)))))
                         (into [:div
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))
-                   (item/structure-mark "}")]}
+                   (structure-mark-hiccup "}")]}
          ;; else -- just print the whole value
          (item/pprint value)))
      ;; else -- just print the whole value
      (item/pprint value))))
-
-
 
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
@@ -236,11 +224,12 @@
                (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively
         {:hiccup [:div
-                  (item/structure-mark open-mark)
+                  (structure-mark-hiccup open-mark)
                   (into [:div {:style {:margin-left "10%"
                                        :width "110%"}}]
-                        prepared-parts)
-                  (item/structure-mark close-mark)]}
+                        (->> prepared-parts
+                             (map #(item->hiccup % nil))))
+                  (structure-mark-hiccup close-mark)]}
         ;; else -- just print the whole value
         (item/pprint value)))
     ;; else -- just print the whole value
