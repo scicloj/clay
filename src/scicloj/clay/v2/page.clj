@@ -120,8 +120,6 @@ async function clay_1 () {
   const response_counter = await response.json();
   if (response_counter != clay_server_counter) {
     clay_refresh();
-  } else {
-    alert('ok');
   }
 };
 clay_1();
