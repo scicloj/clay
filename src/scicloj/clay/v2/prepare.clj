@@ -95,17 +95,19 @@
                                   {:value value}))))
                           ;; else - keep it
                           elem))))]
-     {:hiccup (if (-> hiccup
-                      last ; the :tbody part
-                      count
-                      (> 20)) ; a big table
-                (into hiccup
+     (if (-> hiccup
+             last ; the :tbody part
+             count
+             (> 20)) ; a big table
+       ;; a big table
+       {:hiccup (into hiccup
                       [[:script "new DataTable(document.currentScript.parentElement,
  {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
                        'datatables ; to help Clay realize that th dependency is needed
                        ])
-                hiccup)
-      :deps ['datatables]})))
+        :deps ['datatables]}
+       ;; else - a small table
+       {:hiccup hiccup}))))
 
 
 
