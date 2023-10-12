@@ -82,7 +82,7 @@
    (let [pre-hiccup (table/->table-hiccup
                      table-spec)
          hiccup (->> pre-hiccup
-                     (claywalk/prewalk
+                     (claywalk/postwalk
                       (fn [elem]
                         (if (and (vector? elem)
                                  (-> elem first (= :td)))
@@ -91,8 +91,9 @@
                               (update
                                1
                                (fn [value]
-                                 (prepare-or-str
-                                  {:value value}))))
+                                 (-> {:value value}
+                                     prepare-or-str
+                                     (item->hiccup nil)))))
                           ;; else - keep it
                           elem))))]
      (if (-> hiccup
