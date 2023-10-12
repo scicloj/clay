@@ -139,93 +139,154 @@ clay_1();
                                   ['reagent])))]
     (when-not port
       (throw (ex-info "missing port" {})))
-    (-> (hiccup.page/html5 [:head
-                            [:meta {:charset "UTF-8"}]
-                            [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-                            #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
-                            font-links
-                            [:style (styles/main :table)]
-                            [:style (styles/main :loader)]
-                            #_[:style (styles/main :code)]
-                            [:style (styles/highlight :qtcreator-light)]
-                            (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
-                            (when toc?
-                              (css-from-local-copies
-                               "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
-                            (when toc?
-                              [:style (styles/main :boostrap-toc-customization)])
-                            (->> special-libs
-                                 (mapcat (comp :from-local-copy :css special-lib-resources))
-                                 distinct
-                                 (apply css-from-local-copies))
-                            (->> special-libs
-                                 (mapcat (comp :from-the-web :css special-lib-resources))
-                                 distinct
-                                 (apply hiccup.page/include-css))
-                            [:title (or title "Clay")]]
-                           [:body  {:style {:background "#fcfcfc"
-                                            :font-family "'Roboto', sans-serif"
-                                            :width "90%"
-                                            :margin "auto"}
-                                    :data-spy "scroll"
-                                    :data-target "#toc"}
-                            (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
-                                                  "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                                                  "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
-                            (when toc?
-                              (js-from-local-copies
-                               "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
-                            [:script {:type "text/javascript"}
-                             (-> "highlight/highlight.min.js"
-                                 io/resource
-                                 slurp)]
-                            (->> special-libs
-                                 (mapcat (comp :from-local-copy :js special-lib-resources))
-                                 distinct
-                                 (apply js-from-local-copies))
-                            (->> special-libs
-                                 (mapcat (comp :from-the-web :js special-lib-resources))
-                                 distinct
-                                 (apply hiccup.page/include-js))
-                            [:div.container
-                             [:div.row
-                              (when toc?
-                                [:div.col-sm-3
-                                 [:nav.sticky-top {:id "toc"
-                                                   :data-toggle "toc"}]])
-                              [:div {:class (if toc?
-                                              "col-sm-9"
-                                              "col-sm-12")}
-                               [:div
-                                (->> items
-                                     (map-indexed
-                                      (fn [i item]
-                                        [:div {:style {:margin "15px"}}
-                                         (prepare/item->hiccup item
-                                                               {:id (str "item" i)})]))
-                                     (into [:div]))]]]]
-                            (->> 'reagent
-                                 special-lib-resources
-                                 :js
-                                 :from-local-copy
-                                 (apply js-from-local-copies))
-                            [:script {:type "text/javascript"}
-                             "hljs.highlightAll();"]
-                            #_[:script {:type "application/x-scittle"}
-                               #_(->> {:items (->> items
-                                                   (map #(select-keys % [:reagent])))
-                                       :data data
-                                       :port port
-                                       :special-libs special-libs
-                                       :server-counter counter}
-                                      cljs-generation/items-cljs
-                                      (map pr-str)
-                                      (string/join "\n"))]
-                            [:script {:type "text/javascript"}
-                             (communication-script {:port port
-                                                    :server-counter counter})]])
+    (-> (hiccup.page/html5
+         [:head
+          [:meta {:charset "UTF-8"}]
+          [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
+          #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
+          font-links
+          [:style (styles/main :table)]
+          [:style (styles/main :loader)]
+          #_[:style (styles/main :code)]
+          [:style (styles/highlight :qtcreator-light)]
+          (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
+          (when toc?
+            (css-from-local-copies
+             "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
+          (when toc?
+            [:style (styles/main :boostrap-toc-customization)])
+          (->> (concat (->> special-libs
+                            (mapcat (comp :from-local-copy :css special-lib-resources)))
+                       (->> special-libs
+                            (mapcat (comp :from-the-web :css special-lib-resources))))
+               distinct
+               (apply hiccup.page/include-css)
+               hiccup/html)
+          (->> (concat (->> special-libs
+                            (mapcat (comp :from-local-copy :js special-lib-resources)))
+                       (->> special-libs
+                            (mapcat (comp :from-the-web :js special-lib-resources))))
+               distinct
+               (apply hiccup.page/include-js)
+               hiccup/html)
+          [:title (or title "Clay")]]
+         [:body  {:style {:background "#fcfcfc"
+                          :font-family "'Roboto', sans-serif"
+                          :width "90%"
+                          :margin "auto"}
+                  :data-spy "scroll"
+                  :data-target "#toc"}
+          (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
+                                "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
+                                "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
+          (when toc?
+            (js-from-local-copies
+             "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
+          [:script {:type "text/javascript"}
+           (-> "highlight/highlight.min.js"
+               io/resource
+               slurp)]
+          (->> special-libs
+               (mapcat (comp :from-local-copy :js special-lib-resources))
+               distinct
+               (apply js-from-local-copies))
+          (->> special-libs
+               (mapcat (comp :from-the-web :js special-lib-resources))
+               distinct
+               (apply hiccup.page/include-js))
+          [:div.container
+           [:div.row
+            (when toc?
+              [:div.col-sm-3
+               [:nav.sticky-top {:id "toc"
+                                 :data-toggle "toc"}]])
+            [:div {:class (if toc?
+                            "col-sm-9"
+                            "col-sm-12")}
+             [:div
+              (->> items
+                   (map-indexed
+                    (fn [i item]
+                      [:div {:style {:margin "15px"}}
+                       (prepare/item->hiccup item
+                                             {:id (str "item" i)})]))
+                   (into [:div]))]]]]
+          (->> 'reagent
+               special-lib-resources
+               :js
+               :from-local-copy
+               (apply js-from-local-copies))
+          [:script {:type "text/javascript"}
+           "hljs.highlightAll();"]
+          #_[:script {:type "application/x-scittle"}
+             #_(->> {:items (->> items
+                                 (map #(select-keys % [:reagent])))
+                     :data data
+                     :port port
+                     :special-libs special-libs
+                     :server-counter counter}
+                    cljs-generation/items-cljs
+                    (map pr-str)
+                    (string/join "\n"))]
+          [:script {:type "text/javascript"}
+           (communication-script {:port port
+                                  :server-counter counter})]])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
+
+
+
+
+
+
+
+(defn light-qmd [{:keys [data title options counter]}
+                 items]
+  (let [special-libs (distinct
+                      (concat (->> items
+                                   (map :reagent)
+                                   special-libs-in-form)
+                              (->> items
+                                   (mapcat :deps))
+                              #_(when (some :reagent items)
+                                  ['reagent])))]
+    (str
+     (->> options
+          :quarto
+          yaml/generate-string
+          (format "\n---\n%s\n---\n"))
+
+     ;; " "
+     (hiccup/html
+      [:style (styles/main :table)]
+      [:style "
+.printedClojure .sourceCode {
+  background-color: transparent;
+  border-style: none;
+}
+"])
+     (->> (concat (->> special-libs
+                       (mapcat (comp :from-local-copy :css special-lib-resources)))
+                  (->> special-libs
+                       (mapcat (comp :from-the-web :css special-lib-resources))))
+          distinct
+          sort
+          (apply hiccup.page/include-css)
+          hiccup/html)
+     (->> (concat (->> special-libs
+                       (mapcat (comp :from-local-copy :js special-lib-resources)))
+                  (->> special-libs
+                       (mapcat (comp :from-the-web :js special-lib-resources))))
+          distinct
+          sort
+          (apply hiccup.page/include-js)
+          hiccup/html)
+     (->> items
+          (map-indexed
+           (fn [i item]
+             (prepare/item->md item
+                               {:id (str "item" i)})))
+          (string/join "\n")))))
 
 
 
@@ -492,116 +553,116 @@ code {
            flatten
            (some #{'fn 'quote}))))
 
-(defn light-qmd [{:keys [data title options counter]}
-                 items]
-  (let [special-libs (->> items
-                          special-libs-in-form)]
-    (str
-     (->> options
-          :quarto
-          yaml/generate-string
-          (format "\n---\n%s\n---\n"))
+;; (defn light-qmd [{:keys [data title options counter]}
+;;                  items]
+;;   (let [special-libs (->> items
+;;                           special-libs-in-form)]
+;;     (str
+;;      (->> options
+;;           :quarto
+;;           yaml/generate-string
+;;           (format "\n---\n%s\n---\n"))
 
-     ;; " "
-     (hiccup/html
-      [:style (styles/main :table)]
-      [:style "
-.printedClojure .sourceCode {
-  background-color: transparent;
-  border-style: none;
-}
-"])
-     (when (special-libs 'vega)
-       (->> 'vega
-            special-lib-resources
-            :js
-            :from-local-copy
-            (apply hiccup.page/include-js)
-            hiccup/html))
-     (when (special-libs 'datatables)
-       (str (->> 'datatables
-                 special-lib-resources
-                 :js
-                 :from-the-web
-                 (cons "https://code.jquery.com/jquery-3.6.0.min.js")
-                 (apply hiccup.page/include-js)
-                 hiccup/html)
-            (->> 'datatables
-                 special-lib-resources
-                 :css
-                 :from-the-web
-                 (apply hiccup.page/include-css)
-                 hiccup/html)))
-     (->> items
-          (map-indexed
-           (fn [i item]
-             (cond
-               ;;
-               (-> item
-                   meta
-                   :clay/original-markdown)
-               (-> item
-                   meta
-                   :clay/original-markdown)
-               ;;
-               (-> item
-                   meta
-                   :clay/markdown)
-               (-> item
-                   meta
-                   :clay/markdown)
-               ;;
-               (-> item
-                   meta
-                   :clay/original-code)
-               (let [code (if (-> item
-                                  meta
-                                  :clay/hide-code?)
-                            ""
-                            (-> item
-                                meta
-                                :clay/original-code))]
-                 (if (= code "")
-                   "
-```
-```
-"
-                   (->> code
-                        (format "
-<div class=\"originalCode\">
-```clojure
-%s
-```
-</div>
+;;      ;; " "
+;;      (hiccup/html
+;;       [:style (styles/main :table)]
+;;       [:style "
+;; .printedClojure .sourceCode {
+;;   background-color: transparent;
+;;   border-style: none;
+;; }
+;; "])
+;;      (when (special-libs 'vega)
+;;        (->> 'vega
+;;             special-lib-resources
+;;             :js
+;;             :from-local-copy
+;;             (apply hiccup.page/include-js)
+;;             hiccup/html))
+;;      (when (special-libs 'datatables)
+;;        (str (->> 'datatables
+;;                  special-lib-resources
+;;                  :js
+;;                  :from-the-web
+;;                  (cons "https://code.jquery.com/jquery-3.6.0.min.js")
+;;                  (apply hiccup.page/include-js)
+;;                  hiccup/html)
+;;             (->> 'datatables
+;;                  special-lib-resources
+;;                  :css
+;;                  :from-the-web
+;;                  (apply hiccup.page/include-css)
+;;                  hiccup/html)))
+;;      (->> items
+;;           (map-indexed
+;;            (fn [i item]
+;;              (cond
+;;                ;;
+;;                (-> item
+;;                    meta
+;;                    :clay/original-markdown)
+;;                (-> item
+;;                    meta
+;;                    :clay/original-markdown)
+;;                ;;
+;;                (-> item
+;;                    meta
+;;                    :clay/markdown)
+;;                (-> item
+;;                    meta
+;;                    :clay/markdown)
+;;                ;;
+;;                (-> item
+;;                    meta
+;;                    :clay/original-code)
+;;                (let [code (if (-> item
+;;                                   meta
+;;                                   :clay/hide-code?)
+;;                             ""
+;;                             (-> item
+;;                                 meta
+;;                                 :clay/original-code))]
+;;                  (if (= code "")
+;;                    "
+;; ```
+;; ```
+;; "
+;;                    (->> code
+;;                         (format "
+;; <div class=\"originalCode\">
+;; ```clojure
+;; %s
+;; ```
+;; </div>
 
-"))))
-               ;;
-               ;;
-               (:clay/printed-clojure? item)
-               (->> item
-                    meta
-                    :clay/text
-                    (format "
-<div class=\"printedClojure\">
-```clojure
-%s
-```
-</div>
-"))
-               ;;
-               (:clay/plain-html? item)
-               (hiccup/html item)
-               ;;
-               (not (signals-of-no-plain-html? item))
-               (try
-                 (hiccup/html
-                  item)
-                 (catch Exception e "
-**unsupported element**
-"))
-               ;;
-               :else
-               "
-**unsupported element**
-")))
-          (string/join "\n")))))
+;; "))))
+;;                ;;
+;;                ;;
+;;                (:clay/printed-clojure? item)
+;;                (->> item
+;;                     meta
+;;                     :clay/text
+;;                     (format "
+;; <div class=\"printedClojure\">
+;; ```clojure
+;; %s
+;; ```
+;; </div>
+;; "))
+;;                ;;
+;;                (:clay/plain-html? item)
+;;                (hiccup/html item)
+;;                ;;
+;;                (not (signals-of-no-plain-html? item))
+;;                (try
+;;                  (hiccup/html
+;;                   item)
+;;                  (catch Exception e "
+;; **unsupported element**
+;; "))
+;;                ;;
+;;                :else
+;;                "
+;; **unsupported element**
+;; ")))
+;;           (string/join "\n")))))
