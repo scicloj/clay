@@ -15,7 +15,7 @@
       {tag true
        :hiccup (->> strings
                     (map (fn [s]
-                           [:pre.card
+                           [:pre ;.card
                             [hiccup-element
                              s]]))
                     (into [:div]))

@@ -142,10 +142,11 @@ clay_1();
     (-> (hiccup.page/html5 [:head
                             [:meta {:charset "UTF-8"}]
                             [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-                            [:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
+                            #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
                             font-links
                             [:style (styles/main :table)]
                             [:style (styles/main :loader)]
+                            [:style (styles/main :code)]
                             [:style (styles/highlight :qtcreator-light)]
                             (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
                             (when toc?
