@@ -143,8 +143,8 @@
                      [:p "computing"]
                      [:pre [:code (pr-str form)]]
                      [:div.loader]])))
-           '(defn refresh-page []
-              (.reload js/location))
+           ;; '(defn refresh-page []
+           ;;    (.reload js/location))
            '(ns main
               (:require [reagent.core :as r]
                         [reagent.dom :as dom]
@@ -164,13 +164,14 @@
                                      (str "error on counter: " e)))})
            (list 'def 'data
                  (list 'quote data))
-           (list 'let ['socket `(js/WebSocket. (str "ws://localhost:" ~port))]
-                 '(.addEventListener socket "open" (fn [event]
-                                                     (.send socket "Hello Server!")))
-                 '(.addEventListener socket "message" (fn [event]
-                                                        (case (.-data event)
-                                                          "refresh" (clay/refresh-page)
-                                                          (println [:unknown-ws-message (.-data event)])))))]
+           ;; (list 'let ['socket `(js/WebSocket. (str "ws://localhost:" ~port))]
+           ;;       '(.addEventListener socket "open" (fn [event]
+           ;;                                           (.send socket "Hello Server!")))
+           ;;       '(.addEventListener socket "message" (fn [event]
+           ;;                                              (case (.-data event)
+           ;;                                                "refresh" (clay/refresh-page)
+           ;;                                                (println [:unknown-ws-message (.-data event)])))))
+           ]
           (->> special-libs
                (map special-libs-cljs))
           #_(->> items

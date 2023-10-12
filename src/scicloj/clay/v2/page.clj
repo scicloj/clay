@@ -94,6 +94,24 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
 
+(defn communication-script [port]
+  (format "
+{
+  clay_refresh = function() {location.reload();}
+  const clay_socket = new WebSocket('ws://localhost:%d');
+  clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
+  clay_socket.addEventListener('message', (event)=> {
+    if (event.data=='refresh') {
+      clay_refresh();
+    } else {
+      console.log('unknown ws message: ' + event.data);
+    }
+  });
+}
+  "
+          port))
+
+
 (defn page [{:keys [items data port title toc? counter]}]
   (let [special-libs (distinct
                       (concat (->> items
@@ -176,16 +194,18 @@
                                  (apply js-from-local-copies))
                             [:script {:type "text/javascript"}
                              "hljs.highlightAll();"]
-                            [:script {:type "application/x-scittle"}
-                             #_(->> {:items (->> items
-                                                 (map #(select-keys % [:reagent])))
-                                     :data data
-                                     :port port
-                                     :special-libs special-libs
-                                     :server-counter counter}
-                                    cljs-generation/items-cljs
-                                    (map pr-str)
-                                    (string/join "\n"))]])
+                            #_[:script {:type "application/x-scittle"}
+                               #_(->> {:items (->> items
+                                                   (map #(select-keys % [:reagent])))
+                                       :data data
+                                       :port port
+                                       :special-libs special-libs
+                                       :server-counter counter}
+                                      cljs-generation/items-cljs
+                                      (map pr-str)
+                                      (string/join "\n"))]
+                            [:script {:type "text/javascript"}
+                             (communication-script port)]])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
 
