@@ -146,7 +146,7 @@ clay_1();
                             font-links
                             [:style (styles/main :table)]
                             [:style (styles/main :loader)]
-                            [:style (styles/main :code)]
+                            #_[:style (styles/main :code)]
                             [:style (styles/highlight :qtcreator-light)]
                             (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
                             (when toc?
