@@ -94,12 +94,18 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
 
-(defn communication-script [port]
+(defn communication-script [{:keys [port server-counter]}]
   (format "
 {
+  clay_port = %d;
+  clay_server_counter = '%d';
+
   clay_refresh = function() {location.reload();}
-  const clay_socket = new WebSocket('ws://localhost:%d');
+
+  const clay_socket = new WebSocket('ws://localhost:'+clay_port);
+
   clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
+
   clay_socket.addEventListener('message', (event)=> {
     if (event.data=='refresh') {
       clay_refresh();
@@ -108,8 +114,20 @@
     }
   });
 }
-  "
-          port))
+
+async function clay_1 () {
+  const response = await fetch('/counter');
+  const response_counter = await response.json();
+  if (response_counter != clay_server_counter) {
+    clay_refresh();
+  } else {
+    alert('ok');
+  }
+};
+clay_1();
+"
+          port
+          server-counter))
 
 
 (defn page [{:keys [items data port title toc? counter]}]
@@ -205,7 +223,8 @@
                                       (map pr-str)
                                       (string/join "\n"))]
                             [:script {:type "text/javascript"}
-                             (communication-script port)]])
+                             (communication-script {:port port
+                                                    :server-counter counter})]])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
 

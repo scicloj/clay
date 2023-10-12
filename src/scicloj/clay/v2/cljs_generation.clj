@@ -143,35 +143,25 @@
                      [:p "computing"]
                      [:pre [:code (pr-str form)]]
                      [:div.loader]])))
-           ;; '(defn refresh-page []
-           ;;    (.reload js/location))
            '(ns main
               (:require [reagent.core :as r]
                         [reagent.dom :as dom]
                         [ajax.core :refer [GET POST]]
                         [clojure.string :as string]
                         [scicloj.clay :as clay]))
-           (list 'GET "/counter"
-                 {:handler (list
-                            'fn '[response]
-                            (list 'when
-                                  (list 'not= 'response
-                                        `(str ~server-counter))
-                                  '(clay/refresh-page)))
-                  :error-handler '(fn [e]
-                                    (.log
-                                     js/console
-                                     (str "error on counter: " e)))})
+           ;; (list 'GET "/counter"
+           ;;       {:handler (list
+           ;;                  'fn '[response]
+           ;;                  (list 'when
+           ;;                        (list 'not= 'response
+           ;;                              `(str ~server-counter))
+           ;;                        '(clay/refresh-page)))
+           ;;        :error-handler '(fn [e]
+           ;;                          (.log
+           ;;                           js/console
+           ;;                           (str "error on counter: " e)))})
            (list 'def 'data
-                 (list 'quote data))
-           ;; (list 'let ['socket `(js/WebSocket. (str "ws://localhost:" ~port))]
-           ;;       '(.addEventListener socket "open" (fn [event]
-           ;;                                           (.send socket "Hello Server!")))
-           ;;       '(.addEventListener socket "message" (fn [event]
-           ;;                                              (case (.-data event)
-           ;;                                                "refresh" (clay/refresh-page)
-           ;;                                                (println [:unknown-ws-message (.-data event)])))))
-           ]
+                 (list 'quote data))]
           (->> special-libs
                (map special-libs-cljs))
           #_(->> items
