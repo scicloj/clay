@@ -3,7 +3,6 @@
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.actions :as actions]
             [scicloj.clay.v2.server :as server]
-            [scicloj.clay.v2.portal :as portal]
             [clojure.string :as string]
             [clojure.test]))
 
@@ -94,6 +93,3 @@
 (defn handle-value! [value]
   (pipeline/handle-value! value)
   [:ok])
-
-(defn in-portal [value]
-  (portal/in-portal value))

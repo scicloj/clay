@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha39-SNAPSHOT]
 - major cleanup and refactoring
 - temporarily not supporting reagent-based items
+- portal is now supported as a kind
 
 ## [2-alpha38] - 2023-10-03
 - path changes in light quarto book generation

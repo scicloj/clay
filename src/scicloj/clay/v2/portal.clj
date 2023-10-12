@@ -14,8 +14,6 @@
 (def url (let [[host query] (string/split dev #"\?")]
            (str host "/main.js?" query)))
 
-
-
 (defn in-portal [value]
   (->> {:value value}
        kind-portal/prepare
