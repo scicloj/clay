@@ -23,11 +23,11 @@
                 (map (fn [s]
                        (format "
 <div class=\"%s\">
-```clojure-code-item
+```clojure
 %s
 ```
 </div>
-" md-class s)))
+" (name md-class) s)))
                 (string/join "\n"))})))
 
 (def source-clojure
