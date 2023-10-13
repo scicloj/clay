@@ -6,13 +6,6 @@
             [clojure.string :as string]
             [clojure.test]))
 
-(def ^:dynamic *in-api-call?* false)
-
-(defmacro avoid-recursion [& forms]
-  `(do (if-not *in-api-call?*
-         (binding [*in-api-call?* true]
-           ~@forms))))
-
 (defn stop! []
   (pipeline/stop!)
   [:ok])
@@ -34,42 +27,35 @@
   ([path]
    (show-namespace! path nil))
   ([path options]
-   (avoid-recursion
-    (start!)
-    (actions/show-doc! path options))
+   (start!)
+   (actions/show-doc! path options)
    [:ok]))
 
 (defn show-namespace-and-write-html!
   [path options]
-  (avoid-recursion
-   (->> {:format :html}
-        (merge options)
-        (actions/show-doc-and-write-html! path))))
+  (->> {:format :html}
+       (merge options)
+       (actions/show-doc-and-write-html! path)))
 
 (defn render-namespace-quarto!
   [path options]
-  (avoid-recursion
-   (->> {:format :quarto}
-        (merge options)
-        (actions/render-quarto! path))))
+  (->> {:format :quarto}
+       (merge options)
+       (actions/render-quarto! path)))
 
 (defn write-namespace-quarto!
   [path options]
-  (avoid-recursion
-   (->> {:format :quarto}
-        (merge options)
-        (actions/write-quarto! path))))
+  (->> {:format :quarto}
+       (merge options)
+       (actions/write-quarto! path)))
 
-(defn browse!
-  []
+(defn browse! []
   (server/browse!))
 
-(defn port
-  []
+(defn port []
   (server/port))
 
-(defn url
-  []
+(defn url []
   (server/url))
 
 (defn swap-options! [f & args]
@@ -86,8 +72,7 @@
   (server/options))
 
 (defn handle-form! [form]
-  (avoid-recursion
-   (pipeline/handle-form! form))
+  (pipeline/handle-form! form)
   [:ok])
 
 (defn handle-value! [value]
