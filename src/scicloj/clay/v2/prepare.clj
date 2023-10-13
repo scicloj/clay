@@ -109,13 +109,6 @@
                               (update
                                1
                                (fn [value]
-                                 (prn [:DEBUG
-                                       (-> {:value value})
-                                       (-> {:value value}
-                                           prepare-or-str)
-                                       (-> {:value value}
-                                           prepare-or-str
-                                           (item->hiccup nil))])
                                  (-> {:value value}
                                      prepare-or-str
                                      (item->hiccup nil)))))
