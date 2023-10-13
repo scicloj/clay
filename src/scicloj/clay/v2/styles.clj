@@ -1,24 +1,17 @@
 (ns scicloj.clay.v2.styles
   (:require [clojure.java.io :as io]))
 
-(def main
-  (->> [:table :loader :bootstrap-toc-customization :code
-        :md-main]
-       (map (fn [style]
-              [style (->> style
-                          name
-                          (format "styles/%s.css")
-                          io/resource
-                          slurp)]))
-       (into {})))
+(defn main [style]
+  (->> style
+       name
+       (format "styles/%s.css")
+       io/resource
+       slurp))
 
 
-(def highlight
-  (->> [:qtcreator-light] ; TODO: add all relevant themes here
-       (map (fn [theme]
-              [theme (->> theme
-                          name
-                          (format "highlight/styles/%s.min.css")
-                          io/resource
-                          slurp)]))
-       (into {})))
+(defn highlight [theme]
+  (->> theme
+       name
+       (format "highlight/styles/%s.min.css")
+       io/resource
+       slurp))
