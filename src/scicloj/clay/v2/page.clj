@@ -154,7 +154,7 @@ clay_1();
             (css-from-local-copies
              "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
           (when toc?
-            [:style (styles/main :boostrap-toc-customization)])
+            [:style (styles/main :bootstrap-toc-customization)])
           (->> (concat (->> special-libs
                             (mapcat (comp :from-local-copy :css special-lib-resources)))
                        (->> special-libs
