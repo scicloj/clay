@@ -220,9 +220,9 @@
 (defn write-quarto! [items]
   (let [qmd-path
 
-        (ns->target-path "docs/" *ns* "_quarto.md")
+        (ns->target-path "docs/" *ns* "_quarto.qmd")
         html-path (-> qmd-path
-                      (string/replace #"\.md$" ".html"))]
+                      (string/replace #"\.qmd$" ".html"))]
 
     (io/make-parents qmd-path)
     ;; (-> @*state
@@ -251,7 +251,7 @@ format:
 book:
   title: \"book\"
   chapters:
-    - index.md
+    - index.qmd
 ")
 
 (def base-quarto-index
@@ -265,7 +265,7 @@ embed-resources: true
   ")
 
 (defn update-quarto-config! [chapter-path]
-  (let [index-path "book/index.md"
+  (let [index-path "book/index.qmd"
         config-path "book/_quarto.yml"
         current-config (if (-> config-path io/file .exists)
                          (slurp config-path)
@@ -294,8 +294,8 @@ embed-resources: true
                              (string/split #"\.")
                              last
                              (= "index"))
-                       (ns->target-path "" *ns* ".md")
-                       (ns->target-path "" *ns* "/index.md"))
+                       (ns->target-path "" *ns* ".qmd")
+                       (ns->target-path "" *ns* "/index.qmd"))
         qmd-path (str "book/" chapter-path)]
     (io/make-parents qmd-path)
     (-> @*state
