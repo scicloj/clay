@@ -282,4 +282,4 @@ clay_1();
            (fn [i item]
              (prepare/item->md item
                                {:id (str "item" i)})))
-          (string/join "\n")))))
+          (string/join "\n\n")))))
