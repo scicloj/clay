@@ -400,3 +400,10 @@ nested-structure-1
                 [(tc/dataset {:x (range 3)
                               :y (map inc (range 3))})
                  (random-vega-lite-plot 9)]]})
+
+
+;; # Coming soon
+
+;; In the past, Clay used to support various data visualization libraries such as ECharts, Cytoscape, Plotly, Leaflet, 3DMol, MathBox, and KaTeX.
+;;
+;; These have been disabled in a recent refactoring (Oct. 2023) and will be brought back soon.
