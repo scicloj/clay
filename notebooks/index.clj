@@ -56,7 +56,8 @@
 ;; |`clay/start`|start clay if not started yet|
 ;; |`clay/show-namespace`|save clj buffer and render it in the browser view|
 ;; |`clay/show-namespace-and-write-html`|save clj buffer, render it in the browser view, and save the result as html|
-;; |`clay/generate-and-show-namespace-quarto`|(experimental) save clj buffer, generate an html document using Quarto, and show it in the browser view|
+;; |`clay/write-quarto`|save clj buffer, and generate a Quarto mardkown document|
+;; |`clay/render-quarto`|save clj buffer, generate a Quarto markdown document, render it as HTML, and show it in the browser view|
 ;; |`clay/send`|send a single clj form to be rendered in the browser view|
 ;; |`clay/send-last-sexp`|send the last s-expression|
 ;; |`clay/send-defun-at-point`|send the [defun-at-point](https://www.emacswiki.org/emacs/ThingAtPoint)|
