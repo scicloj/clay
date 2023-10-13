@@ -24,16 +24,6 @@
          :fns {}
          :counter 0}))
 
-;; (defn counter-watch [key atom old-value new-value]
-;;   (->> [old-value new-value]
-;;        (map :counter)
-;;        ((fn [[x y]]
-;;           (if (not= x y)
-;;             (println [x y]))))))
-
-;; (defonce once1
-;;   (add-watch *state :watcher #'counter-watch))
-
 (defn swap-state! [f & args]
   (-> *state
       (swap!
