@@ -167,14 +167,7 @@
           (assoc :items items)
           (merge options))))
    (broadcast! "refresh")
-   (-> [:ok] (kindly/consider :kind/hidden))))
-
-#_(defn reveal! [state]
-    (future (Thread/sleep 2000)
-            (reset! *state
-                    (assoc state :reveal? true))
-            (println (pr-str @*state))
-            (broadcast! "refresh")))
+   [:ok]))
 
 (defn show! [context]
   (-> context
@@ -204,13 +197,10 @@
         page/page
         (spit path))
    (println [:wrote path (now)])
-   (-> [:wrote path]
-       (kindly/consider :kind/hidden))))
+   [:wrote path]))
 
 (defn render-quarto! [items]
-  (let [md-path
-
-        (ns->target-path "docs/" *ns* "_quarto.md")
+  (let [md-path (ns->target-path "docs/" *ns* "_quarto.md")
         html-path (-> md-path
                       (string/replace #"\.md$" ".html"))]
 
