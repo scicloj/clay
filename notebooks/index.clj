@@ -8,6 +8,7 @@
     :src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
     :alt "quaternary clay in Estonia"}]
   {:kindly/kind :kind/hiccup})
+
 ;; (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
 ;; ## What is it?
@@ -208,7 +209,7 @@
        (URL.)
        (ImageIO/read)))
 
-;; clay-image
+clay-image
 
 ;; ### Plain data structures
 
