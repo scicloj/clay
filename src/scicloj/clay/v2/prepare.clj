@@ -71,7 +71,7 @@
   (prepare context {:fallback-preparer item/pprint}))
 
 (defn prepare-or-str [context]
-  (prepare context {:fallback-preparer str}))
+  (prepare context {:fallback-preparer item/md}))
 
 (defn has-kind-with-preparer? [value]
   (some-> value
@@ -109,6 +109,13 @@
                               (update
                                1
                                (fn [value]
+                                 (prn [:DEBUG
+                                       (-> {:value value})
+                                       (-> {:value value}
+                                           prepare-or-str)
+                                       (-> {:value value}
+                                           prepare-or-str
+                                           (item->hiccup nil))])
                                  (-> {:value value}
                                      prepare-or-str
                                      (item->hiccup nil)))))
