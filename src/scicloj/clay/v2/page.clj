@@ -235,13 +235,6 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
-(defn md-style [css]
-  (format "
-```{css echo=FALSE}
-%s
-```
-" css))
-
 (defn light-qmd [{:keys [data title options counter]}
                  items]
   (let [special-libs (distinct
@@ -260,8 +253,8 @@ clay_1();
 
      ;; " "
      (hiccup/html
-      (md-style (styles/main :table))
-      (md-style (styles/main :md-main)))
+      [:style (styles/main :table)]
+      [:style (styles/main :md-main)])
      (->> (concat (->> special-libs
                        (mapcat (comp :from-local-copy :css special-lib-resources)))
                   (->> special-libs
