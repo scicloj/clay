@@ -34,7 +34,7 @@
       (->> (show-doc! path)))
   (server/write-html!))
 
-(defn gen-doc-and-write-quarto!
+(defn render-quarto!
   [path {:keys [title]
          :as options}]
   (server/show-message!
@@ -47,9 +47,9 @@
        :title (or title path)
        :path path)
       (->> (eval/gen-doc path))
-      server/write-quarto!))
+      server/render-quarto!))
 
-(defn gen-doc-and-write-light-quarto!
+(defn write-quarto!
   [path {:keys [title]
          :as options}]
   (-> options
@@ -57,4 +57,4 @@
        :title (or title path)
        :path path)
       (->> (eval/gen-doc path))
-      server/write-light-quarto!))
+      server/write-quarto!))

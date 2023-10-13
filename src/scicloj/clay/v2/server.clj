@@ -217,7 +217,7 @@
    (-> [:wrote path]
        (kindly/consider :kind/hidden))))
 
-(defn write-quarto! [items]
+(defn render-quarto! [items]
   (let [md-path
 
         (ns->target-path "docs/" *ns* "_quarto.md")
@@ -225,9 +225,9 @@
                       (string/replace #"\.md$" ".html"))]
 
     (io/make-parents md-path)
-    ;; (-> @*state
-    ;;     (page/qmd items)
-    ;;     (->> (spit md-path)))
+    (-> @*state
+        (page/qmd items)
+        (->> (spit md-path)))
     (println [:wrote md-path (now)])
     (->> (sh/sh "quarto" "render" md-path)
          ((juxt :err :out))
@@ -288,7 +288,7 @@ embed-resources: true
 
 
 
-(defn write-light-quarto! [items]
+(defn write-quarto! [items]
   (let [chapter-path (if (-> *ns*
                              str
                              (string/split #"\.")
@@ -299,7 +299,7 @@ embed-resources: true
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
     (-> @*state
-        (page/light-qmd items)
+        (page/qmd items)
         (->> (spit md-path)))
     (update-quarto-config! chapter-path)
     (println [:wrote md-path (now)])))

@@ -46,19 +46,19 @@
         (merge options)
         (actions/show-doc-and-write-html! path))))
 
-(defn generate-and-show-namespace-quarto!
+(defn render-namespace-quarto!
   [path options]
   (avoid-recursion
    (->> {:format :quarto}
         (merge options)
-        (actions/gen-doc-and-write-quarto! path))))
+        (actions/render-quarto! path))))
 
-(defn generate-namespace-light-quarto!
+(defn write-namespace-quarto!
   [path options]
   (avoid-recursion
    (->> {:format :quarto}
         (merge options)
-        (actions/gen-doc-and-write-light-quarto! path))))
+        (actions/write-quarto! path))))
 
 (defn browse!
   []
