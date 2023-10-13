@@ -225,9 +225,9 @@
                       (string/replace #"\.qmd$" ".html"))]
 
     (io/make-parents qmd-path)
-    (-> @*state
-        (page/qmd items)
-        (->> (spit qmd-path)))
+    ;; (-> @*state
+    ;;     (page/qmd items)
+    ;;     (->> (spit qmd-path)))
     (println [:wrote qmd-path (now)])
     (->> (sh/sh "quarto" "render" qmd-path)
          ((juxt :err :out))
