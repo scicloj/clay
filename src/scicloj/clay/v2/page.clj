@@ -235,8 +235,8 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
-(defn light-qmd [{:keys [data title options counter]}
-                 items]
+(defn qmd [{:keys [data title options counter]}
+           items]
   (let [special-libs (distinct
                       (concat (->> items
                                    (map :reagent)
