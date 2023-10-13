@@ -235,6 +235,12 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
+(defn md-style [css]
+  (format "
+```{css echo=FALSE}
+%s
+```
+" css))
 
 (defn light-qmd [{:keys [data title options counter]}
                  items]
@@ -254,13 +260,13 @@ clay_1();
 
      ;; " "
      (hiccup/html
-      [:style (styles/main :table)]
-      [:style "
+      (md-style (styles/main :table))
+      (md-style "
 .printedClojure .sourceCode {
   background-color: transparent;
   border-style: none;
 }
-"])
+"))
      (->> (concat (->> special-libs
                        (mapcat (comp :from-local-copy :css special-lib-resources)))
                   (->> special-libs
