@@ -2,7 +2,8 @@
   (:require [clojure.java.io :as io]))
 
 (def main
-  (->> [:table :loader :bootstrap-toc-customization :code]
+  (->> [:table :loader :bootstrap-toc-customization :code
+        :md-main]
        (map (fn [style]
               [style (->> style
                           name

@@ -261,12 +261,7 @@ clay_1();
      ;; " "
      (hiccup/html
       (md-style (styles/main :table))
-      (md-style "
-.printedClojure .sourceCode {
-  background-color: transparent;
-  border-style: none;
-}
-"))
+      (md-style (styles/main :md-main)))
      (->> (concat (->> special-libs
                        (mapcat (comp :from-local-copy :css special-lib-resources)))
                   (->> special-libs
