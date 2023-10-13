@@ -218,18 +218,18 @@
        (kindly/consider :kind/hidden))))
 
 (defn write-quarto! [items]
-  (let [qmd-path
+  (let [md-path
 
-        (ns->target-path "docs/" *ns* "_quarto.qmd")
-        html-path (-> qmd-path
-                      (string/replace #"\.qmd$" ".html"))]
+        (ns->target-path "docs/" *ns* "_quarto.md")
+        html-path (-> md-path
+                      (string/replace #"\.md$" ".html"))]
 
-    (io/make-parents qmd-path)
+    (io/make-parents md-path)
     ;; (-> @*state
     ;;     (page/qmd items)
-    ;;     (->> (spit qmd-path)))
-    (println [:wrote qmd-path (now)])
-    (->> (sh/sh "quarto" "render" qmd-path)
+    ;;     (->> (spit md-path)))
+    (println [:wrote md-path (now)])
+    (->> (sh/sh "quarto" "render" md-path)
          ((juxt :err :out))
          (mapv println))
     (println [:created html-path (now)])
@@ -251,7 +251,7 @@ format:
 book:
   title: \"book\"
   chapters:
-    - index.qmd
+    - index.md
 ")
 
 (def base-quarto-index
@@ -265,7 +265,7 @@ embed-resources: true
   ")
 
 (defn update-quarto-config! [chapter-path]
-  (let [index-path "book/index.qmd"
+  (let [index-path "book/index.md"
         config-path "book/_quarto.yml"
         current-config (if (-> config-path io/file .exists)
                          (slurp config-path)
@@ -294,15 +294,15 @@ embed-resources: true
                              (string/split #"\.")
                              last
                              (= "index"))
-                       (ns->target-path "" *ns* ".qmd")
-                       (ns->target-path "" *ns* "/index.qmd"))
-        qmd-path (str "book/" chapter-path)]
-    (io/make-parents qmd-path)
+                       (ns->target-path "" *ns* ".md")
+                       (ns->target-path "" *ns* "/index.md"))
+        md-path (str "book/" chapter-path)]
+    (io/make-parents md-path)
     (-> @*state
         (page/light-qmd items)
-        (->> (spit qmd-path)))
+        (->> (spit md-path)))
     (update-quarto-config! chapter-path)
-    (println [:wrote qmd-path (now)])))
+    (println [:wrote md-path (now)])))
 
 (defn show-message! [hiccup]
   (set-items! [hiccup])
