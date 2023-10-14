@@ -111,5 +111,5 @@
        doall)))
 
 (comment
-  (-> "notebooks/index.clj"
+  (-> "notebooks/scratch.clj"
       (gen-doc {})))
