@@ -26,10 +26,6 @@
 (defn item->hiccup [item {:keys [id]}]
   (cond
     ;;
-    (:reagent item)
-    [:div {:id id}
-     [:code "reagent-based components are unsuppored in this version"]]
-    ;;
     (:hiccup item)
     (:hiccup item)
     ;;
@@ -44,10 +40,6 @@
   (cond
     (:md item)
     (:md item)
-    ;;
-    (:reagent item)
-    [:div {:id id}
-     [:code "reagent-based components are unsuppored in this version"]]
     ;;
     (:hiccup item)
     (-> item
@@ -268,6 +260,14 @@
  :kind/set
  (fn [value]
    (view-sequentially value "#{" "}")))
+
+(def next-id
+  (let [*counter (atom 0)]
+    #(str "id" (swap! *counter inc))))
+
+(add-preparer!
+ :kind/reagent
+ item/reagent)
 
 (def non-hiccup-kind?
   (complement #{:kind/vector :kind/map :kind/seq :kind/set

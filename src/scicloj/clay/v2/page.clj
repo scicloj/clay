@@ -59,7 +59,14 @@
                ["https://scicloj.github.io/scittle/js/scittle.emmy.js"]}}
    'mathbox {:js {:from-local-copy
                   ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}
-   'portal {:js {:from-local-copy [portal/url]}}})
+   'portal {:js {:from-local-copy [portal/url]}}
+   'html-default {:js {:from-local-copy
+                       ["https://code.jquery.com/jquery-3.6.0.min.js"
+                        "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
+                        "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"]}}
+   'md-default {:js {:from-local-copy
+                     ["https://code.jquery.com/jquery-3.6.0.min.js"
+                      "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}})
 
 (defn js-from-local-copies [& urls]
   (->> urls
@@ -129,14 +136,10 @@ clay_1();
 
 
 (defn page [{:keys [items data port title toc? counter]}]
-  (let [special-libs (distinct
-                      (concat (->> items
-                                   (map :reagent)
-                                   special-libs-in-form)
-                              (->> items
-                                   (mapcat :deps))
-                              #_(when (some :reagent items)
-                                  ['reagent])))]
+  (let [special-libs (->> items
+                          (mapcat :deps)
+                          distinct
+                          (cons 'html-default))]
     (when-not port
       (throw (ex-info "missing port" {})))
     (-> (hiccup.page/html5
@@ -160,15 +163,10 @@ clay_1();
                        (->> special-libs
                             (mapcat (comp :from-the-web :css special-lib-resources))))
                distinct
-               (apply hiccup.page/include-css)
-               hiccup/html)
-          (->> (concat (->> special-libs
-                            (mapcat (comp :from-local-copy :js special-lib-resources)))
-                       (->> special-libs
-                            (mapcat (comp :from-the-web :js special-lib-resources))))
-               distinct
-               (apply hiccup.page/include-js)
-               hiccup/html)
+               (map #(-> %
+                         hiccup.page/include-css
+                         hiccup/html))
+               (string/join "\n"))
           [:title (or title "Clay")]]
          [:body  {:style {:background "#fcfcfc"
                           :font-family "'Roboto', sans-serif"
@@ -176,9 +174,6 @@ clay_1();
                           :margin "auto"}
                   :data-spy "scroll"
                   :data-target "#toc"}
-          (js-from-local-copies "https://code.jquery.com/jquery-3.6.0.min.js"
-                                "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                                "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js")
           (when toc?
             (js-from-local-copies
              "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
@@ -211,23 +206,8 @@ clay_1();
                        (prepare/item->hiccup item
                                              {:id (str "item" i)})]))
                    (into [:div]))]]]]
-          (->> 'reagent
-               special-lib-resources
-               :js
-               :from-local-copy
-               (apply js-from-local-copies))
           [:script {:type "text/javascript"}
            "hljs.highlightAll();"]
-          #_[:script {:type "application/x-scittle"}
-             #_(->> {:items (->> items
-                                 (map #(select-keys % [:reagent])))
-                     :data data
-                     :port port
-                     :special-libs special-libs
-                     :server-counter counter}
-                    cljs-generation/items-cljs
-                    (map pr-str)
-                    (string/join "\n"))]
           [:script {:type "text/javascript"}
            (communication-script {:port port
                                   :server-counter counter})]])
@@ -237,14 +217,10 @@ clay_1();
 
 (defn qmd [{:keys [data title options counter]}
            items]
-  (let [special-libs (distinct
-                      (concat (->> items
-                                   (map :reagent)
-                                   special-libs-in-form)
-                              (->> items
-                                   (mapcat :deps))
-                              #_(when (some :reagent items)
-                                  ['reagent])))]
+  (let [special-libs (->> items
+                          (mapcat :deps)
+                          distinct
+                          (cons 'md-default))]
     (str
      (->> options
           :quarto
@@ -259,16 +235,12 @@ clay_1();
                        (mapcat (comp :from-local-copy :css special-lib-resources)))
                   (->> special-libs
                        (mapcat (comp :from-the-web :css special-lib-resources))))
-          distinct
-          sort
           (apply hiccup.page/include-css)
           hiccup/html)
      (->> (concat (->> special-libs
                        (mapcat (comp :from-local-copy :js special-lib-resources)))
                   (->> special-libs
                        (mapcat (comp :from-the-web :js special-lib-resources))))
-          distinct
-          sort
           (apply hiccup.page/include-js)
           hiccup/html)
      (->> items

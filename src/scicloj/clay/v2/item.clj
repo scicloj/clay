@@ -85,16 +85,33 @@
                           (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
    :deps ['vega]})
 
-(defn reagent [component-symbol data]
-  {:reagent (cond
-              ;;
-              (vector? data)
-              (into [component-symbol] data)
-              ;;
-              (map? data)
-              [component-symbol data])})
 
 (defn image [buffered-image]
   {:hiccup [:img {:src (-> buffered-image
                            util.image/buffered-image->byte-array
                            util.image/byte-array->data-uri)}]})
+
+(def next-id
+  (let [*counter (atom 0)]
+    #(str "id" (swap! *counter inc))))
+
+(defn reagent [form]
+  (let [id (next-id)]
+    {:hiccup [:div {:id id}
+              [:script {:type "application/x-scittle"}
+               (pr-str
+                (list 'reagent.dom/render
+                      form
+                      (list 'js/document.getElementById id)))]]
+     :deps ['reagent]}))
+
+
+(defn reagent-based-item [component-symbol data]
+  (reagent
+   (cond
+     ;;
+     (vector? data)
+     (into [component-symbol] data)
+     ;;
+     (map? data)
+     [component-symbol data])))

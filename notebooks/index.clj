@@ -185,6 +185,14 @@
 
 ;; As we can see, this kind is displayed by converting Hiccup to HTML.
 
+;; ### Reagent
+
+(kind/reagent
+ ['(fn [numbers]
+     [:p {:style {:background "#d4ebe9"}}
+      (pr-str (map inc numbers))])
+  (vec (range 40))])
+
 ;; ### Markdown
 
 ;; Markdown text (a vector of strings) can be handled using a kind too.
