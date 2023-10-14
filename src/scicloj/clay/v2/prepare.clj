@@ -91,6 +91,7 @@
  (fn [table-spec]
    (let [pre-hiccup (table/->table-hiccup
                      table-spec)
+         *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
                      (claywalk/postwalk
                       (fn [elem]
@@ -101,9 +102,10 @@
                               (update
                                1
                                (fn [value]
-                                 (-> {:value value}
-                                     prepare-or-str
-                                     (item->hiccup nil)))))
+                                 (let [item (prepare-or-str
+                                             {:value value})]
+                                   (swap! *deps concat (:deps item))
+                                   (item->hiccup item nil)))))
                           ;; else - keep it
                           elem))))]
      (if (-> hiccup
@@ -116,16 +118,17 @@
  {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
                        'datatables ; to help Clay realize that th dependency is needed
                        ])
-        :deps ['datatables]}
+        :deps (->> @*deps
+                   (cons 'datatables)
+                   distinct)}
        ;; else - a small table
-       {:hiccup hiccup}))))
+       {:hiccup hiccup
+        :deps (distinct @*deps)}))))
 
 (defn structure-mark-hiccup [mark]
   (-> mark
       item/structure-mark
       :hiccup))
-
-
 
 (add-preparer!
  :kind/vega
@@ -180,15 +183,17 @@
    (if (->> value
             (apply concat)
             (some has-kind-with-preparer?))
-     (let [prepared-kv-pairs (->> value
+     (let [*deps (atom []) ; TODO: implement without mutable state
+           prepared-kv-pairs (->> value
                                   (map (fn [kv]
                                          {:kv kv
                                           :prepared-kv
                                           (->> kv
                                                (map (fn [v]
-                                                      (-> {:value v}
-                                                          prepare-or-pprint
-                                                          (item->hiccup nil)))))})))]
+                                                      (let [item (prepare-or-pprint
+                                                                  {:value v})]
+                                                        (swap! *deps concat (:deps item))
+                                                        (item->hiccup item nil)))))})))]
        (if (->> prepared-kv-pairs
                 (map :prepared-kv)
                 (apply concat)
@@ -219,7 +224,8 @@
                         (into [:div
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))
-                   (structure-mark-hiccup "}")]}
+                   (structure-mark-hiccup "}")]
+          :deps (distinct @*deps)}
          ;; else -- just print the whole value
          (item/pprint value)))
      ;; else -- just print the whole value
@@ -228,7 +234,8 @@
 (defn view-sequentially [value open-mark close-mark]
   (if (->> value
            (some has-kind-with-preparer?))
-    (let [prepared-parts (->> value
+    (let [*deps (atom []) ; TODO: implement without mutable state
+          prepared-parts (->> value
                               (map (fn [subvalue]
                                      (prepare-or-pprint {:value subvalue}))))]
       (if (->> prepared-parts
@@ -240,7 +247,10 @@
                                        :width "110%"}}]
                         (->> prepared-parts
                              (map #(item->hiccup % nil))))
-                  (structure-mark-hiccup close-mark)]}
+                  (structure-mark-hiccup close-mark)]
+         :deps (->> prepared-parts
+                    (mapcat :deps)
+                    distinct)}
         ;; else -- just print the whole value
         (item/pprint value)))
     ;; else -- just print the whole value
@@ -291,7 +301,7 @@
                               (item->hiccup item nil))
                             subform)))))]
      {:hiccup hiccup
-      :deps @*deps})))
+      :deps (distinct @*deps)})))
 
 
 
