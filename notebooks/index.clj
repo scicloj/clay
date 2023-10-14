@@ -193,6 +193,24 @@
       (pr-str (map inc numbers))])
   (vec (range 40))])
 
+
+(kind/reagent
+ ['(fn [numbers]
+     [:p {:style {:background "#d4ebe9"}}
+      (pr-str (map inc numbers))])
+  (vec (range 40))])
+
+;; From the [reagent tutorial](https://reagent-project.github.io/):
+(kind/reagent
+ ['(fn []
+     (let [*click-count (reagent.core/atom 0)]
+       (fn []
+         [:div
+          "The atom " [:code "*click-count"] " has value: "
+          @*click-count ". "
+          [:input {:type "button" :value "Click me!"
+                   :on-click #(swap! *click-count inc)}]])))])
+
 ;; ### Markdown
 
 ;; Markdown text (a vector of strings) can be handled using a kind too.
@@ -336,6 +354,7 @@ nested-structure-1
       vega-lite-point-plot))
 
 (random-vega-lite-plot 9)
+
 
 
 ;; ## Delays
