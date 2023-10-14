@@ -261,7 +261,6 @@ clay-image
 nested-structure-1
 
 
-
 ;; ### Pretty printing
 
 ;; The `:kind/pprint` kind  makes sure to simply pretty-print values:
@@ -394,9 +393,16 @@ nested-structure-1
 
   [:hr]
   [:h3 [:code "kind/vega"]]
-  (random-vega-lite-plot 9)])
+  (random-vega-lite-plot 9)
 
 
+  [:hr]
+  [:h3 [:code "kind/reagent"]]
+  (kind/reagent
+   ['(fn [numbers]
+       [:p {:style {:background "#d4ebe9"}}
+        (pr-str (map inc numbers))])
+    (vec (range 40))])])
 
 
 ;; ## Nesting kinds in Tables (WIP)
@@ -409,6 +415,15 @@ nested-structure-1
                               :y (map inc (range 3))})
                  (random-vega-lite-plot 9)]]})
 
+;; ## More nesting examples
+
+{:plot (random-vega-lite-plot 9)
+ :dataset (tc/dataset {:x (range 3)
+                       :y (repeatedly 3 rand)})}
+
+[(random-vega-lite-plot 9)
+ (tc/dataset {:x (range 3)
+              :y (repeatedly 3 rand)})]
 
 ;; # Coming soon
 
