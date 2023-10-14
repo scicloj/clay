@@ -312,3 +312,9 @@
                 (vary-meta dissoc :kindly/kind)
                 portal/in-portal)
     :deps ['portal]}))
+
+
+(add-preparer!
+ :kind/cytoscape
+ (fn [data]
+   (item/reagent-based-item 'cytoscape data)))
