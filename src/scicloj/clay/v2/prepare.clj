@@ -276,18 +276,22 @@
 (add-preparer!
  :kind/hiccup
  (fn [form]
-   {:hiccup (->> form
-                 (claywalk/prewalk
-                  (fn [subform]
-                    (let [context {:value subform}]
-                      (if (some-> context
-                                  kindly-advice/advise
-                                  :kind
-                                  non-hiccup-kind?)
-                        (-> context
-                            prepare-or-pprint
-                            (item->hiccup nil))
-                        subform)))))}))
+   (let [*deps (atom []) ; TODO: implement without mutable state
+         hiccup (->> form
+                     (claywalk/prewalk
+                      (fn [subform]
+                        (let [context {:value subform}]
+                          (if (some-> context
+                                      kindly-advice/advise
+                                      :kind
+                                      non-hiccup-kind?)
+                            (let [item (prepare-or-pprint
+                                        context)]
+                              (swap! *deps concat (:deps item))
+                              (item->hiccup item nil))
+                            subform)))))]
+     {:hiccup hiccup
+      :deps @*deps})))
 
 
 
