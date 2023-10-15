@@ -42,9 +42,22 @@
     (:md item)
     ;;
     (:hiccup item)
-    (-> item
-        :hiccup
-        hiccup/html)))
+    (->> item
+         :hiccup
+         (clojure.walk/postwalk
+          (fn [form]
+            (if (and (vector? form)
+                     (-> form first (= :p)))
+              (-> form
+                  (update
+                   1
+                   (fn [text]
+                     (-> text
+                         (clojure.string/replace "[" (str \\ "["))
+                         (clojure.string/replace "]" (str \\ "]"))))))
+              ;; else
+              form)))
+         hiccup/html)))
 
 
 
@@ -243,6 +256,7 @@
         (item/pprint value)))
     ;; else -- just print the whole value
     (item/pprint value)))
+
 
 (add-preparer!
  :kind/vector
