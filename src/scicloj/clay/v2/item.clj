@@ -115,3 +115,26 @@
      ;;
      (map? data)
      [component-symbol data])))
+
+
+(defn cytoscape [data]
+  (let [[options spec] (if (vector? data)
+                         data
+                         [{:style {:height "200px"
+                                   :width "200px"}}
+                          data])]
+    {:hiccup [:div
+              options
+              [:script
+               (->> spec
+                    jsonista/write-value-as-string
+                    (format
+                     "
+{
+  value = %s;
+  value['container'] = document.currentScript.parentElement;
+  console.log(JSON.stringify(value));
+  console.log(document.currentScript.parentElement);
+  cytoscape(value);
+};"))]]
+     :deps ['cytoscape]}))

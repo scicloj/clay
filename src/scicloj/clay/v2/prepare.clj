@@ -304,7 +304,6 @@
       :deps (distinct @*deps)})))
 
 
-
 (add-preparer!
  :kind/portal
  (fn [value]
@@ -316,5 +315,4 @@
 
 (add-preparer!
  :kind/cytoscape
- (fn [data]
-   (item/reagent-based-item 'cytoscape data)))
+ #'item/cytoscape)
