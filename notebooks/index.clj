@@ -481,6 +481,6 @@ nested-structure-1
 
 ;; # Coming soon
 
-;; In the past, Clay used to support various data visualization libraries such as ECharts, Cytoscape, Plotly, Leaflet, 3DMol, MathBox, and KaTeX.
+;; In the past, Clay used to support various data visualization libraries such as ECharts, Leaflet, 3DMol, MathBox, and KaTeX.
 ;;
 ;; These have been disabled in a recent refactoring (Oct. 2023) and will be brought back soon.
