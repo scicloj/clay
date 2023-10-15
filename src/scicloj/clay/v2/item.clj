@@ -1,7 +1,6 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]
-            [jsonista.core :as jsonista]
             [charred.api :as charred]
             [scicloj.clay.v2.util.image :as util.image]))
 

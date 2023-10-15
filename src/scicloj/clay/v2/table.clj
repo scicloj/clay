@@ -1,8 +1,7 @@
 (ns scicloj.clay.v2.table
   "Interactive table visualisations."
   (:require [hiccup.core :as hiccup]
-            [hiccup.element :as elem]
-            [jsonista.core :as jsonista])
+            [hiccup.element :as elem])
   (:import java.io.File
            java.util.UUID))
 
