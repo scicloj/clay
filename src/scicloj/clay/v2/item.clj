@@ -2,6 +2,7 @@
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]
             [jsonista.core :as jsonista]
+            [charred.api :as charred]
             [scicloj.clay.v2.util.image :as util.image]))
 
 (defn in-vector [v]
@@ -81,7 +82,7 @@
 (defn vega-embed [spec]
   {:hiccup [:div
             [:script (->> spec
-                          jsonista/write-value-as-string
+                          charred/write-json-str
                           (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
    :deps ['vega]})
 
@@ -131,7 +132,7 @@
               options
               [:script
                (->> spec
-                    jsonista/write-value-as-string
+                    charred/write-json-str
                     (format
                      "
 {
@@ -148,7 +149,7 @@
               options
               [:script
                (->> spec
-                    jsonista/write-value-as-string
+                    charred/write-json-str
                     (format
                      "
 Plotly.newPlot(document.currentScript.parentElement,
