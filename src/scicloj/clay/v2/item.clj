@@ -76,7 +76,7 @@
 
 (defn structure-mark [string]
   {:md string
-   :hiccup string})
+   :hiccup [:p (escape string)]})
 
 (defn vega-embed [spec]
   {:hiccup [:div
