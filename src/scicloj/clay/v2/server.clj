@@ -22,14 +22,16 @@
   (atom {:port nil
          :items nil
          :fns {}
-         :counter 0}))
+         :counter 0
+         :page-cache nil}))
 
 (defn swap-state! [f & args]
   (-> *state
       (swap!
        (fn [state]
          (-> state
-             (#(apply f % args)))))))
+             (#(apply f % args))
+             (assoc :page-cache nil))))))
 
 (defn swap-state-and-increment! [f & args]
   (swap-state!

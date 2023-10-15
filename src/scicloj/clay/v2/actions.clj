@@ -32,6 +32,7 @@
                               [:div.loader]]
              :path path)
       (->> (show-doc! path)))
+  (Thread/sleep 1000)
   (server/write-html!))
 
 (defn render-quarto!
