@@ -137,8 +137,6 @@
 {
   value = %s;
   value['container'] = document.currentScript.parentElement;
-  console.log(JSON.stringify(value));
-  console.log(document.currentScript.parentElement);
   cytoscape(value);
 };"))]]
      :deps ['cytoscape]}))
