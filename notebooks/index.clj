@@ -380,6 +380,17 @@ nested-structure-1
            :height "100px"}}
   cytoscape-example])
 
+;; ### Plotly
+(kind/plotly
+ {:data [{:x [0 1 3 2]
+          :y [0 6 4 5]
+          :z [0 8 9 7]
+          :type :scatter3d
+          :mode :lines+markers
+          :opacity 0.5
+          :line {:width 5}
+          :marker {:size 4
+                   :colorscale :Viridis}}]})
 
 ;; ## Delays
 
