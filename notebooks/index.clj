@@ -110,7 +110,7 @@
                           :theme :spacelab}}
           :highlight-style :solarized
           :code-block-background true
-          :embed-resources false
+          :embed-resources true
           :execute {:freeze true}})
 
 ;; These initializations can also be done in a `user.clj` file, making them available for all namespaces in the project.
