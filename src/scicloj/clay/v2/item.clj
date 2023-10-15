@@ -117,12 +117,16 @@
      [component-symbol data])))
 
 
+(defn extract-options-and-spec [data]
+  (if (vector? data)
+    data
+    [{:style {:height "400px"
+              :width "400px"}}
+     data]))
+
+
 (defn cytoscape [data]
-  (let [[options spec] (if (vector? data)
-                         data
-                         [{:style {:height "200px"
-                                   :width "200px"}}
-                          data])]
+  (let [[options spec] (extract-options-and-spec data)]
     {:hiccup [:div
               options
               [:script
@@ -138,3 +142,19 @@
   cytoscape(value);
 };"))]]
      :deps ['cytoscape]}))
+
+
+(defn plotly [data]
+  (let [[options spec] (extract-options-and-spec data)]
+    {:hiccup [:div
+              options
+              [:script
+               (->> spec
+                    jsonista/write-value-as-string
+                    (format
+                     "
+Plotly.newPlot(document.currentScript.parentElement,
+ %s['data']
+);
+"))]]
+     :deps ['plotly]}))

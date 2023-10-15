@@ -139,18 +139,6 @@
  #'item/vega-embed)
 
 (add-preparer!
- :kind/cytoscape
- (partial #'item/reagent 'cytoscape))
-
-(add-preparer!
- :kind/echarts
- (partial #'item/reagent 'echarts))
-
-(add-preparer!
- :kind/plotly
- (partial #'item/reagent 'plotly))
-
-(add-preparer!
  :kind/code
  (fn [codes]
    (->> codes
@@ -316,3 +304,7 @@
 (add-preparer!
  :kind/cytoscape
  #'item/cytoscape)
+
+(add-preparer!
+ :kind/plotly
+ #'item/plotly)
