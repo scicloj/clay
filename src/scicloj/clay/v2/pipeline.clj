@@ -1,12 +1,13 @@
 (ns scicloj.clay.v2.pipeline
   (:require [clojure.core.async :as async
              :refer [<! go go-loop timeout chan thread]]
-            [scicloj.clay.v2.server :as server]))
+            [scicloj.clay.v2.server :as server]
+            [scicloj.clay.v2.show :as show]))
 
 (defn handle-event [{:keys [event-type]
                      :as event}]
   (some-> event-type
-          (case :event-type/value (server/show! event))))
+          (case :event-type/value (show/show! event))))
 
 (defn new-pipeline []
   (let [events-channel         (async/chan 100)]

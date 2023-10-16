@@ -3,6 +3,7 @@
    [scicloj.clay.v2.eval :as eval]
    [scicloj.clay.v2.path :as path]
    [scicloj.clay.v2.server :as server]
+   [scicloj.clay.v2.show :as show]
    [scicloj.clay.v2.quarto :as quarto]))
 
 (defn show-doc!
@@ -10,7 +11,7 @@
    (show-doc! path nil))
   ([path {:keys [title toc? custom-message]
           :as options}]
-   (server/show-message!
+   (show/show-message!
     (or custom-message
         [:div
          [:p "showing document for "
@@ -18,7 +19,7 @@
          [:div.loader]]))
    (let [doc (eval/gen-doc path options)]
      (-> doc
-         (server/show-items!
+         (show/show-items!
           {:title title
            :toc? toc?})))
    :ok))
@@ -34,12 +35,12 @@
              :path path)
       (->> (show-doc! path)))
   (Thread/sleep 1000)
-  (server/write-html!))
+  (show/write-html!))
 
 (defn render-quarto!
   [path {:keys [title]
          :as options}]
-  (server/show-message!
+  (show/show-message!
    [:div
     [:p "generating Quarto document for "
      [:code (path/path->filename path)]]
