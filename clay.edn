@@ -1,1 +1,14 @@
-{}
+{:modes {:html {:toc true}
+         :quarto-book {:quarto {:format {:html {:toc true}}
+                                :code-block-background true
+                                :embed-resources false}}
+         :quarto-standalone {:quarto {:format {:html {:toc true}}
+                                      :code-block-background true
+                                      :embed-resources true}}
+         :quarto-reveal {:quarto {:format {:revealjs {:theme :serif
+                                                      :navigation-mode :vertical
+                                                      :transition :slide
+                                                      :background-transition :fade
+                                                      :incremental true
+                                                      :embed-resources false}}}}}
+ :default-mode {}}
