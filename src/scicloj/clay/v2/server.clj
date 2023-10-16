@@ -4,8 +4,10 @@
             [clojure.java.browse :as browse]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.page :as page]
+            [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.path :as path]
+            [scicloj.clay.v2.state :as state]
             [clojure.java.shell :as sh]
             [clojure.string :as string]
             [clojure.java.io :as io]))
@@ -18,59 +20,15 @@
   (doseq [ch @*clients]
     (httpkit/send! ch msg)))
 
-(defonce *state
-  (atom {:port nil
-         :items nil
-         :fns {}
-         :counter 0
-         :page-cache nil}))
-
-(defn swap-state! [f & args]
-  (-> *state
-      (swap!
-       (fn [state]
-         (-> state
-             (#(apply f % args))
-             (assoc :page-cache nil))))))
-
-(defn swap-state-and-increment! [f & args]
-  (swap-state!
-   (fn [state]
-     (-> state
-         (update :counter inc)
-         (#(apply f % args))))))
-
-
-(defn set-items! [items]
-  (swap-state-and-increment! assoc :items items))
-
-(def welcome-item
-  [:div
-   [:p [:code (str (java.util.Date.))]]
-   [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
-               "Clay"]
-        " is ready, waiting for interaction."]]])
-
-(set-items! [welcome-item])
-
-(comment
-  (set-items! [welcome-item welcome-item])
-  (broadcast! "refresh"))
+(state/set-items! [item/welcome])
 
 (def default-options
   {:quarto {:format {:html {:toc true}}
             :code-block-background true
             :embed-resources false
             :execute {:freeze true}}})
+(state/swap-options! (constantly default-options))
 
-(defn swap-options! [f & args]
-  (apply swap-state! update :options f args)
-  :ok)
-
-(swap-options! (constantly default-options))
-
-(defn reset-quarto-html-path! [path]
-  (swap-state! assoc :quarto-html-path path))
 
 (defn get-free-port []
   (loop [port 1971]
@@ -88,13 +46,11 @@
                              :on-close (fn [ch _reason] (swap! *clients disj ch))
                              :on-receive (fn [_ch msg])})
     (case [request-method uri]
-      [:get "/"] {:body (or (some-> @*state
-                                    :quarto-html-path
+      [:get "/"] {:body (or (some-> (state/quarto-html-path)
                                     slurp)
-                            (page/page @*state))
+                            (page/page @state/*state))
                   :status 200}
-      [:get "/counter"] {:body (-> @*state
-                                   :counter
+      [:get "/counter"] {:body (-> (state/counter)
                                    str)
                          :status 200}
       [:get "/favicon.ico"] {:body nil
@@ -109,8 +65,7 @@
                                       pr-str)
                             :status 200})
       ;; else
-      {:body (let [base-path (or (some-> @*state
-                                         :quarto-html-path
+      {:body (let [base-path (or (some-> (state/quarto-html-path)
                                          path/path->parent)
                                  "docs")]
                #_(println [:uri uri])
@@ -125,7 +80,6 @@
                         (throw e)))))
        :status 200})))
 
-
 (defonce *stop-server! (atom nil))
 
 (defn core-http-server [port]
@@ -134,11 +88,8 @@
 (defn port->url [port]
   (str "http://localhost:" port "/"))
 
-(defn port []
-  (:port @*state))
-
 (defn url []
-  (port->url (port)))
+  (port->url (state/port)))
 
 (defn browse! []
   (browse/browse-url (url)))
@@ -146,7 +97,7 @@
 (defn open! []
   (let [port (get-free-port)
         server (core-http-server port)]
-    (swap-state! assoc :port port)
+    (state/set-port! port)
     (reset! *stop-server! port)
     (println "serving scittle at " (port->url port))
     (browse!)))
@@ -161,7 +112,7 @@
   ([items]
    (show-items! items nil))
   ([items options]
-   (swap-state-and-increment!
+   (state/swap-state-and-increment!
     (fn [state]
       (-> state
           (assoc :quarto-html-path nil)
@@ -195,7 +146,7 @@
    (write-html! (ns->target-path "docs/" *ns* ".html")))
   ([path]
    (io/make-parents path)
-   (->> @*state
+   (->> @state/*state
         page/page
         (spit path))
    (println [:wrote path (now)])
@@ -207,7 +158,7 @@
                       (string/replace #"\.md$" ".html"))]
 
     (io/make-parents md-path)
-    (-> @*state
+    (-> @state/*state
         (page/qmd items)
         (->> (spit md-path)))
     (println [:wrote md-path (now)])
@@ -215,7 +166,7 @@
          ((juxt :err :out))
          (mapv println))
     (println [:created html-path (now)])
-    (swap-state! assoc :quarto-html-path html-path)
+    (state/reset-quarto-html-path! html-path)
     (broadcast! "refresh")
     :ok))
 
@@ -280,16 +231,13 @@ embed-resources: true
                        (ns->target-path "" *ns* "/index.md"))
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
-    (-> @*state
+    (-> @state/*state
         (page/qmd items)
         (->> (spit md-path)))
     (update-quarto-config! chapter-path)
     (println [:wrote md-path (now)])))
 
 (defn show-message! [hiccup]
-  (set-items! [hiccup])
-  (reset-quarto-html-path! nil)
+  (state/set-items! [hiccup])
+  (state/reset-quarto-html-path! nil)
   (broadcast! "refresh"))
-
-(defn options []
-  (:options @*state))

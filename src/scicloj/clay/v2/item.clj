@@ -156,3 +156,11 @@ Plotly.newPlot(document.currentScript.parentElement,
 );
 "))]]
      :deps ['plotly]}))
+
+
+(def welcome
+  {:hiccup [:div
+            [:p [:code (str (java.util.Date.))]]
+            [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
+                        "Clay"]
+                 " is ready, waiting for interaction."]]]})

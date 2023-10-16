@@ -7,7 +7,8 @@
    [scicloj.clay.v2.path :as path]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read]
-   [scicloj.clay.v2.server :as server]))
+   [scicloj.clay.v2.server :as server]
+   [scicloj.clay.v2.state :as state]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -23,7 +24,7 @@
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo
                             absolute-file-path)
-        git-url (some-> (server/options)
+        git-url (some-> (state/options)
                         :remote-repo
                         (path/file-git-url relative-file-path))]
     [:div

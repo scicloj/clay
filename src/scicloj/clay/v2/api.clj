@@ -3,6 +3,7 @@
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.actions :as actions]
             [scicloj.clay.v2.server :as server]
+            [scicloj.clay.v2.state :as state]
             [clojure.string :as string]
             [clojure.test]))
 
@@ -53,23 +54,23 @@
   (server/browse!))
 
 (defn port []
-  (server/port))
+  (state/port))
 
 (defn url []
   (server/url))
 
 (defn swap-options! [f & args]
-  (apply server/swap-options!
+  (apply state/swap-options!
          f args))
 
 (defn reset-options!
   ([]
    (reset-options!  server/default-options))
   ([options]
-   (server/swap-options! (constantly options))))
+   (state/swap-options! (constantly options))))
 
 (defn options []
-  (server/options))
+  (state/options))
 
 (defn handle-form! [form]
   (pipeline/handle-form! form)
