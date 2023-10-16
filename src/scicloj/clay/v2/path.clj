@@ -63,3 +63,13 @@
           git-url
           branch
           file-path))
+
+(defn ns->target-path
+  ([base the-ns ext]
+   (str base
+        (-> the-ns
+            str
+            (string/replace #"-" "_")
+            (string/split #"\.")
+            (->> (string/join "/")))
+        ext)))

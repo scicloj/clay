@@ -8,6 +8,7 @@
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.path :as path]
             [scicloj.clay.v2.state :as state]
+            [scicloj.clay.v2.time :as time]
             [clojure.java.shell :as sh]
             [clojure.string :as string]
             [clojure.java.io :as io]))
@@ -128,114 +129,18 @@
       vector
       show-items!))
 
-(defn ns->target-path
-  ([base the-ns ext]
-   (str base
-        (-> the-ns
-            str
-            (string/replace #"-" "_")
-            (string/split #"\.")
-            (->> (string/join "/")))
-        ext)))
 
-(defn now []
-  (java.util.Date.))
 
 (defn write-html!
   ([]
-   (write-html! (ns->target-path "docs/" *ns* ".html")))
+   (write-html! (path/ns->target-path "docs/" *ns* ".html")))
   ([path]
    (io/make-parents path)
    (->> @state/*state
         page/page
         (spit path))
-   (println [:wrote path (now)])
+   (println [:wrote path (time/now)])
    [:wrote path]))
-
-(defn render-quarto! [items]
-  (let [md-path (ns->target-path "docs/" *ns* "_quarto.md")
-        html-path (-> md-path
-                      (string/replace #"\.md$" ".html"))]
-
-    (io/make-parents md-path)
-    (-> @state/*state
-        (page/qmd items)
-        (->> (spit md-path)))
-    (println [:wrote md-path (now)])
-    (->> (sh/sh "quarto" "render" md-path)
-         ((juxt :err :out))
-         (mapv println))
-    (println [:created html-path (now)])
-    (state/reset-quarto-html-path! html-path)
-    (broadcast! "refresh")
-    :ok))
-
-
-
-(def base-quarto-config
-  "
-project:
-  type: book
-
-format:
-  html:
-    theme: cosmo
-
-book:
-  title: \"book\"
-  chapters:
-    - index.md
-")
-
-(def base-quarto-index
-  "
----
-format:
-  html: {toc: true}
-embed-resources: true
----
-# book index
-  ")
-
-(defn update-quarto-config! [chapter-path]
-  (let [index-path "book/index.md"
-        config-path "book/_quarto.yml"
-        current-config (if (-> config-path io/file .exists)
-                         (slurp config-path)
-                         (do (spit config-path base-quarto-config)
-                             (println [:created config-path])
-                             base-quarto-config))
-        chapter-line (str "    - " chapter-path)]
-    (when-not (-> index-path io/file .exists)
-      (spit index-path base-quarto-index)
-      (println [:created index-path]))
-    (when-not (-> current-config
-                  (string/split #"\n")
-                  (->> (some (partial = chapter-line))))
-      (->> chapter-line
-           (str current-config "\n")
-           (spit config-path))
-      (println [:updated config-path
-                :with chapter-path]))))
-
-
-
-
-(defn write-quarto! [items]
-  (let [chapter-path (if (-> *ns*
-                             str
-                             (string/split #"\.")
-                             last
-                             (= "index"))
-                       (ns->target-path "" *ns* ".md")
-                       (ns->target-path "" *ns* "/index.md"))
-        md-path (str "book/" chapter-path)]
-    (io/make-parents md-path)
-    (-> @state/*state
-        (page/qmd items)
-        (->> (spit md-path)))
-    (update-quarto-config! chapter-path)
-    (println [:wrote md-path (now)])))
 
 (defn show-message! [hiccup]
   (state/set-items! [hiccup])

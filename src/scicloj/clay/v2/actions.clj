@@ -2,7 +2,8 @@
   (:require
    [scicloj.clay.v2.eval :as eval]
    [scicloj.clay.v2.path :as path]
-   [scicloj.clay.v2.server :as server]))
+   [scicloj.clay.v2.server :as server]
+   [scicloj.clay.v2.quarto :as quarto]))
 
 (defn show-doc!
   ([path]
@@ -48,7 +49,7 @@
        :title (or title path)
        :path path)
       (->> (eval/gen-doc path))
-      server/render-quarto!))
+      quarto/render-quarto!))
 
 (defn write-quarto!
   [path {:keys [title]
@@ -58,4 +59,4 @@
        :title (or title path)
        :path path)
       (->> (eval/gen-doc path))
-      server/write-quarto!))
+      quarto/write-quarto!))
