@@ -1,4 +1,3 @@
-;; .
 ;; # Clay
 
 ^:kindly/hide-code?
@@ -17,9 +16,13 @@
 ;;
 ;; Also see the [Babashka Conf 2023 talk](https://www.youtube.com/watch?v=HvhMsv3iVGM).
 
+;; ### Status
+;; This project is still alpha-stage and changing. As of October 2023, it is going through extensive refactoring, mostly seeking simpler and leaner implemenation and API.
+;; Clay is developed in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
+
 ;; ### Goals
 
-;; - Easily explore & share things for others to easily pick & use.
+;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
 ;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
 ;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
 
@@ -479,7 +482,7 @@ nested-structure-1
  (tc/dataset {:x (range 3)
               :y (repeatedly 3 rand)})]
 
-;; # Coming soon
+;; ## Coming soon
 
 ;; In the past, Clay used to support various data visualization libraries such as ECharts, Leaflet, 3DMol, MathBox, and KaTeX.
 ;;
