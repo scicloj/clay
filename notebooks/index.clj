@@ -207,6 +207,23 @@
           [:input {:type "button" :value "Click me!"
                    :on-click #(swap! *click-count inc)}]])))])
 
+;; [d3-require](https://github.com/d3/d3-require) can be used to provide js dependencies:
+
+(kind/reagent
+ ['(fn []
+     (reagent.core/with-let
+       [*result (reagent.core/atom nil)]
+       (-> js/d3
+           (.require "d3-array")
+           (.then (fn [d3-array]
+                    (reset! *result
+                            (-> d3-array
+                                (.range 9)
+                                pr-str)))))
+       [:pre @*result]))])
+
+
+
 ;; ### Markdown
 
 ;; Markdown text (a vector of strings) can be handled using a kind too.
