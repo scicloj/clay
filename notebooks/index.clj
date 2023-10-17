@@ -212,13 +212,19 @@
 ;; Markdown text (a vector of strings) can be handled using a kind too.
 
 (kind/md
+ "This is [markdown](https://www.markdownguide.org/).")
+
+(kind/md
  ["
 * This is [markdown](https://www.markdownguide.org/).
   * *Isn't it??*"
   "
 * Here is **some more** markdown."])
 
-;; As we can see, this kind is displayed by converting Hiccup to HTML.
+;; When rendering through Quarto, LaTeX formulae are supported as well.
+
+(kind/md
+ "Let $x=9$. Then $$x+11=20$$")
 
 ;; ### Images
 
