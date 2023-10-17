@@ -5,6 +5,7 @@
    [hiccup.core :as hiccup]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.path :as path]
+   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read]
    [scicloj.clay.v2.server :as server]
@@ -23,19 +24,11 @@
 
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo
-                            absolute-file-path)
-        git-url (some-> (state/options)
-                        :remote-repo
-                        (path/file-git-url relative-file-path))]
-    [:div
-     (when relative-file-path
-       [:code
-        [:small
-         [:small
-          "source: "
-          (if git-url
-            [:a {:href git-url} relative-file-path]
-            relative-file-path)]]])]))
+                            absolute-file-path)]
+    (item/info-line {:path relative-file-path
+                     :url (some-> (state/options)
+                                  :remote-repo
+                                  (path/file-git-url relative-file-path))})))
 
 (defn complete-note [{:as note
                       :keys [comment? code form]}]

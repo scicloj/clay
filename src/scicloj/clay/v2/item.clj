@@ -183,3 +183,15 @@ Plotly.newPlot(document.currentScript.parentElement,
 
 (def loader
   {:hiccup [:div.loader]})
+
+(defn info-line [{:keys [path url]}]
+  {:hiccup
+   [:div
+    (when path
+      [:pre
+       [:small
+        [:small
+         "source: "
+         (if url
+           [:a {:href url} path]
+           path)]]])]})
