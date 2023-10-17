@@ -7,9 +7,9 @@
    [hiccup.page]
    [scicloj.clay.v2.cljs-generation :as cljs-generation]
    [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.portal :as portal]
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.prepare :as prepare]
+   [scicloj.clay.v2.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]))
 
 (def special-libs-set

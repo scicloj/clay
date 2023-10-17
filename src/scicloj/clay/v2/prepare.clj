@@ -6,7 +6,6 @@
    [scicloj.clay.v2.walk :as claywalk]
    [scicloj.kindly-advice.v1.api :as kindly-advice]
    [nextjournal.markdown :as md]
-   [scicloj.clay.v2.portal :as portal]
    [clojure.walk]
    [hiccup.core :as hiccup]))
 
@@ -309,10 +308,9 @@
 (add-preparer!
  :kind/portal
  (fn [value]
-   {:hiccup (-> value
-                (vary-meta dissoc :kindly/kind)
-                portal/in-portal)
-    :deps ['portal]}))
+   (-> value
+       (vary-meta dissoc :kindly/kind)
+       item/portal)))
 
 
 (add-preparer!

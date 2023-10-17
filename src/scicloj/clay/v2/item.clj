@@ -2,7 +2,9 @@
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]
             [charred.api :as charred]
-            [scicloj.clay.v2.util.image :as util.image]))
+            [scicloj.clay.v2.util.image :as util.image]
+            [scicloj.kind-portal.v1.api :as kind-portal]
+            [scicloj.clay.v2.util.meta :as meta]))
 
 (defn in-vector [v]
   (if (vector? v)
@@ -164,3 +166,17 @@ Plotly.newPlot(document.currentScript.parentElement,
             [:p [:code [:a {:href "https://scicloj.github.io/clay/"}
                         "Clay"]
                  " is ready, waiting for interaction."]]]})
+
+
+(defn portal [value]
+  {:hiccup (->> {:value value}
+                kind-portal/prepare
+                meta/pr-str-with-meta
+                pr-str
+                (format "portal_api.embed().renderOutputItem(
+                {'mime': 'x-application/edn',
+                 'text': (() => %s)}
+                , document.currentScript.parentElement);")
+                (vector :script)
+                (vector :div))
+   :deps ['portal]})

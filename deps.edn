@@ -12,8 +12,8 @@
         io.github.nextjournal/markdown {:mvn/version "0.5.144"}
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
         clj-commons/clj-yaml {:mvn/version "1.0.26"}
-        org.clojars.daslu/portal {:mvn/version "0.46.0-experimental"}
-        org.scicloj/kind-portal {:mvn/version "1-alpha7"}}
+        org.scicloj/kind-portal {:mvn/version "1-alpha7"}
+        djblue/portal {:mvn/version "0.48.0"}}
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {scicloj/tablecloth {:mvn/version "7.000-beta-27"}}}
            :build {:deps {io.github.seancorfield/build-clj

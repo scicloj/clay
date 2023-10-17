@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha39-SNAPSHOT]
 - major cleanup and refactoring
 - temporarily not supporting reagent-based items
-- portal is now supported as a kind
+- updated portal support
+  - portal is now supported as a kind
+  - updated portal dep (no longer relying on an ad-hoc patched version)
 - unifying the quarto pathways in the API: one markdown generation funciton, two different actions (with/without rendering)
 - updated kindly version
 
