@@ -215,7 +215,7 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
-(defn md [{:keys [data title options counter]}
+(defn md [{:keys [port data title options counter]}
           items]
   (let [special-libs (->> items
                           (mapcat :deps)
@@ -248,4 +248,8 @@ clay_1();
            (fn [i item]
              (prepare/item->md item
                                {:id (str "item" i)})))
-          (string/join "\n\n")))))
+          (string/join "\n\n"))
+     (hiccup/html
+      [:script {:type "text/javascript"}
+       (communication-script {:port port
+                              :server-counter counter})]))))
