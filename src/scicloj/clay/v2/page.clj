@@ -52,7 +52,8 @@
                    "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
                    "https://scicloj.github.io/scittle/js/scittle.js"
                    "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                   "https://scicloj.github.io/scittle/js/scittle.reagent.js"]}}
+                   "https://scicloj.github.io/scittle/js/scittle.reagent.js"
+                   "https://cdn.jsdelivr.net/npm/d3-require@1"]}}
    'tmdjs {:js {:from-local-copy
                 ["https://scicloj.github.io/scittle/js/scittle.tmdjs.js"]}}
    'emmy {:js {:from-local-copy
