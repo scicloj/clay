@@ -13,7 +13,9 @@
 
 (defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
   (fn [string-or-strings]
-    (let [strings (in-vector string-or-strings)]
+    (let [strings (->> string-or-strings
+                       in-vector
+                       (map escape))]
       {tag true
        :hiccup (->> strings
                     (map (fn [s]
