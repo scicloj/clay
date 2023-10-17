@@ -15,7 +15,8 @@
   (fn [string-or-strings]
     (let [strings (->> string-or-strings
                        in-vector
-                       (map escape))]
+                       ;; (map escape)
+                       )]
       {tag true
        :hiccup (->> strings
                     (map (fn [s]
