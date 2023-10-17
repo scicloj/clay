@@ -7,18 +7,21 @@
    [scicloj.clay.v2.path :as path]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.state :as state]
+   [scicloj.clay.v2.show :as show]
+   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.util.time :as time]))
 
 (defn render-quarto! [items]
   (let [md-path (path/ns->target-path "docs/" *ns* ".md")
         html-path (-> md-path
                       (string/replace #"\.md$" ".html"))]
-
+    (show/show-items! [item/loader])
     (io/make-parents md-path)
     (-> @state/*state
         (page/md items)
         (->> (spit md-path)))
     (println [:wrote md-path (time/now)])
+    (Thread/sleep 500)
     (->> (sh/sh "quarto" "render" md-path)
          ((juxt :err :out))
          (mapv println))

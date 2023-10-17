@@ -180,3 +180,6 @@ Plotly.newPlot(document.currentScript.parentElement,
                 (vector :script)
                 (vector :div))
    :deps ['portal]})
+
+(def loader
+  {:hiccup [:div.loader]})
