@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.portal
+(ns scicloj.clay.v2.util.portal
   (:require [portal.api :as portal]
             [clojure.string :as string]))
 
