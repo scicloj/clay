@@ -10,7 +10,7 @@
    [scicloj.clay.v2.util.time :as time]))
 
 (defn render-quarto! [items]
-  (let [md-path (path/ns->target-path "docs/" *ns* "_quarto.md")
+  (let [md-path (path/ns->target-path "docs/" *ns* ".md")
         html-path (-> md-path
                       (string/replace #"\.md$" ".html"))]
 
