@@ -135,7 +135,7 @@ clay_1();
           server-counter))
 
 
-(defn page [{:keys [items data port title toc? counter]}]
+(defn html [{:keys [items data port title toc? counter]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
@@ -215,8 +215,8 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
-(defn qmd [{:keys [data title options counter]}
-           items]
+(defn md [{:keys [data title options counter]}
+          items]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct

@@ -33,7 +33,7 @@
   ([path]
    (io/make-parents path)
    (->> @state/*state
-        page/page
+        page/html
         (spit path))
    (println [:wrote path (time/now)])
    [:wrote path]))

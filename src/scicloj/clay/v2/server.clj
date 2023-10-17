@@ -49,7 +49,7 @@
     (case [request-method uri]
       [:get "/"] {:body (or (some-> (state/quarto-html-path)
                                     slurp)
-                            (page/page @state/*state))
+                            (page/html @state/*state))
                   :status 200}
       [:get "/counter"] {:body (-> (state/counter)
                                    str)

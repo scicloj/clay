@@ -15,7 +15,7 @@
 
     (io/make-parents md-path)
     (-> @state/*state
-        (page/qmd items)
+        (page/md items)
         (->> (spit md-path)))
     (println [:wrote md-path (time/now)])
     (->> (sh/sh "quarto" "render" md-path)
@@ -85,7 +85,7 @@ embed-resources: true
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
     (-> @state/*state
-        (page/qmd items)
+        (page/md items)
         (->> (spit md-path)))
     (update-quarto-config! chapter-path)
     (println [:wrote md-path (time/now)])))
