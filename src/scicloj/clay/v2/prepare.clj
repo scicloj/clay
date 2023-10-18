@@ -44,18 +44,18 @@
     (->> item
          :hiccup
          (clojure.walk/postwalk
-          (fn [form]
-            (if (and (vector? form)
-                     (-> form first (= :p)))
-              (-> form
-                  (update
-                   1
-                   (fn [text]
-                     (-> text
-                         (clojure.string/replace "[" (str \\ "["))
-                         (clojure.string/replace "]" (str \\ "]"))))))
+          (fn [subform]
+            (if (and (vector? subform)
+                     (-> subform first (= :p)))
+              (->> subform
+                   (mapv (fn [subsubform]
+                           (if (string? subsubform)
+                             (-> subsubform
+                                 (clojure.string/replace "[" (str \\ "["))
+                                 (clojure.string/replace "]" (str \\ "]")))
+                             subsubform))))
               ;; else
-              form)))
+              subform)))
          hiccup/html)))
 
 
