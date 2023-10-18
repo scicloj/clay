@@ -1,4 +1,7 @@
-# clay
+# Clay
+
+![Clay logo](resources/Clay.svg)
+
 
 Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
