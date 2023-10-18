@@ -1,26 +1,21 @@
 ;; # Clay
 
-^:kindly/hide-code?
-(with-meta
-  [:img
-   {:style {:width "300px"}
-    :src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-    :alt "quaternary clay in Estonia"}]
-  {:kindly/kind :kind/hiccup})
-
-;; (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
-
-;; ## What is it?
+^{:kindly/hide-code? true
+  :kindly/kind :kind/hiccup}
+[:img
+ {:style {:width "100px"}
+  :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
+  :alt "Clay logo"}]
 
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly/) convention.
 ;;
 ;; Also see the [Babashka Conf 2023 talk](https://www.youtube.com/watch?v=HvhMsv3iVGM).
 
-;; ### Status
+;; ## Status
 ;; This project is still alpha-stage and changing. As of October 2023, it is going through extensive refactoring, mostly seeking simpler and leaner implemenation and API.
 ;; Clay is developed in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
 
-;; ### Goals
+;; ## Goals
 
 ;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
 ;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
