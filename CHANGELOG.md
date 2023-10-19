@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
   - updated portal dep (no longer relying on an ad-hoc patched version)
 - unifying the quarto pathways in the API: one markdown generation funciton, two different actions (with/without rendering)
 - updated kindly version
+- new config-oriented actions (WIP)
 
 ## [2-alpha38] - 2023-10-03
 - path changes in light quarto book generation
