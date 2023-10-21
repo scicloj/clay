@@ -217,6 +217,17 @@
                                 pr-str)))))
        [:pre @*result]))])
 
+;; ### HTML
+
+;; Raw html can be represented as a kind too:
+
+(kind/html "<div style='height:40px; width:40px; background:purple'></div> ")
+
+(kind/html
+ "
+<svg height=100 width=100>
+<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />
+</svg> ")
 
 
 ;; ### Markdown

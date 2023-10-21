@@ -23,42 +23,37 @@
       :kind))
 
 (defn item->hiccup [item {:keys [id]}]
-  (cond
-    ;;
-    (:hiccup item)
-    (:hiccup item)
-    ;;
-    (:md item)
-    (->> item
-         :md
-         md/->hiccup
-         (clojure.walk/postwalk-replace
-          {:<> :p}))))
+  (or
+   (:hiccup item)
+   (some->> item
+            :html
+            (vector :div))
+   (some->> item
+            :md
+            md/->hiccup
+            (clojure.walk/postwalk-replace
+             {:<> :p}))))
 
 (defn item->md [item {:keys [id]}]
-  (cond
-    (:md item)
-    (:md item)
-    ;;
-    (:hiccup item)
-    (->> item
-         :hiccup
-         (clojure.walk/postwalk
-          (fn [subform]
-            (if (and (vector? subform)
-                     (-> subform first (= :p)))
-              (->> subform
-                   (mapv (fn [subsubform]
-                           (if (string? subsubform)
-                             (-> subsubform
-                                 (clojure.string/replace "[" (str \\ "["))
-                                 (clojure.string/replace "]" (str \\ "]")))
-                             subsubform))))
-              ;; else
-              subform)))
-         hiccup/html)))
-
-
+  (or
+   (:md item)
+   (:html item)
+   (some->> item
+            :hiccup
+            (clojure.walk/postwalk
+             (fn [subform]
+               (if (and (vector? subform)
+                        (-> subform first (= :p)))
+                 (->> subform
+                      (mapv (fn [subsubform]
+                              (if (string? subsubform)
+                                (-> subsubform
+                                    (clojure.string/replace "[" (str \\ "["))
+                                    (clojure.string/replace "]" (str \\ "]")))
+                                subsubform))))
+                 ;; else
+                 subform)))
+            hiccup/html)))
 
 
 (defn prepare [{:as context
@@ -304,6 +299,9 @@
      {:hiccup hiccup
       :deps (distinct @*deps)})))
 
+(add-preparer!
+ :kind/html
+ #'item/html)
 
 (add-preparer!
  :kind/portal

@@ -198,3 +198,9 @@ Plotly.newPlot(document.currentScript.parentElement,
          (if url
            [:a {:href url} path]
            path)]]])]})
+
+
+(defn html [html]
+  {:html (->> html
+              in-vector
+              (string/join "\n"))})

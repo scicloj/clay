@@ -2,7 +2,7 @@
  :deps {org.clojure/clojure {:mvn/version "1.11.0"}
         com.cnuernber/charred {:mvn/version "1.033"}
         org.clojure/core.async {:mvn/version "1.1.587"}
-        org.scicloj/kindly {:mvn/version "4-alpha6"}
+        org.scicloj/kindly {:mvn/version "4-alpha7"}
         org.scicloj/kindly-advice {:mvn/version "1-alpha3"}
         org.scicloj/tempfiles {:mvn/version "1-alpha2"}
         carocad/parcera {:mvn/version "0.11.6"}
