@@ -11,6 +11,11 @@
     v
     [v]))
 
+(defn escape [string]
+  (-> string
+      (string/escape
+       {\< "&lt;" \> "&gt;"})))
+
 (defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
   (fn [string-or-strings]
     (let [strings (->> string-or-strings
@@ -20,9 +25,9 @@
       {tag true
        :hiccup (->> strings
                     (map (fn [s]
-                           [:pre ;.card
+                           [:pre
                             [hiccup-element
-                             s]]))
+                             (escape s)]]))
                     (into [:div]))
        :md (->> strings
                 (map (fn [s]
@@ -45,10 +50,7 @@
                       :hiccup-element :code.language-clojure
                       :md-class :printedClojure}))
 
-(defn escape [string]
-  (-> string
-      (string/escape
-       {\< "&lt;" \> "&gt;"})))
+
 
 (defn just-println [value]
   (-> value
