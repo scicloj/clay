@@ -2,6 +2,7 @@
   (:require [scicloj.clay.v2.pipeline :as pipeline]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.actions :as actions]
+            [scicloj.clay.v2.quarto :as quarto]
             [scicloj.clay.v2.server :as server]
             [scicloj.clay.v2.state :as state]
             [clojure.string :as string]
@@ -79,3 +80,6 @@
 (defn handle-value! [value]
   (pipeline/handle-value! value)
   [:ok])
+
+(defn update-book! [options]
+  (quarto/update-book! options))
