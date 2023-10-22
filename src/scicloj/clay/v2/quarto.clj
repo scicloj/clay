@@ -97,10 +97,15 @@ embed-resources: true
     (println [:wrote md-path (time/now)])))
 
 
+
 (defn source-path->target-path [path]
   (-> path
       (string/replace #"\.clj$"
-                      "/index.md")))
+                      (if (-> path
+                              path/path->filename
+                              (= "index.clj"))
+                        ".md"
+                        "/index.md"))))
 
 (defn source-path->file-ext [path]
   (-> path
@@ -108,12 +113,15 @@ embed-resources: true
       last))
 
 (defn ->base-book-config [{:keys [title chapter-source-paths]}]
-  {:project {:type "book"}
-   :format {:html {:theme "cosmo"}}
-   :book {:title title
-          :chapters (->> chapter-source-paths
-                         (cons "index.md")
-                         (mapv source-path->target-path))}})
+  (let [index-included? (->> chapter-source-paths
+                             (some #{"index.md" "index.clj"}))]
+    {:project {:type "book"}
+     :format {:html {:theme "cosmo"}}
+     :book {:title title
+            :chapters (->> (if index-included?
+                             chapter-source-paths
+                             (cons "index.md" chapter-source-paths))
+                           (mapv source-path->target-path))}}))
 
 (defn ->main-index [{:keys [toc embed-resources title]}]
   (str "---\n"
