@@ -126,22 +126,22 @@ embed-resources: true
                             chapter-source-paths
                             base-target-path
                             title
-                            quarto-config
-                            toc
+                            quarto-book-config
+                            page-options
                             embed-resources
                             main-index]
                      :or {title "Book Draft"
-                          toc true
+                          page-options {:toc true}
                           embed-resources true
-                          quarto-config (->base-book-config {:title title
-                                                             :chapter-source-paths chapter-source-paths})
-                          main-index (->main-index {:toc toc
+                          quarto-book-config (->base-book-config {:title title
+                                                                  :chapter-source-paths chapter-source-paths})
+                          main-index (->main-index {:toc (:toc page-options)
                                                     :embed-resources embed-resources
                                                     :title title})}}]
   (let [config-path (str base-target-path "/_quarto.yml")
         main-index-path (str base-target-path "/index.md")]
     (io/make-parents config-path)
-    (->> quarto-config
+    (->> quarto-book-config
          yaml/generate-string
          (spit config-path))
     (prn [:created config-path])
@@ -161,6 +161,8 @@ embed-resources: true
                             (spit full-target-path))
                   "clj" (-> full-source-path
                             (eval/gen-doc {:title source-path})
-                            (->> (page/md @state/*state)
+                            (->> (page/md (update @state/*state
+                                                  :options
+                                                  merge page-options))
                                  (spit full-target-path))))
                 (prn [:wrote full-target-path (time/now)]))))))
