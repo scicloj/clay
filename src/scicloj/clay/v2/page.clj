@@ -196,13 +196,13 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
-(defn md [{:keys [items port data title options counter]}]
+(defn md [{:keys [items port data title config counter]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
                           (cons :md-default))]
     (str
-     (->> options
+     (->> config
           :quarto
           yaml/generate-string
           (format "\n---\n%s\n---\n"))

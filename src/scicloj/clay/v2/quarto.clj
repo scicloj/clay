@@ -10,6 +10,7 @@
    [scicloj.clay.v2.show :as show]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.notebook :as notebook]
+   [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.util.time :as time]
    [clj-yaml.core :as yaml]))
 
@@ -20,7 +21,8 @@
     (show/show-items! [item/loader])
     (io/make-parents md-path)
     (-> @state/*state
-        (assoc :items items)
+        (assoc :items items
+               :config (config/config))
         page/md
         (->> (spit md-path)))
     (println [:wrote md-path (time/now)])
@@ -92,7 +94,8 @@ embed-resources: true
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
     (-> @state/*state
-        (assoc :items items)
+        (assoc :items items
+               :config (config/config))
         page/md
         (->> (spit md-path)))
     (update-quarto-config! chapter-path)
@@ -137,15 +140,15 @@ embed-resources: true
                             base-target-path
                             title
                             quarto-book-config
-                            page-options
+                            page-config
                             embed-resources
                             main-index]
                      :or {title "Book Draft"
-                          page-options {:toc true}
+                          page-config {:toc true}
                           embed-resources true
                           quarto-book-config (->base-book-config {:title title
                                                                   :chapter-source-paths chapter-source-paths})
-                          main-index (->main-index {:toc (:toc page-options)
+                          main-index (->main-index {:toc (:toc page-config)
                                                     :embed-resources embed-resources
                                                     :title title})}}]
   (let [config-path (str base-target-path "/_quarto.yml")
@@ -171,8 +174,8 @@ embed-resources: true
                             (spit full-target-path))
                   "clj" (-> @state/*state
                             (assoc :items (-> full-source-path
-                                              (notebook/gen-doc {:title source-path})))
-                            (update :options merge page-options)
+                                              (notebook/gen-doc {:title source-path}))
+                                   :config page-config)
                             page/md
                             (->> (spit full-target-path))))
                 (prn [:wrote full-target-path (time/now)]))))))

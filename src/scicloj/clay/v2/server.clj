@@ -22,16 +22,6 @@
   (doseq [ch @*clients]
     (httpkit/send! ch msg)))
 
-
-
-(def default-options
-  {:quarto {:format {:html {:toc true}}
-            :code-block-background true
-            :embed-resources false
-            :execute {:freeze true}}})
-(state/swap-options! (constantly default-options))
-
-
 (defn get-free-port []
   (loop [port 1971]
     ;; Check if the port is free:

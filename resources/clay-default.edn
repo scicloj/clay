@@ -1,1 +1,4 @@
-{}
+{:quarto {:format {:html {:toc true}}
+          :code-block-background true
+          :embed-resources false
+          :execute {:freeze true}}}

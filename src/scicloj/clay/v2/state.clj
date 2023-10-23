@@ -29,13 +29,6 @@
 (defn page []
   (:page @*state))
 
-(defn swap-options! [f & args]
-  (apply swap-state! update :options f args)
-  :ok)
-
-(defn options []
-  (:options @*state))
-
 (defn reset-quarto-html-path! [path]
   (swap-state! assoc :quarto-html-path path))
 
