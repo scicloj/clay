@@ -98,22 +98,7 @@
 (defonce memoized-slurp
   (memoize slurp))
 
-;; Let us set up Clay.
 
-(clay/swap-options!
- assoc
- :remote-repo {:git-url "https://github.com/scicloj/clay"
-               :branch "main"}
- :quarto {:format {:html {:toc true
-                          :theme :spacelab}}
-          :highlight-style :solarized
-          :code-block-background true
-          :embed-resources true
-          :execute {:freeze true}})
-
-;; These initializations can also be done in a `user.clj` file, making them available for all namespaces in the project.
-
-;; The browser view should open automatically.
 
 ;; ## A few useful actions
 
