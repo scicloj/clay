@@ -9,7 +9,7 @@
    [scicloj.clay.v2.state :as state]
    [scicloj.clay.v2.show :as show]
    [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.eval :as eval]
+   [scicloj.clay.v2.notebook :as notebook]
    [scicloj.clay.v2.util.time :as time]
    [clj-yaml.core :as yaml]))
 
@@ -168,7 +168,7 @@ embed-resources: true
                             slurp
                             (spit full-target-path))
                   "clj" (-> full-source-path
-                            (eval/gen-doc {:title source-path})
+                            (notebook/gen-doc {:title source-path})
                             (->> (page/md (update @state/*state
                                                   :options
                                                   merge page-options))

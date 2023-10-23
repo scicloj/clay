@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.eval
+(ns scicloj.clay.v2.notebook
   (:require
    [clojure.string :as string]
    [clojure.walk :as walk]

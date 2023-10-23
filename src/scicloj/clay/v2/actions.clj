@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.actions
   (:require
-   [scicloj.clay.v2.eval :as eval]
+   [scicloj.clay.v2.notebook :as notebook]
    [scicloj.clay.v2.path :as path]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.show :as show]
@@ -17,7 +17,7 @@
          [:p "showing document for "
           [:code (path/path->filename path)]]
          [:div.loader]]))
-   (let [doc (eval/gen-doc path options)]
+   (let [doc (notebook/gen-doc path options)]
      (-> doc
          (show/show-items!
           {:title title
@@ -49,7 +49,7 @@
       (assoc
        :title (or title path)
        :path path)
-      (->> (eval/gen-doc path))
+      (->> (notebook/gen-doc path))
       quarto/render-quarto!))
 
 (defn write-quarto!
@@ -59,5 +59,5 @@
       (assoc
        :title (or title path)
        :path path)
-      (->> (eval/gen-doc path))
+      (->> (notebook/gen-doc path))
       quarto/write-quarto!))
