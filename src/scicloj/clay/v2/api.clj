@@ -5,6 +5,7 @@
             [scicloj.clay.v2.quarto :as quarto]
             [scicloj.clay.v2.server :as server]
             [scicloj.clay.v2.state :as state]
+            [scicloj.clay.v2.config :as config]
             [clojure.string :as string]
             [clojure.test]))
 
@@ -60,19 +61,6 @@
 (defn url []
   (server/url))
 
-(defn swap-options! [f & args]
-  (apply state/swap-options!
-         f args))
-
-(defn reset-options!
-  ([]
-   (reset-options!  server/default-options))
-  ([options]
-   (state/swap-options! (constantly options))))
-
-(defn options []
-  (state/options))
-
 (defn handle-form! [form]
   (pipeline/handle-form! form)
   [:ok])
@@ -83,3 +71,6 @@
 
 (defn update-book! [options]
   (quarto/update-book! options))
+
+(defn config []
+  (config/config))
