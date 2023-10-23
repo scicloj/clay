@@ -12,26 +12,22 @@
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]))
 
-(def special-libs-set
-  #{'datatables 'vega 'echarts 'cytoscape 'plotly 'katex
-    'three-d-mol 'three-d-mol-viewer 'leaflet})
-
 (def special-lib-resources
-  {'vega {:js {:from-local-copy
+  {:vega {:js {:from-local-copy
                ["https://cdn.jsdelivr.net/npm/vega@5.22.1"
                 "https://cdn.jsdelivr.net/npm/vega-lite@5.6.0"
                 "https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"]}}
-   'datatables {:js {:from-the-web
+   :datatables {:js {:from-the-web
                      ["https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"]}
                 :css {:from-the-web
                       ["https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"]}}
-   'echarts {:js {:from-local-copy
+   :echarts {:js {:from-local-copy
                   ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
-   'cytoscape {:js {:from-local-copy
+   :cytoscape {:js {:from-local-copy
                     ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"]}}
-   'plotly {:js {:from-local-copy
+   :plotly {:js {:from-local-copy
                  ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}
-   'katex {:js {:from-local-copy
+   :katex {:js {:from-local-copy
                 ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"]}
            :css {:from-the-web
                  ;; fetching the KaTeX css from the web
@@ -39,33 +35,33 @@
                  ;; which would need a bit more care
                  ;; (see https://katex.org/docs/font.html)
                  ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"]}}
-   'three-d-mol {:js {:from-local-copy
+   :three-d-mol {:js {:from-local-copy
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
-   'three-d-mol-viewer {:js {:from-local-copy
+   :three-d-mol-viewer {:js {:from-local-copy
                              ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
-   'leaflet {:js {:from-local-copy
+   :leaflet {:js {:from-local-copy
                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
              :css {:from-local-copy
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
-   'reagent {:js {:from-local-copy
+   :reagent {:js {:from-local-copy
                   ["https://unpkg.com/react@18/umd/react.production.min.js"
                    "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
                    "https://scicloj.github.io/scittle/js/scittle.js"
                    "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
                    "https://scicloj.github.io/scittle/js/scittle.reagent.js"
                    "https://cdn.jsdelivr.net/npm/d3-require@1"]}}
-   'tmdjs {:js {:from-local-copy
+   :tmdjs {:js {:from-local-copy
                 ["https://scicloj.github.io/scittle/js/scittle.tmdjs.js"]}}
-   'emmy {:js {:from-local-copy
+   :emmy {:js {:from-local-copy
                ["https://scicloj.github.io/scittle/js/scittle.emmy.js"]}}
-   'mathbox {:js {:from-local-copy
+   :mathbox {:js {:from-local-copy
                   ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}
-   'portal {:js {:from-local-copy [portal/url]}}
-   'html-default {:js {:from-local-copy
+   :portal {:js {:from-local-copy [portal/url]}}
+   :html-default {:js {:from-local-copy
                        ["https://code.jquery.com/jquery-3.6.0.min.js"
                         "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"]}}
-   'md-default {:js {:from-local-copy
+   :md-default {:js {:from-local-copy
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
                       "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}})
 
@@ -80,21 +76,6 @@
        (map resource/get)
        (map (partial vector :style))
        (into [:div])))
-
-(defn special-libs-in-form [f]
-  (->> f
-       (tree-seq (fn [x]
-                   (or (vector? x)
-                       (map? x)
-                       (list? x)
-                       (seq? x)))
-                 (fn [x]
-                   (if (map? x)
-                     (vals x)
-                     x)))
-       (filter special-libs-set)
-       distinct
-       set))
 
 (def font-links
   " <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
@@ -140,7 +121,7 @@ clay_1();
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
-                          (cons 'html-default))]
+                          (cons :html-default))]
     (when-not port
       (throw (ex-info "missing port" {})))
     (-> (hiccup.page/html5
@@ -220,7 +201,7 @@ clay_1();
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
-                          (cons 'md-default))]
+                          (cons :md-default))]
     (str
      (->> options
           :quarto

@@ -90,7 +90,7 @@
             [:script (->> spec
                           charred/write-json-str
                           (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
-   :deps ['vega]})
+   :deps [:vega]})
 
 
 (defn image [buffered-image]
@@ -110,7 +110,7 @@
                 (list 'reagent.dom/render
                       form
                       (list 'js/document.getElementById id)))]]
-     :deps ['reagent]}))
+     :deps [:reagent]}))
 
 
 (defn reagent-based-item [component-symbol data]
@@ -146,7 +146,7 @@
   value['container'] = document.currentScript.parentElement;
   cytoscape(value);
 };"))]]
-     :deps ['cytoscape]}))
+     :deps [:cytoscape]}))
 
 
 (defn plotly [data]
@@ -162,7 +162,7 @@ Plotly.newPlot(document.currentScript.parentElement,
  %s['data']
 );
 "))]]
-     :deps ['plotly]}))
+     :deps [:plotly]}))
 
 
 (def welcome
@@ -184,7 +184,7 @@ Plotly.newPlot(document.currentScript.parentElement,
                 , document.currentScript.parentElement);")
                 (vector :script)
                 (vector :div))
-   :deps ['portal]})
+   :deps [:portal]})
 
 (def loader
   {:hiccup [:div.loader]})

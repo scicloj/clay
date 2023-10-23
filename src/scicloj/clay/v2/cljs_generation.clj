@@ -99,13 +99,13 @@
             :data-ui true}]))
 
 (def special-libs-cljs
-  {'datatables datatables-cljs
-   'vega vega-cljs
-   'echarts echarts-cljs
-   'cytoscape cytoscape-cljs
-   'plotly plotly-cljs
-   'katex katex-cljs
-   'three-d-mol-viewer three-d-mol-viewer-cljs})
+  {:datatables datatables-cljs
+   :vega vega-cljs
+   :echarts echarts-cljs
+   :cytoscape cytoscape-cljs
+   :plotly plotly-cljs
+   :katex katex-cljs
+   :three-d-mol-viewer three-d-mol-viewer-cljs})
 
 (defn items-cljs [{:keys [server-counter items data port special-libs]}]
   (concat ['(ns scicloj.clay

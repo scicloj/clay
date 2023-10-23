@@ -126,7 +126,7 @@
                        'datatables ; to help Clay realize that th dependency is needed
                        ])
         :deps (->> @*deps
-                   (cons 'datatables)
+                   (cons :datatables)
                    distinct)}
        ;; else - a small table
        {:hiccup hiccup
