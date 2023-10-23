@@ -5,7 +5,6 @@
    [clojure.string :as string]
    [hiccup.core :as hiccup]
    [hiccup.page]
-   [scicloj.clay.v2.cljs-generation :as cljs-generation]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
