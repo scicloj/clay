@@ -20,7 +20,8 @@
     (show/show-items! [item/loader])
     (io/make-parents md-path)
     (-> @state/*state
-        (page/md items)
+        (assoc :items items)
+        page/md
         (->> (spit md-path)))
     (println [:wrote md-path (time/now)])
     (Thread/sleep 500)
@@ -91,7 +92,8 @@ embed-resources: true
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
     (-> @state/*state
-        (page/md items)
+        (assoc :items items)
+        page/md
         (->> (spit md-path)))
     (update-quarto-config! chapter-path)
     (println [:wrote md-path (time/now)])))
@@ -167,10 +169,10 @@ embed-resources: true
                   "md" (->> full-source-path
                             slurp
                             (spit full-target-path))
-                  "clj" (-> full-source-path
-                            (notebook/gen-doc {:title source-path})
-                            (->> (page/md (update @state/*state
-                                                  :options
-                                                  merge page-options))
-                                 (spit full-target-path))))
+                  "clj" (-> @state/*state
+                            (assoc :items (-> full-source-path
+                                              (notebook/gen-doc {:title source-path})))
+                            (update :options merge page-options)
+                            page/md
+                            (->> (spit full-target-path))))
                 (prn [:wrote full-target-path (time/now)]))))))

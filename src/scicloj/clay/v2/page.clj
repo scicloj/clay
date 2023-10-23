@@ -216,8 +216,7 @@ clay_1();
                         "<table class='table table-hover'>"))))
 
 
-(defn md [{:keys [port data title options counter]}
-          items]
+(defn md [{:keys [items port data title options counter]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
