@@ -4,6 +4,7 @@
    [scicloj.clay.v2.page :as page]
    [scicloj.clay.v2.path :as path]
    [scicloj.clay.v2.prepare :as prepare]
+   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.state :as state]
    [scicloj.clay.v2.util.time :as time]))
@@ -14,11 +15,15 @@
   ([items options]
    (state/swap-state-and-increment!
     (fn [state]
-      (-> state
-          (assoc :quarto-html-path nil)
-          (assoc :date (java.util.Date.))
-          (assoc :items items)
-          (merge options))))
+      (let [state1 (-> state
+                       (assoc :quarto-html-path nil)
+                       (assoc :date (java.util.Date.))
+                       (merge options))
+            page (-> state1
+                     (assoc :items items)
+                     page/html)]
+        (-> state1
+            (assoc :page page)))))
    (server/broadcast! "refresh")
    [:ok]))
 
@@ -33,13 +38,7 @@
    (write-html! (path/ns->target-path "docs/" *ns* ".html")))
   ([path]
    (io/make-parents path)
-   (->> @state/*state
-        page/html
+   (->> (state/page)
         (spit path))
    (println [:wrote path (time/now)])
    [:wrote path]))
-
-(defn show-message! [hiccup]
-  (state/set-items! [hiccup])
-  (state/reset-quarto-html-path! nil)
-  (server/broadcast! "refresh"))

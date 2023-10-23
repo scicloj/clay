@@ -22,7 +22,7 @@
   (doseq [ch @*clients]
     (httpkit/send! ch msg)))
 
-(state/set-items! [item/welcome])
+
 
 (def default-options
   {:quarto {:format {:html {:toc true}}
@@ -50,7 +50,7 @@
     (case [request-method uri]
       [:get "/"] {:body (or (some-> (state/quarto-html-path)
                                     slurp)
-                            (page/html @state/*state))
+                            (:page @state/*state))
                   :status 200}
       [:get "/counter"] {:body (-> (state/counter)
                                    str)
@@ -102,6 +102,10 @@
     (state/set-port! port)
     (reset! *stop-server! port)
     (println "serving scittle at " (port->url port))
+    (-> @state/*state
+        (assoc :items [item/welcome])
+        page/html
+        state/set-page!)
     (browse!)))
 
 (defn close! []

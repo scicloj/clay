@@ -2,10 +2,9 @@
 
 (defonce *state
   (atom {:port nil
-         :items nil
          :fns {}
          :counter 0
-         :page-cache nil}))
+         :page nil}))
 
 (defn counter []
   (:counter @*state))
@@ -15,8 +14,7 @@
       (swap!
        (fn [state]
          (-> state
-             (#(apply f % args))
-             (assoc :page-cache nil))))))
+             (#(apply f % args)))))))
 
 (defn swap-state-and-increment! [f & args]
   (swap-state!
@@ -25,9 +23,11 @@
          (update :counter inc)
          (#(apply f % args))))))
 
+(defn set-page! [page]
+  (swap-state-and-increment! assoc :page page))
 
-(defn set-items! [items]
-  (swap-state-and-increment! assoc :items items))
+(defn page []
+  (:page @*state))
 
 (defn swap-options! [f & args]
   (apply swap-state! update :options f args)

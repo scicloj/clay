@@ -4,19 +4,21 @@
    [scicloj.clay.v2.path :as path]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.show :as show]
-   [scicloj.clay.v2.quarto :as quarto]))
+   [scicloj.clay.v2.quarto :as quarto]
+   [scicloj.clay.v2.item :as item]))
 
 (defn show-doc!
   ([path]
    (show-doc! path nil))
   ([path {:keys [title toc? custom-message]
           :as options}]
-   (show/show-message!
-    (or custom-message
-        [:div
-         [:p "showing document for "
-          [:code (path/path->filename path)]]
-         [:div.loader]]))
+   (show/show-items!
+    [(item/hiccup
+      (or custom-message
+          [:div
+           [:p "showing document for "
+            [:code (path/path->filename path)]]
+           [:div.loader]]))])
    (let [doc (notebook/gen-doc path options)]
      (-> doc
          (show/show-items!
@@ -40,11 +42,12 @@
 (defn render-quarto!
   [path {:keys [title]
          :as options}]
-  (show/show-message!
-   [:div
-    [:p "generating Quarto document for "
-     [:code (path/path->filename path)]]
-    [:div.loader]])
+  (show/show-items!
+   [(item/hiccup
+     [:div
+      [:p "generating Quarto document for "
+       [:code (path/path->filename path)]]
+      [:div.loader]])])
   (-> options
       (assoc
        :title (or title path)

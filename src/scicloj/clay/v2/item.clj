@@ -66,6 +66,9 @@
       escape
       printed-clojure))
 
+(defn hiccup [hiccup]
+  {:hiccup hiccup})
+
 (defn md [text]
   {:md (->> text
             in-vector
