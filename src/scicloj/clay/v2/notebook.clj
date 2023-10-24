@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [hiccup.core :as hiccup]
    [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.path :as path]
+   [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read]

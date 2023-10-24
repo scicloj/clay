@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.path
+(ns scicloj.clay.v2.util.path
   (:require [clojure.java.io :as io]
             [clojure.string :as string]
             [babashka.fs :as fs])

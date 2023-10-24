@@ -4,7 +4,7 @@
    [clojure.java.shell :as sh]
    [clojure.string :as string]
    [scicloj.clay.v2.page :as page]
-   [scicloj.clay.v2.path :as path]
+   [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.state :as state]
    [scicloj.clay.v2.show :as show]

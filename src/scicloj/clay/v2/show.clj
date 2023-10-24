@@ -2,7 +2,7 @@
   (:require
    [clojure.java.io :as io]
    [scicloj.clay.v2.page :as page]
-   [scicloj.clay.v2.path :as path]
+   [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.server :as server]
