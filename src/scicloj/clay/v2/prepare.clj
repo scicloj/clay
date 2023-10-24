@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.table :as table]
-   [scicloj.clay.v2.walk :as claywalk]
+   [scicloj.clay.v2.util.walk :as claywalk]
    [scicloj.kindly-advice.v1.api :as kindly-advice]
    [nextjournal.markdown :as md]
    [clojure.walk]
