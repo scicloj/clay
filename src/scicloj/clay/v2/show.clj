@@ -16,7 +16,7 @@
    (state/swap-state-and-increment!
     (fn [state]
       (let [state1 (-> state
-                       (assoc :quarto-html-path nil)
+                       (assoc :html-path nil)
                        (assoc :date (java.util.Date.))
                        (merge options))
             page (-> state1

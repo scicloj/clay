@@ -38,7 +38,7 @@
                              :on-close (fn [ch _reason] (swap! *clients disj ch))
                              :on-receive (fn [_ch msg])})
     (case [request-method uri]
-      [:get "/"] {:body (or (some-> (state/quarto-html-path)
+      [:get "/"] {:body (or (some-> (state/html-path)
                                     slurp)
                             (:page @state/*state))
                   :status 200}
@@ -57,10 +57,9 @@
                                       pr-str)
                             :status 200})
       ;; else
-      {:body (let [base-path (or (some-> (state/quarto-html-path)
+      {:body (let [base-path (or (some-> (state/html-path)
                                          path/path->parent)
                                  "docs")]
-               #_(println [:uri uri])
                (try (->> uri
                          (str base-path)
                          (java.io.FileInputStream.))

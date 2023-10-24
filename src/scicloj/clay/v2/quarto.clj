@@ -31,7 +31,7 @@
          ((juxt :err :out))
          (mapv println))
     (println [:created html-path (time/now)])
-    (state/reset-quarto-html-path! html-path)
+    (state/reset-html-path! html-path)
     (server/broadcast! "refresh")
     :ok))
 

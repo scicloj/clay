@@ -29,11 +29,11 @@
 (defn page []
   (:page @*state))
 
-(defn reset-quarto-html-path! [path]
-  (swap-state! assoc :quarto-html-path path))
+(defn reset-html-path! [path]
+  (swap-state! assoc :html-path path))
 
-(defn quarto-html-path []
-  (:quarto-html-path @*state))
+(defn html-path []
+  (:html-path @*state))
 
 (defn set-port! [port]
   (swap-state! assoc :port port))
