@@ -17,15 +17,6 @@
   (pipeline/start!)
   [:ok])
 
-(defmacro capture-print
-  [& body]
-  `(scicloj.kindly.v4.kind/pprint
-    [(let [s# (new java.io.StringWriter)]
-       (binding [*out* s#]
-         ~@body
-         (println s#)
-         (str s#)))]))
-
 (defn show-namespace!
   ([path]
    (show-namespace! path nil))
@@ -61,6 +52,9 @@
 (defn url []
   (server/url))
 
+(defn config []
+  (config/config))
+
 (defn handle-form! [form]
   (pipeline/handle-form! form)
   [:ok])
@@ -71,6 +65,3 @@
 
 (defn update-book! [options]
   (quarto/update-book! options))
-
-(defn config []
-  (config/config))
