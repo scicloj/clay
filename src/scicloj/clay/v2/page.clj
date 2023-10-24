@@ -121,8 +121,6 @@ clay_1();
                           (mapcat :deps)
                           distinct
                           (cons :html-default))]
-    (when-not port
-      (throw (ex-info "missing port" {})))
     (-> (hiccup.page/html5
          [:head
           [:meta {:charset "UTF-8"}]
@@ -189,9 +187,10 @@ clay_1();
                    (into [:div]))]]]]
           [:script {:type "text/javascript"}
            "hljs.highlightAll();"]
-          [:script {:type "text/javascript"}
-           (communication-script {:port port
-                                  :server-counter counter})]])
+          (when port
+            [:script {:type "text/javascript"}
+             (communication-script {:port port
+                                    :server-counter counter})])])
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
 
@@ -229,7 +228,8 @@ clay_1();
              (prepare/item->md item
                                {:id (str "item" i)})))
           (string/join "\n\n"))
-     (hiccup/html
-      [:script {:type "text/javascript"}
-       (communication-script {:port port
-                              :server-counter counter})]))))
+     (when port
+       (hiccup/html
+        [:script {:type "text/javascript"}
+         (communication-script {:port port
+                                :server-counter counter})])))))
