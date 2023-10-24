@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.walk)
+(ns scicloj.clay.v2.util.walk)
 
 ;; A dataset-friendly version of clojure.walk
 
