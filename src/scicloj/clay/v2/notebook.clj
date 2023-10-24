@@ -19,7 +19,10 @@
     v))
 
 (def hidden-form-starters
-  #{'ns 'comment 'defn 'def 'defmacro 'defrecord 'defprotocol 'deftype})
+  #{'ns 'comment
+    'def 'defonce 'defn 'defmacro
+    'defrecord 'defprotocol 'deftype
+    'extend-protocol 'extend})
 
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo
