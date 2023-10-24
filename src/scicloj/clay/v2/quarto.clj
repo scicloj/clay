@@ -135,6 +135,43 @@ embed-resources: true
        "\n---\n"
        "# " title))
 
+(defn write-book-config! [quarto-book-config
+                          {:keys [base-target-path]}]
+  (let [config-path (str base-target-path "/_quarto.yml")]
+    (io/make-parents config-path)
+    (->> quarto-book-config
+         yaml/generate-string
+         (spit config-path))
+    (prn [:created config-path])))
+
+(defn write-main-book-index-if-needed! [main-index
+                                        {:keys [base-target-path]}]
+  (let [main-index-path (str base-target-path "/index.md")]
+    (when-not (-> main-index-path io/file .exists)
+      (spit main-index-path main-index)
+      (prn [:created main-index-path]))))
+
+(defn write-book-chapter! [source-path
+                           {:keys [base-source-path
+                                   base-target-path
+                                   page-config]}]
+  (let [target-path (-> source-path
+                        source-path->target-path)
+        full-source-path (str base-source-path "/" source-path)
+        full-target-path (str base-target-path "/" target-path)]
+    (io/make-parents full-target-path)
+    (case (source-path->file-ext source-path)
+      "md" (->> full-source-path
+                slurp
+                (spit full-target-path))
+      "clj" (-> @state/*state
+                (assoc :items (-> full-source-path
+                                  (notebook/gen-doc {:title source-path}))
+                       :config page-config)
+                page/md
+                (->> (spit full-target-path))))
+    (prn [:wrote full-target-path (time/now)])))
+
 (defn update-book! [{:keys [base-source-path
                             chapter-source-paths
                             base-target-path
@@ -151,31 +188,15 @@ embed-resources: true
                           main-index (->main-index {:toc (:toc page-config)
                                                     :embed-resources embed-resources
                                                     :title title})}}]
-  (let [config-path (str base-target-path "/_quarto.yml")
-        main-index-path (str base-target-path "/index.md")]
-    (io/make-parents config-path)
-    (->> quarto-book-config
-         yaml/generate-string
-         (spit config-path))
-    (prn [:created config-path])
-    (when-not (-> main-index-path io/file .exists)
-      (spit main-index-path main-index)
-      (prn [:created main-index-path])))
+  (-> quarto-book-config
+      (write-book-config! {:base-target-path base-target-path}))
   (->> chapter-source-paths
        (map (fn [source-path]
-              (let [target-path (-> source-path
-                                    source-path->target-path)
-                    full-source-path (str base-source-path "/" source-path)
-                    full-target-path (str base-target-path "/" target-path)]
-                (io/make-parents full-target-path)
-                (case (source-path->file-ext source-path)
-                  "md" (->> full-source-path
-                            slurp
-                            (spit full-target-path))
-                  "clj" (-> @state/*state
-                            (assoc :items (-> full-source-path
-                                              (notebook/gen-doc {:title source-path}))
-                                   :config page-config)
-                            page/md
-                            (->> (spit full-target-path))))
-                (prn [:wrote full-target-path (time/now)]))))))
+              (-> source-path
+                  (write-book-chapter!
+                   {:base-source-path base-source-path
+                    :base-target-path base-target-path
+                    :page-config page-config}))))
+       doall)
+  (-> main-index
+      (write-main-book-index-if-needed! {:base-target-path base-target-path})))
