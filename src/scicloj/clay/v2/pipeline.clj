@@ -4,16 +4,11 @@
             [scicloj.clay.v2.server :as server]
             [scicloj.clay.v2.show :as show]))
 
-(defn handle-event [{:keys [event-type]
-                     :as event}]
-  (some-> event-type
-          (case :event-type/value (show/show! event))))
-
 (defn new-pipeline []
   (let [events-channel         (async/chan 100)]
     (async/go-loop []
       (when-let [event (async/<! events-channel)]
-        (handle-event event)
+        (show/show! event)
         (recur)))
     {:stop (fn []
              (async/close! events-channel))
@@ -38,19 +33,17 @@
   (when-let [p (:process @*pipeline)]
     (p event)))
 
-(defn handle-form! [form]
+(defn handle-context! [context]
   (try
-    (process!
-     {:event-type :event-type/value
-      :form form
-      :value (eval form)})
+    (process! context)
     (catch Exception e
       (println [:error-in-clay-pipeline e]))))
 
+(defn handle-form! [form]
+  (handle-context!
+   {:form form
+    :value (eval form)}))
+
 (defn handle-value! [value]
-  (try
-    (process!
-     {:event-type :event-type/value
-      :value value})
-    (catch Exception e
-      (println [:error-in-clay-pipeline e]))))
+  (handle-context!
+   {:value value}))
