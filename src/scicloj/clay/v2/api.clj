@@ -15,7 +15,6 @@
 
 (defn start! []
   (pipeline/start!)
-  (actions/welcome!)
   [:ok])
 
 (defn show-namespace!
