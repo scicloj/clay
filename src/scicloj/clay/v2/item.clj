@@ -82,7 +82,7 @@
 
 (def void
   {:md ""
-   :hicup ""})
+   :hiccup ""})
 
 (defn structure-mark [string]
   {:md string
