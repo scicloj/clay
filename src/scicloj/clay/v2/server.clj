@@ -4,7 +4,6 @@
    [clojure.java.io :as io]
    [clojure.java.shell :as sh]
    [clojure.string :as string]
-   [cognitect.transit :as transit]
    [org.httpkit.server :as httpkit]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.page :as page]
@@ -47,15 +46,6 @@
                          :status 200}
       [:get "/favicon.ico"] {:body nil
                              :status 200}
-      [:post "/compute"] (let [{:keys [form]} (-> body
-                                                  (transit/reader :json)
-                                                  transit/read
-                                                  read-string)]
-                           (println [:compute form (java.util.Date.)])
-                           {:body (-> form
-                                      eval
-                                      pr-str)
-                            :status 200})
       ;; else
       {:body (let [base-path (or (some-> (state/html-path)
                                          path/path->parent)
