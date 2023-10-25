@@ -92,7 +92,7 @@
               [item/separator
                il]))))
 
-(defn gen-doc
+(defn notebook-items
   ([path {:as options
           :keys [hide-info-line?
                  hide-code? hide-nils? hide-vars?
@@ -108,4 +108,4 @@
 
 (comment
   (-> "notebooks/scratch.clj"
-      (gen-doc {})))
+      (notebook-items {})))

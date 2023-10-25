@@ -19,7 +19,7 @@
            [:p "showing document for "
             [:code (path/path->filename path)]]
            [:div.loader]]))])
-   (let [doc (notebook/gen-doc path options)]
+   (let [doc (notebook/notebook-items path options)]
      (-> doc
          (show/show-items!
           {:title title
@@ -52,7 +52,7 @@
       (assoc
        :title (or title path)
        :path path)
-      (->> (notebook/gen-doc path))
+      (->> (notebook/notebook-items path))
       quarto/render-quarto!))
 
 (defn write-quarto!
@@ -62,5 +62,5 @@
       (assoc
        :title (or title path)
        :path path)
-      (->> (notebook/gen-doc path))
+      (->> (notebook/notebook-items path))
       quarto/write-quarto!))
