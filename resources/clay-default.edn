@@ -1,4 +1,5 @@
-{:quarto {:format {:html {:toc true}}
-          :code-block-background true
-          :embed-resources false
-          :execute {:freeze true}}}
+{:quarto {:format {:html {:toc true
+                          :toc-depth 4
+                          :theme :spacelab}}
+          :highlight-style :solarized
+          :code-block-background true}}
