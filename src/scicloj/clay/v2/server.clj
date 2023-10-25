@@ -44,8 +44,6 @@
       [:get "/counter"] {:body (-> (state/counter)
                                    str)
                          :status 200}
-      [:get "/favicon.ico"] {:body nil
-                             :status 200}
       ;; else
       {:body (let [base-path (or (some-> (state/html-path)
                                          path/path->parent)
