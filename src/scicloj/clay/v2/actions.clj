@@ -64,3 +64,18 @@
        :path path)
       (->> (notebook/notebook-items path))
       quarto/write-quarto!))
+
+(defn handle-context! [context]
+  (try
+    (show/show! context)
+    (catch Exception e
+      (println [:error-in-clay-pipeline e]))))
+
+(defn handle-form! [form]
+  (handle-context!
+   {:form form
+    :value (eval form)}))
+
+(defn handle-value! [value]
+  (handle-context!
+   {:value value}))

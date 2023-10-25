@@ -86,16 +86,17 @@
   (browse/browse-url (url)))
 
 (defn open! []
-  (let [port (get-free-port)
-        server (core-http-server port)]
-    (state/set-port! port)
-    (reset! *stop-server! port)
-    (println "serving scittle at " (port->url port))
-    (-> @state/*state
-        (assoc :items [item/welcome])
-        page/html
-        state/set-page!)
-    (browse!)))
+  (when-not @*stop-server!
+    (let [port (get-free-port)
+          server (core-http-server port)]
+      (state/set-port! port)
+      (reset! *stop-server! port)
+      (println "serving scittle at " (port->url port))
+      (-> @state/*state
+          (assoc :items [item/welcome])
+          page/html
+          state/set-page!)
+      (browse!))))
 
 (defn close! []
   (when-let [s @*stop-server!]

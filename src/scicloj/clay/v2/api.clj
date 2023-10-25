@@ -1,6 +1,5 @@
 (ns scicloj.clay.v2.api
-  (:require [scicloj.clay.v2.pipeline :as pipeline]
-            [scicloj.kindly.v4.api :as kindly]
+  (:require [scicloj.kindly.v4.api :as kindly]
             [scicloj.clay.v2.actions :as actions]
             [scicloj.clay.v2.quarto :as quarto]
             [scicloj.clay.v2.server :as server]
@@ -10,11 +9,11 @@
             [clojure.test]))
 
 (defn stop! []
-  (pipeline/stop!)
+  (server/close!)
   [:ok])
 
 (defn start! []
-  (pipeline/start!)
+  (server/open!)
   [:ok])
 
 (defn show-namespace!
@@ -56,11 +55,11 @@
   (config/config))
 
 (defn handle-form! [form]
-  (pipeline/handle-form! form)
+  (actions/handle-form! form)
   [:ok])
 
 (defn handle-value! [value]
-  (pipeline/handle-value! value)
+  (actions/handle-value! value)
   [:ok])
 
 (defn update-book! [options]
