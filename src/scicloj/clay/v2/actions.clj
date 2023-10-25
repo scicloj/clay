@@ -64,3 +64,6 @@
        :path path)
       (->> (notebook/notebook-items path))
       quarto/write-quarto!))
+
+(defn welcome! []
+  (show/show-items! [item/welcome]))

@@ -91,10 +91,7 @@
     (state/set-port! port)
     (reset! *stop-server! port)
     (println "serving scittle at " (port->url port))
-    (-> @state/*state
-        (assoc :items [item/welcome])
-        page/html
-        state/set-page!)
+
     (browse!)))
 
 (defn close! []
