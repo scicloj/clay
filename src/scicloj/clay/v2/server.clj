@@ -5,12 +5,10 @@
    [clojure.java.shell :as sh]
    [clojure.string :as string]
    [org.httpkit.server :as httpkit]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.page :as page]
    [scicloj.clay.v2.util.path :as path]
-   [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.state :as state]
    [scicloj.clay.v2.util.time :as time]
+   [hiccup.core]
    [scicloj.kindly.v4.api :as kindly]))
 
 (def default-port 1971)
@@ -73,6 +71,13 @@
 (defn browse! []
   (browse/browse-url (url)))
 
+(defn welcome-hiccup []
+  [:div
+   [:p [:pre (str (java.util.Date.))]]
+   [:p [:pre [:a {:href "https://scicloj.github.io/clay/"}
+              "Clay"]
+        " is ready, waiting for interaction."]]])
+
 (defn open! []
   (when-not @*stop-server!
     (let [port (get-free-port)
@@ -80,9 +85,8 @@
       (state/set-port! port)
       (reset! *stop-server! port)
       (println "serving scittle at " (port->url port))
-      (-> @state/*state
-          (assoc :items [item/welcome])
-          page/html
+      (-> welcome-hiccup
+          hiccup.core/html
           state/set-page!)
       (browse!))))
 
