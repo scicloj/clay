@@ -20,9 +20,8 @@
                       (string/replace #"\.md$" ".html"))]
     (show/show-items! [item/loader])
     (io/make-parents md-path)
-    (-> @server.state/*state
-        (assoc :items items
-               :config (config/config))
+    (-> {:items items
+         :config (config/config)}
         page/md
         (->> (spit md-path)))
     (println [:wrote md-path (time/now)])
@@ -34,8 +33,6 @@
     (server.state/reset-html-path! html-path)
     (server/broadcast! "refresh")
     :ok))
-
-
 
 (def base-quarto-config
   "
@@ -93,9 +90,8 @@ embed-resources: true
                        (path/ns->target-path "" *ns* "/index.md"))
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
-    (-> @server.state/*state
-        (assoc :items items
-               :config (config/config))
+    (-> {:items items
+         :config (config/config)}
         page/md
         (->> (spit md-path)))
     (update-quarto-config! chapter-path)
@@ -164,11 +160,10 @@ embed-resources: true
       "md" (->> full-source-path
                 slurp
                 (spit full-target-path))
-      "clj" (-> @server.state/*state
-                (assoc :items (-> full-source-path
-                                  (notebook/notebook-items
-                                   {:title source-path}))
-                       :config page-config)
+      "clj" (-> {:items (-> full-source-path
+                            (notebook/notebook-items
+                             {:title source-path}))
+                 :config page-config}
                 page/md
                 (->> (spit full-target-path))))
     (prn [:wrote full-target-path (time/now)])))

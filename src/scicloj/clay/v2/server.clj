@@ -28,6 +28,55 @@
              (catch Exception e nil))
         (recur (inc port)))))
 
+(defn communication-script [{:keys [port counter]}]
+  (format "
+<script type=\"text/javascript\">
+  {
+    clay_port = %d;
+    clay_server_counter = '%d';
+
+    clay_refresh = function() {location.reload();}
+
+    const clay_socket = new WebSocket('ws://localhost:'+clay_port);
+
+    clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
+
+    clay_socket.addEventListener('message', (event)=> {
+      if (event.data=='refresh') {
+        clay_refresh();
+      } else {
+        console.log('unknown ws message: ' + event.data);
+      }
+    });
+  }
+
+  async function clay_1 () {
+    const response = await fetch('/counter');
+    const response_counter = await response.json();
+    if (response_counter != clay_server_counter) {
+      clay_refresh();
+    }
+  };
+  clay_1();
+</script>
+"
+          port
+          counter))
+
+(defn add-communication-script [page state]
+  (-> page
+      (string/replace #"</body></html>$"
+                      (str "\n"
+                           (communication-script state)
+                           "\n</body></html>"))))
+
+(defn page-to-serve [state]
+  (-> (some-> state
+              :html-path
+              slurp)
+      (or (:page state))
+      (add-communication-script state)))
+
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
   (if (:websocket? req)
@@ -35,15 +84,15 @@
                              :on-close (fn [ch _reason] (swap! *clients disj ch))
                              :on-receive (fn [_ch msg])})
     (case [request-method uri]
-      [:get "/"] {:body (or (some-> (server.state/html-path)
-                                    slurp)
-                            (:page @server.state/*state))
+      [:get "/"] {:body (page-to-serve @server.state/*state)
                   :status 200}
-      [:get "/counter"] {:body (-> (server.state/counter)
+      [:get "/counter"] {:body (-> @server.state/*state
+                                   :counter
                                    str)
                          :status 200}
       ;; else
-      {:body (let [base-path (or (some-> (server.state/html-path)
+      {:body (let [base-path (or (some-> @server.state/*state
+                                         :html-path
                                          path/path->parent)
                                  "docs")]
                (try (->> uri
@@ -66,7 +115,9 @@
   (str "http://localhost:" port "/"))
 
 (defn url []
-  (port->url (server.state/port)))
+  (-> @server.state/*state
+      :port
+      port->url))
 
 (defn browse! []
   (browse/browse-url (url)))

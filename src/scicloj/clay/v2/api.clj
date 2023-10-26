@@ -47,7 +47,7 @@
   (server/browse!))
 
 (defn port []
-  (server.state/port))
+  (:port @server.state/*state))
 
 (defn url []
   (server/url))

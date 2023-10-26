@@ -82,41 +82,10 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
 
-(defn communication-script [{:keys [port server-counter]}]
-  (format "
-{
-  clay_port = %d;
-  clay_server_counter = '%d';
-
-  clay_refresh = function() {location.reload();}
-
-  const clay_socket = new WebSocket('ws://localhost:'+clay_port);
-
-  clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
-
-  clay_socket.addEventListener('message', (event)=> {
-    if (event.data=='refresh') {
-      clay_refresh();
-    } else {
-      console.log('unknown ws message: ' + event.data);
-    }
-  });
-}
-
-async function clay_1 () {
-  const response = await fetch('/counter');
-  const response_counter = await response.json();
-  if (response_counter != clay_server_counter) {
-    clay_refresh();
-  }
-};
-clay_1();
-"
-          port
-          server-counter))
 
 
-(defn html [{:keys [items data port title toc? counter]}]
+
+(defn html [{:keys [items data title toc?]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
@@ -186,17 +155,13 @@ clay_1();
                                                  {:id (str "item" i)})]))
                        (into [:div]))]]]]
               [:script {:type "text/javascript"}
-               "hljs.highlightAll();"]
-              (when port
-                [:script {:type "text/javascript"}
-                 (communication-script {:port port
-                                        :server-counter counter})])]]
+               "hljs.highlightAll();"]]]
     (-> (hiccup.page/html5 head body)
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
 
 
-(defn md [{:keys [items port data title config counter]}]
+(defn md [{:keys [items data title config]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
@@ -228,9 +193,4 @@ clay_1();
            (fn [i item]
              (prepare/item->md item
                                {:id (str "item" i)})))
-          (string/join "\n\n"))
-     (when port
-       (hiccup/html
-        [:script {:type "text/javascript"}
-         (communication-script {:port port
-                                :server-counter counter})])))))
+          (string/join "\n\n")))))

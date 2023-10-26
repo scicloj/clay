@@ -6,9 +6,6 @@
          :page nil
          :html-path nil}))
 
-(defn counter []
-  (:counter @*state))
-
 (defn swap-state! [f & args]
   (-> *state
       (swap!
@@ -26,17 +23,8 @@
 (defn set-page! [page]
   (swap-state-and-increment! assoc :page page))
 
-(defn page []
-  (:page @*state))
-
 (defn reset-html-path! [path]
   (swap-state! assoc :html-path path))
 
-(defn html-path []
-  (:html-path @*state))
-
 (defn set-port! [port]
   (swap-state! assoc :port port))
-
-(defn port []
-  (:port @*state))
