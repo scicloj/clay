@@ -120,78 +120,78 @@ clay_1();
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
-                          (cons :html-default))]
-    (-> (hiccup.page/html5
-         [:head
-          [:meta {:charset "UTF-8"}]
-          [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-          [:link {:rel "icon" :href "data:,"}] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
-          #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
-          font-links
-          [:style (styles/main :table)]
-          [:style (styles/main :loader)]
-          #_[:style (styles/main :code)]
-          [:style (styles/highlight :qtcreator-light)]
-          (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
-          (when toc?
-            (css-from-local-copies
-             "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
-          (when toc?
-            [:style (styles/main :bootstrap-toc-customization)])
-          (->> (concat (->> special-libs
-                            (mapcat (comp :from-local-copy :css special-lib-resources)))
-                       (->> special-libs
-                            (mapcat (comp :from-the-web :css special-lib-resources))))
-               distinct
-               (map #(-> %
-                         hiccup.page/include-css
-                         hiccup/html))
-               (string/join "\n"))
-          [:title (or title "Clay")]]
-         [:body  {:style {:background "#fcfcfc"
-                          :font-family "'Roboto', sans-serif"
-                          :width "90%"
-                          :margin "auto"}
-                  :data-spy "scroll"
-                  :data-target "#toc"}
-          (when toc?
-            (js-from-local-copies
-             "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
-          [:script {:type "text/javascript"}
-           (-> "highlight/highlight.min.js"
-               io/resource
-               slurp)]
-          (->> special-libs
-               (mapcat (comp :from-local-copy :js special-lib-resources))
-               distinct
-               (apply js-from-local-copies))
-          (->> special-libs
-               (mapcat (comp :from-the-web :js special-lib-resources))
-               distinct
-               (apply hiccup.page/include-js))
-          [:div.container
-           [:div.row
-            (when toc?
-              [:div.col-sm-3
-               [:nav.sticky-top {:id "toc"
-                                 :data-toggle "toc"}]])
-            [:div {:class (if toc?
-                            "col-sm-9"
-                            "col-sm-12")}
-             [:div
-              (->> items
-                   (map-indexed
-                    (fn [i item]
-                      [:div {:style {:margin "15px"}}
-                       (prepare/item->hiccup item
-                                             {:id (str "item" i)})]))
-                   (into [:div]))]]]]
-          [:script {:type "text/javascript"}
-           "hljs.highlightAll();"]
-          (when port
-            [:script {:type "text/javascript"}
-             (communication-script {:port port
-                                    :server-counter counter})])])
+                          (cons :html-default))
+        head [:head
+              [:meta {:charset "UTF-8"}]
+              [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
+              [:link {:rel "icon" :href "data:,"}] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
+              #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
+              font-links
+              [:style (styles/main :table)]
+              [:style (styles/main :loader)]
+              #_[:style (styles/main :code)]
+              [:style (styles/highlight :qtcreator-light)]
+              (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
+              (when toc?
+                (css-from-local-copies
+                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
+              (when toc?
+                [:style (styles/main :bootstrap-toc-customization)])
+              (->> (concat (->> special-libs
+                                (mapcat (comp :from-local-copy :css special-lib-resources)))
+                           (->> special-libs
+                                (mapcat (comp :from-the-web :css special-lib-resources))))
+                   distinct
+                   (map #(-> %
+                             hiccup.page/include-css
+                             hiccup/html))
+                   (string/join "\n"))
+              [:title (or title "Clay")]]
+        body [:body  {:style {:background "#fcfcfc"
+                              :font-family "'Roboto', sans-serif"
+                              :width "90%"
+                              :margin "auto"}
+                      :data-spy "scroll"
+                      :data-target "#toc"}
+              (when toc?
+                (js-from-local-copies
+                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
+              [:script {:type "text/javascript"}
+               (-> "highlight/highlight.min.js"
+                   io/resource
+                   slurp)]
+              (->> special-libs
+                   (mapcat (comp :from-local-copy :js special-lib-resources))
+                   distinct
+                   (apply js-from-local-copies))
+              (->> special-libs
+                   (mapcat (comp :from-the-web :js special-lib-resources))
+                   distinct
+                   (apply hiccup.page/include-js))
+              [:div.container
+               [:div.row
+                (when toc?
+                  [:div.col-sm-3
+                   [:nav.sticky-top {:id "toc"
+                                     :data-toggle "toc"}]])
+                [:div {:class (if toc?
+                                "col-sm-9"
+                                "col-sm-12")}
+                 [:div
+                  (->> items
+                       (map-indexed
+                        (fn [i item]
+                          [:div {:style {:margin "15px"}}
+                           (prepare/item->hiccup item
+                                                 {:id (str "item" i)})]))
+                       (into [:div]))]]]]
+              [:script {:type "text/javascript"}
+               "hljs.highlightAll();"]
+              (when port
+                [:script {:type "text/javascript"}
+                 (communication-script {:port port
+                                        :server-counter counter})])]]
+    (-> (hiccup.page/html5 head body)
         (string/replace #"<table>"
                         "<table class='table table-hover'>"))))
 
