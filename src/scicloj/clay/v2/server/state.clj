@@ -1,10 +1,10 @@
-(ns scicloj.clay.v2.state)
+(ns scicloj.clay.v2.server.state)
 
 (defonce *state
   (atom {:port nil
-         :fns {}
          :counter 0
-         :page nil}))
+         :page nil
+         :html-path nil}))
 
 (defn counter []
   (:counter @*state))

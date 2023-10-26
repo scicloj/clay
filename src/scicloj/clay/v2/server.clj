@@ -4,11 +4,11 @@
    [clojure.java.io :as io]
    [clojure.java.shell :as sh]
    [clojure.string :as string]
-   [org.httpkit.server :as httpkit]
-   [scicloj.clay.v2.util.path :as path]
-   [scicloj.clay.v2.state :as state]
-   [scicloj.clay.v2.util.time :as time]
    [hiccup.core]
+   [org.httpkit.server :as httpkit]
+   [scicloj.clay.v2.server.state :as server.state]
+   [scicloj.clay.v2.util.path :as path]
+   [scicloj.clay.v2.util.time :as time]
    [scicloj.kindly.v4.api :as kindly]))
 
 (def default-port 1971)
@@ -35,15 +35,15 @@
                              :on-close (fn [ch _reason] (swap! *clients disj ch))
                              :on-receive (fn [_ch msg])})
     (case [request-method uri]
-      [:get "/"] {:body (or (some-> (state/html-path)
+      [:get "/"] {:body (or (some-> (server.state/html-path)
                                     slurp)
-                            (:page @state/*state))
+                            (:page @server.state/*state))
                   :status 200}
-      [:get "/counter"] {:body (-> (state/counter)
+      [:get "/counter"] {:body (-> (server.state/counter)
                                    str)
                          :status 200}
       ;; else
-      {:body (let [base-path (or (some-> (state/html-path)
+      {:body (let [base-path (or (some-> (server.state/html-path)
                                          path/path->parent)
                                  "docs")]
                (try (->> uri
@@ -66,7 +66,7 @@
   (str "http://localhost:" port "/"))
 
 (defn url []
-  (port->url (state/port)))
+  (port->url (server.state/port)))
 
 (defn browse! []
   (browse/browse-url (url)))
@@ -82,12 +82,12 @@
   (when-not @*stop-server!
     (let [port (get-free-port)
           server (core-http-server port)]
-      (state/set-port! port)
+      (server.state/set-port! port)
       (reset! *stop-server! port)
       (println "serving scittle at " (port->url port))
       (-> welcome-hiccup
           hiccup.core/html
-          state/set-page!)
+          server.state/set-page!)
       (browse!))))
 
 (defn close! []

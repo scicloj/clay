@@ -1,18 +1,18 @@
 (ns scicloj.clay.v2.quarto
   (:require
+   [clj-yaml.core :as yaml]
    [clojure.java.io :as io]
    [clojure.java.shell :as sh]
    [clojure.string :as string]
-   [scicloj.clay.v2.page :as page]
-   [scicloj.clay.v2.util.path :as path]
-   [scicloj.clay.v2.server :as server]
-   [scicloj.clay.v2.state :as state]
-   [scicloj.clay.v2.show :as show]
+   [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.notebook :as notebook]
-   [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.util.time :as time]
-   [clj-yaml.core :as yaml]))
+   [scicloj.clay.v2.page :as page]
+   [scicloj.clay.v2.server :as server]
+   [scicloj.clay.v2.server.state :as server.state]
+   [scicloj.clay.v2.show :as show]
+   [scicloj.clay.v2.util.path :as path]
+   [scicloj.clay.v2.util.time :as time]))
 
 (defn render-quarto! [items]
   (let [md-path (path/ns->target-path "docs/" *ns* ".md")
@@ -20,7 +20,7 @@
                       (string/replace #"\.md$" ".html"))]
     (show/show-items! [item/loader])
     (io/make-parents md-path)
-    (-> @state/*state
+    (-> @server.state/*state
         (assoc :items items
                :config (config/config))
         page/md
@@ -31,7 +31,7 @@
          ((juxt :err :out))
          (mapv println))
     (println [:created html-path (time/now)])
-    (state/reset-html-path! html-path)
+    (server.state/reset-html-path! html-path)
     (server/broadcast! "refresh")
     :ok))
 
@@ -93,7 +93,7 @@ embed-resources: true
                        (path/ns->target-path "" *ns* "/index.md"))
         md-path (str "book/" chapter-path)]
     (io/make-parents md-path)
-    (-> @state/*state
+    (-> @server.state/*state
         (assoc :items items
                :config (config/config))
         page/md
@@ -164,7 +164,7 @@ embed-resources: true
       "md" (->> full-source-path
                 slurp
                 (spit full-target-path))
-      "clj" (-> @state/*state
+      "clj" (-> @server.state/*state
                 (assoc :items (-> full-source-path
                                   (notebook/notebook-items
                                    {:title source-path}))

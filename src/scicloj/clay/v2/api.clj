@@ -1,12 +1,13 @@
 (ns scicloj.clay.v2.api
-  (:require [scicloj.kindly.v4.api :as kindly]
-            [scicloj.clay.v2.actions :as actions]
-            [scicloj.clay.v2.quarto :as quarto]
-            [scicloj.clay.v2.server :as server]
-            [scicloj.clay.v2.state :as state]
-            [scicloj.clay.v2.config :as config]
-            [clojure.string :as string]
-            [clojure.test]))
+  (:require
+   [clojure.string :as string]
+   [clojure.test]
+   [scicloj.clay.v2.actions :as actions]
+   [scicloj.clay.v2.config :as config]
+   [scicloj.clay.v2.quarto :as quarto]
+   [scicloj.clay.v2.server :as server]
+   [scicloj.clay.v2.server.state :as server.state]
+   [scicloj.kindly.v4.api :as kindly]))
 
 (defn stop! []
   (server/close!)
@@ -46,7 +47,7 @@
   (server/browse!))
 
 (defn port []
-  (state/port))
+  (server.state/port))
 
 (defn url []
   (server/url))
