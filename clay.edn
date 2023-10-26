@@ -1,2 +1,3 @@
 {:remote-repo {:git-url "https://github.com/scicloj/clay"
-               :branch "main"}}
+               :branch "main"}
+ :quarto {:monofont "Fira Code Medium"}}
