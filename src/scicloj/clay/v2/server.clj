@@ -85,7 +85,7 @@
       (server.state/set-port! port)
       (reset! *stop-server! port)
       (println "serving scittle at " (port->url port))
-      (-> welcome-hiccup
+      (-> (welcome-hiccup)
           hiccup.core/html
           server.state/set-page!)
       (browse!))))
