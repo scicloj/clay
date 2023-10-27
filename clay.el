@@ -28,7 +28,7 @@
       (cider-interactive-eval
        (concat "(scicloj.clay.v2.api/show-namespace-and-write-html! \"" filename "\" {:toc? true})")))))
 
-(defun clay/render-namespace-quarto ()
+(defun clay/render-namespace-quarto-html ()
   (interactive)
   (clay/start)
   (save-buffer)
@@ -37,7 +37,18 @@
         (buffer-file-name)))
     (when filename
       (cider-interactive-eval
-       (concat "(scicloj.clay.v2.api/render-namespace-quarto! \"" filename "\" {})")))))
+       (concat "(scicloj.clay.v2.api/render-namespace-quarto! \"" filename "\" {:format :html})")))))
+
+(defun clay/render-namespace-quarto-revealjs ()
+  (interactive)
+  (clay/start)
+  (save-buffer)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (when filename
+      (cider-interactive-eval
+       (concat "(scicloj.clay.v2.api/render-namespace-quarto! \"" filename "\" {:format :revealjs})")))))
 
 (defun clay/write-namespace-quarto ()
   (interactive)

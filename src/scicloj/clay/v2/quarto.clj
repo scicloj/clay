@@ -14,26 +14,6 @@
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]))
 
-(defn render-quarto! [items]
-  (let [md-path (path/ns->target-path "docs/" *ns* ".md")
-        html-path (-> md-path
-                      (string/replace #"\.md$" ".html"))]
-    (show/show-items! [item/loader])
-    (io/make-parents md-path)
-    (-> {:items items
-         :config (config/config)}
-        page/md
-        (->> (spit md-path)))
-    (println [:wrote md-path (time/now)])
-    (Thread/sleep 500)
-    (->> (sh/sh "quarto" "render" md-path)
-         ((juxt :err :out))
-         (mapv println))
-    (println [:created html-path (time/now)])
-    (server.state/reset-html-path! html-path)
-    (server/broadcast! "refresh")
-    :ok))
-
 (def base-quarto-config
   "
 project:
@@ -196,3 +176,37 @@ embed-resources: true
        doall)
   (-> main-index
       (write-main-book-index-if-needed! {:base-target-path base-target-path})))
+
+
+
+(defn render-quarto!
+  ([items]
+   (render-quarto! items {}))
+  ([items
+    {:keys [format]}]
+   (let [md-path (path/ns->target-path "docs/" *ns* ".md")
+         html-path (-> md-path
+                       (string/replace #"\.md$"
+                                       (str "-" (name format) ".html")))
+         html-filename (-> html-path
+                           (string/split #"/")
+                           last)]
+     (show/show-items! [item/loader])
+     (io/make-parents md-path)
+     (-> {:items items
+          :config (-> (config/config)
+                      (update-in [:quarto :format]
+                                 select-keys [format])
+                      (update-in [:quarto :format format]
+                                 assoc :output-file html-filename))}
+         page/md
+         (->> (spit md-path)))
+     (println [:wrote md-path (time/now)])
+     (Thread/sleep 500)
+     (->> (sh/sh "quarto" "render" md-path)
+          ((juxt :err :out))
+          (mapv println))
+     (println [:created  html-path (time/now)])
+     (server.state/reset-html-path!  html-path)
+     (server/broadcast! "refresh")
+     :ok)))

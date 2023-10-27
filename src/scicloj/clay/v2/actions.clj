@@ -40,7 +40,8 @@
   (show/write-html!))
 
 (defn render-quarto!
-  [path {:keys [title]
+  [path {:keys [format title]
+         :or {format :html}
          :as options}]
   (show/show-items!
    [(item/hiccup
@@ -53,7 +54,8 @@
        :title (or title path)
        :path path)
       (->> (notebook/notebook-items path))
-      quarto/render-quarto!))
+      (quarto/render-quarto! {:format format})))
+
 
 (defn write-quarto!
   [path {:keys [title]

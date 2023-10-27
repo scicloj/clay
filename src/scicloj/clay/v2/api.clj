@@ -33,15 +33,11 @@
 
 (defn render-namespace-quarto!
   [path options]
-  (->> {:format :quarto}
-       (merge options)
-       (actions/render-quarto! path)))
+  (actions/render-quarto! path options))
 
 (defn write-namespace-quarto!
   [path options]
-  (->> {:format :quarto}
-       (merge options)
-       (actions/write-quarto! path)))
+  (actions/write-quarto! path options))
 
 (defn browse! []
   (server/browse!))
