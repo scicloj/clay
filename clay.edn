@@ -1,3 +1,16 @@
 {:remote-repo {:git-url "https://github.com/scicloj/clay"
                :branch "main"}
- :quarto {:monofont "Fira Code Medium"}}
+ :quarto {:format {:html {:toc true
+                          :toc-depth 4
+                          :theme :spacelab}
+                   :revealjs {:theme :solarized
+                              :navigation-mode :vertical
+                              :transition :slide
+                              :background-transition :fade
+                              :incremental true}}
+          :monofont "Fira Code Medium"
+          :title "Clay tutorial"
+          :author "Scicloj"
+          :institute "Scicloj docs"
+          :code-block-background true
+          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}}
