@@ -187,7 +187,10 @@ embed-resources: true
    (let [md-path (path/ns->target-path "docs/" *ns* ".md")
          html-path (-> md-path
                        (string/replace #"\.md$"
-                                       (str "-" (name format) ".html")))
+                                       (str (case format
+                                              :html ""
+                                              :revealjs "-revealjs")
+                                            ".html")))
          html-filename (-> html-path
                            (string/split #"/")
                            last)]
