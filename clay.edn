@@ -10,7 +10,5 @@
                               :incremental true}}
           :monofont "Fira Code Medium"
           :title "Clay tutorial"
-          :author "Scicloj"
-          :institute "Scicloj docs"
           :code-block-background true
           :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}}
