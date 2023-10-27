@@ -1,6 +1,11 @@
 {:quarto {:format {:html {:toc true
                           :toc-depth 4
-                          :theme :spacelab}}
+                          :theme :spacelab}
+                   :revealjs {:theme :solarized
+                              :navigation-mode :vertical
+                              :transition :slide
+                              :background-transition :fade
+                              :incremental true}}
           :highlight-style :solarized
           :code-block-background true
           :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}}
