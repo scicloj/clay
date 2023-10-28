@@ -114,10 +114,14 @@
 (defn port->url [port]
   (str "http://localhost:" port "/"))
 
-(defn url []
+(defn port []
   (-> @server.state/*state
-      :port
-      port->url))
+      :port))
+
+(defn url []
+  (some-> @server.state/*state
+          :port
+          port->url))
 
 (defn browse! []
   (browse/browse-url (url)))

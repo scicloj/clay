@@ -43,7 +43,7 @@
   (server/browse!))
 
 (defn port []
-  (:port @server.state/*state))
+  (server/port))
 
 (defn url []
   (server/url))
