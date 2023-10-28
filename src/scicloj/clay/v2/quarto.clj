@@ -209,5 +209,4 @@ embed-resources: true
           ((juxt :err :out))
           (mapv println))
      (println [:created  html-path (time/now)])
-     (server/update-page! {:html-path html-path})
-     :ok)))
+     (server/update-page! {:html-path html-path}))))

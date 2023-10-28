@@ -159,4 +159,8 @@
        (-> state
            (assoc :html-path nil)
            (assoc :page page)))))
-  (broadcast! "refresh"))
+  (broadcast! "refresh")
+  [:ok])
+
+(defn page []
+  (:page @server.state/*state))

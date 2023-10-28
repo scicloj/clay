@@ -5,7 +5,7 @@
    [scicloj.clay.v2.page :as page]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.server :as server]
-   [scicloj.clay.v2.server.state :as server.state]
+   [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]))
 
@@ -13,19 +13,11 @@
   ([items]
    (show-items! items nil))
   ([items options]
-   (server.state/swap-state-and-increment!
-    (fn [state]
-      (let [state1 (-> state
-                       (assoc :html-path nil)
-                       (assoc :date (java.util.Date.))
-                       (merge options))
-            page (-> state1
-                     (assoc :items items)
-                     page/html)]
-        (-> state1
-            (assoc :page page)))))
-   (server/broadcast! "refresh")
-   [:ok]))
+   (server/update-page!
+    {:page (-> options
+               (assoc :items items
+                      :config (config/config))
+               page/html)})))
 
 (defn show! [context]
   (-> context
@@ -38,8 +30,7 @@
    (write-html! (path/ns->target-path "docs/" *ns* ".html")))
   ([path]
    (io/make-parents path)
-   (->> @server.state/*state
-        :page
+   (->> (server/page)
         (spit path))
    (println [:wrote path (time/now)])
    [:wrote path]))
