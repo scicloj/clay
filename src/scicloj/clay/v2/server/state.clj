@@ -21,7 +21,11 @@
          (#(apply f % args))))))
 
 (defn set-page! [page]
-  (swap-state-and-increment! assoc :page page))
+  (swap-state-and-increment!
+   (fn [state]
+     (-> state
+         (assoc :html-path nil)
+         (assoc :page page)))))
 
 (defn reset-html-path! [path]
   (swap-state! assoc :html-path path))

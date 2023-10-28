@@ -9,6 +9,7 @@
    [scicloj.clay.v2.server.state :as server.state]
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]
+   [scicloj.clay.v2.item :as item]
    [scicloj.kindly.v4.api :as kindly]))
 
 (def default-port 1971)
@@ -70,12 +71,20 @@
                            (communication-script state)
                            "\n</body></html>"))))
 
-(defn page-to-serve [state]
-  (-> (some-> state
-              :html-path
-              slurp)
-      (or (:page state))
-      (add-communication-script state)))
+(defn page
+  ([] (page @server.state/*state))
+  ([state] (-> (some-> state
+                       :html-path
+                       slurp)
+               (or (:page state))
+               (add-communication-script state))))
+
+(defn page-to-serve
+  ([state]
+   (-> state
+       page
+       (add-communication-script state))))
+
 
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
@@ -154,13 +163,6 @@
                             page]}]
   (if html-path
     (server.state/reset-html-path! html-path)
-    (server.state/swap-state-and-increment!
-     (fn [state]
-       (-> state
-           (assoc :html-path nil)
-           (assoc :page page)))))
+    (server.state/set-page! page))
   (broadcast! "refresh")
   [:ok])
-
-(defn page []
-  (:page @server.state/*state))
