@@ -7,7 +7,6 @@
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read]
-   [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.config :as config]))
 
 (defn deref-if-needed [v]

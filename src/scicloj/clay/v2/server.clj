@@ -145,3 +145,14 @@
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
+
+(defn update-page! [{:keys [html-path
+                            page]}]
+  (if html-path
+    (server.state/reset-html-path! html-path)
+    (server.state/swap-state-and-increment!
+     (fn [state]
+       (-> state
+           (assoc :html-path nil)
+           (assoc :page page)))))
+  (broadcast! "refresh"))

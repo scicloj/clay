@@ -9,7 +9,6 @@
    [scicloj.clay.v2.notebook :as notebook]
    [scicloj.clay.v2.page :as page]
    [scicloj.clay.v2.server :as server]
-   [scicloj.clay.v2.server.state :as server.state]
    [scicloj.clay.v2.show :as show]
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]))
@@ -210,6 +209,5 @@ embed-resources: true
           ((juxt :err :out))
           (mapv println))
      (println [:created  html-path (time/now)])
-     (server.state/reset-html-path!  html-path)
-     (server/broadcast! "refresh")
+     (server/update-page! {:html-path html-path})
      :ok)))
