@@ -408,7 +408,7 @@ nested-structure-1
 
 ;; See https://echarts.apache.org/handbook/en/get-started/
 (def echarts-example
-  {:title {:text "Echarts Getting Started Example"}
+  {:title {:text "Echarts Example"}
    :tooltip {}
    :legend {:data ["sales"]}
    :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
@@ -421,6 +421,11 @@ nested-structure-1
 
 (kind/echarts
  echarts-example)
+
+(kind/echarts
+ [{:style {:width "500px"
+           :height "200px"}}
+  echarts-example])
 
 
 ;; ### Plotly
@@ -524,6 +529,6 @@ nested-structure-1
 
 ;; ## Coming soon
 
-;; In the past, Clay used to support various data visualization libraries such as ECharts, Leaflet, 3DMol, MathBox, and KaTeX.
+;; In the past, Clay used to support various data visualization libraries such as Leaflet, 3DMol, MathBox, and KaTeX.
 ;;
 ;; These have been disabled in a recent refactoring (Oct. 2023) and will be brought back soon.
