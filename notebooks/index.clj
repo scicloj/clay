@@ -406,8 +406,9 @@ nested-structure-1
 
 ;; ### ECharts
 
+;; See https://echarts.apache.org/handbook/en/get-started/
 (def echarts-example
-  {:title "Echarts Getting Started Example"
+  {:title {:text "Echarts Getting Started Example"}
    :tooltip {}
    :legend {:data ["sales"]}
    :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
@@ -420,6 +421,7 @@ nested-structure-1
 
 (kind/echarts
  echarts-example)
+
 
 ;; ### Plotly
 (kind/plotly
