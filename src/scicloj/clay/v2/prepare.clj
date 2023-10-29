@@ -86,8 +86,8 @@
  #'item/pprint)
 
 (add-preparer!
- :kind/void
- (constantly item/void))
+ :kind/hidden
+ (constantly item/hidden))
 
 (add-preparer!
  :kind/md

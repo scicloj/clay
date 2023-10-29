@@ -80,7 +80,7 @@
                    :width "100%"
                    :background-color "grey"}}]})
 
-(def void
+(def hidden
   {:md ""
    :hiccup ""})
 
