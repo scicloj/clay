@@ -404,6 +404,23 @@ nested-structure-1
            :height "100px"}}
   cytoscape-example])
 
+;; ### ECharts
+
+(def echarts-example
+  {:title "Echarts Getting Started Example"
+   :tooltip {}
+   :legend {:data ["sales"]}
+   :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
+                  "Pants", "Heels", "Socks"]}
+   :yAxis {}
+   :series [{:name "sales"
+             :type "bar"
+             :data [5 20 36
+                    10 10 20]}]})
+
+(kind/echarts
+ echarts-example)
+
 ;; ### Plotly
 (kind/plotly
  {:data [{:x [0 1 3 2]
