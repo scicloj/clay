@@ -116,17 +116,6 @@
      :deps [:reagent]}))
 
 
-(defn reagent-based-item [component-symbol data]
-  (reagent
-   (cond
-     ;;
-     (vector? data)
-     (into [component-symbol] data)
-     ;;
-     (map? data)
-     [component-symbol data])))
-
-
 (defn extract-options-and-spec [data]
   (if (vector? data)
     data
