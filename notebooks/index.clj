@@ -156,6 +156,12 @@
 
 (str "abcd" "efgh")
 
+;; ### Hidden
+
+;; Values of :kind/hidden are not shown.
+
+(kind/hidden 9)
+
 ;; ### Hiccup
 
 ;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, can be specified by kind:
