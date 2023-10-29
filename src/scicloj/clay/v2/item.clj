@@ -148,14 +148,11 @@
               [:script
                (->> spec
                     charred/write-json-str
-                    pr-str
                     (format
                      "
 {
   var myChart = echarts.init(document.currentScript.parentElement);
-  var option_str = %s;
-  var option = JSON.parse(option_str);
-  myChart.setOption(option);
+  myChart.setOption(%s);
 };"))]]
      :deps [:echarts]}))
 
