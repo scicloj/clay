@@ -316,5 +316,9 @@
  #'item/cytoscape)
 
 (add-preparer!
+ :kind/echarts
+ #'item/echarts)
+
+(add-preparer!
  :kind/plotly
  #'item/plotly)

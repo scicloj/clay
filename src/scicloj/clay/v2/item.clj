@@ -141,6 +141,23 @@
      :deps [:cytoscape]}))
 
 
+(defn echarts [data]
+  (let [[options spec] (extract-options-and-spec data)]
+    {:hiccup [:div
+              options
+              [:script
+               (->> spec
+                    charred/write-json-str
+                    (format
+                     "
+{
+  var myChart = echarts.init(document.currentScript.parentElement);
+  var option = %s;
+  myChart.setOption(option);
+};"))]]
+     :deps [:echarts]}))
+
+
 (defn plotly [data]
   (let [[options spec] (extract-options-and-spec data)]
     {:hiccup [:div
