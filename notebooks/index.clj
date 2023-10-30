@@ -99,8 +99,6 @@
 (defonce memoized-slurp
   (memoize slurp))
 
-
-
 ;; ## A few useful actions
 
 ;; Showing the whole namespace:
