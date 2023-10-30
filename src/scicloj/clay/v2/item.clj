@@ -67,7 +67,8 @@
       printed-clojure))
 
 (defn hiccup [hiccup]
-  {:hiccup hiccup})
+  {:hiccup hiccup
+   :deps (-> hiccup meta :deps)})
 
 (defn md [text]
   {:md (->> text
@@ -113,8 +114,8 @@
                 (list 'reagent.dom/render
                       form
                       (list 'js/document.getElementById id)))]]
-     :deps [:reagent]}))
-
+     :deps (cons :reagent
+                 (-> form meta :deps))}))
 
 (defn extract-options-and-spec [data]
   (if (vector? data)
