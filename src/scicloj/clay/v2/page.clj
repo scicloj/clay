@@ -34,10 +34,8 @@
                  ;; which would need a bit more care
                  ;; (see https://katex.org/docs/font.html)
                  ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"]}}
-   :three-d-mol {:js {:from-local-copy
+   :three-d-mol {:js {:from-the-web
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
-   :three-d-mol-viewer {:js {:from-local-copy
-                             ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
    :leaflet {:js {:from-local-copy
                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
              :css {:from-local-copy
