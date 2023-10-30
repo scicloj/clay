@@ -511,9 +511,7 @@ nested-structure-1
                                      :alpha 0.2}))
                 (.zoomTo viewer)
                 (.render viewer)
-                (.zoom viewer 0.8 2000)))}
-      ;; need to keep this symbol to let Clay infer the necessary dependency
-      'three-d-mol])
+                (.zoom viewer 0.8 2000)))}])
   {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
 
 ;; ## Delays
