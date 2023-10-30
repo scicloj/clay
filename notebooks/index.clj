@@ -469,7 +469,78 @@ nested-structure-1
                           (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
                           (.openPopup))))}]])])
 
+;; ### 3DMol.js
 
+
+
+(kind/reagent
+ ^{:deps [:three-d-mol]}
+ ['(fn [{:keys [data-pdb]}]
+     [:div {:style {:height "400px"
+                    :width "400px"
+                    :position :relative}
+            :class "viewer_3Dmoljs"
+            :data-pdb data-pdb
+            :data-backgroundcolor "0xffffff"
+            :data-style "stick"
+            :data-ui true}])
+  {:data-pdb "2POR"}])
+
+(kind/reagent
+ ^{:deps [:three-d-mol]}
+ ['(fn [{:keys [pdb-data]}]
+     [:div
+      {:style {:width "100%"
+               :height "500px"
+               :position "relative"}
+       :ref (fn [el]
+              (let [config (clj->js
+                            {:backgroundColor "0xffffff"})
+                    viewer (.createViewer js/$3Dmol el #_config)]
+                (.setViewStyle viewer (clj->js
+                                       {:style "outline"}))
+                (.addModelsAsFrames viewer pdb-data "pdb")
+                (.addSphere viewer (clj->js
+                                    {:center {:x 0
+                                              :y 0
+                                              :z 0}
+                                     :radius 5
+                                     :color "green"
+                                     :alpha 0.2}))
+                (.zoomTo viewer)
+                (.render viewer)
+                (.zoom viewer 0.8 2000)))}
+      ;; need to keep this symbol to let Clay infer the necessary dependency
+      'three-d-mol])
+  {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
+
+(kind/reagent
+ ^{:deps [:three-d-mol]}
+ ['(fn [{:keys [pdb-data]}]
+     [:div
+      {:style {:width "100%"
+               :height "500px"
+               :position "relative"}
+       :ref (fn [el]
+              (let [config (clj->js
+                            {:backgroundColor "0xffffff"})
+                    viewer (.createViewer js/$3Dmol el #_config)]
+                (.setViewStyle viewer (clj->js
+                                       {:style "outline"}))
+                (.addModelsAsFrames viewer pdb-data "pdb")
+                (.addSphere viewer (clj->js
+                                    {:center {:x 0
+                                              :y 0
+                                              :z 0}
+                                     :radius 5
+                                     :color "green"
+                                     :alpha 0.2}))
+                (.zoomTo viewer)
+                (.render viewer)
+                (.zoom viewer 0.8 2000)))}
+      ;; need to keep this symbol to let Clay infer the necessary dependency
+      'three-d-mol])
+  {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
 
 ;; ## Delays
 
@@ -560,6 +631,6 @@ nested-structure-1
 
 ;; ## Coming soon
 
-;; In the past, Clay used to support various data visualization libraries such as 3DMol, MathBox, and KaTeX.
+;; In the past, Clay used to support various data visualization libraries such as MathBox and KaTeX.
 ;;
 ;; These have been disabled in a recent refactoring (Oct. 2023) and will be brought back soon.
