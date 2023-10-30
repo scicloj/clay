@@ -273,7 +273,7 @@
 
 (add-preparer!
  :kind/reagent
- item/reagent)
+ #'item/reagent)
 
 (def non-hiccup-kind?
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
