@@ -439,6 +439,18 @@ nested-structure-1
           :marker {:size 4
                    :colorscale :Viridis}}]})
 
+;; ### KaTeX
+
+#_(kind/reagent
+   ^{:deps [:katex]}
+   '[(fn [tex-string]
+       [:div
+        (js/alert (pr-str js/katex))
+        {:dangerouslySetInnerHTML
+         {:__html (.renderToString js/katex
+                                   tex-string)}}])
+     "1+x^2"])
+
 ;; ### Leaflet
 
 ;; (experimental)
