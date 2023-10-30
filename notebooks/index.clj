@@ -406,7 +406,8 @@ nested-structure-1
 
 ;; ### ECharts
 
-;; See https://echarts.apache.org/handbook/en/get-started/
+;; This example is taken from Apache ECharts' [Getting Started](https://echarts.apache.org/handbook/en/get-started/).
+
 (def echarts-example
   {:title {:text "Echarts Example"}
    :tooltip {}
