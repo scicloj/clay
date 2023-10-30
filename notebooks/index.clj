@@ -471,7 +471,7 @@ nested-structure-1
 
 ;; ### 3DMol.js
 
-
+;; Embedding a 3Dmol Viewer ([original example](https://3dmol.csb.pitt.edu/doc/tutorial-embeddable.html)):
 
 (kind/reagent
  ^{:deps [:three-d-mol]}
@@ -486,6 +486,8 @@ nested-structure-1
             :data-ui true}])
   {:data-pdb "2POR"}])
 
+;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
+
 (kind/reagent
  ^{:deps [:three-d-mol]}
  ['(fn [{:keys [pdb-data]}]
@@ -496,7 +498,7 @@ nested-structure-1
        :ref (fn [el]
               (let [config (clj->js
                             {:backgroundColor "0xffffff"})
-                    viewer (.createViewer js/$3Dmol el #_config)]
+                    viewer (.createViewer js/$3Dmol el)]
                 (.setViewStyle viewer (clj->js
                                        {:style "outline"}))
                 (.addModelsAsFrames viewer pdb-data "pdb")
