@@ -137,6 +137,8 @@
 
 (defn welcome-page []
   (hiccup.page/html5
+   [:head
+    [:link {:rel "icon" :href "data:,"}]] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
    [:body
     [:div
      [:p [:pre (str (java.util.Date.))]]
