@@ -12,4 +12,5 @@
           :highlight-style :solarized
           :code-block-background true
           :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}
-          :embed-resources true}}
+          ;; :embed-resources true
+          }}
