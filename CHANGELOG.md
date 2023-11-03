@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. This change
 - unifying the quarto pathways in the API: one markdown generation funciton, two different actions (with/without rendering)
 - new config-oriented actions (WIP)
 - using file-based config rathern than stateful options
+- added header to browser view
 
 ## [2-alpha38] - 2023-10-03
 - path changes in light quarto book generation

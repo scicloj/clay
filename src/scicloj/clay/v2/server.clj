@@ -71,12 +71,31 @@
                            (communication-script state)
                            "\n</body></html>"))))
 
+(defn header [state]
+  (hiccup.core/html
+   [:div
+    {:style {:background "#dddddd"}}
+    [:div {:style {:margin "20px"}}
+     [:big [:big "(Clay)"]]
+     (some->> state
+              :html-path
+              (vector :pre))
+     [:pre (time/now)]]
+    (:hiccup item/separator)]))
+
+(defn add-header [page state]
+  (-> page
+      (string/replace #"</head>"
+                      (str "</head>"
+                           (header state)))))
+
 (defn page
   ([] (page @server.state/*state))
   ([state] (-> (some-> state
                        :html-path
                        slurp)
                (or (:page state))
+               (add-header state)
                (add-communication-script state))))
 
 (defn page-to-serve
