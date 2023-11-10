@@ -25,12 +25,12 @@
       vector
       show-items!))
 
-(defn write-html!
-  ([]
-   (write-html! (path/ns->target-path "docs/" *ns* ".html")))
-  ([path]
-   (io/make-parents path)
-   (->> (server/page)
-        (spit path))
-   (println [:wrote path (time/now)])
-   [:wrote path]))
+#_(defn write-html!
+    ([]
+     (write-html! (path/ns->target-path "docs/" *ns* ".html")))
+    ([path]
+     (io/make-parents path)
+     (->> (server/page)
+          (spit path))
+     (println [:wrote path (time/now)])
+     [:wrote path]))

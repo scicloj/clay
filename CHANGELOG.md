@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha40-SNAPSHOT]
+- changed the way the server works: always serving a file
+
 ## [2-alpha39] - 2023-11-03
 - major cleanup and refactoring
 - temporarily not supporting reagent-based items

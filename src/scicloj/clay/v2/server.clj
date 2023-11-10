@@ -91,12 +91,11 @@
 
 (defn page
   ([] (page @server.state/*state))
-  ([state] (-> (some-> state
-                       :html-path
-                       slurp)
-               (or (:page state))
-               (add-header state)
-               (add-communication-script state))))
+  ([state] (some-> state
+                   :html-path
+                   slurp
+                   (add-header state)
+                   (add-communication-script state))))
 
 (defn page-to-serve
   ([state]
@@ -165,6 +164,19 @@
                 "Clay"]
           " is ready, waiting for interaction."]]]]))
 
+(defn update-page! [{:keys [page
+                            html-path
+                            show]
+                     :or {html-path ".clay.html"
+                          show true}}]
+  (when page
+    (spit html-path page))
+  (when html-path
+    (server.state/reset-html-path! html-path))
+  (when show
+    (broadcast! "refresh"))
+  [:ok])
+
 (defn open! []
   (when-not @*stop-server!
     (let [port (get-free-port)
@@ -172,19 +184,10 @@
       (server.state/set-port! port)
       (reset! *stop-server! port)
       (println "serving scittle at " (port->url port))
-      (-> (welcome-page)
-          server.state/set-page!)
+      (update-page! {:page (welcome-page)})
       (browse!))))
 
 (defn close! []
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
-
-(defn update-page! [{:keys [html-path
-                            page]}]
-  (if html-path
-    (server.state/reset-html-path! html-path)
-    (server.state/set-page! page))
-  (broadcast! "refresh")
-  [:ok])

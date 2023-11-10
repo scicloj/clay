@@ -37,7 +37,7 @@
              :path path)
       (->> (show-doc! path)))
   (Thread/sleep 1000)
-  (show/write-html!))
+  #_(show/write-html!))
 
 (defn render-quarto!
   [path {:keys [format title]
