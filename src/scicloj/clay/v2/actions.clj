@@ -23,21 +23,9 @@
      (-> doc
          (show/show-items!
           {:title title
-           :toc? toc?})))
+           :toc? toc?
+           :html-path (path/ns->target-path "docs/" *ns* ".html")})))
    :ok))
-
-(defn show-doc-and-write-html!
-  [path options]
-  (-> options
-      (assoc :custom-message [:div
-                              [:p "showing document for "
-                               [:code (path/path->filename path)]]
-                              [:p "and then writing as html file"]
-                              [:div.loader]]
-             :path path)
-      (->> (show-doc! path)))
-  (Thread/sleep 1000)
-  #_(show/write-html!))
 
 (defn render-quarto!
   [path {:keys [format title]

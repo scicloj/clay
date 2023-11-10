@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha40-SNAPSHOT]
 - changed the way the server works: always serving a file
+- simplified the pathway for writing HTML
 
 ## [2-alpha39] - 2023-11-03
 - major cleanup and refactoring

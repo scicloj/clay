@@ -14,23 +14,16 @@
    (show-items! items nil))
   ([items options]
    (server/update-page!
-    {:page (-> options
-               (assoc :items items
-                      :config (config/config))
-               page/html)})))
+    (merge
+     {:page (-> options
+                (assoc :items items
+                       :config (config/config))
+                page/html)}
+     (select-keys options [:html-path])))))
+
 
 (defn show! [context]
   (-> context
       prepare/prepare-or-pprint
       vector
       show-items!))
-
-#_(defn write-html!
-    ([]
-     (write-html! (path/ns->target-path "docs/" *ns* ".html")))
-    ([path]
-     (io/make-parents path)
-     (->> (server/page)
-          (spit path))
-     (println [:wrote path (time/now)])
-     [:wrote path]))
