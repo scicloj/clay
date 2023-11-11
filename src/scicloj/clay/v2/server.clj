@@ -29,6 +29,7 @@
              (catch Exception e nil))
         (recur (inc port)))))
 
+
 (defn communication-script [{:keys [port counter]}]
   (format "
 <script type=\"text/javascript\">
@@ -74,28 +75,52 @@
 (defn header [state]
   (hiccup.core/html
    [:div
-    {:style {:background "#dddddd"}}
-    [:div {:style {:margin "20px"}}
-     [:big [:big "(Clay)"]]
-     (some->> state
-              :html-path
-              (vector :pre))
-     [:pre (time/now)]]
-    (:hiccup item/separator)]))
+    [:div
+     [:img
+      {:style {:display "inline-block"
+               :zoom 1
+               :width "40px"
+               :margin-left "20px"}
+       ;; { zoom: 1; vertical-align: top; font-size: 12px;}
+       :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
+       :alt "Clay logo"}]
+     #_[:big [:big "(Clay)"]]
+     [:div {:style {:display "inline-block"
+                    :margin "20px"}}
+      [:pre (some->> state
+                     :html-path)]
+      [:pre (time/now)]]]
+    #_(:hiccup item/separator)]))
 
-(defn add-header [page state]
-  (-> page
-      (string/replace #"</head>"
-                      (str "</head>"
-                           (header state)))))
+(def avoid-favicon
+  ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
+  [:link {:rel "icon" :href "data:,"}])
 
 (defn page
-  ([] (page @server.state/*state))
-  ([state] (some-> state
-                   :html-path
-                   slurp
-                   (add-header state)
-                   (add-communication-script state))))
+  ([]
+   (page @server.state/*state))
+  ([state]
+   (hiccup.page/html5
+    [:head avoid-favicon]
+    [:body {:style {:overflow-x "hidden"}}
+     [:style "* {margin: 0; padding: 0; top: 0;}"]
+     [:div {:style {:left "0px"
+                    :top "0px"
+                    :height "70px"
+                    :background-color "#ddd"}}
+      (header state)]
+     ;; https://makersaid.com/make-iframe-fit-100-of-remaining-height/
+     [:iframe {:style {:height "calc(100vh - 100px)"
+                       :width "100%"
+                       :border "none"}
+               :srcdoc (some-> state
+                               :html-path
+                               slurp)}]
+     (communication-script state)])))
+
+
+
+(def debug )
 
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
@@ -149,7 +174,7 @@
 (defn welcome-page []
   (hiccup.page/html5
    [:head
-    [:link {:rel "icon" :href "data:,"}]] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
+    avoid-favicon]
    [:body
     [:div
      [:p [:pre (str (java.util.Date.))]]
