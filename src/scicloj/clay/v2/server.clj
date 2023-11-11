@@ -97,13 +97,6 @@
                    (add-header state)
                    (add-communication-script state))))
 
-(defn page-to-serve
-  ([state]
-   (-> state
-       page
-       (add-communication-script state))))
-
-
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
   (if (:websocket? req)
@@ -111,7 +104,7 @@
                              :on-close (fn [ch _reason] (swap! *clients disj ch))
                              :on-receive (fn [_ch msg])})
     (case [request-method uri]
-      [:get "/"] {:body (page-to-serve @server.state/*state)
+      [:get "/"] {:body (page @server.state/*state)
                   :status 200}
       [:get "/counter"] {:body (-> @server.state/*state
                                    :counter
