@@ -25,12 +25,6 @@
    (actions/show-doc! path options)
    [:ok]))
 
-(defn show-namespace-and-write-html!
-  [path options]
-  (->> {:format :html}
-       (merge options)
-       (actions/show-doc-and-write-html! path)))
-
 (defn render-namespace-quarto!
   [path options]
   (actions/render-quarto! path options))

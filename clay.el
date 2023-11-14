@@ -17,17 +17,6 @@
       (cider-interactive-eval
        (concat "(scicloj.clay.v2.api/show-namespace! \"" filename "\" {})")))))
 
-(defun clay/show-namespace-and-write-html ()
-  (interactive)
-  (clay/start)
-  (save-buffer)
-  (let
-      ((filename
-        (buffer-file-name)))
-    (when filename
-      (cider-interactive-eval
-       (concat "(scicloj.clay.v2.api/show-namespace-and-write-html! \"" filename "\" {:toc? true})")))))
-
 (defun clay/render-namespace-quarto-html ()
   (interactive)
   (clay/start)
