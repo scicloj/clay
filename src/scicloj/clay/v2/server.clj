@@ -187,11 +187,10 @@
                             show]
                      :or {html-path ".clay.html"
                           show true}}]
+  (io/make-parents html-path)
   (when page
     (spit html-path page))
-  (when html-path
-    (io/make-parents html-path)
-    (server.state/reset-html-path! html-path))
+  (server.state/reset-html-path! html-path)
   (when show
     (broadcast! "refresh"))
   [:ok])
