@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - changed the way the server works: always serving a file
 - simplified the pathway for writing HTML
 - using an iframe for the browser view
+- changed the target paths to always end with "index.md" or "index.html"
 
 
 ## [2-alpha39] - 2023-11-03
