@@ -2,7 +2,7 @@
   (:require
    [clojure.java.browse :as browse]
    [clojure.java.io :as io]
-   [clojure.java.shell :as sh]
+   [clojure.java.shell :as shell]
    [clojure.string :as string]
    [hiccup.page]
    [org.httpkit.server :as httpkit]
