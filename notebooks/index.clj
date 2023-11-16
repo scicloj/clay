@@ -611,7 +611,8 @@ nested-structure-1
               :y (repeatedly 3 rand)})]
 
 ;; ## Referring to files
-;; (WIP)
+
+;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`.
 
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
