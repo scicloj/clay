@@ -614,7 +614,7 @@ nested-structure-1
 ;; (WIP)
 
 (kind/hiccup
- [:img {:src "src/images/Clay.svg.png"}])
+ [:img {:src "notebooks/images/Clay.svg.png"}])
 
 ;; ## Coming soon
 
