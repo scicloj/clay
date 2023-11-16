@@ -616,6 +616,16 @@ nested-structure-1
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
 
+(kind/vega-lite
+ {:data {:url "notebooks/datasets/iris.csv"},
+  :mark "rule",
+  :encoding {:x {:field "sepal_width", :type "quantitative"},
+             :y {:field "sepal_length", :type "quantitative"},
+             :x2 {:field "petal_width", :type "quantitative"},
+             :y2 {:field "petal_length", :type "quantitative"},
+             :color {:field "species", :type "nominal"}}
+  :background "floralwhite"})
+
 ;; ## Coming soon
 
 ;; In the past, Clay used to support various data visualization libraries such as MathBox and KaTeX.
