@@ -191,6 +191,7 @@
   (when page
     (spit html-path page))
   (server.state/reset-html-path! html-path)
+  (shell/sh "rsync" "-avu" "src/" "docs/src")
   (when show
     (broadcast! "refresh"))
   [:ok])
