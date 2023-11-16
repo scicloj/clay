@@ -610,6 +610,12 @@ nested-structure-1
  (tc/dataset {:x (range 3)
               :y (repeatedly 3 rand)})]
 
+;; ## Referring to files
+;; (WIP)
+
+(kind/hiccup
+ [:img {:src "src/images/Clay.svg.png"}])
+
 ;; ## Coming soon
 
 ;; In the past, Clay used to support various data visualization libraries such as MathBox and KaTeX.
