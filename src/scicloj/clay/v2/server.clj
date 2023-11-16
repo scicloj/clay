@@ -192,6 +192,7 @@
     (spit html-path page))
   (server.state/reset-html-path! html-path)
   (shell/sh "rsync" "-avu" "src/" "docs/src")
+  (shell/sh "rsync" "-avu" "notebooks/" "docs/notebooks")
   (when show
     (broadcast! "refresh"))
   [:ok])
