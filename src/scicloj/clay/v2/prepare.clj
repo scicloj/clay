@@ -17,6 +17,15 @@
   (swap! *kind->preparer assoc kind preparer)
   [:ok])
 
+(defn preparer-from-value-fn [f]
+  (comp f :value))
+
+(defn add-preparer-from-value-fn!
+  [kind f]
+  (->> f
+       preparer-from-value-fn
+       (add-preparer! kind)))
+
 (defn value->kind [v]
   (-> {:value v}
       kindly-advice/advise
@@ -64,7 +73,7 @@
                           :kind
                           (@*kind->preparer)
                           (or fallback-preparer))]
-    (preparer value)))
+    (preparer context)))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer item/pprint}))
@@ -77,23 +86,25 @@
           value->kind
           (@*kind->preparer)))
 
-(add-preparer!
+
+
+(add-preparer-from-value-fn!
  :kind/println
  #'item/just-println)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/pprint
  #'item/pprint)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/hidden
  (constantly item/hidden))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/md
  #'item/md)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/table
  (fn [table-spec]
    (let [pre-hiccup (table/->table-hiccup
@@ -137,21 +148,21 @@
       item/structure-mark
       :hiccup))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/vega
  #'item/vega-embed)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/vega-lite
  #'item/vega-embed)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/code
  (fn [codes]
    (->> codes
         item/source-clojure)))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/dataset
  (fn [v]
    (-> v
@@ -159,11 +170,11 @@
        with-out-str
        item/md)))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/image
  #'item/image)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/test
  (fn [t]
    (prepare-or-pprint
@@ -172,7 +183,7 @@
                 :test
                 (#(%)))})))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/map
  (fn [value]
    (if (->> value
@@ -252,17 +263,17 @@
     (item/pprint value)))
 
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/vector
  (fn [value]
    (view-sequentially value "[" "]")))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/seq
  (fn [value]
    (view-sequentially value "(" ")")))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/set
  (fn [value]
    (view-sequentially value "#{" "}")))
@@ -271,7 +282,7 @@
   (let [*counter (atom 0)]
     #(str "id" (swap! *counter inc))))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/reagent
  #'item/reagent)
 
@@ -279,7 +290,7 @@
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
                 :kind/hiccup}))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/hiccup
  (fn [form]
    (let [*deps (atom []) ; TODO: implement without mutable state
@@ -299,11 +310,11 @@
      {:hiccup hiccup
       :deps (distinct @*deps)})))
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/html
  #'item/html)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/portal
  (fn [value]
    (-> value
@@ -311,14 +322,14 @@
        item/portal)))
 
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/cytoscape
  #'item/cytoscape)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/echarts
  #'item/echarts)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/plotly
  #'item/plotly)
