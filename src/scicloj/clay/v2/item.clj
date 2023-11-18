@@ -2,6 +2,7 @@
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]
             [charred.api :as charred]
+            [scicloj.clay.v2.tempfiles :as tempfiles]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]))
@@ -97,10 +98,16 @@
    :deps [:vega]})
 
 
-(defn image [buffered-image]
-  {:hiccup [:img {:src (-> buffered-image
-                           util.image/buffered-image->byte-array
-                           util.image/byte-array->data-uri)}]})
+(defn image [{:keys [value
+                     target-path]}]
+  (let [jpg-path (tempfiles/next-tempfile!
+                  target-path
+                  value
+                  ".jpg")]
+    (util.image/write! value jpg-path)
+    {:hiccup [:img {:src (-> jpg-path
+                             (string/replace
+                              #"^docs/" ""))}]}))
 
 (def next-id
   (let [*counter (atom 0)]

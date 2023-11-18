@@ -170,9 +170,7 @@
        with-out-str
        item/md)))
 
-(add-preparer-from-value-fn!
- :kind/image
- #'item/image)
+
 
 (add-preparer-from-value-fn!
  :kind/test
@@ -333,3 +331,7 @@
 (add-preparer-from-value-fn!
  :kind/plotly
  #'item/plotly)
+
+(add-preparer!
+ :kind/image
+ #'item/image)

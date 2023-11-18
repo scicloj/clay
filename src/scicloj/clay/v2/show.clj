@@ -6,6 +6,7 @@
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.config :as config]
+   [scicloj.clay.v2.tempfiles :as tempfiles]
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]))
 
@@ -23,6 +24,7 @@
 
 
 (defn show! [context]
+  (tempfiles/init-target! nil)
   (-> context
       prepare/prepare-or-pprint
       vector

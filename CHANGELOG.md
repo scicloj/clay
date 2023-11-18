@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - simplified the pathway for writing HTML
 - using an iframe for the browser view
 - changed the target paths to always end with "index.md" or "index.html"
-
+- embedding images as separate files
 
 ## [2-alpha39] - 2023-11-03
 - major cleanup and refactoring

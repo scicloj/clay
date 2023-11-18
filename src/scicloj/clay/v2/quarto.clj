@@ -141,7 +141,8 @@ embed-resources: true
                 (spit full-target-path))
       "clj" (-> {:items (-> full-source-path
                             (notebook/notebook-items
-                             {:title source-path}))
+                             {:title source-path
+                              :target-path full-target-path}))
                  :config page-config}
                 page/md
                 (->> (spit full-target-path))))

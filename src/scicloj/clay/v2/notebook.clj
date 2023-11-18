@@ -7,7 +7,8 @@
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read]
-   [scicloj.clay.v2.config :as config]))
+   [scicloj.clay.v2.config :as config]
+   [scicloj.clay.v2.tempfiles :as tempfiles]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -75,7 +76,7 @@
                 (and hide-nils? (nil? value))
                 (and hide-vars? (var? value)))
        (-> note
-           (select-keys [:value :code :form])
+           (select-keys [:value :code :form :target-path])
            (update :value deref-if-needed)
            prepare/prepare-or-pprint
            ;; in-div ; TODO: is this needed?
@@ -95,12 +96,17 @@
   ([path {:as options
           :keys [hide-info-line?
                  hide-code? hide-nils? hide-vars?
-                 title toc?]}]
+                 title toc?
+                 target-path]}]
+   (tempfiles/init-target! target-path)
    (-> path
        slurp
        scicloj.clay.v2.read/->safe-notes
-       (->> (map complete-note)
-            (mapcat #(note-to-items % options))
+       (->> (mapcat (fn [note]
+                      (-> note
+                          complete-note
+                          (assoc :target-path target-path)
+                          (note-to-items options))))
             (remove nil?))
        (add-info-line path options)
        doall)))

@@ -5,6 +5,13 @@
            java.io.InputStream
            javax.imageio.ImageIO))
 
+(defn write! [^BufferedImage image
+              target-jpg-path]
+  (io/make-parents target-jpg-path)
+  (ImageIO/write image
+                 "jpg"
+                 (io/file target-jpg-path)))
+
 (defn buffered-image->byte-array [^BufferedImage image]
   (let [baos (java.io.ByteArrayOutputStream.)]
     (ImageIO/write ^BufferedImage image "png" baos)

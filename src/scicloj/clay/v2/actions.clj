@@ -19,12 +19,15 @@
            [:p "showing document for "
             [:code (path/path->filename path)]]
            [:div.loader]]))])
-   (let [doc (notebook/notebook-items path options)]
+   (let [target-path (path/ns->target-path "docs/" *ns* ".html")
+         doc (notebook/notebook-items path
+                                      (assoc options
+                                             :target-path target-path))]
      (-> doc
          (show/show-items!
           {:title title
            :toc? toc?
-           :html-path (path/ns->target-path "docs/" *ns* ".html")})))
+           :html-path target-path})))
    :ok))
 
 (defn render-quarto!
