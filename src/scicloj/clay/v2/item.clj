@@ -2,7 +2,7 @@
   (:require [clojure.pprint :as pp]
             [clojure.string :as string]
             [charred.api :as charred]
-            [scicloj.clay.v2.tempfiles :as tempfiles]
+            [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]))
@@ -100,7 +100,7 @@
 
 (defn image [{:keys [value
                      target-path]}]
-  (let [jpg-path (tempfiles/next-tempfile!
+  (let [jpg-path (files/next-tempfile!
                   target-path
                   value
                   ".jpg")]

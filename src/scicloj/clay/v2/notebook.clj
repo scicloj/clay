@@ -8,7 +8,7 @@
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read]
    [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.tempfiles :as tempfiles]))
+   [scicloj.clay.v2.files :as files]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -98,7 +98,7 @@
                  hide-code? hide-nils? hide-vars?
                  title toc?
                  target-path]}]
-   (tempfiles/init-target! target-path)
+   (files/init-target! target-path)
    (-> path
        slurp
        scicloj.clay.v2.read/->safe-notes
