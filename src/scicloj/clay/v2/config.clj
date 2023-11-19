@@ -16,5 +16,4 @@
                  edn/read-string)
              (some-> "clay.edn"
                      slurp-when-exists
-                     edn/read-string)))
-  ([k] ((config) k)))
+                     edn/read-string))))
