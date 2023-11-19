@@ -105,7 +105,8 @@
                   value
                   ".jpg")]
     (util.image/write! value jpg-path)
-    {:hiccup [:img {:src (-> jpg-path
+    {:hiccup [:img {:style {:width "100%"}
+                    :src (-> jpg-path
                              (string/replace
                               #"^docs/" ""))}]}))
 
