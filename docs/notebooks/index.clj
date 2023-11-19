@@ -438,18 +438,6 @@ nested-structure-1
           :marker {:size 4
                    :colorscale :Viridis}}]})
 
-;; ### KaTeX
-
-#_(kind/reagent
-   ^{:deps [:katex]}
-   '[(fn [tex-string]
-       [:div
-        (js/alert (pr-str js/katex))
-        {:dangerouslySetInnerHTML
-         {:__html (.renderToString js/katex
-                                   tex-string)}}])
-     "1+x^2"])
-
 ;; ### Leaflet
 
 ;; (experimental)
@@ -631,6 +619,6 @@ nested-structure-1
 
 ;; ## Coming soon
 
-;; In the past, Clay used to support various data visualization libraries such as MathBox and KaTeX.
+;; In the past, Clay used to support various data visualization libraries such as MathBox.
 ;;
 ;; These have been disabled in a recent refactoring (Oct. 2023) and will be brought back soon.
