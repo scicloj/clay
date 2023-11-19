@@ -76,17 +76,17 @@
     (preparer context)))
 
 (defn prepare-or-pprint [context]
-  (prepare context {:fallback-preparer item/pprint}))
+  (prepare context {:fallback-preparer
+                    (preparer-from-value-fn #'item/pprint)}))
 
 (defn prepare-or-str [context]
-  (prepare context {:fallback-preparer item/md}))
+  (prepare context {:fallback-preparer
+                    (preparer-from-value-fn #'item/md)}))
 
 (defn has-kind-with-preparer? [value]
   (some-> value
           value->kind
           (@*kind->preparer)))
-
-
 
 (add-preparer-from-value-fn!
  :kind/println
