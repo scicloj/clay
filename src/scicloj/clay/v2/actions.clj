@@ -50,19 +50,6 @@
         (quarto/render-quarto! {:format format
                                 :md-path target-path}))))
 
-
-(defn write-quarto!
-  [path {:keys [title]
-         :as options}]
-  (let [target-path (path/ns->target-path "docs/" *ns* ".md")]
-    (-> options
-        (assoc
-         :title (or title path)
-         :path path
-         :target-path target-path)
-        (->> (notebook/notebook-items path))
-        quarto/write-quarto!)))
-
 (defn handle-context! [context]
   (try
     (show/show! context)
