@@ -10,12 +10,23 @@
   (swap! *generation inc)
   @*generation)
 
-(defn read-by-tools-reader [code]
+(defn read-forms [code]
   (->> code
        clojure.tools.reader.reader-types/source-logging-push-back-reader
        repeat
        (map #(clojure.tools.reader/read % false ::EOF))
-       (take-while (partial not= ::EOF))
+       (take-while (partial not= ::EOF))))
+
+(defn read-ns-form [code]
+  (->> code
+       read-forms
+       (filter (fn [form]
+                 (and (sequential? form)
+                      (-> form first (= 'ns)))))))
+
+(defn read-by-tools-reader [code]
+  (->> code
+       read-forms
        (map (fn [form]
               (let [{:keys [line column
                             end-line end-column
