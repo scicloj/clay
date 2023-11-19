@@ -100,7 +100,7 @@
 
 (defn image [{:keys [value
                      target-path]}]
-  (let [jpg-path (files/next-tempfile!
+  (let [jpg-path (files/next-file!
                   target-path
                   value
                   ".jpg")]
