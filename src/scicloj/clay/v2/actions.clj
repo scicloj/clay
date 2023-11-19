@@ -19,11 +19,11 @@
            [:p "showing document for "
             [:code (path/path->filename path)]]
            [:div.loader]]))])
-   (let [target-path (path/ns->target-path "docs/" *ns* ".html")
-         doc (notebook/notebook-items path
-                                      (assoc options
-                                             :target-path target-path))]
-     (-> doc
+   (let [target-path (path/ns->target-path "docs/" *ns* ".html")]
+     (-> path
+         (notebook/notebook-items
+          (assoc options
+                 :target-path target-path))
          (show/show-items!
           {:title title
            :toc? toc?
