@@ -177,15 +177,13 @@ embed-resources: true
   (-> main-index
       (write-main-book-index-if-needed! {:base-target-path base-target-path})))
 
-
-
 (defn render-quarto!
   ([items]
    (render-quarto! items {}))
   ([items
-    {:keys [format]}]
-   (let [md-path (path/ns->target-path "docs/" *ns* ".md")
-         html-path (-> md-path
+    {:keys [format
+            md-path]}]
+   (let [html-path (-> md-path
                        (string/replace #"\.md$"
                                        (str (case format
                                               :html ""

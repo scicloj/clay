@@ -40,23 +40,28 @@
       [:p "generating Quarto document for "
        [:code (path/path->filename path)]]
       [:div.loader]])])
-  (-> options
-      (assoc
-       :title (or title path)
-       :path path)
-      (->> (notebook/notebook-items path))
-      (quarto/render-quarto! {:format format})))
+  (let [target-path (path/ns->target-path "docs/" *ns* ".md")]
+    (-> options
+        (assoc
+         :title (or title path)
+         :path path
+         :target-path target-path)
+        (->> (notebook/notebook-items path))
+        (quarto/render-quarto! {:format format
+                                :md-path target-path}))))
 
 
 (defn write-quarto!
   [path {:keys [title]
          :as options}]
-  (-> options
-      (assoc
-       :title (or title path)
-       :path path)
-      (->> (notebook/notebook-items path))
-      quarto/write-quarto!))
+  (let [target-path (path/ns->target-path "docs/" *ns* ".md")]
+    (-> options
+        (assoc
+         :title (or title path)
+         :path path
+         :target-path target-path)
+        (->> (notebook/notebook-items path))
+        quarto/write-quarto!)))
 
 (defn handle-context! [context]
   (try
