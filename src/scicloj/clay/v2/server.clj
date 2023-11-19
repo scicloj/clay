@@ -185,7 +185,7 @@
 (defn update-page! [{:keys [page
                             html-path
                             show]
-                     :or {html-path ".clay.html"
+                     :or {html-path "docs/.clay.html"
                           show true}}]
   (io/make-parents html-path)
   (when page
