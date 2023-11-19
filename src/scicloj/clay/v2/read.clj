@@ -22,7 +22,8 @@
        read-forms
        (filter (fn [form]
                  (and (sequential? form)
-                      (-> form first (= 'ns)))))))
+                      (-> form first (= 'ns)))))
+       first))
 
 (defn read-by-tools-reader [code]
   (->> code
