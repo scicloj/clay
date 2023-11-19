@@ -113,9 +113,9 @@
      [:iframe {:style {:height "calc(100vh - 100px)"
                        :width "100%"
                        :border "none"}
-               :srcdoc (some-> state
-                               :html-path
-                               slurp)}]
+               :src (some-> state
+                            :html-path
+                            (string/replace #"^docs/" ""))}]
      (communication-script state)])))
 
 
