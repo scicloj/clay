@@ -9,7 +9,7 @@
 
 (defn file-path [target-path idx ext]
   (str (or (some-> target-path
-                   (string/replace #"\.html$" ""))
+                   #_(string/replace #"\.html$" ""))
            "docs/")
        "_files/"
        idx
