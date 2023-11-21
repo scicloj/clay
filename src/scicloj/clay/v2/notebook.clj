@@ -108,7 +108,6 @@
                   (read/->safe-notes code))]
      (-> notes
          (->> (mapcat (fn [note]
-                        (prn [:note note])
                         (-> note
                             complete-note
                             (assoc :target-path target-path)
