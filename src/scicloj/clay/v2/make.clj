@@ -46,14 +46,18 @@
         :html (let [page (page/html {:items items
                                      :config config})]
                 (server/update-page!
-                 {:page page
-                  :html-path target-path}))))))
+                 (merge {:page page
+                         :html-path target-path}
+                        (select-keys config [:show]))))))))
 
 
 (comment
   (make {:format :html
          :source-path "notebooks/index.clj"})
 
+  (make {:format :html
+         :source-path "notebooks/index.clj"
+         :show false})
 
   (make {:format :html
          :source-path "notebooks/index.clj"
