@@ -34,7 +34,6 @@
 
 (defn complete-note [{:as note
                       :keys [comment? code form]}]
-  (prn [:note note])
   (if comment?
     note
     (assoc
