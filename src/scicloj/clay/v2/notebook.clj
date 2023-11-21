@@ -6,7 +6,7 @@
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.read]
+   [scicloj.clay.v2.read :as read]
    [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.files :as files]))
 
@@ -34,6 +34,7 @@
 
 (defn complete-note [{:as note
                       :keys [comment? code form]}]
+  (prn [:note note])
   (if comment?
     note
     (assoc
@@ -61,12 +62,13 @@
 (defn note-to-items [{:as note
                       :keys [comment? code form value]}
                      {:keys [hide-code? hide-nils? hide-vars?]}]
-  (if comment?
+  (if (and comment? code)
     [(comment->item code)]
     [;; code
      (when-not (or hide-code?
                    (-> form meta :kindly/hide-code?)
-                   (-> value meta :kindly/hide-code?))
+                   (-> value meta :kindly/hide-code?)
+                   (nil? code))
        (item/source-clojure code))
      ;; value
      (when-not (or
@@ -97,20 +99,30 @@
           :keys [hide-info-line?
                  hide-code? hide-nils? hide-vars?
                  title toc?
-                 target-path]}]
+                 target-path
+                 single-form]}]
    (files/init-target! target-path)
-   (-> path
-       slurp
-       scicloj.clay.v2.read/->safe-notes
-       (->> (mapcat (fn [note]
-                      (-> note
-                          complete-note
-                          (assoc :target-path target-path)
-                          (note-to-items options))))
-            (remove nil?))
-       (add-info-line path options)
-       doall)))
+   (let [code (slurp path)
+         notes  (if single-form
+                  [{:form (read/read-ns-form code)}
+                   {:form single-form}]
+                  (read/->safe-notes code))]
+     (-> notes
+         (->> (mapcat (fn [note]
+                        (prn [:note note])
+                        (-> note
+                            complete-note
+                            (assoc :target-path target-path)
+                            (note-to-items options))))
+              (remove nil?))
+         (add-info-line path options)
+         doall))))
 
 (comment
   (-> "notebooks/scratch.clj"
-      (notebook-items {})))
+      (notebook-items {:target-path "docs/scratch.html"}))
+
+  (-> "notebooks/scratch.clj"
+      (notebook-items {:target-path "docs/scratch.html"
+                       :single-form '(+ 1 2)}))
+  )

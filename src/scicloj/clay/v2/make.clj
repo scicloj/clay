@@ -13,10 +13,7 @@
    :value (eval form)})
 
 (defn make [{:keys [source-path
-                    form
-                    context]
-             :or {context (some-> form
-                                  form->context)}
+                    single-form]
              :as options}]
   (let [ns-form (-> source-path
                     slurp
@@ -43,12 +40,8 @@
         config (assoc pre-config
                       :target-path target-path)]
     (files/init-target! target-path)
-    (let [items      (if context
-                       (-> context
-                           prepare/prepare-or-pprint
-                           vector)
-                       (-> source-path
-                           (notebook/notebook-items config)))]
+    (let [items      (-> source-path
+                         (notebook/notebook-items config))]
       (case format
         :html (let [page (page/html {:items items
                                      :config config})]
@@ -64,9 +57,9 @@
 
   (make {:format :html
          :source-path "notebooks/index.clj"
-         :form '(kind/cytoscape
-                 [{:style {:width "100px"
-                           :height "100px"}}
-                  cytoscape-example])})
+         :single-form '(kind/cytoscape
+                        [{:style {:width "100px"
+                                  :height "100px"}}
+                         cytoscape-example])})
 
   )
