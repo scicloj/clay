@@ -105,4 +105,7 @@
 
   (make {:format [:quarto :revealjs]
          :source-path "notebooks/slides.clj"})
-  )
+
+  (make {:format [:quarto :html]
+         :source-path "notebooks/index.clj"
+         :quarto {:highlight-style :nord}}))
