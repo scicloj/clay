@@ -102,4 +102,7 @@
 
   (make {:format [:quarto :html]
          :source-path "notebooks/index.clj"})
+
+  (make {:format [:quarto :revealjs]
+         :source-path "notebooks/slides.clj"})
   )
