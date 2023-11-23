@@ -39,6 +39,9 @@
                      ".html")
         config (assoc pre-config
                       :target-path target-path)]
+    (server/update-page! {:page (page/html
+                                 {:items [item/loader]
+                                  :config config})})
     (files/init-target! target-path)
     (let [items      (-> source-path
                          (notebook/notebook-items config))]
