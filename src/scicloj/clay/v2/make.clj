@@ -3,10 +3,14 @@
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.read :as read]
+            [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.notebook :as notebook]
             [scicloj.clay.v2.page :as page]
-            [scicloj.clay.v2.server :as server]))
+            [scicloj.clay.v2.server :as server]
+            [scicloj.clay.v2.util.time :as time]
+            [clojure.string :as string]
+            [clojure.java.shell :as shell]))
 
 (defn form->context [form]
   {:form form
@@ -36,37 +40,66 @@
         target-path (path/ns->target-path
                      base-target-path
                      ns-name
-                     ".html")
+                     (str (when (-> pre-config
+                                    :format
+                                    second
+                                    (= :revealjs))
+                            "-revealjs")
+                          ".html"))
         config (assoc pre-config
                       :target-path target-path)]
-    (server/update-page! {:page (page/html
-                                 {:items [item/loader]
-                                  :config config})})
+    (when (-> config :show)
+      (server/update-page! {:page (page/html
+                                   {:items [item/loader]
+                                    :config config})}))
     (files/init-target! target-path)
     (let [items      (-> source-path
                          (notebook/notebook-items config))]
-      (case format
+      (case (first format)
         :html (let [page (page/html {:items items
                                      :config config})]
                 (server/update-page!
                  (merge {:page page
                          :html-path target-path}
-                        (select-keys config [:show]))))))))
+                        (select-keys config [:show]))))
+        :quarto (let [md-path (-> target-path
+                                  (string/replace #"\.html$" ".md"))
+                      output-file (-> target-path
+                                      (string/split #"/")
+                                      last)]
+                  (->> {:items items
+                        :config (-> config
+                                    (update-in [:quarto :format]
+                                               select-keys [(second format)])
+                                    (update-in [:quarto :format (second format)]
+                                               assoc :output-file output-file))}
+                       page/md
+                       (spit md-path))
+                  (println [:wrote md-path (time/now)])
+                  #_(Thread/sleep 500)
+                  (->> (shell/sh "quarto" "render" md-path)
+                       ((juxt :err :out))
+                       (mapv println))
+                  (println [:created target-path (time/now)])
+                  (server/update-page! {:html-path target-path}))))))
+
 
 
 (comment
-  (make {:format :html
+  (make {:format [:html]
          :source-path "notebooks/index.clj"})
 
-  (make {:format :html
+  (make {:format [:html]
          :source-path "notebooks/index.clj"
          :show false})
 
-  (make {:format :html
+  (make {:format [:html]
          :source-path "notebooks/index.clj"
          :single-form '(kind/cytoscape
                         [{:style {:width "100px"
                                   :height "100px"}}
                          cytoscape-example])})
 
+  (make {:format [:quarto :html]
+         :source-path "notebooks/index.clj"})
   )
