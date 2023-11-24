@@ -6,49 +6,26 @@
     (scicloj.clay.v2.api/start!)")
   t)
 
-(defun clay/show-namespace ()
-  (interactive)
-  (clay/start)
+(defun clay/make-ns (format)
   (save-buffer)
   (let
       ((filename
         (buffer-file-name)))
     (when filename
       (cider-interactive-eval
-       (concat "(scicloj.clay.v2.api/show-namespace! \"" filename "\" {})")))))
+       (concat "(scicloj.clay.v2.api/make! {:format " format " :source-path \"" filename "\" })")))))
 
-(defun clay/render-namespace-quarto-html ()
+(defun clay/make-ns-html ()
   (interactive)
-  (clay/start)
-  (save-buffer)
-  (let
-      ((filename
-        (buffer-file-name)))
-    (when filename
-      (cider-interactive-eval
-       (concat "(scicloj.clay.v2.api/render-namespace-quarto! \"" filename "\" {:format :html})")))))
+  (clay/make-ns "[:html]"))
 
-(defun clay/render-namespace-quarto-revealjs ()
+(defun clay/make-ns-quarto-html ()
   (interactive)
-  (clay/start)
-  (save-buffer)
-  (let
-      ((filename
-        (buffer-file-name)))
-    (when filename
-      (cider-interactive-eval
-       (concat "(scicloj.clay.v2.api/render-namespace-quarto! \"" filename "\" {:format :revealjs})")))))
+  (clay/make-ns "[:quarto :html]"))
 
-(defun clay/write-namespace-quarto ()
+(defun clay/make-ns-quarto-revealjs ()
   (interactive)
-  (clay/start)
-  (save-buffer)
-  (let
-      ((filename
-        (buffer-file-name)))
-    (when filename
-      (cider-interactive-eval
-       (concat "(scicloj.clay.v2.api/write-namespace-quarto! \"" filename "\" {})")))))
+  (clay/make-ns "[:quarto :revealjs]"))
 
 (defun clay/cider-interactive-notify-and-eval (code)
   (cider-interactive-eval
@@ -57,17 +34,19 @@
    nil
    nil))
 
-(defun clay/send (code)
-  (clay/start)
-  (clay/cider-interactive-notify-and-eval
-   (concat "(scicloj.clay.v2.api/handle-form! (quote " code "))")))
+(defun clay/make-form (code)
+  (let
+      ((filename
+        (buffer-file-name)))
+    (clay/cider-interactive-notify-and-eval
+     (concat "(scicloj.clay.v2.api/make! {:format [:html] :source-path \"" filename "\" :single-form (quote " code")})"))))
 
-(defun clay/send-last-sexp ()
+(defun clay/make-last-sexp ()
   (interactive)
   (clay/start)
-  (clay/send (cider-last-sexp)))
+  (clay/make-form (cider-last-sexp)))
 
-(defun clay/send-defun-at-point ()
+(defun clay/make-defun-at-point ()
   (interactive)
   (clay/start)
-  (clay/send (thing-at-point 'defun)))
+  (clay/make-form (thing-at-point 'defun)))

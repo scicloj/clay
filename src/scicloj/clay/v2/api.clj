@@ -6,7 +6,7 @@
    [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.quarto :as quarto]
    [scicloj.clay.v2.server :as server]
-   [scicloj.clay.v2.server.state :as server.state]
+   [scicloj.clay.v2.make :as make]
    [scicloj.kindly.v4.api :as kindly]))
 
 (defn stop! []
@@ -17,17 +17,9 @@
   (server/open!)
   [:ok])
 
-(defn show-namespace!
-  ([path]
-   (show-namespace! path nil))
-  ([path options]
-   (start!)
-   (actions/show-doc! path options)
-   [:ok]))
-
-(defn render-namespace-quarto!
-  [path options]
-  (actions/render-quarto! path options))
+(defn make! [spec]
+  (start!)
+  (make/make! spec))
 
 (defn browse! []
   (server/browse!))
@@ -40,14 +32,6 @@
 
 (defn config []
   (config/config))
-
-(defn handle-form! [form]
-  (actions/handle-form! form)
-  [:ok])
-
-(defn handle-value! [value]
-  (actions/handle-value! value)
-  [:ok])
 
 (defn update-book! [options]
   (quarto/update-book! options))
