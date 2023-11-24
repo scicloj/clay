@@ -1,3 +1,4 @@
+^{:clay {:quarto {:monofont "Fira Code Medium"}}}
 (ns slides
   (:require [scicloj.kindly.v4.kind :as kind]
             [scicloj.clay.v2.api :as clay]
