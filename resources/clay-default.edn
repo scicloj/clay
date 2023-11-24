@@ -1,4 +1,5 @@
 {:base-target-path "docs/"
+ :show true
  :quarto {:format {:html {:toc true
                           :toc-depth 4
                           :theme :spacelab}
