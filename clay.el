@@ -17,14 +17,17 @@
 
 (defun clay/make-ns-html ()
   (interactive)
+  (clay/start)
   (clay/make-ns "[:html]"))
 
 (defun clay/make-ns-quarto-html ()
   (interactive)
+  (clay/start)
   (clay/make-ns "[:quarto :html]"))
 
 (defun clay/make-ns-quarto-revealjs ()
   (interactive)
+  (clay/start)
   (clay/make-ns "[:quarto :revealjs]"))
 
 (defun clay/cider-interactive-notify-and-eval (code)
@@ -35,6 +38,7 @@
    nil))
 
 (defun clay/make-form (code)
+  (clay/start)
   (let
       ((filename
         (buffer-file-name)))
@@ -43,10 +47,8 @@
 
 (defun clay/make-last-sexp ()
   (interactive)
-  (clay/start)
   (clay/make-form (cider-last-sexp)))
 
 (defun clay/make-defun-at-point ()
   (interactive)
-  (clay/start)
   (clay/make-form (thing-at-point 'defun)))
