@@ -182,10 +182,21 @@
                 "Clay"]
           " is ready, waiting for interaction."]]]]))
 
+(defn open! []
+  (when-not @*stop-server!
+    (let [port (get-free-port)
+          server (core-http-server port)]
+      (server.state/set-port! port)
+      (reset! *stop-server! port)
+      (println "serving Clay at" (port->url port))
+      (browse!))))
+
 (defn update-page! [{:keys [page
                             html-path
                             show]
-                     :or {html-path "docs/.clay.html"}}]
+                     :or   {html-path "docs/.clay.html"}}]
+  (when show
+    (open!))
   (io/make-parents html-path)
   (when page
     (spit html-path page))
@@ -195,16 +206,6 @@
   (when show
     (broadcast! "refresh"))
   [:ok])
-
-(defn open! []
-  (when-not @*stop-server!
-    (let [port (get-free-port)
-          server (core-http-server port)]
-      (server.state/set-port! port)
-      (reset! *stop-server! port)
-      (println "serving scittle at " (port->url port))
-      (update-page! {:page (welcome-page)})
-      (browse!))))
 
 (defn close! []
   (when-let [s @*stop-server!]

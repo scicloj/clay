@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha42-snapshot] - 2023-11-25
+- Only start the server if show is not false
+- Remove warning about replacing get
+- Report target path on make
+- Remove deref printing
+
 ## [2-alpha41] - 2023-11-25
 - using `qmd` rather than `md` for Quarto files (to support R code blocks, etc.)
 
@@ -70,7 +76,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha29] - 2023-08-07
 - avoiding the use of local path as title (#21)
-- refactoring the handling of kinds: 
+- refactoring the handling of kinds:
   - adapting to kindly-default version 1-alpha10, where plain data structures have explicit kinds
   - handling hierarchy in a more clean and systematic way
 - bug fix: avoiding looking for KaTeX fonts locally (which would take more care to work correctly)
@@ -82,7 +88,7 @@ All notable changes to this project will be documented in this file. This change
 - leaflet support
 - more flexible caching (WIP)
 - minor changes to info-line
-- rendering more parts as plain-html 
+- rendering more parts as plain-html
 - moved the `is->` function to the kindly-default library
 
 ## [2-alpha26] - 2023-06-04
@@ -137,7 +143,7 @@ All notable changes to this project will be documented in this file. This change
 - table view support for datasets
 
 ## [2-alpha13]  - 2023-02-20
-- supporting :kind/vega-lite 
+- supporting :kind/vega-lite
 - using markdown again when printing datasets (following fix https://github.com/nextjournal/markdown/issues/12)
 
 ## [2-alpha12]  - 2022-12-17
@@ -207,8 +213,8 @@ All notable changes to this project will be documented in this file. This change
 - scittle tool: reordered js lib rendering, added visual spacing
 
 ## [1-alpha10] - 2022-04-24
-- scittle tool: 
-  - refactoring of page generation 
+- scittle tool:
+  - refactoring of page generation
   - optional loading of special widgets
   - more self-contained generated html (relying on less web resources)
   - made table-of-contents optional
@@ -243,4 +249,3 @@ initial version of scittle viewer
 
 ## [1-alpha1] - 2022-04-08
 initial version
-    
