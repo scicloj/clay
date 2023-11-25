@@ -1,14 +1,20 @@
 
-(defun clay/start ()
+(defun clay/require ()
   (interactive)
   (cider-interactive-eval "
-    (require '[scicloj.clay.v2.api])
+    (require '[scicloj.clay.v2.api])")
+  t)
+
+(defun clay/start ()
+  (interactive)
+  (clay/require)
+  (cider-interactive-eval "
     (scicloj.clay.v2.api/start!)")
   t)
 
 (defun clay/make-ns (format)
   (save-buffer)
-  (clay/start)
+  (clay/require)
   (let
       ((filename
         (buffer-file-name)))
@@ -18,17 +24,17 @@
 
 (defun clay/make-ns-html ()
   (interactive)
-  (clay/start)
+  (clay/require)
   (clay/make-ns "[:html]"))
 
 (defun clay/make-ns-quarto-html ()
   (interactive)
-  (clay/start)
+  (clay/require)
   (clay/make-ns "[:quarto :html]"))
 
 (defun clay/make-ns-quarto-revealjs ()
   (interactive)
-  (clay/start)
+  (clay/require)
   (clay/make-ns "[:quarto :revealjs]"))
 
 (defun clay/cider-interactive-notify-and-eval (code)
@@ -39,7 +45,7 @@
    nil))
 
 (defun clay/make-form (code)
-  (clay/start)
+  (clay/require)
   (let
       ((filename
         (buffer-file-name)))
