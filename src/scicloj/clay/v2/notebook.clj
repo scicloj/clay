@@ -12,10 +12,7 @@
 
 (defn deref-if-needed [v]
   (if (delay? v)
-    (let [_ (println "deref ...")
-          dv @v
-          _ (println "done.")]
-      dv)
+    @v
     v))
 
 (def hidden-form-starters

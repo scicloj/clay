@@ -188,7 +188,7 @@
           server (core-http-server port)]
       (server.state/set-port! port)
       (reset! *stop-server! port)
-      (println "serving scittle at " (port->url port))
+      (println "serving Clay at" (port->url port))
       (browse!))))
 
 (defn update-page! [{:keys [page

@@ -84,7 +84,8 @@
                   (println [:created target-path (time/now)])
                   (-> config
                       (merge {:html-path target-path})
-                      server/update-page!))))))
+                      server/update-page!))))
+    [:wrote target-path]))
 
 
 (comment

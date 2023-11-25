@@ -40,6 +40,10 @@
   (make! {:format [:html]
           :source-path "notebooks/index.clj"})
 
+  (make! {:format [:html]
+          :source-path "notebooks/index.clj"
+          :show false})
+
   ;; TODO: support a book with multiple chapters
   ;; Quarto: create 1 book (this is just our normal configuration, but Clay can help)
   (make! {:format [:quarto :book]
