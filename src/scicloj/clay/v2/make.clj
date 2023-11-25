@@ -64,7 +64,7 @@
                             :html-path target-path})
                     server/update-page!))
         :quarto (let [md-path (-> target-path
-                                  (string/replace #"\.html$" ".md"))
+                                  (string/replace #"\.html$" ".qmd"))
                       output-file (-> target-path
                                       (string/split #"/")
                                       last)]
