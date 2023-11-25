@@ -1,7 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha40-SNAPSHOT]
+## [2-alpha40] - 2023-11-25
+- a revised API, with one main entry point, `make!`
 - changed the way the server works: always serving a file
 - simplified the pathway for writing HTML
 - using an iframe for the browser view
