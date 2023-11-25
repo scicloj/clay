@@ -9,7 +9,6 @@
    [scicloj.clay.v2.notebook :as notebook]
    [scicloj.clay.v2.page :as page]
    [scicloj.clay.v2.server :as server]
-   [scicloj.clay.v2.show :as show]
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]))
 
@@ -176,36 +175,3 @@ embed-resources: true
        doall)
   (-> main-index
       (write-main-book-index-if-needed! {:base-target-path base-target-path})))
-
-(defn render-quarto!
-  ([items]
-   (render-quarto! items {}))
-  ([items
-    {:keys [format
-            md-path]}]
-   (let [html-path (-> md-path
-                       (string/replace #"\.md$"
-                                       (str (case format
-                                              :html ""
-                                              :revealjs "-revealjs")
-                                            ".html")))
-         html-filename (-> html-path
-                           (string/split #"/")
-                           last)]
-     (show/show-items! [item/loader])
-     (io/make-parents md-path)
-     (-> {:items items
-          :config (-> (config/config)
-                      (update-in [:quarto :format]
-                                 select-keys [format])
-                      (update-in [:quarto :format format]
-                                 assoc :output-file html-filename))}
-         page/md
-         (->> (spit md-path)))
-     (println [:wrote md-path (time/now)])
-     (Thread/sleep 500)
-     (->> (sh/sh "quarto" "render" md-path)
-          ((juxt :err :out))
-          (mapv println))
-     (println [:created  html-path (time/now)])
-     (server/update-page! {:html-path html-path}))))
