@@ -8,6 +8,7 @@
 
 (defun clay/make-ns (format)
   (save-buffer)
+  (clay/start)
   (let
       ((filename
         (buffer-file-name)))
