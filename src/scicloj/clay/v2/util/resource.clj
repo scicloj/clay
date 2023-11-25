@@ -1,4 +1,5 @@
 (ns scicloj.clay.v2.util.resource
+  (:refer-clojure :exclude [get])
   (:require [scicloj.tempfiles.api :as tempfiles]))
 
 (def cached-resource
