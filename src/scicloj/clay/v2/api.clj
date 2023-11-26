@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [clojure.test]
    [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.quarto :as quarto]
+   [scicloj.clay.v2.book :as book]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.make :as make]
    [scicloj.kindly.v4.api :as kindly]))
@@ -32,4 +32,4 @@
   (config/config))
 
 (defn update-book! [options]
-  (quarto/update-book! options))
+  (book/update-book! options))

@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.quarto
+(ns scicloj.clay.v2.book
   (:require
    [clj-yaml.core :as yaml]
    [clojure.java.io :as io]
