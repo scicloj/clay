@@ -43,23 +43,23 @@
                      :clay)
                  options)
           ;; target path
-          target-path (path/ns->target-path
-                       base-target-path
-                       ns-name
-                       (str (when (-> pre-config
-                                      :format
-                                      second
-                                      (= :revealjs))
-                              "-revealjs")
-                            ".html"))
+          html-path (path/ns->target-path
+                     base-target-path
+                     ns-name
+                     (str (when (-> pre-config
+                                    :format
+                                    second
+                                    (= :revealjs))
+                            "-revealjs")
+                          ".html"))
           config (assoc pre-config
-                        :target-path target-path)]
+                        :html-path html-path)]
       (when (-> config :show)
         (-> config
             (merge {:page (page/html
                            {:items [item/loader]})})
             server/update-page!))
-      (files/init-target! target-path)
+      (files/init-target! html-path)
       (let [items      (-> source-path
                            (notebook/notebook-items config))]
         (case (first format)
@@ -67,12 +67,12 @@
                                        :config config})]
                   (-> config
                       (merge {:page page
-                              :html-path target-path})
+                              :html-path html-path})
                       server/update-page!)
-                  [:wrote target-path])
-          :quarto (let [md-path (-> target-path
+                  [:wrote html-path])
+          :quarto (let [md-path (-> html-path
                                     (string/replace #"\.html$" ".qmd"))
-                        output-file (-> target-path
+                        output-file (-> html-path
                                         (string/split #"/")
                                         last)]
                     (->> {:items items
@@ -87,11 +87,11 @@
                     (->> (shell/sh "quarto" "render" md-path)
                          ((juxt :err :out))
                          (mapv println))
-                    (println [:created target-path (time/now)])
+                    (println [:created html-path (time/now)])
                     (-> config
-                        (merge {:html-path target-path})
+                        (merge {:html-path html-path})
                         server/update-page!)
-                    [:wrote md-path target-path]))))))
+                    [:wrote md-path html-path]))))))
 
 
 (comment
