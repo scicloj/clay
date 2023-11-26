@@ -68,7 +68,8 @@
                   (-> config
                       (merge {:page page
                               :html-path target-path})
-                      server/update-page!))
+                      server/update-page!)
+                  [:wrote target-path])
           :quarto (let [md-path (-> target-path
                                     (string/replace #"\.html$" ".qmd"))
                         output-file (-> target-path
@@ -90,8 +91,8 @@
                     (println [:created target-path (time/now)])
                     (-> config
                         (merge {:html-path target-path})
-                        server/update-page!))))
-      [:wrote target-path])))
+                        server/update-page!)
+                    [:wrote md-path target-path]))))))
 
 
 (comment
