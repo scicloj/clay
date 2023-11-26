@@ -12,70 +12,6 @@
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]))
 
-(def base-quarto-config
-  "
-project:
-  type: book
-
-format:
-  html:
-    theme: cosmo
-
-book:
-  title: \"book\"
-  chapters:
-    - index.md
-")
-
-(def base-quarto-index
-  "
----
-format:
-  html: {toc: true}
-embed-resources: true
----
-# book index
-  ")
-
-(defn update-quarto-config! [chapter-path]
-  (let [index-path "book/index.md"
-        config-path "book/_quarto.yml"
-        current-config (if (-> config-path io/file .exists)
-                         (slurp config-path)
-                         (do (spit config-path base-quarto-config)
-                             (println [:created config-path])
-                             base-quarto-config))
-        chapter-line (str "    - " chapter-path)]
-    (when-not (-> index-path io/file .exists)
-      (spit index-path base-quarto-index)
-      (println [:created index-path]))
-    (when-not (-> current-config
-                  (string/split #"\n")
-                  (->> (some (partial = chapter-line))))
-      (->> chapter-line
-           (str current-config "\n")
-           (spit config-path))
-      (println [:updated config-path
-                :with chapter-path]))))
-
-(defn write-quarto! [items]
-  (let [chapter-path (if (-> *ns*
-                             str
-                             (string/split #"\.")
-                             last
-                             (= "index"))
-                       (path/ns->target-path "" *ns* ".md")
-                       (path/ns->target-path "" *ns* "/index.md"))
-        md-path (str "book/" chapter-path)]
-    (io/make-parents md-path)
-    (-> {:items items
-         :config (config/config)}
-        page/md
-        (->> (spit md-path)))
-    (update-quarto-config! chapter-path)
-    (println [:wrote md-path (time/now)])))
-
-
 
 (defn source-path->target-path [path]
   (-> path
@@ -175,3 +111,20 @@ embed-resources: true
        doall)
   (-> main-index
       (write-main-book-index-if-needed! {:base-target-path base-target-path})))
+
+
+
+(comment
+  (update-book!
+   {:title "Clay"
+    :base-source-path "notebooks"
+    :base-target-path "book"
+    :chapter-source-paths ["index.clj"
+                           "slides.clj"]
+    :page-config {:quarto {:format {:html {;; Quarto themes:
+                                           ;; https://quarto.org/docs/output-formats/html-themes.html
+                                           :theme :spacelab
+                                           :monofont "Fira Code Medium"}}
+                           ;; Quarto code highlighting:
+                           ;; https://quarto.org/docs/output-formats/html-code.html#highlighting
+                           :highlight-style :solarized}}}))
