@@ -1,11 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha42-snapshot] - 2023-11-25
-- Only start the server if show is not false
-- Remove warning about replacing get
-- Report target path on make
-- Remove deref printing
+## [2-alpha42-SNAPSHOT] - 2023-11-25
+- only start the server if show is not false
+- remove warning about replacing get
+- report target path on make
+- remove deref printing
+- support for multiple sources in `make!`
 
 ## [2-alpha41] - 2023-11-25
 - using `qmd` rather than `md` for Quarto files (to support R code blocks, etc.)

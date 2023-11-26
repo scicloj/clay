@@ -19,73 +19,79 @@
 (defn make! [{:keys [source-path
                      single-form]
               :as options}]
-  (let [ns-form (-> source-path
-                    slurp
-                    read/read-ns-form)
-        ns-name (-> ns-form
-                    second
-                    name)
-        ;; merge configurations
-        {:as pre-config
-         :keys [base-target-path
-                format
-                html
-                quarto]}
-        (merge (config/config)
-               (-> ns-form
-                   meta
-                   :clay)
-               options)
-        ;; target path
-        target-path (path/ns->target-path
-                     base-target-path
-                     ns-name
-                     (str (when (-> pre-config
-                                    :format
-                                    second
-                                    (= :revealjs))
-                            "-revealjs")
-                          ".html"))
-        config (assoc pre-config
-                      :target-path target-path)]
-    (when (-> config :show)
-      (-> config
-          (merge {:page (page/html
-                         {:items [item/loader]})})
-          server/update-page!))
-    (files/init-target! target-path)
-    (let [items      (-> source-path
-                         (notebook/notebook-items config))]
-      (case (first format)
-        :html (let [page (page/html {:items items
-                                     :config config})]
-                (-> config
-                    (merge {:page page
-                            :html-path target-path})
-                    server/update-page!))
-        :quarto (let [md-path (-> target-path
-                                  (string/replace #"\.html$" ".qmd"))
-                      output-file (-> target-path
-                                      (string/split #"/")
-                                      last)]
-                  (->> {:items items
-                        :config (-> config
-                                    (update-in [:quarto :format]
-                                               select-keys [(second format)])
-                                    (update-in [:quarto :format (second format)]
-                                               assoc :output-file output-file))}
-                       page/md
-                       (spit md-path))
-                  (println [:wrote md-path (time/now)])
-                  #_(Thread/sleep 500)
-                  (->> (shell/sh "quarto" "render" md-path)
-                       ((juxt :err :out))
-                       (mapv println))
-                  (println [:created target-path (time/now)])
+  (if (sequential? source-path)
+    (->> source-path
+         (mapv (fn [sp]
+                 (-> options
+                     (assoc :source-path sp)
+                     make!))))
+    (let [ns-form (-> source-path
+                      slurp
+                      read/read-ns-form)
+          ns-name (-> ns-form
+                      second
+                      name)
+          ;; merge configurations
+          {:as pre-config
+           :keys [base-target-path
+                  format
+                  html
+                  quarto]}
+          (merge (config/config)
+                 (-> ns-form
+                     meta
+                     :clay)
+                 options)
+          ;; target path
+          target-path (path/ns->target-path
+                       base-target-path
+                       ns-name
+                       (str (when (-> pre-config
+                                      :format
+                                      second
+                                      (= :revealjs))
+                              "-revealjs")
+                            ".html"))
+          config (assoc pre-config
+                        :target-path target-path)]
+      (when (-> config :show)
+        (-> config
+            (merge {:page (page/html
+                           {:items [item/loader]})})
+            server/update-page!))
+      (files/init-target! target-path)
+      (let [items      (-> source-path
+                           (notebook/notebook-items config))]
+        (case (first format)
+          :html (let [page (page/html {:items items
+                                       :config config})]
                   (-> config
-                      (merge {:html-path target-path})
-                      server/update-page!))))
-    [:wrote target-path]))
+                      (merge {:page page
+                              :html-path target-path})
+                      server/update-page!))
+          :quarto (let [md-path (-> target-path
+                                    (string/replace #"\.html$" ".qmd"))
+                        output-file (-> target-path
+                                        (string/split #"/")
+                                        last)]
+                    (->> {:items items
+                          :config (-> config
+                                      (update-in [:quarto :format]
+                                                 select-keys [(second format)])
+                                      (update-in [:quarto :format (second format)]
+                                                 assoc :output-file output-file))}
+                         page/md
+                         (spit md-path))
+                    (println [:wrote md-path (time/now)])
+                    #_(Thread/sleep 500)
+                    (->> (shell/sh "quarto" "render" md-path)
+                         ((juxt :err :out))
+                         (mapv println))
+                    (println [:created target-path (time/now)])
+                    (-> config
+                        (merge {:html-path target-path})
+                        server/update-page!))))
+      [:wrote target-path])))
 
 
 (comment
@@ -94,6 +100,11 @@
 
   (make! {:format [:html]
           :source-path "notebooks/index.clj"
+          :show false})
+
+  (make! {:format [:html]
+          :source-path ["notebooks/slides.clj"
+                        "notebooks/index.clj"]
           :show false})
 
   ;; TODO: support a book with multiple chapters
