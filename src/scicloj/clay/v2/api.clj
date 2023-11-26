@@ -31,5 +31,5 @@
 (defn config []
   (config/config))
 
-(defn update-book! [options]
-  (book/update-book! options))
+(defn make-book! [options]
+  (book/write-book! options))

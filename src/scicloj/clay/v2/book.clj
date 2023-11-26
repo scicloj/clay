@@ -83,22 +83,22 @@
                 (->> (spit full-target-path))))
     (prn [:wrote full-target-path (time/now)])))
 
-(defn update-book! [{:keys [base-source-path
-                            chapter-source-paths
-                            base-target-path
-                            title
-                            quarto-book-config
-                            page-config
-                            embed-resources
-                            main-index]
-                     :or {title "Book Draft"
-                          page-config {:toc true}
-                          embed-resources true
-                          quarto-book-config (->base-book-config {:title title
-                                                                  :chapter-source-paths chapter-source-paths})
-                          main-index (->main-index {:toc (:toc page-config)
-                                                    :embed-resources embed-resources
-                                                    :title title})}}]
+(defn write-book! [{:keys [base-source-path
+                           chapter-source-paths
+                           base-target-path
+                           title
+                           quarto-book-config
+                           page-config
+                           embed-resources
+                           main-index]
+                    :or {title "Book Draft"
+                         page-config {:toc true}
+                         embed-resources true
+                         quarto-book-config (->base-book-config {:title title
+                                                                 :chapter-source-paths chapter-source-paths})
+                         main-index (->main-index {:toc (:toc page-config)
+                                                   :embed-resources embed-resources
+                                                   :title title})}}]
   (-> quarto-book-config
       (write-book-config! {:base-target-path base-target-path}))
   (->> chapter-source-paths
@@ -113,9 +113,8 @@
       (write-main-book-index-if-needed! {:base-target-path base-target-path})))
 
 
-
 (comment
-  (update-book!
+  (write-book!
    {:title "Clay"
     :base-source-path "notebooks"
     :base-target-path "book"
