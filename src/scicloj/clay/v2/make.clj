@@ -73,8 +73,8 @@
                               :html-path html-path})
                       server/update-page!)
                   [:wrote html-path])
-          :quarto (let [md-path (-> html-path
-                                    (string/replace #"\.html$" ".qmd"))
+          :quarto (let [qmd-path (-> html-path
+                                     (string/replace #"\.html$" ".qmd"))
                         output-file (-> html-path
                                         (string/split #"/")
                                         last)]
@@ -85,10 +85,10 @@
                                       (update-in [:quarto :format (second format)]
                                                  assoc :output-file output-file))}
                          page/md
-                         (spit md-path))
-                    (println [:wrote md-path (time/now)])
+                         (spit qmd-path))
+                    (println [:wrote qmd-path (time/now)])
                     (if run-quarto
-                      (do (->> (shell/sh "quarto" "render" md-path)
+                      (do (->> (shell/sh "quarto" "render" qmd-path)
                                ((juxt :err :out))
                                (mapv println))
                           (println [:created html-path (time/now)])
@@ -97,10 +97,10 @@
                               server/update-page!))
                       ;; else, just show the qmd file
                       (-> config
-                          (merge {:html-path md-path})
+                          (merge {:html-path qmd-path})
                           server/update-page!))
                     (vec
-                     (concat [:wrote md-path]
+                     (concat [:wrote qmd-path]
                              (when run-quarto
                                [html-path])))))))))
 
