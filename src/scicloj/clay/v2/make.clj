@@ -86,32 +86,3 @@
                       (merge {:html-path target-path})
                       server/update-page!))))
     [:wrote target-path]))
-
-
-(comment
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"})
-
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"
-          :show false})
-
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"
-          :single-form '(kind/cytoscape
-                         [{:style {:width "300px"
-                                   :height "300px"}}
-                          cytoscape-example])})
-
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"})
-
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/slides.clj"})
-
-  (make! {:format [:quarto :revealjs]
-          :source-path "notebooks/slides.clj"})
-
-  (make! {:format [:quarto :html]
-         :source-path "notebooks/index.clj"
-         :quarto {:highlight-style :nord}}))
