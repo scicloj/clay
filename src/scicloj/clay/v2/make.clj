@@ -84,7 +84,6 @@
                          page/md
                          (spit md-path))
                     (println [:wrote md-path (time/now)])
-                    #_(Thread/sleep 500)
                     (->> (shell/sh "quarto" "render" md-path)
                          ((juxt :err :out))
                          (mapv println))

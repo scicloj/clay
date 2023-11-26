@@ -70,14 +70,4 @@
         (-> the-ns
             str
             (string/replace #"-" "_"))
-        ext)
-   #_(let [ns-parts (-> the-ns
-                        str
-                        (string/replace #"-" "_")
-                        (string/split #"\."))]
-       (str base
-            (string/join "/" ns-parts)
-            (if (= (last ns-parts) "index")
-              ""
-              "/index")
-            ext))))
+        ext)))
