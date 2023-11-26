@@ -36,7 +36,9 @@
            :keys [base-target-path
                   format
                   html
-                  quarto]}
+                  quarto
+                  run-quarto
+                  show]}
           (merge (config/config)
                  (-> ns-form
                      meta
@@ -52,9 +54,10 @@
                                     (= :revealjs))
                             "-revealjs")
                           ".html"))
+          ;; final configuration
           config (assoc pre-config
                         :html-path html-path)]
-      (when (-> config :show)
+      (when show
         (-> config
             (merge {:page (page/html
                            {:items [item/loader]})})
@@ -84,14 +87,22 @@
                          page/md
                          (spit md-path))
                     (println [:wrote md-path (time/now)])
-                    (->> (shell/sh "quarto" "render" md-path)
-                         ((juxt :err :out))
-                         (mapv println))
-                    (println [:created html-path (time/now)])
-                    (-> config
-                        (merge {:html-path html-path})
-                        server/update-page!)
-                    [:wrote md-path html-path]))))))
+                    (if run-quarto
+                      (do (->> (shell/sh "quarto" "render" md-path)
+                               ((juxt :err :out))
+                               (mapv println))
+                          (println [:created html-path (time/now)])
+                          (-> config
+                              (merge {:html-path html-path})
+                              server/update-page!))
+                      ;; else, just show the qmd file
+                      (-> config
+                          (merge {:html-path md-path})
+                          server/update-page!))
+                    (vec
+                     (concat [:wrote md-path]
+                             (when run-quarto
+                               [html-path])))))))))
 
 
 (comment
@@ -125,6 +136,10 @@
 
   (make! {:format [:quarto :html]
           :source-path "notebooks/index.clj"})
+
+  (make! {:format [:quarto :html]
+          :source-path "notebooks/index.clj"
+          :run-quarto false})
 
   (make! {:format [:quarto :html]
           :source-path "notebooks/slides.clj"})
