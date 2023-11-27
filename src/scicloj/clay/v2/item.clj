@@ -99,16 +99,21 @@
 
 
 (defn image [{:keys [value
-                     target-path]}]
+                     html-path
+                     base-target-path]
+              :as context}]
   (let [jpg-path (files/next-file!
-                  target-path
+                  html-path
                   value
                   ".jpg")]
     (util.image/write! value jpg-path)
     {:hiccup [:img {:style {:width "100%"}
                     :src (-> jpg-path
                              (string/replace
-                              #"^docs/" ""))}]}))
+                              (re-pattern (str "^"
+                                               base-target-path
+                                               "/"))
+                              ""))}]}))
 
 (def next-id
   (let [*counter (atom 0)]

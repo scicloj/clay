@@ -74,7 +74,8 @@
                 (and hide-nils? (nil? value))
                 (and hide-vars? (var? value)))
        (-> note
-           (select-keys [:value :code :form :html-path])
+           (select-keys [:value :code :form
+                         :base-target-path :html-path])
            (update :value deref-if-needed)
            prepare/prepare-or-pprint
            ;; in-div ; TODO: is this needed?
@@ -95,6 +96,7 @@
           :keys [hide-info-line?
                  hide-code? hide-nils? hide-vars?
                  title toc?
+                 base-target-path
                  html-path
                  single-form]}]
    (files/init-target! html-path)
@@ -107,7 +109,8 @@
          (->> (mapcat (fn [note]
                         (-> note
                             complete-note
-                            (assoc :html-path html-path)
+                            (assoc :base-target-path base-target-path
+                                   :html-path html-path)
                             (note-to-items options))))
               (remove nil?))
          (add-info-line path options)
