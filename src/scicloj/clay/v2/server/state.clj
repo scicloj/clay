@@ -3,7 +3,8 @@
 (defonce *state
   (atom {:port nil
          :counter 0
-         :html-path nil}))
+         :html-path nil
+         :base-target-path nil}))
 
 (defn swap-state! [f & args]
   (-> *state
@@ -24,3 +25,9 @@
 
 (defn set-port! [port]
   (swap-state! assoc :port port))
+
+(defn set-base-target-path! [path]
+  (swap-state! assoc :base-target-path path))
+
+(defn base-target-path []
+  (:base-target-path @*state))
