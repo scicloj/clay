@@ -16,93 +16,99 @@
   {:form form
    :value (eval form)})
 
-(defn make! [{:keys [source-path
-                     single-form]
-              :as options}]
-  (if (sequential? source-path)
-    (->> source-path
-         (mapv (fn [sp]
-                 (-> options
-                     (assoc :source-path sp)
-                     make!))))
-    (let [ns-form (-> source-path
-                      slurp
-                      read/read-ns-form)
-          ns-name (-> ns-form
-                      second
-                      name)
-          ;; merge configurations
-          {:as pre-config
-           :keys [base-target-path
-                  format
-                  html
-                  quarto
-                  run-quarto
-                  show]}
-          (merge (config/config)
-                 (-> ns-form
-                     meta
-                     :clay)
-                 options)
-          ;; target path
-          html-path (path/ns->target-path
-                     base-target-path
-                     ns-name
-                     (str (when (-> pre-config
-                                    :format
-                                    second
-                                    (= :revealjs))
-                            "-revealjs")
-                          ".html"))
-          ;; final configuration
-          config (assoc pre-config
-                        :html-path html-path)]
-      (when show
-        (-> config
-            (merge {:page (page/html
-                           {:items [item/loader]})})
-            server/update-page!))
-      (files/init-target! html-path)
-      (let [items      (-> source-path
-                           (notebook/notebook-items config))]
-        (case (first format)
-          :html (let [page (page/html {:items items
-                                       :config config})]
-                  (-> config
-                      (merge {:page page
-                              :html-path html-path})
-                      server/update-page!)
-                  [:wrote html-path])
-          :quarto (let [qmd-path (-> html-path
-                                     (string/replace #"\.html$" ".qmd"))
-                        output-file (-> html-path
-                                        (string/split #"/")
-                                        last)]
-                    (->> {:items items
-                          :config (-> config
-                                      (update-in [:quarto :format]
-                                                 select-keys [(second format)])
-                                      (update-in [:quarto :format (second format)]
-                                                 assoc :output-file output-file))}
-                         page/md
-                         (spit qmd-path))
-                    (println [:wrote qmd-path (time/now)])
-                    (if run-quarto
-                      (do (->> (shell/sh "quarto" "render" qmd-path)
-                               ((juxt :err :out))
-                               (mapv println))
-                          (println [:created html-path (time/now)])
-                          (-> config
-                              (merge {:html-path html-path})
-                              server/update-page!))
-                      ;; else, just show the qmd file
-                      (-> config
-                          (merge {:html-path qmd-path})
-                          server/update-page!))
-                    (vec
-                     (concat [:wrote qmd-path]
-                             (when run-quarto
-                               [html-path])))))))))
+(defn make! [options]
+  (let [;;
+        config1 (config/config)
+        ;;
+        {:keys [source-path
+                single-form]
+         :as config2}
+        (merge config1 options)]
+    (if (sequential? source-path)
+      (->> source-path
+           (mapv (fn [sp]
+                   (-> options
+                       (assoc :source-path sp)
+                       make!))))
+      (let [ns-form (-> source-path
+                        slurp
+                        read/read-ns-form)
+            ns-name (-> ns-form
+                        second
+                        name)
+            ;;
+            {:as config3
+             :keys [base-source-path
+                    base-target-path
+                    format
+                    html
+                    quarto
+                    run-quarto
+                    show]}
+            (merge config1
+                   (-> ns-form
+                       meta
+                       :clay)
+                   options)
+            ;; target path
+            html-path (path/ns->target-path
+                       base-target-path
+                       ns-name
+                       (str (when (-> config3
+                                      :format
+                                      second
+                                      (= :revealjs))
+                              "-revealjs")
+                            ".html"))
+            ;; final configuration
+            config (assoc config3
+                          :html-path html-path)]
+        (when show
+          (-> config
+              (merge {:page (page/html
+                             {:items [item/loader]})})
+              server/update-page!))
+        (files/init-target! html-path)
+        (let [items      (-> source-path
+                             (notebook/notebook-items config))]
+          (case (first format)
+            :html (let [page (page/html {:items items
+                                         :config config})]
+                    (-> config
+                        (merge {:page page
+                                :html-path html-path})
+                        server/update-page!)
+                    [:wrote html-path])
+            :quarto (let [qmd-path (-> html-path
+                                       (string/replace #"\.html$" ".qmd"))
+                          output-file (-> html-path
+                                          (string/split #"/")
+                                          last)]
+                      (->> {:items items
+                            :config (-> config
+                                        (update-in [:quarto :format]
+                                                   select-keys [(second format)])
+                                        (update-in [:quarto :format (second format)]
+                                                   assoc :output-file output-file))}
+                           page/md
+                           (spit qmd-path))
+                      (println [:wrote qmd-path (time/now)])
+                      (if run-quarto
+                        (do (->> (shell/sh "quarto" "render" qmd-path)
+                                 ((juxt :err :out))
+                                 (mapv println))
+                            (println [:created html-path (time/now)])
+                            (-> config
+                                (merge {:html-path html-path})
+                                server/update-page!))
+                        ;; else, just show the qmd file
+                        (-> config
+                            (merge {:html-path qmd-path})
+                            server/update-page!))
+                      (vec
+                       (concat [:wrote qmd-path]
+                               (when run-quarto
+                                 [html-path]))))))))))
 
 
 (comment
