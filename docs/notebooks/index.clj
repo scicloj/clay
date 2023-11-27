@@ -51,6 +51,13 @@
 ;; ### IntelliJ Cursive
 ;; **(coming soon)**
 
+;; ## API
+
+;; **(to be documented soon)**
+
+;; Briefly, the entry point of the Clay API  is the `scicloj.clay.v2.api/make!` function.
+;; Till it is documented, you may find code examples at the bottom of the [`src/scicloj/clay/v2/make.clj`](https://github.com/scicloj/clay/blob/main/src/scicloj/clay/v2/make.clj) source file.
+
 ;; ## Starting a Clay namespace
 
 ;; Now, we can write a namespace and play with Clay.
