@@ -1,4 +1,4 @@
-{:base-target-path "docs/"
+{:base-target-path "docs"
  :show true
  :run-quarto true
  :quarto {:format {:html {:toc true

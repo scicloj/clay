@@ -67,6 +67,7 @@
 (defn ns->target-path
   ([base the-ns ext]
    (str base
+        "/"
         (-> the-ns
             str
             (string/replace #"-" "_"))

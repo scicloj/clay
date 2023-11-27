@@ -115,41 +115,38 @@
                        :border "none"}
                :src (some-> state
                             :html-path
-                            (string/replace #"^docs/" ""))}]
+                            (string/replace (re-pattern (str "^"
+                                                             (:base-target-path state)
+                                                             "/"))
+                                            ""))}]
      (communication-script state)])))
 
 
-
-(def debug )
-
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
-  (if (:websocket? req)
-    (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
-                             :on-close (fn [ch _reason] (swap! *clients disj ch))
-                             :on-receive (fn [_ch msg])})
-    (case [request-method uri]
-      [:get "/"] {:body (page @server.state/*state)
-                  :status 200}
-      [:get "/counter"] {:body (-> @server.state/*state
-                                   :counter
-                                   str)
-                         :status 200}
-      ;; else
-      {:body (let [base-path (or (some-> @server.state/*state
-                                         :html-path
-                                         path/path->parent)
-                                 "docs")]
-               (try (->> uri
-                         (str base-path)
+  (let [state @server.state/*state]
+    (if (:websocket? req)
+      (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
+                               :on-close (fn [ch _reason] (swap! *clients disj ch))
+                               :on-receive (fn [_ch msg])})
+      (case [request-method uri]
+        [:get "/"] {:body (page state)
+                    :status 200}
+        [:get "/counter"] {:body (-> state
+                                     :counter
+                                     str)
+                           :status 200}
+        ;; else
+        {:body (try (->> uri
+                         (str (:base-target-path state))
                          (java.io.FileInputStream.))
                     (catch java.io.FileNotFoundException e
                       ;; Ignoring missing source maps.
                       ;; TODO: Figure this problem out.
                       (if (.endsWith ^String uri ".map")
                         nil
-                        (throw e)))))
-       :status 200})))
+                        (throw e))))
+         :status 200}))))
 
 (defonce *stop-server! (atom nil))
 
@@ -191,18 +188,22 @@
       (println "serving Clay at" (port->url port))
       (browse!))))
 
-(defn update-page! [{:keys [page
-                            html-path
-                            show]
-                     :or   {html-path "docs/.clay.html"}}]
+(defn update-page! [{:keys [show
+                            base-target-path
+                            page
+                            html-path]
+                     :or   {html-path (str base-target-path
+                                           "/"
+                                           ".clay.html")}}]
+  (server.state/set-base-target-path! base-target-path)
   (when show
     (open!))
   (io/make-parents html-path)
   (when page
     (spit html-path page))
   (server.state/reset-html-path! html-path)
-  (shell/sh "rsync" "-avu" "src/" "docs/src")
-  (shell/sh "rsync" "-avu" "notebooks/" "docs/notebooks")
+  (shell/sh "rsync" "-avu" "src/" (str base-target-path "/src"))
+  (shell/sh "rsync" "-avu" "notebooks/" (str base-target-path "/notebooks"))
   (when show
     (broadcast! "refresh"))
   [:ok])
