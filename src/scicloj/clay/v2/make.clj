@@ -20,7 +20,8 @@
   (let [;;
         config1 (config/config)
         ;;
-        {:keys [source-path
+        {:keys [base-source-path
+                source-path
                 single-form]
          :as config2}
         (merge config1 options)]
@@ -30,7 +31,10 @@
                    (-> options
                        (assoc :source-path sp)
                        make!))))
-      (let [ns-form (-> source-path
+      (let [full-source-path (or (some-> base-source-path
+                                         (str "/" source-path))
+                                 source-path)
+            ns-form (-> full-source-path
                         slurp
                         read/read-ns-form)
             ns-name (-> ns-form
@@ -38,8 +42,7 @@
                         name)
             ;;
             {:as config3
-             :keys [base-source-path
-                    base-target-path
+             :keys [base-target-path
                     format
                     html
                     quarto
@@ -69,7 +72,7 @@
                              {:items [item/loader]})})
               server/update-page!))
         (files/init-target! html-path)
-        (let [items      (-> source-path
+        (let [items      (-> full-source-path
                              (notebook/notebook-items config))]
           (case (first format)
             :html (let [page (page/html {:items items
@@ -155,4 +158,8 @@
 
   (make! {:format [:quarto :html]
           :source-path "notebooks/index.clj"
-          :quarto {:highlight-style :nord}}))
+          :quarto {:highlight-style :nord}})
+
+  (make! {:format [:html]
+          :base-source-path "notebooks/"
+          :source-path "index.clj"}))
