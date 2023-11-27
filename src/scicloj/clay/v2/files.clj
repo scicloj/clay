@@ -8,9 +8,8 @@
          assoc target-path {}))
 
 (defn file-path [target-path idx ext]
-  (str (or (some-> target-path
-                   #_(string/replace #"\.html$" ""))
-           "docs/")
+  (str (-> target-path
+           #_(string/replace #"\.html$" ""))
        "_files/"
        idx
        ext))
