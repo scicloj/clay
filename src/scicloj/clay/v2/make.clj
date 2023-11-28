@@ -7,10 +7,13 @@
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.notebook :as notebook]
             [scicloj.clay.v2.page :as page]
+            [scicloj.clay.v2.book :as book]
             [scicloj.clay.v2.server :as server]
             [scicloj.clay.v2.util.time :as time]
             [clojure.string :as string]
-            [clojure.java.shell :as shell]))
+            [clojure.java.shell :as shell]
+            [clj-yaml.core :as yaml]
+            [clojure.java.io :as io]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
   (or (some-> base-source-path
@@ -57,9 +60,63 @@
                                       merge-ns-config
                                       (merge spec) ; prioritize spec over the ns config
                                       (config/add-field :html-path spec->html-path)))))}))
+(defn index-path? [path]
+  (-> path
+      (string/split #"/")
+      last
+      (#{"index.qmd" "index.clj"})))
 
-(defn handle-main-spec! [spec]
-  )
+(defn quarto-book-config [{:as spec
+                           :keys [book
+                                  quarto
+                                  base-target-path
+                                  full-target-paths]}]
+  (let [index-included? (->> full-target-paths
+                             (some index-path?))]
+    (-> quarto
+        (select-keys [:format])
+        (merge {:project {:type "book"}
+                :book {:title (:title book)
+                       :chapters (if index-included?
+                                   full-target-paths
+                                   (cons (str base-target-path "/index.qmd")
+                                         full-target-paths))}}))))
+
+(defn write-quarto-book-config! [quarto-book-config
+                                 {:keys [base-target-path]}]
+  (let [config-path (str base-target-path "/_quarto.yml")]
+    (io/make-parents config-path)
+    (->> quarto-book-config
+         yaml/generate-string
+         (spit config-path))
+    (prn [:created config-path])))
+
+(defn quarto-book-index [{{:keys [toc title]} :book}]
+  (str "---\n"
+       (yaml/generate-string {:format {:html {:toc toc}}})
+       "\n---\n"
+       "# " title))
+
+(defn write-quarto-book-index-if-needed! [quarto-index
+                                          {:keys [base-target-path]}]
+  (let [main-index-path (str base-target-path "/index.qmd")]
+    (when-not (-> main-index-path io/file .exists)
+      (spit main-index-path quarto-index)
+      (prn [:created main-index-path]))))
+
+(defn make-book! [spec]
+  (-> spec
+      quarto-book-config
+      (write-quarto-book-config! spec))
+  (-> spec
+      quarto-book-index
+      (write-quarto-book-index-if-needed! spec)))
+
+(defn handle-main-spec! [{:as spec
+                          :keys [book]}]
+  (prn [:book book])
+  (when book
+    (make-book! spec)))
 
 (defn handle-single-source-spec! [{:as spec
                                    :keys [format
@@ -115,7 +172,9 @@
                          {:items [item/loader]})})
           server/update-page!))
     (->> single-ns-specs
-         (mapv handle-single-source-spec!))))
+         (mapv handle-single-source-spec!))
+    (-> main-spec
+        handle-main-spec!)))
 
 
 (comment
@@ -129,15 +188,6 @@
   (make! {:format [:html]
           :source-path ["notebooks/slides.clj"
                         "notebooks/index.clj"]
-          :show false})
-
-  ;; TODO: support a book with multiple chapters
-  ;; Quarto: create 1 book (this is just our normal configuration, but Clay can help)
-  (make! {:format [:quarto :book]
-          ;; Clay: create 3 markdown files from source
-          :source-path ["notebooks/index.clj"
-                        "notebooks/index1.clj"
-                        "notebooks/index2.clj"]
           :show false})
 
   (make! {:format      [:html]
@@ -166,4 +216,19 @@
 
   (make! {:format [:html]
           :base-source-path "notebooks/"
-          :source-path "index.clj"}))
+          :source-path "index.clj"})
+
+  (make! {:format [:quarto :html]
+          :base-source-path "notebooks"
+          :source-path ["index.clj"
+                        "slides.clj"]
+          :base-target-path "book"
+          :show false
+          :run-quarto false
+          :book {:title "Book Example"}})
+
+
+
+
+
+)
