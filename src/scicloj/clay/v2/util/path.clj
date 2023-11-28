@@ -72,3 +72,8 @@
             str
             (string/replace #"-" "_"))
         ext)))
+
+(defn ext [path]
+  (-> path
+      (string/split #"\.")
+      last))
