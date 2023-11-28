@@ -25,7 +25,7 @@
       slurp
       read/read-ns-form))
 
-(defn spec->html-path [{:keys [base-target-path format ns-form]}]
+(defn spec->full-target-path [{:keys [base-target-path format ns-form]}]
   (path/ns->target-path base-target-path
                         (-> ns-form
                             second
@@ -59,11 +59,11 @@
                                         (config/add-field :ns-form spec->ns-form)
                                         merge-ns-config
                                         (merge spec) ; prioritize spec over the ns config
-                                        (config/add-field :html-path spec->html-path)))))]
+                                        (config/add-field :full-target-path spec->full-target-path)))))]
     {:main-spec (-> base-spec
-                    (assoc :html-paths
+                    (assoc :full-target-paths
                            (->> single-ns-specs
-                                (mapv :html-path))))
+                                (mapv :full-target-path))))
      :single-ns-specs single-ns-specs}))
 
 
@@ -77,14 +77,14 @@
                            :keys [book
                                   quarto
                                   base-target-path
-                                  html-paths]}]
-  (let [index-included? (->> html-paths
+                                  full-target-paths]}]
+  (let [index-included? (->> full-target-paths
                              (some index-path?))]
     (-> quarto
         (select-keys [:format])
         (merge {:project {:type "book"}
                 :book {:title (:title book)
-                       :chapters (-> html-paths
+                       :chapters (-> full-target-paths
                                      (->> (map
                                            (fn [path]
                                              (-> path
@@ -104,7 +104,8 @@
     (->> quarto-book-config
          yaml/generate-string
          (spit config-path))
-    (prn [:created config-path])))
+    (prn [:wrote config-path])
+    [:wrote config-path]))
 
 (defn quarto-book-index [{{:keys [toc title]} :book}]
   (str "---\n"
@@ -115,38 +116,41 @@
 (defn write-quarto-book-index-if-needed! [quarto-index
                                           {:keys [base-target-path]}]
   (let [main-index-path (str base-target-path "/index.qmd")]
-    (when-not (-> main-index-path io/file .exists)
-      (spit main-index-path quarto-index)
-      (prn [:created main-index-path]))))
+    (if-not (-> main-index-path io/file .exists)
+      (do (spit main-index-path quarto-index)
+          (prn [:wrote main-index-path])
+          [:wrote main-index-path])
+      [:ok])))
 
 (defn make-book! [spec]
-  (-> spec
-      quarto-book-config
-      (write-quarto-book-config! spec))
-  (-> spec
-      quarto-book-index
-      (write-quarto-book-index-if-needed! spec)))
+  [(-> spec
+       quarto-book-config
+       (write-quarto-book-config! spec))
+   (-> spec
+       quarto-book-index
+       (write-quarto-book-index-if-needed! spec))])
 
 (defn handle-main-spec! [{:as spec
                           :keys [book]}]
-  (when book
-    (make-book! spec)))
+  (if book
+    (make-book! spec)
+    [:ok]))
 
 (defn handle-single-source-spec! [{:as spec
                                    :keys [format
-                                          html-path
+                                          full-target-path
                                           run-quarto]}]
-  (files/init-target! html-path)
+  (files/init-target! full-target-path)
   (let [spec-with-items      (-> spec
                                  (config/add-field :items notebook/notebook-items))]
     (case (first format)
       :html (do (-> spec-with-items
                     (config/add-field :page page/html)
                     server/update-page!)
-                [:wrote html-path])
-      :quarto (let [qmd-path (-> html-path
+                [:wrote full-target-path])
+      :quarto (let [qmd-path (-> full-target-path
                                  (string/replace #"\.html$" ".qmd"))
-                    output-file (-> html-path
+                    output-file (-> full-target-path
                                     (string/split #"/")
                                     last)]
                 (-> spec-with-items
@@ -161,18 +165,18 @@
                   (do (->> (shell/sh "quarto" "render" qmd-path)
                            ((juxt :err :out))
                            (mapv println))
-                      (println [:created html-path (time/now)])
+                      (println [:created full-target-path (time/now)])
                       (-> spec
-                          (merge {:html-path html-path})
+                          (merge {:full-target-path full-target-path})
                           server/update-page!))
                   ;; else, just show the qmd file
                   (-> spec
-                      (merge {:html-path qmd-path})
+                      (merge {:full-target-path qmd-path})
                       server/update-page!))
                 (vec
                  (concat [:wrote qmd-path]
                          (when run-quarto
-                           [html-path])))))))
+                           [full-target-path])))))))
 
 
 
@@ -185,10 +189,10 @@
           (merge {:page (page/html
                          {:items [item/loader]})})
           server/update-page!))
-    (->> single-ns-specs
-         (mapv handle-single-source-spec!))
-    (-> main-spec
-        handle-main-spec!)))
+    [(->> single-ns-specs
+          (mapv handle-single-source-spec!))
+     (-> main-spec
+         handle-main-spec!)]))
 
 
 (comment

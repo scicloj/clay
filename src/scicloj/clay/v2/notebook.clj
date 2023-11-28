@@ -75,7 +75,7 @@
                 (and hide-vars? (var? value)))
        (-> note
            (select-keys [:value :code :form
-                         :base-target-path :html-path])
+                         :base-target-path :full-target-path])
            (update :value deref-if-needed)
            prepare/prepare-or-pprint
            ;; in-div ; TODO: is this needed?
@@ -98,9 +98,9 @@
             hide-code? hide-nils? hide-vars?
             title toc?
             base-target-path
-            html-path
+            full-target-path
             single-form]}]
-   (files/init-target! html-path)
+   (files/init-target! full-target-path)
    (let [code (slurp full-source-path)
          notes  (if single-form
                   [{:form (read/read-ns-form code)}
@@ -111,7 +111,7 @@
                         (-> note
                             complete-note
                             (assoc :base-target-path base-target-path
-                                   :html-path html-path)
+                                   :full-target-path full-target-path)
                             (note-to-items options))))
               (remove nil?))
          (add-info-line options)
@@ -119,9 +119,9 @@
 
 (comment
   (-> "notebooks/scratch.clj"
-      (notebook-items {:html-path "docs/scratch.html"}))
+      (notebook-items {:full-target-path "docs/scratch.html"}))
 
   (-> "notebooks/scratch.clj"
-      (notebook-items {:html-path "docs/scratch.html"
+      (notebook-items {:full-target-path "docs/scratch.html"
                        :single-form '(+ 1 2)}))
   )

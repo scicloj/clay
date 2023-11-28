@@ -99,11 +99,11 @@
 
 
 (defn image [{:keys [value
-                     html-path
+                     full-target-path
                      base-target-path]
               :as context}]
   (let [jpg-path (files/next-file!
-                  html-path
+                  full-target-path
                   value
                   ".jpg")]
     (util.image/write! value jpg-path)

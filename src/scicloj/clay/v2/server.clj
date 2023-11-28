@@ -88,7 +88,7 @@
      [:div {:style {:display "inline-block"
                     :margin "20px"}}
       [:pre (some->> state
-                     :html-path)]
+                     :full-target-path)]
       [:pre (time/now)]]]
     #_(:hiccup item/separator)]))
 
@@ -114,7 +114,7 @@
                        :width "100%"
                        :border "none"}
                :src (some-> state
-                            :html-path
+                            :full-target-path
                             (string/replace (re-pattern (str "^"
                                                              (:base-target-path state)
                                                              "/"))
@@ -191,17 +191,17 @@
 (defn update-page! [{:keys [show
                             base-target-path
                             page
-                            html-path]
-                     :or   {html-path (str base-target-path
-                                           "/"
-                                           ".clay.html")}}]
+                            full-target-path]
+                     :or   {full-target-path (str base-target-path
+                                                  "/"
+                                                  ".clay.html")}}]
   (server.state/set-base-target-path! base-target-path)
   (when show
     (open!))
-  (io/make-parents html-path)
+  (io/make-parents full-target-path)
   (when page
-    (spit html-path page))
-  (server.state/reset-html-path! html-path)
+    (spit full-target-path page))
+  (server.state/reset-full-target-path! full-target-path)
   (shell/sh "rsync" "-avu" "src/" (str base-target-path "/src"))
   (shell/sh "rsync" "-avu" "notebooks/" (str base-target-path "/notebooks"))
   (when show
