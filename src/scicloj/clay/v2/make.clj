@@ -78,7 +78,6 @@
                                   quarto
                                   base-target-path
                                   html-paths]}]
-  (prn [:spec1 spec])
   (let [index-included? (->> html-paths
                              (some index-path?))]
     (-> quarto
@@ -128,7 +127,6 @@
 
 (defn handle-main-spec! [{:as spec
                           :keys [book]}]
-  (prn [:book book])
   (when book
     (make-book! spec)))
 
