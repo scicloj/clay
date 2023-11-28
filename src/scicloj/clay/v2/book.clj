@@ -107,19 +107,3 @@
        doall)
   (-> main-index
       (write-main-book-index-if-needed! {:base-target-path base-target-path})))
-
-
-(comment
-  (write-book!
-   {:title "Clay"
-    :base-source-path "notebooks"
-    :base-target-path "book"
-    :chapter-source-paths ["index.clj"
-                           "slides.clj"]
-    :page-config {:quarto {:format {:html {;; Quarto themes:
-                                           ;; https://quarto.org/docs/output-formats/html-themes.html
-                                           :theme :spacelab
-                                           :monofont "Fira Code Medium"}}
-                           ;; Quarto code highlighting:
-                           ;; https://quarto.org/docs/output-formats/html-code.html#highlighting
-                           :highlight-style :solarized}}}))
