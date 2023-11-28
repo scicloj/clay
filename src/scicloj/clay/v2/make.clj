@@ -85,13 +85,15 @@
         (merge {:project {:type "book"}
                 :book {:title (:title book)
                        :chapters (-> html-paths
-                                     (->> (map (fn [path]
-                                                 (-> path
-                                                     (string/replace
-                                                      (re-pattern (str "^"
-                                                                       base-target-path
-                                                                       "/"))
-                                                      "")))))
+                                     (->> (map
+                                           (fn [path]
+                                             (-> path
+                                                 (string/replace (re-pattern (str "^"
+                                                                                  base-target-path
+                                                                                  "/"))
+                                                                 "")
+                                                 (string/replace #"\.html$"
+                                                                 ".qmd")))))
                                      (cond->> index-included?
                                        (cons (str base-target-path "/index.qmd"))))}}))))
 
