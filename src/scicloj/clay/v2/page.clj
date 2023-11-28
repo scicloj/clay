@@ -83,7 +83,7 @@
 
 
 
-(defn html [{:keys [items data title toc?]}]
+(defn html [{:keys [items title toc?]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
@@ -159,17 +159,15 @@
                         "<table class='table table-hover'>"))))
 
 
-(defn md [{:keys [items data title config]}]
+(defn md [{:keys [items title quarto]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
                           (cons :md-default))]
     (str
-     (->> config
-          :quarto
+     (->> quarto
           yaml/generate-string
           (format "\n---\n%s\n---\n"))
-
      ;; " "
      (hiccup/html
       [:style (styles/main :table)]

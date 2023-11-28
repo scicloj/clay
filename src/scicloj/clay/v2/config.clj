@@ -9,11 +9,21 @@
     (-> path
         slurp)))
 
-(defn config
-  ([] (merge (-> "clay-default.edn"
-                 io/resource
-                 slurp
-                 edn/read-string)
-             (some-> "clay.edn"
-                     slurp-when-exists
-                     edn/read-string))))
+(defn default-config []
+  (-> "clay-default.edn"
+      io/resource
+      slurp
+      edn/read-string))
+
+(defn maybe-user-config []
+  (some-> "clay.edn"
+          slurp-when-exists
+          edn/read-string))
+
+(defn add-field [config kw compute]
+  (-> config
+      (assoc kw (compute config))))
+
+(defn config []
+  (-> (default-config)
+      (merge (maybe-user-config))))

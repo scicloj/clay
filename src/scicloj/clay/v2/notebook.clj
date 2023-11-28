@@ -81,10 +81,10 @@
            ;; in-div ; TODO: is this needed?
            ))]))
 
-(defn add-info-line [items path {:keys [hide-info-line?]}]
+(defn add-info-line [items {:keys [full-source-path hide-info-line?]}]
   (if hide-info-line?
     items
-    (let [il (info-line path)]
+    (let [il (info-line full-source-path)]
       (concat #_[il
                  item/separator]
               items
@@ -92,15 +92,16 @@
                il]))))
 
 (defn notebook-items
-  ([path {:as options
-          :keys [hide-info-line?
-                 hide-code? hide-nils? hide-vars?
-                 title toc?
-                 base-target-path
-                 html-path
-                 single-form]}]
+  ([{:as options
+     :keys [full-source-path
+            hide-info-line?
+            hide-code? hide-nils? hide-vars?
+            title toc?
+            base-target-path
+            html-path
+            single-form]}]
    (files/init-target! html-path)
-   (let [code (slurp path)
+   (let [code (slurp full-source-path)
          notes  (if single-form
                   [{:form (read/read-ns-form code)}
                    {:form single-form}]
@@ -113,7 +114,7 @@
                                    :html-path html-path)
                             (note-to-items options))))
               (remove nil?))
-         (add-info-line path options)
+         (add-info-line options)
          doall))))
 
 (comment
