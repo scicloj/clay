@@ -38,10 +38,9 @@
                              (cons "index.md" chapter-source-paths))
                            (mapv source-path->target-path))}}))
 
-(defn ->main-index [{:keys [toc embed-resources title]}]
+(defn ->main-index [{:keys [toc title]}]
   (str "---\n"
-       (yaml/generate-string {:format {:html {:toc toc}}
-                              :embed-resources embed-resources})
+       (yaml/generate-string {:format {:html {:toc toc}}})
        "\n---\n"
        "# " title))
 
@@ -89,15 +88,12 @@
                            title
                            quarto-book-config
                            page-config
-                           embed-resources
                            main-index]
                     :or {title "Book Draft"
                          page-config {:toc true}
-                         embed-resources true
                          quarto-book-config (->base-book-config {:title title
                                                                  :chapter-source-paths chapter-source-paths})
                          main-index (->main-index {:toc (:toc page-config)
-                                                   :embed-resources embed-resources
                                                    :title title})}}]
   (-> quarto-book-config
       (write-book-config! {:base-target-path base-target-path}))
