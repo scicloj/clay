@@ -235,7 +235,7 @@
   (make! {:format [:quarto :html]
           :base-source-path "notebooks"
           :source-path ["index.clj"
-                        "slides.clj"]
+                        "chapter.clj"]
           :base-target-path "book"
           :show false
           :run-quarto false
