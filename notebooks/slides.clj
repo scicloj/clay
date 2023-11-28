@@ -9,7 +9,7 @@
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
 
-;; # A
+;; # Slides
 
 ;; ## A1
 
@@ -17,4 +17,4 @@
 
 ;; ## A2
 
-;; # B
+;; # More Slides
