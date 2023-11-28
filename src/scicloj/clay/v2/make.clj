@@ -46,20 +46,27 @@
          (spec->ns-config spec)))
 
 (defn extract-specs [config spec]
-  (let [{:as main-spec :keys [source-path]}
-        (merge config spec)] ; prioritize spec over global config
-    {:main-spec main-spec
-     :single-ns-specs (->> (if (sequential? source-path)
-                             (->> source-path
-                                  (map (partial assoc main-spec :source-path)))
-                             [main-spec])
-                           (map (fn [single-ns-spec]
-                                  (-> single-ns-spec
-                                      (config/add-field :full-source-path spec->full-source-path)
-                                      (config/add-field :ns-form spec->ns-form)
-                                      merge-ns-config
-                                      (merge spec) ; prioritize spec over the ns config
-                                      (config/add-field :html-path spec->html-path)))))}))
+  (let [{:as base-spec :keys [source-path]}
+        (merge config spec) ; prioritize spec over global config
+        ;;
+        single-ns-specs (->> (if (sequential? source-path)
+                               (->> source-path
+                                    (map (partial assoc base-spec :source-path)))
+                               [base-spec])
+                             (map (fn [single-ns-spec]
+                                    (-> single-ns-spec
+                                        (config/add-field :full-source-path spec->full-source-path)
+                                        (config/add-field :ns-form spec->ns-form)
+                                        merge-ns-config
+                                        (merge spec) ; prioritize spec over the ns config
+                                        (config/add-field :html-path spec->html-path)))))]
+    {:main-spec (-> base-spec
+                    (assoc :html-paths
+                           (->> single-ns-specs
+                                (mapv :html-path))))
+     :single-ns-specs single-ns-specs}))
+
+
 (defn index-path? [path]
   (-> path
       (string/split #"/")
@@ -70,17 +77,24 @@
                            :keys [book
                                   quarto
                                   base-target-path
-                                  full-target-paths]}]
-  (let [index-included? (->> full-target-paths
+                                  html-paths]}]
+  (prn [:spec1 spec])
+  (let [index-included? (->> html-paths
                              (some index-path?))]
     (-> quarto
         (select-keys [:format])
         (merge {:project {:type "book"}
                 :book {:title (:title book)
-                       :chapters (if index-included?
-                                   full-target-paths
-                                   (cons (str base-target-path "/index.qmd")
-                                         full-target-paths))}}))))
+                       :chapters (-> html-paths
+                                     (->> (map (fn [path]
+                                                 (-> path
+                                                     (string/replace
+                                                      (re-pattern (str "^"
+                                                                       base-target-path
+                                                                       "/"))
+                                                      "")))))
+                                     (cond->> index-included?
+                                       (cons (str base-target-path "/index.qmd"))))}}))))
 
 (defn write-quarto-book-config! [quarto-book-config
                                  {:keys [base-target-path]}]
@@ -226,9 +240,5 @@
           :show false
           :run-quarto false
           :book {:title "Book Example"}})
-
-
-
-
 
 )
