@@ -158,6 +158,19 @@
 
   ,)
 
+;; ## Configutation
+
+;; Calls to the `make!` function are affected by various parameters
+;; which collected as one nested map.
+;; This map is the result of merging four sources:
+;; - the default configuration: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
+;; - the user configuration: `clay.edn` at the top
+;; - the namespace configuration: the `:clay` member of the namespace metadata
+;; - the call configuration: the argument to `make!`
+
+;; Here are some of the parameters worth knowing about
+;; **(to be documented soon)**
+
 ;; ## Starting a Clay namespace
 
 ;; Now, we can write a namespace and play with Clay.
