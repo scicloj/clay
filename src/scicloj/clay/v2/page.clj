@@ -66,6 +66,10 @@
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
                       "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}})
 
+(def include
+  {:js hiccup.page/include-js
+   :css hiccup.page/include-css})
+
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]
   (let [path (files/next-file!
@@ -82,65 +86,38 @@
                           base-target-path
                           "/"))
          "")
-        ((case js-or-css
-           :js hiccup.page/include-js
-           :css hiccup.page/include-css)))))
+        ((include js-or-css)))))
 
 (defn include-libs [spec libs]
-  (->> libs
-       (mapcat (comp :from-the-web :css special-lib-resources))
-       (apply hiccup.page/include-css)
-       hiccup/html)
-  (->> libs
-       (mapcat (fn [lib]
-                 (->> lib
-                      special-lib-resources
-                      :css
-                      :from-local-copy
-                      (map (fn [url]
-                             (include-from-a-local-file
-                              url
-                              lib
-                              :css
-                              spec))))))
-       hiccup/html)
-  (->> libs
-       (mapcat (comp :from-the-web :js special-lib-resources))
-       (apply hiccup.page/include-js)
-       hiccup/html)
-  (->> libs
-       (mapcat (fn [lib]
-                 (->> lib
-                      special-lib-resources
-                      :js
-                      :from-local-copy
-                      (map (fn [url]
-                             (include-from-a-local-file
-                              url
-                              lib
-                              :js
-                              spec))))))
-       hiccup/html))
-
-;; (defn js-from-local-copies [& urls]
-;;                    (->> urls
-;;                         (map resource/get)
-;;                         (map (partial vector :script {:type "text/javascript"}))
-;;                         (into [:div])))
-
-;; (defn  css-from-local-copies [& urls]
-;;   (->> urls
-;;        (map resource/get)
-;;        (map (partial vector :style))
-;;        (into [:div])))
+  (->> [:js :css]
+       (mapcat (fn [js-or-css]
+                 (->> libs
+                      (mapcat
+                       (fn [lib]
+                         (->> lib
+                              special-lib-resources
+                              js-or-css
+                              ((fn [{:keys [from-the-web from-local-copy]}]
+                                 (concat
+                                  (some->> from-the-web
+                                           (apply (include js-or-css))
+                                           vector)
+                                  (some->> from-local-copy
+                                           (map (fn [url]
+                                                  (include-from-a-local-file
+                                                   url
+                                                   lib
+                                                   js-or-css
+                                                   spec)))))))))))))
+       (apply concat)
+       hiccup/html
+       (format "\n%s\n")))
 
 (def font-links
   " <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
     <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
-
-
 
 
 (defn html [{:as spec
