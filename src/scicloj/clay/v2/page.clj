@@ -78,7 +78,7 @@
               url
               (str "." (name js-or-css)))]
     (->> url
-         slurp
+         resource/get
          (spit path))
     (-> path
         (string/replace
@@ -241,7 +241,8 @@
         (mapcat :deps)
         distinct
         (cons :md-default)
-        (include-libs spec))
+        (include-libs spec)
+        time)
    (->> items
         (map-indexed
          (fn [i item]
