@@ -53,10 +53,110 @@
 
 ;; ## API
 
-;; **(to be documented soon)**
+;; The entry point of the Clay API  is the `scicloj.clay.v2.api/make!` function.
+;; Here are some usage examples.
 
-;; Briefly, the entry point of the Clay API  is the `scicloj.clay.v2.api/make!` function.
-;; Till it is documented, you may find code examples at the bottom of the [`src/scicloj/clay/v2/make.clj`](https://github.com/scicloj/clay/blob/main/src/scicloj/clay/v2/make.clj) source file.
+(comment
+  ;; Evaluate and render
+  ;; the `index` namespace
+  ;; as HTML
+  ;; and show it at the browser.
+  (make! {:format [:html]
+          :source-path "notebooks/index.clj"})
+
+  ;; Evaluate and render
+  ;; the `index` namespace
+  ;; as HTML
+  ;; and do not show it at the browser.
+  (make! {:format [:html]
+          :source-path "notebooks/index.clj"
+          :show false})
+
+  ;; Evaluate and render
+  ;; the `slides` & `index` namespace
+  ;; as HTML
+  ;; and do not show it at the browser.
+  (make! {:format [:html]
+          :source-path ["notebooks/slides.clj"
+                        "notebooks/index.clj"]
+          :show false})
+
+  ;; Evaluate and render a single form
+  ;; in the context of the `index` namespace
+  ;; as HTML
+  ;; and show it at the browser.
+  (make! {:format      [:html]
+          :source-path "notebooks/index.clj"
+          :single-form '(kind/cytoscape
+                         [{:style {:width "300px"
+                                   :height "300px"}}
+                          cytoscape-example])})
+
+  ;; Evaluate and render
+  ;; the `index` namespace
+  ;; as a Quarto qmd file
+  ;; then, using Quarto, render that file as HTML
+  ;; and show it at the browser.
+  (make! {:format [:quarto :html]
+          :source-path "notebooks/index.clj"})
+
+  ;; Evaluate and render
+  ;; the `index` namespace
+  ;; as a Quarto qmd file
+  ;; and show it at the browser.
+  (make! {:format [:quarto :html]
+          :source-path "notebooks/index.clj"
+          :run-quarto false})
+
+  ;; Evaluate and render
+  ;; the `slides` namespace
+  ;; as a Quarto qmd file
+  ;; (using its namespace-specific config from the ns metadata)
+  ;; then, using Quarto, render that file as HTML
+  ;; and show it at the browser.
+  (make! {:format [:quarto :html]
+          :source-path "notebooks/slides.clj"})
+
+  ;; Evaluate and render
+  ;; the `slides` namespace
+  ;; as a Quarto qmd file
+  ;; (using its namespace-specific config from the ns metadata)
+  ;; then, using Quarto, render that file as a reveal.js slideshow
+  ;; and show it at the browser.
+  (make! {:format [:quarto :revealjs]
+          :source-path "notebooks/slides.clj"})
+
+  ;; Evaluate and render
+  ;; the `index` namespace
+  ;; as a Quarto qmd file
+  ;; with a custom Quarto config
+  ;; then, using Quarto, render that file as HTML
+  ;; and show it at the browser.
+  (make! {:format [:quarto :html]
+          :source-path "notebooks/index.clj"
+          :quarto {:highlight-style :nord}})
+
+  ;; Evaluate and render
+  ;; the `index` namespace
+  ;; under the `"notebooks/"` directory
+  ;; as HTML
+  ;; and show it at the browser.
+  (make! {:format [:html]
+          :base-source-path "notebooks/"
+          :source-path "index.clj"})
+
+  ;; Create a Quarto book
+  ;; (to be documented soon).
+  (make! {:format [:quarto :html]
+          :base-source-path "notebooks"
+          :source-path ["index.clj"
+                        "chapter.clj"]
+          :base-target-path "book"
+          :show false
+          :run-quarto false
+          :book {:title "Book Example"}})
+
+  ,)
 
 ;; ## Starting a Clay namespace
 
