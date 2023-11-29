@@ -37,12 +37,12 @@
                  ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"]}}
    :three-d-mol {:js {:from-the-web
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
-   :leaflet {:js {:from-local-copy
+   :leaflet {;; fetching Leaflet from the web
+             ;; to avoid fetching the images locally,
+             ;; which would need a bit more care.
+             :js {:from-the-web
                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
              :css {:from-the-web
-                   ;; fetching the Leaflet css from the web
-                   ;; to avoid fetching the images locally,
-                   ;; which would need a bit more care.
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
    :reagent {:js {:from-local-copy
                   ["https://unpkg.com/react@18/umd/react.production.min.js"
@@ -85,6 +85,42 @@
         ((case js-or-css
            :js hiccup.page/include-js
            :css hiccup.page/include-css)))))
+
+(defn include-libs [spec libs]
+  (->> libs
+       (mapcat (comp :from-the-web :css special-lib-resources))
+       (apply hiccup.page/include-css)
+       hiccup/html)
+  (->> libs
+       (mapcat (fn [lib]
+                 (->> lib
+                      special-lib-resources
+                      :css
+                      :from-local-copy
+                      (map (fn [url]
+                             (include-from-a-local-file
+                              url
+                              lib
+                              :css
+                              spec))))))
+       hiccup/html)
+  (->> libs
+       (mapcat (comp :from-the-web :js special-lib-resources))
+       (apply hiccup.page/include-js)
+       hiccup/html)
+  (->> libs
+       (mapcat (fn [lib]
+                 (->> lib
+                      special-lib-resources
+                      :js
+                      :from-local-copy
+                      (map (fn [url]
+                             (include-from-a-local-file
+                              url
+                              lib
+                              :js
+                              spec))))))
+       hiccup/html))
 
 ;; (defn js-from-local-copies [& urls]
 ;;                    (->> urls
@@ -216,55 +252,22 @@
 
 (defn md [{:as spec
            :keys [items title quarto]}]
-  (let [special-libs (->> items
-                          (mapcat :deps)
-                          distinct
-                          (cons :md-default))]
-    (str
-     (->> quarto
-          yaml/generate-string
-          (format "\n---\n%s\n---\n"))
-     ;; " "
-     (hiccup/html
-      [:style (styles/main :table)]
-      [:style (styles/main :md-main)])
-     (->> special-libs
-          (mapcat (comp :from-the-web :css special-lib-resources))
-          (apply hiccup.page/include-css)
-          hiccup/html)
-     (->> special-libs
-          (mapcat (fn [lib]
-                    (->> lib
-                         special-lib-resources
-                         :css
-                         :from-local-copy
-                         (map (fn [url]
-                                (include-from-a-local-file
-                                 url
-                                 lib
-                                 :css
-                                 spec))))))
-          hiccup/html)
-     (->> special-libs
-          (mapcat (comp :from-the-web :js special-lib-resources))
-          (apply hiccup.page/include-js)
-          hiccup/html)
-     (->> special-libs
-          (mapcat (fn [lib]
-                    (->> lib
-                         special-lib-resources
-                         :js
-                         :from-local-copy
-                         (map (fn [url]
-                                (include-from-a-local-file
-                                 url
-                                 lib
-                                 :js
-                                 spec))))))
-          hiccup/html)
-     (->> items
-          (map-indexed
-           (fn [i item]
-             (prepare/item->md item
-                               {:id (str "item" i)})))
-          (string/join "\n\n")))))
+  (str
+   (->> quarto
+        yaml/generate-string
+        (format "\n---\n%s\n---\n"))
+   ;; " "
+   (hiccup/html
+    [:style (styles/main :table)]
+    [:style (styles/main :md-main)])
+   (->> items
+        (mapcat :deps)
+        distinct
+        (cons :md-default)
+        (include-libs spec))
+   (->> items
+        (map-indexed
+         (fn [i item]
+           (prepare/item->md item
+                             {:id (str "item" i)})))
+        (string/join "\n\n"))))
