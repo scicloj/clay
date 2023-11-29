@@ -501,7 +501,7 @@ nested-structure-1
 
 (kind/portal
  [(kind/hiccup [:img {:height 50 :width 50
-                      :src "attps://clojure.org/images/clojure-logo-120b.png"}])
+                      :src "https://clojure.org/images/clojure-logo-120b.png"}])
   (kind/hiccup [:img {:height 50 :width 50
                       :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
 
