@@ -58,14 +58,14 @@
 
 (comment
   ;; Evaluate and render
-  ;; the `index` namespace
+  ;; the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and show it at the browser.
   (make! {:format [:html]
           :source-path "notebooks/index.clj"})
 
   ;; Evaluate and render
-  ;; the `index` namespace
+  ;; the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and do not show it at the browser.
   (make! {:format [:html]
@@ -73,7 +73,7 @@
           :show false})
 
   ;; Evaluate and render
-  ;; the `slides` & `index` namespace
+  ;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
   ;; as HTML
   ;; and do not show it at the browser.
   (make! {:format [:html]
@@ -82,7 +82,7 @@
           :show false})
 
   ;; Evaluate and render a single form
-  ;; in the context of the `index` namespace
+  ;; in the context of the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and show it at the browser.
   (make! {:format      [:html]
@@ -93,7 +93,7 @@
                           cytoscape-example])})
 
   ;; Evaluate and render
-  ;; the `index` namespace
+  ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
   ;; then, using Quarto, render that file as HTML
   ;; and show it at the browser.
@@ -101,7 +101,7 @@
           :source-path "notebooks/index.clj"})
 
   ;; Evaluate and render
-  ;; the `index` namespace
+  ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
   ;; and show it at the browser.
   (make! {:format [:quarto :html]
@@ -109,7 +109,7 @@
           :run-quarto false})
 
   ;; Evaluate and render
-  ;; the `slides` namespace
+  ;; the namespace in `"notebooks/slides.clj"`
   ;; as a Quarto qmd file
   ;; (using its namespace-specific config from the ns metadata)
   ;; then, using Quarto, render that file as HTML
@@ -118,7 +118,7 @@
           :source-path "notebooks/slides.clj"})
 
   ;; Evaluate and render
-  ;; the `slides` namespace
+  ;; the namespace in `"notebooks/slides.clj"`
   ;; as a Quarto qmd file
   ;; (using its namespace-specific config from the ns metadata)
   ;; then, using Quarto, render that file as a reveal.js slideshow
@@ -127,7 +127,7 @@
           :source-path "notebooks/slides.clj"})
 
   ;; Evaluate and render
-  ;; the `index` namespace
+  ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
   ;; with a custom Quarto config
   ;; then, using Quarto, render that file as HTML
@@ -137,8 +137,8 @@
           :quarto {:highlight-style :nord}})
 
   ;; Evaluate and render
-  ;; the `index` namespace
-  ;; under the `"notebooks/"` directory
+  ;; the namespace in `"index.clj"`
+  ;; under the `"notebooks"` directory
   ;; as HTML
   ;; and show it at the browser.
   (make! {:format [:html]
