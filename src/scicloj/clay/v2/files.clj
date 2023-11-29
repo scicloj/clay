@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.files
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [clojure.java.io :as io]))
 
 (def *target-path->files (atom {}))
 
@@ -7,14 +8,15 @@
   (swap! *target-path->files
          assoc target-path {}))
 
-(defn file-path [target-path idx ext]
+(defn file-path [target-path custom-name idx ext]
   (str (-> target-path
            #_(string/replace #"\.html$" ""))
        "_files/"
+       (name custom-name)
        idx
        ext))
 
-(defn next-file! [target-path value ext]
+(defn next-file! [target-path custom-name value ext]
   (if-let [file (-> @*target-path->files
                     (get target-path)
                     (get value))]
@@ -28,8 +30,11 @@
                      (-> target-path->templfiles
                          (assoc-in [target-path value]
                                    (file-path target-path
+                                              custom-name
                                               (count files)
                                               ext)))))))
-        (-> @*target-path->files
-            (get target-path)
-            (get value)))))
+        (let [new-file (-> @*target-path->files
+                           (get target-path)
+                           (get value))]
+          (io/make-parents new-file)
+          new-file))))

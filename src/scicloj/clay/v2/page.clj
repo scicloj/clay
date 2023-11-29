@@ -9,7 +9,8 @@
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
-   [scicloj.clay.v2.util.resource :as resource]))
+   [scicloj.clay.v2.util.resource :as resource]
+   [scicloj.clay.v2.files :as files]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -38,7 +39,10 @@
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
    :leaflet {:js {:from-local-copy
                   ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
-             :css {:from-local-copy
+             :css {:from-the-web
+                   ;; fetching the Leaflet css from the web
+                   ;; to avoid fetching the images locally,
+                   ;; which would need a bit more care.
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
    :reagent {:js {:from-local-copy
                   ["https://unpkg.com/react@18/umd/react.production.min.js"
@@ -62,17 +66,37 @@
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
                       "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}})
 
-(defn js-from-local-copies [& urls]
-  (->> urls
-       (map resource/get)
-       (map (partial vector :script {:type "text/javascript"}))
-       (into [:div])))
+(defn include-from-a-local-file [url custom-name js-or-css
+                                 {:keys [full-target-path base-target-path]}]
+  (let [path (files/next-file!
+              full-target-path
+              custom-name
+              url
+              (str "." (name js-or-css)))]
+    (->> url
+         slurp
+         (spit path))
+    (-> path
+        (string/replace
+         (re-pattern (str "^"
+                          base-target-path
+                          "/"))
+         "")
+        ((case js-or-css
+           :js hiccup.page/include-js
+           :css hiccup.page/include-css)))))
 
-(defn css-from-local-copies [& urls]
-  (->> urls
-       (map resource/get)
-       (map (partial vector :style))
-       (into [:div])))
+;; (defn js-from-local-copies [& urls]
+;;                    (->> urls
+;;                         (map resource/get)
+;;                         (map (partial vector :script {:type "text/javascript"}))
+;;                         (into [:div])))
+
+;; (defn  css-from-local-copies [& urls]
+;;   (->> urls
+;;        (map resource/get)
+;;        (map (partial vector :style))
+;;        (into [:div])))
 
 (def font-links
   " <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
@@ -83,7 +107,8 @@
 
 
 
-(defn html [{:keys [items title toc?]}]
+(defn html [{:as spec
+             :keys [items title toc?]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
@@ -98,21 +123,38 @@
               [:style (styles/main :loader)]
               #_[:style (styles/main :code)]
               [:style (styles/highlight :qtcreator-light)]
-              (css-from-local-copies "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css")
+              (include-from-a-local-file
+               "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+               "bootstrap"
+               :css
+               spec)
               (when toc?
-                (css-from-local-copies
-                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"))
+                (include-from-a-local-file
+                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"
+                 "bootstrap-toc"
+                 :css
+                 spec))
               (when toc?
                 [:style (styles/main :bootstrap-toc-customization)])
-              (->> (concat (->> special-libs
-                                (mapcat (comp :from-local-copy :css special-lib-resources)))
-                           (->> special-libs
-                                (mapcat (comp :from-the-web :css special-lib-resources))))
+              (->> special-libs
+                   (mapcat (comp :from-the-web :css special-lib-resources))
                    distinct
                    (map #(-> %
                              hiccup.page/include-css
                              hiccup/html))
                    (string/join "\n"))
+              (->> special-libs
+                   (mapcat (fn [lib]
+                             (->> lib
+                                  special-lib-resources
+                                  :css
+                                  :from-local-copy
+                                  (map (fn [url]
+                                         (include-from-a-local-file
+                                          url
+                                          lib
+                                          :css
+                                          spec)))))))
               [:title (or title "Clay")]]
         body [:body  {:style {:background "#fcfcfc"
                               :font-family "'Roboto', sans-serif"
@@ -121,16 +163,27 @@
                       :data-spy "scroll"
                       :data-target "#toc"}
               (when toc?
-                (js-from-local-copies
-                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"))
+                (include-from-a-local-file
+                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"
+                 "bootstrap-toc"
+                 :js
+                 spec))
               [:script {:type "text/javascript"}
                (-> "highlight/highlight.min.js"
                    io/resource
                    slurp)]
               (->> special-libs
-                   (mapcat (comp :from-local-copy :js special-lib-resources))
-                   distinct
-                   (apply js-from-local-copies))
+                   (mapcat (fn [lib]
+                             (->> lib
+                                  special-lib-resources
+                                  :js
+                                  :from-local-copy
+                                  (map (fn [url]
+                                         (include-from-a-local-file
+                                          url
+                                          lib
+                                          :js
+                                          spec)))))))
               (->> special-libs
                    (mapcat (comp :from-the-web :js special-lib-resources))
                    distinct
@@ -159,7 +212,10 @@
                         "<table class='table table-hover'>"))))
 
 
-(defn md [{:keys [items title quarto]}]
+
+
+(defn md [{:as spec
+           :keys [items title quarto]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
@@ -172,17 +228,39 @@
      (hiccup/html
       [:style (styles/main :table)]
       [:style (styles/main :md-main)])
-     (->> (concat (->> special-libs
-                       (mapcat (comp :from-local-copy :css special-lib-resources)))
-                  (->> special-libs
-                       (mapcat (comp :from-the-web :css special-lib-resources))))
+     (->> special-libs
+          (mapcat (comp :from-the-web :css special-lib-resources))
           (apply hiccup.page/include-css)
           hiccup/html)
-     (->> (concat (->> special-libs
-                       (mapcat (comp :from-local-copy :js special-lib-resources)))
-                  (->> special-libs
-                       (mapcat (comp :from-the-web :js special-lib-resources))))
+     (->> special-libs
+          (mapcat (fn [lib]
+                    (->> lib
+                         special-lib-resources
+                         :css
+                         :from-local-copy
+                         (map (fn [url]
+                                (include-from-a-local-file
+                                 url
+                                 lib
+                                 :css
+                                 spec))))))
+          hiccup/html)
+     (->> special-libs
+          (mapcat (comp :from-the-web :js special-lib-resources))
           (apply hiccup.page/include-js)
+          hiccup/html)
+     (->> special-libs
+          (mapcat (fn [lib]
+                    (->> lib
+                         special-lib-resources
+                         :js
+                         :from-local-copy
+                         (map (fn [url]
+                                (include-from-a-local-file
+                                 url
+                                 lib
+                                 :js
+                                 spec))))))
           hiccup/html)
      (->> items
           (map-indexed

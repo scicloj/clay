@@ -186,8 +186,10 @@
         {:keys [show]} main-spec]
     (when show
       (-> main-spec
-          (merge {:page (page/html
-                         {:items [item/loader]})})
+          (assoc :page (-> single-ns-specs
+                           first
+                           (assoc :items [item/loader])
+                           page/html))
           server/update-page!))
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))

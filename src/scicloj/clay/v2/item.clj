@@ -5,7 +5,8 @@
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
-            [scicloj.clay.v2.util.meta :as meta]))
+            [scicloj.clay.v2.util.meta :as meta]
+            [hiccup.page]))
 
 (defn in-vector [v]
   (if (vector? v)
@@ -98,22 +99,7 @@
    :deps [:vega]})
 
 
-(defn image [{:keys [value
-                     full-target-path
-                     base-target-path]
-              :as context}]
-  (let [jpg-path (files/next-file!
-                  full-target-path
-                  value
-                  ".jpg")]
-    (util.image/write! value jpg-path)
-    {:hiccup [:img {:style {:width "100%"}
-                    :src (-> jpg-path
-                             (string/replace
-                              (re-pattern (str "^"
-                                               base-target-path
-                                               "/"))
-                              ""))}]}))
+
 
 (def next-id
   (let [*counter (atom 0)]
@@ -220,3 +206,21 @@ Plotly.newPlot(document.currentScript.parentElement,
   {:html (->> html
               in-vector
               (string/join "\n"))})
+
+(defn image [{:keys [value
+                     full-target-path
+                     base-target-path]
+              :as context}]
+  (let [jpg-path (files/next-file!
+                  full-target-path
+                  ""
+                  value
+                  ".jpg")]
+    (util.image/write! value jpg-path)
+    {:hiccup [:img {:style {:width "100%"}
+                    :src (-> jpg-path
+                             (string/replace
+                              (re-pattern (str "^"
+                                               base-target-path
+                                               "/"))
+                              ""))}]}))
