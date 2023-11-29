@@ -139,44 +139,54 @@
 (defn handle-single-source-spec! [{:as spec
                                    :keys [format
                                           full-target-path
+                                          show
                                           run-quarto]}]
   (files/init-target! full-target-path)
-  (let [spec-with-items      (-> spec
-                                 (config/add-field :items notebook/notebook-items))]
-    (case (first format)
-      :html (do (-> spec-with-items
-                    (config/add-field :page page/html)
-                    server/update-page!)
-                [:wrote full-target-path])
-      :quarto (let [qmd-path (-> full-target-path
-                                 (string/replace #"\.html$" ".qmd"))
-                    output-file (-> full-target-path
-                                    (string/split #"/")
-                                    last)]
-                (-> spec-with-items
-                    (update-in [:quarto :format]
-                               select-keys [(second format)])
-                    (update-in [:quarto :format (second format)]
-                               assoc :output-file output-file)
-                    page/md
-                    (->> (spit qmd-path)))
-                (println [:wrote qmd-path (time/now)])
-                (if run-quarto
-                  (do (->> (shell/sh "quarto" "render" qmd-path)
-                           ((juxt :err :out))
-                           (mapv println))
-                      (println [:created full-target-path (time/now)])
-                      (-> spec
-                          (merge {:full-target-path full-target-path})
-                          server/update-page!))
-                  ;; else, just show the qmd file
-                  (-> spec
-                      (merge {:full-target-path qmd-path})
-                      server/update-page!))
-                (vec
-                 (concat [:wrote qmd-path]
-                         (when run-quarto
-                           [full-target-path])))))))
+  (try
+    (let [spec-with-items      (-> spec
+                                   (config/add-field :items notebook/notebook-items))]
+      (case (first format)
+        :html (do (-> spec-with-items
+                      (config/add-field :page page/html)
+                      server/update-page!)
+                  [:wrote full-target-path])
+        :quarto (let [qmd-path (-> full-target-path
+                                   (string/replace #"\.html$" ".qmd"))
+                      output-file (-> full-target-path
+                                      (string/split #"/")
+                                      last)]
+                  (-> spec-with-items
+                      (update-in [:quarto :format]
+                                 select-keys [(second format)])
+                      (update-in [:quarto :format (second format)]
+                                 assoc :output-file output-file)
+                      page/md
+                      (->> (spit qmd-path)))
+                  (println [:wrote qmd-path (time/now)])
+                  (if run-quarto
+                    (do (->> (shell/sh "quarto" "render" qmd-path)
+                             ((juxt :err :out))
+                             (mapv println))
+                        (println [:created full-target-path (time/now)])
+                        (-> spec
+                            (merge {:full-target-path full-target-path})
+                            server/update-page!))
+                    ;; else, just show the qmd file
+                    (-> spec
+                        (merge {:full-target-path qmd-path})
+                        server/update-page!))
+                  (vec
+                   (concat [:wrote qmd-path]
+                           (when run-quarto
+                             [full-target-path]))))))
+    (catch Exception e
+      (prn [:e e])
+      (when show
+        (-> spec
+            (assoc :page (-> spec
+                             (assoc :items [(item/pprint e)])
+                             page/html))
+            server/update-page!)))))
 
 
 
@@ -247,4 +257,4 @@
           :run-quarto false
           :book {:title "Book Example"}})
 
-)
+,)
