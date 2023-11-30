@@ -1,3 +1,4 @@
+^{:clay {:quarto {:monofont "Fira Code Medium"}}}
 (ns slides
   (:require [scicloj.kindly.v4.kind :as kind]
             [scicloj.clay.v2.api :as clay]
@@ -8,7 +9,7 @@
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
 
-;; # A
+;; # Slides
 
 ;; ## A1
 
@@ -16,6 +17,4 @@
 
 ;; ## A2
 
-;; # B
-
-(/ 1 0)
+;; # More Slides
