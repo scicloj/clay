@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file. This change
 - support for multiple sources in `make!`
 - refactoring of parameter flow
 - displaying errors on the browser view
+- support for markdown files in books through `make!`
+
 
 ## [2-alpha41] - 2023-11-25
 - using `qmd` rather than `md` for Quarto files (to support R code blocks, etc.)

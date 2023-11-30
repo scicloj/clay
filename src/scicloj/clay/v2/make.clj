@@ -21,25 +21,37 @@
       source-path))
 
 (defn spec->ns-form [{:keys [full-source-path]}]
-  (-> full-source-path
-      slurp
-      read/read-ns-form))
+  (when (-> full-source-path
+            path/path->ext
+            (= "clj"))
+    (-> full-source-path
+        slurp
+        read/read-ns-form)))
 
-(defn spec->full-target-path [{:keys [base-target-path format ns-form]}]
-  (path/ns->target-path base-target-path
-                        (-> ns-form
-                            second
-                            name)
-                        (str (when (-> format
-                                       second
-                                       (= :revealjs))
-                               "-revealjs")
-                             ".html")))
+(defn spec->full-target-path [{:keys [full-source-path
+                                      base-target-path
+                                      format
+                                      ns-form]}]
+  (if ns-form
+    ;; a Clojure namespace
+    (path/ns->target-path base-target-path
+                          (-> ns-form
+                              second
+                              name)
+                          (str (when (-> format
+                                         second
+                                         (= :revealjs))
+                                 "-revealjs")
+                               ".html"))
+    ;; else, a markdown file
+    (str base-target-path
+         "/"
+         full-source-path)))
 
 (defn spec->ns-config [{:keys [ns-form]}]
-  (-> ns-form
-      meta
-      :clay))
+  (some-> ns-form
+          meta
+          :clay))
 
 (defn merge-ns-config [spec]
   (merge spec
@@ -58,7 +70,7 @@
                                         (config/add-field :full-source-path spec->full-source-path)
                                         (config/add-field :ns-form spec->ns-form)
                                         merge-ns-config
-                                        (merge spec) ; prioritize spec over the ns config
+                                        (merge (dissoc spec :source-path)) ; prioritize spec over the ns config
                                         (config/add-field :full-target-path spec->full-target-path)))))]
     {:main-spec (-> base-spec
                     (assoc :full-target-paths
@@ -68,10 +80,10 @@
 
 
 (defn index-path? [path]
-  (-> path
-      (string/split #"/")
-      last
-      (#{"index.qmd" "index.clj"})))
+  (some-> path
+          (string/split #"/")
+          last
+          (#{"index.qmd" "index.clj"})))
 
 (defn quarto-book-config [{:as spec
                            :keys [book
@@ -88,12 +100,14 @@
                                      (->> (map
                                            (fn [path]
                                              (-> path
-                                                 (string/replace (re-pattern (str "^"
-                                                                                  base-target-path
-                                                                                  "/"))
-                                                                 "")
-                                                 (string/replace #"\.html$"
-                                                                 ".qmd")))))
+                                                 (string/replace
+                                                  (re-pattern (str "^"
+                                                                   base-target-path
+                                                                   "/"))
+                                                  "")
+                                                 (string/replace
+                                                  #"\.html$"
+                                                  ".qmd")))))
                                      (cond->> index-included?
                                        (cons (str base-target-path "/index.qmd"))))}}))))
 
@@ -137,63 +151,73 @@
     [:ok]))
 
 (defn handle-single-source-spec! [{:as spec
-                                   :keys [format
+                                   :keys [ns-form
+                                          format
                                           full-target-path
                                           show
                                           run-quarto]}]
-  (files/init-target! full-target-path)
-  (try
-    (let [spec-with-items      (-> spec
-                                   (config/add-field :items notebook/notebook-items))]
-      (case (first format)
-        :html (do (-> spec-with-items
-                      (config/add-field :page page/html)
-                      server/update-page!)
-                  [:wrote full-target-path])
-        :quarto (let [qmd-path (-> full-target-path
-                                   (string/replace #"\.html$" ".qmd"))
-                      output-file (-> full-target-path
-                                      (string/split #"/")
-                                      last)]
-                  (-> spec-with-items
-                      (update-in [:quarto :format]
-                                 select-keys [(second format)])
-                      (update-in [:quarto :format (second format)]
-                                 assoc :output-file output-file)
-                      page/md
-                      (->> (spit qmd-path)))
-                  (println [:wrote qmd-path (time/now)])
-                  (if run-quarto
-                    (do (->> (shell/sh "quarto" "render" qmd-path)
-                             ((juxt :err :out))
-                             (mapv println))
-                        (println [:created full-target-path (time/now)])
-                        (-> spec
-                            (merge {:full-target-path full-target-path})
-                            server/update-page!))
-                    ;; else, just show the qmd file
-                    (-> spec
-                        (merge {:full-target-path qmd-path})
-                        server/update-page!))
-                  (vec
-                   (concat [:wrote qmd-path]
-                           (when run-quarto
-                             [full-target-path]))))))
-    (catch Exception e
-      (prn [:e e])
-      (when show
-        (-> spec
-            (assoc :page (-> spec
-                             (assoc :items [(item/pprint e)])
-                             page/html))
-            server/update-page!)))))
+  (when ns-form
+    (files/init-target! full-target-path)
+    (try
+      (let [spec-with-items      (-> spec
+                                     (config/add-field :items notebook/notebook-items))]
+        (case (first format)
+          :html (do (-> spec-with-items
+                        (config/add-field :page page/html)
+                        server/update-page!)
+                    [:wrote full-target-path])
+          :quarto (let [qmd-path (-> full-target-path
+                                     (string/replace #"\.html$" ".qmd"))
+                        output-file (-> full-target-path
+                                        (string/split #"/")
+                                        last)]
+                    (-> spec-with-items
+                        (update-in [:quarto :format]
+                                   select-keys [(second format)])
+                        (update-in [:quarto :format (second format)]
+                                   assoc :output-file output-file)
+                        page/md
+                        (->> (spit qmd-path)))
+                    (println [:wrote qmd-path (time/now)])
+                    (if run-quarto
+                      (do (->> (shell/sh "quarto" "render" qmd-path)
+                               ((juxt :err :out))
+                               (mapv println))
+                          (println [:created full-target-path (time/now)])
+                          (-> spec
+                              (merge {:full-target-path full-target-path})
+                              server/update-page!))
+                      ;; else, just show the qmd file
+                      (-> spec
+                          (merge {:full-target-path qmd-path})
+                          server/update-page!))
+                    (vec
+                     (concat [:wrote qmd-path]
+                             (when run-quarto
+                               [full-target-path]))))))
+      (catch Exception e
+        (when show
+          (-> spec
+              (assoc :page (-> spec
+                               (assoc :items [(item/pprint e)])
+                               page/html))
+              server/update-page!))
+        (throw e)))))
 
+(defn sync-resources! [{:keys [base-target-path]}]
+  (shell/sh "rsync" "-avu"
+            "src/"
+            (str base-target-path "/src"))
+  (shell/sh "rsync" "-avu"
+            "notebooks/"
+            (str base-target-path "/notebooks")))
 
 
 (defn make! [spec]
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge spec))
         {:keys [show]} main-spec]
+    (sync-resources! spec)
     (when show
       (-> main-spec
           (assoc :page (-> single-ns-specs
@@ -251,7 +275,8 @@
   (make! {:format [:quarto :html]
           :base-source-path "notebooks"
           :source-path ["index.clj"
-                        "chapter.clj"]
+                        "chapter.clj"
+                        "another_chapter.md"]
           :base-target-path "book"
           :show false
           :run-quarto false

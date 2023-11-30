@@ -20,6 +20,11 @@
       io/file
       (.getName)))
 
+(defn path->ext [path]
+  (-> path
+      (string/split #"\.")
+      last))
+
 (defn path->parent [file-path]
   (-> file-path
       io/file
@@ -72,8 +77,3 @@
             str
             (string/replace #"-" "_"))
         ext)))
-
-(defn ext [path]
-  (-> path
-      (string/split #"\.")
-      last))

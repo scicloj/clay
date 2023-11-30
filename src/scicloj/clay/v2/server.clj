@@ -202,8 +202,6 @@
   (when page
     (spit full-target-path page))
   (server.state/reset-full-target-path! full-target-path)
-  (shell/sh "rsync" "-avu" "src/" (str base-target-path "/src"))
-  (shell/sh "rsync" "-avu" "notebooks/" (str base-target-path "/notebooks"))
   (when show
     (broadcast! "refresh"))
   [:ok])
