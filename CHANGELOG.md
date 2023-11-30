@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha42-SNAPSHOT] - 2023-11-25
+## [2-alpha42]
 - only start the server if show is not false
 - remove warning about replacing get
 - report target path on make
