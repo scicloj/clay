@@ -10,7 +10,7 @@
 
 (defn file-path [target-path custom-name idx ext]
   (str (-> target-path
-           #_(string/replace #"\.html$" ""))
+           (string/replace #"\.html$" ""))
        "_files/"
        (name custom-name)
        idx
