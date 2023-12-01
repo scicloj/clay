@@ -33,7 +33,6 @@
 ;; **(coming soon)**
 
 ;; ### Emacs CIDER
-;; **(to be updated soon)**
 ;;
 ;; Please load [clay.el](https://github.com/scicloj/clay/blob/main/clay.el) at your Emacs config.
 ;;

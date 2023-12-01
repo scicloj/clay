@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha43]
+- missing depdendency
+
 ## [2-alpha42]
 - only start the server if show is not false
 - remove warning about replacing get
