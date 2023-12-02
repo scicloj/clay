@@ -216,7 +216,9 @@ Plotly.newPlot(document.currentScript.parentElement,
                   ""
                   value
                   ".png")]
-    (util.image/write! value "png" png-path)
+    (when-not
+        (util.image/write! value "png" png-path)
+      (throw (ex-message "Failed to save image as PNG.")))
     {:hiccup [:img {:style {:width "100%"}
                     :src (-> png-path
                              (string/replace
