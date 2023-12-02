@@ -211,14 +211,14 @@ Plotly.newPlot(document.currentScript.parentElement,
                      full-target-path
                      base-target-path]
               :as context}]
-  (let [jpg-path (files/next-file!
+  (let [png-path (files/next-file!
                   full-target-path
                   ""
                   value
-                  ".jpg")]
-    (util.image/write! value "jpg" jpg-path)
+                  ".png")]
+    (util.image/write! value "png" png-path)
     {:hiccup [:img {:style {:width "100%"}
-                    :src (-> jpg-path
+                    :src (-> png-path
                              (string/replace
                               (re-pattern (str "^"
                                                base-target-path

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha44-SNAPSHOT]
 - updated deps
+- saving BufferedImage object as png rather than jpg (because a BufferedImage resulting from png might not be savable as jpg https://stackoverflow.com/a/2290430)
 
 ## [2-alpha43] - 2023-12-01
 - missing depdendency
