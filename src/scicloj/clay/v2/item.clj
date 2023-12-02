@@ -216,7 +216,7 @@ Plotly.newPlot(document.currentScript.parentElement,
                   ""
                   value
                   ".jpg")]
-    (util.image/write! value jpg-path)
+    (util.image/write! value "jpg" jpg-path)
     {:hiccup [:img {:style {:width "100%"}
                     :src (-> jpg-path
                              (string/replace
