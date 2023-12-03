@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha46-SNAPSHOT]
 - allowing to `make!` a single form without specifying a source file
+- synching resources more carefully -- not copying clj/cljs/cljc
 
 ## [2-alpha45] - 2023-12-03
 - bugfix in syncing resources: using the correct spec
