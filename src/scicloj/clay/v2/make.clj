@@ -219,6 +219,7 @@
       (let [target (str base-target-path "/" subdir)]
         (when (babashka.fs/exists? target)
           (babashka.fs/delete-tree target))
+        (io/make-parents target)
         (util.fs/copy-tree-no-clj subdir target)))))
 
 (defn make! [spec]
