@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha47] - 2023-12-04
+- missing babashka.fs dependency
+
 ## [2-alpha46] - 2023-12-04
 - allowing to `make!` a single form without specifying a source file
 - synching resources more carefully -- not copying clj/cljs/cljc
