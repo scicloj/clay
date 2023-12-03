@@ -8,6 +8,9 @@
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
 
+(kind/hiccup
+ [:img {:src "notebooks/images/Kindly.svg"}])
+
 ;; # A
 
 ;; ## A1
@@ -17,5 +20,3 @@
 ;; ## A2
 
 ;; # B
-
-(/ 1 0)

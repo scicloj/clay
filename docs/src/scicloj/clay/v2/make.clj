@@ -7,7 +7,6 @@
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.notebook :as notebook]
             [scicloj.clay.v2.page :as page]
-            [scicloj.clay.v2.book :as book]
             [scicloj.clay.v2.server :as server]
             [scicloj.clay.v2.util.time :as time]
             [clojure.string :as string]
@@ -217,7 +216,7 @@
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge spec))
         {:keys [show]} main-spec]
-    (sync-resources! spec)
+    (sync-resources! main-spec)
     (when show
       (-> main-spec
           (assoc :page (-> single-ns-specs
@@ -229,57 +228,3 @@
           (mapv handle-single-source-spec!))
      (-> main-spec
          handle-main-spec!)]))
-
-
-(comment
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"})
-
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"
-          :show false})
-
-  (make! {:format [:html]
-          :source-path ["notebooks/slides.clj"
-                        "notebooks/index.clj"]
-          :show false})
-
-  (make! {:format      [:html]
-          :source-path "notebooks/index.clj"
-          :single-form '(kind/cytoscape
-                         [{:style {:width "300px"
-                                   :height "300px"}}
-                          cytoscape-example])})
-
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"})
-
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"
-          :run-quarto false})
-
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/slides.clj"})
-
-  (make! {:format [:quarto :revealjs]
-          :source-path "notebooks/slides.clj"})
-
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"
-          :quarto {:highlight-style :nord}})
-
-  (make! {:format [:html]
-          :base-source-path "notebooks/"
-          :source-path "index.clj"})
-
-  (make! {:format [:quarto :html]
-          :base-source-path "notebooks"
-          :source-path ["index.clj"
-                        "chapter.clj"
-                        "another_chapter.md"]
-          :base-target-path "book"
-          :show false
-          :run-quarto false
-          :book {:title "Book Example"}})
-
-,)

@@ -6,10 +6,11 @@
            javax.imageio.ImageIO))
 
 (defn write! [^BufferedImage image
+              format
               target-jpg-path]
   (io/make-parents target-jpg-path)
   (ImageIO/write image
-                 "jpg"
+                 format
                  (io/file target-jpg-path)))
 
 (defn buffered-image->byte-array [^BufferedImage image]

@@ -216,7 +216,7 @@
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge spec))
         {:keys [show]} main-spec]
-    (sync-resources! spec)
+    (sync-resources! main-spec)
     (when show
       (-> main-spec
           (assoc :page (-> single-ns-specs
