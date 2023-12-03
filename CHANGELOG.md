@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha46-SNAPSHOT]
+- allowing to `make!` a single form without specifying a source file
+
 ## [2-alpha45] - 2023-12-03
 - bugfix in syncing resources: using the correct spec
 

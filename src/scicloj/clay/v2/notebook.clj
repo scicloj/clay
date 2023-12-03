@@ -101,10 +101,12 @@
             full-target-path
             single-form]}]
    (files/init-target! full-target-path)
-   (let [code (slurp full-source-path)
+   (let [code (some-> full-source-path
+                      slurp)
          notes  (if single-form
-                  [{:form (read/read-ns-form code)}
-                   {:form single-form}]
+                  (conj (when code
+                          [{:form (read/read-ns-form code)}])
+                        {:form single-form})
                   (read/->safe-notes code))]
      (-> notes
          (->> (mapcat (fn [note]
@@ -117,11 +119,11 @@
          (add-info-line options)
          doall))))
 
+
 (comment
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"}))
 
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
-                       :single-form '(+ 1 2)}))
-  )
+                       :single-form '(+ 1 2)})))

@@ -15,37 +15,41 @@
             [clojure.java.io :as io]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
-  (or (some-> base-source-path
-              (str "/" source-path))
-      source-path))
+  (when source-path
+    (or (some-> base-source-path
+                (str "/" source-path))
+        source-path)))
 
-(defn spec->ns-form [{:keys [full-source-path]}]
-  (when (-> full-source-path
-            path/path->ext
-            (= "clj"))
+(defn spec->source-type [{:keys [source-path]}]
+  (some-> source-path
+          path/path->ext))
+
+(defn spec->ns-form [{:keys [source-type full-source-path]}]
+  (when (= source-type "clj")
     (-> full-source-path
         slurp
         read/read-ns-form)))
 
 (defn spec->full-target-path [{:keys [full-source-path
+                                      source-type
                                       base-target-path
                                       format
                                       ns-form]}]
-  (if ns-form
-    ;; a Clojure namespace
-    (path/ns->target-path base-target-path
-                          (-> ns-form
-                              second
-                              name)
-                          (str (when (-> format
-                                         second
-                                         (= :revealjs))
-                                 "-revealjs")
-                               ".html"))
-    ;; else, a markdown file
-    (str base-target-path
-         "/"
-         full-source-path)))
+  (case source-type
+    nil (str base-target-path
+             "/.clay.html")
+    "md" (str base-target-path
+              "/"
+              full-source-path)
+    "clj" (path/ns->target-path base-target-path
+                                (-> ns-form
+                                    second
+                                    name)
+                                (str (when (-> format
+                                               second
+                                               (= :revealjs))
+                                       "-revealjs")
+                                     ".html"))))
 
 (defn spec->ns-config [{:keys [ns-form]}]
   (some-> ns-form
@@ -67,6 +71,7 @@
                              (map (fn [single-ns-spec]
                                     (-> single-ns-spec
                                         (config/add-field :full-source-path spec->full-source-path)
+                                        (config/add-field :source-type spec->source-type)
                                         (config/add-field :ns-form spec->ns-form)
                                         merge-ns-config
                                         (merge (dissoc spec :source-path)) ; prioritize spec over the ns config
@@ -150,12 +155,14 @@
     [:ok]))
 
 (defn handle-single-source-spec! [{:as spec
-                                   :keys [ns-form
+                                   :keys [source-type
+                                          single-form
                                           format
                                           full-target-path
                                           show
                                           run-quarto]}]
-  (when ns-form
+  (when (or (= source-type "clj")
+            single-form)
     (files/init-target! full-target-path)
     (try
       (let [spec-with-items      (-> spec

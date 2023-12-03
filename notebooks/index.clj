@@ -91,6 +91,16 @@
                                         :height "300px"}}
                                cytoscape-example])})
 
+  ;; Evaluate and render a single form
+  ;; in the context of the current namespace (`*ns*`)
+  ;; as HTML
+  ;; and show it at the browser.
+  (clay/make! {:format      [:html]
+               :single-form '(kind/cytoscape
+                              [{:style {:width "300px"
+                                        :height "300px"}}
+                               cytoscape-example])})
+
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
