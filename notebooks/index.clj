@@ -155,7 +155,7 @@
                :source-path "index.clj"})
 
   ;; Create a Quarto book
-  ;; (to be documented soon).
+  ;; (to be documented better soon).
   (clay/make! {:format [:quarto :html]
           :base-source-path "notebooks"
           :source-path ["index.clj"
