@@ -217,10 +217,8 @@
   (doseq [subdir ["src" "notebooks"]]
     (when (babashka.fs/exists? subdir)
       (let [target (str base-target-path "/" subdir)]
-        (prn target)
         (when (babashka.fs/exists? target)
-          (prn [:deleting target
-                (babashka.fs/delete-tree target)]))
+          (babashka.fs/delete-tree target))
         (util.fs/copy-tree-no-clj subdir target)))))
 
 (defn make! [spec]
