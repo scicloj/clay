@@ -12,7 +12,9 @@
             [clojure.string :as string]
             [clojure.java.shell :as shell]
             [clj-yaml.core :as yaml]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [babashka.fs]
+            [scicloj.clay.v2.util.fs :as util.fs]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
   (when source-path
@@ -210,14 +212,16 @@
               server/update-page!))
         (throw e)))))
 
-(defn sync-resources! [{:keys [base-target-path]}]
-  (shell/sh "rsync" "-avu"
-            "src/"
-            (str base-target-path "/src"))
-  (shell/sh "rsync" "-avu"
-            "notebooks/"
-            (str base-target-path "/notebooks")))
 
+(defn sync-resources! [{:keys [base-target-path]}]
+  (doseq [subdir ["src" "notebooks"]]
+    (when (babashka.fs/exists? subdir)
+      (let [target (str base-target-path "/" subdir)]
+        (prn target)
+        (when (babashka.fs/exists? target)
+          (prn [:deleting target
+                (babashka.fs/delete-tree target)]))
+        (util.fs/copy-tree-no-clj subdir target)))))
 
 (defn make! [spec]
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)

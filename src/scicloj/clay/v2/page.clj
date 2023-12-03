@@ -77,6 +77,7 @@
               custom-name
               url
               (str "." (name js-or-css)))]
+    (io/make-parents path)
     (->> url
          resource/get
          (spit path))
