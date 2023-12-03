@@ -60,52 +60,52 @@
   ;; the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and show it at the browser.
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"})
+  (clay/make! {:format [:html]
+               :source-path "notebooks/index.clj"})
 
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and do not show it at the browser.
-  (make! {:format [:html]
-          :source-path "notebooks/index.clj"
-          :show false})
+  (clay/make! {:format [:html]
+               :source-path "notebooks/index.clj"
+               :show false})
 
   ;; Evaluate and render
   ;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
   ;; as HTML
   ;; and do not show it at the browser.
-  (make! {:format [:html]
-          :source-path ["notebooks/slides.clj"
-                        "notebooks/index.clj"]
-          :show false})
+  (clay/make! {:format [:html]
+               :source-path ["notebooks/slides.clj"
+                             "notebooks/index.clj"]
+               :show false})
 
   ;; Evaluate and render a single form
   ;; in the context of the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and show it at the browser.
-  (make! {:format      [:html]
-          :source-path "notebooks/index.clj"
-          :single-form '(kind/cytoscape
-                         [{:style {:width "300px"
-                                   :height "300px"}}
-                          cytoscape-example])})
+  (clay/make! {:format      [:html]
+               :source-path "notebooks/index.clj"
+               :single-form '(kind/cytoscape
+                              [{:style {:width "300px"
+                                        :height "300px"}}
+                               cytoscape-example])})
 
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
   ;; then, using Quarto, render that file as HTML
   ;; and show it at the browser.
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"})
+  (clay/make! {:format [:quarto :html]
+               :source-path "notebooks/index.clj"})
 
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
   ;; and show it at the browser.
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"
-          :run-quarto false})
+  (clay/make! {:format [:quarto :html]
+               :source-path "notebooks/index.clj"
+               :run-quarto false})
 
   ;; Evaluate and render
   ;; the namespace in `"notebooks/slides.clj"`
@@ -113,8 +113,8 @@
   ;; (using its namespace-specific config from the ns metadata)
   ;; then, using Quarto, render that file as HTML
   ;; and show it at the browser.
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/slides.clj"})
+  (clay/make! {:format [:quarto :html]
+               :source-path "notebooks/slides.clj"})
 
   ;; Evaluate and render
   ;; the namespace in `"notebooks/slides.clj"`
@@ -122,8 +122,8 @@
   ;; (using its namespace-specific config from the ns metadata)
   ;; then, using Quarto, render that file as a reveal.js slideshow
   ;; and show it at the browser.
-  (make! {:format [:quarto :revealjs]
-          :source-path "notebooks/slides.clj"})
+  (clay/make! {:format [:quarto :revealjs]
+               :source-path "notebooks/slides.clj"})
 
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
@@ -131,22 +131,22 @@
   ;; with a custom Quarto config
   ;; then, using Quarto, render that file as HTML
   ;; and show it at the browser.
-  (make! {:format [:quarto :html]
-          :source-path "notebooks/index.clj"
-          :quarto {:highlight-style :nord}})
+  (clay/make! {:format [:quarto :html]
+               :source-path "notebooks/index.clj"
+               :quarto {:highlight-style :nord}})
 
   ;; Evaluate and render
   ;; the namespace in `"index.clj"`
   ;; under the `"notebooks"` directory
   ;; as HTML
   ;; and show it at the browser.
-  (make! {:format [:html]
-          :base-source-path "notebooks/"
-          :source-path "index.clj"})
+  (clay/make! {:format [:html]
+               :base-source-path "notebooks/"
+               :source-path "index.clj"})
 
   ;; Create a Quarto book
   ;; (to be documented soon).
-  (make! {:format [:quarto :html]
+  (clay/make! {:format [:quarto :html]
           :base-source-path "notebooks"
           :source-path ["index.clj"
                         "chapter.clj"]
