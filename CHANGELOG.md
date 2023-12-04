@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha49-SNAPSHOT]
 - fixed broken welcome message on `start!`
+- fixed the preparation of :kind/map - just print where possible
 
 ## [2-alpha48] - 2023-12-04
 - making sure the base-target-directory exists before synching resources

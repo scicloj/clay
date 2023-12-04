@@ -197,7 +197,8 @@
                                                       (let [item (prepare-or-pprint
                                                                   {:value v})]
                                                         (swap! *deps concat (:deps item))
-                                                        (item->hiccup item nil)))))})))]
+                                                        #_(item->hiccup item nil)
+                                                        item))))})))]
        (if (->> prepared-kv-pairs
                 (map :prepared-kv)
                 (apply concat)
@@ -213,12 +214,12 @@
                                    [:table
                                     [:tr
                                      [:td {:valign :top}
-                                      pk]
+                                      (item->hiccup pk nil)]
                                      [:td [:div
                                            {:style {:margin-top "10px"
                                                     ;; :border "1px inset"
                                                     }}
-                                           pv]]]])
+                                           (item->hiccup pv nil)]]]])
                                  ;; else
                                  (->> kv
                                       (map pr-str)
@@ -242,6 +243,7 @@
           prepared-parts (->> value
                               (map (fn [subvalue]
                                      (prepare-or-pprint {:value subvalue}))))]
+      (clojure.pprint/pprint [:DBGseq (->> prepared-parts)])
       (if (->> prepared-parts
                (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively
