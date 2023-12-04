@@ -243,7 +243,6 @@
           prepared-parts (->> value
                               (map (fn [subvalue]
                                      (prepare-or-pprint {:value subvalue}))))]
-      (clojure.pprint/pprint [:DBGseq (->> prepared-parts)])
       (if (->> prepared-parts
                (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively
