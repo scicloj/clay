@@ -159,12 +159,14 @@
 (defn handle-single-source-spec! [{:as spec
                                    :keys [source-type
                                           single-form
+                                          single-value
                                           format
                                           full-target-path
                                           show
                                           run-quarto]}]
   (when (or (= source-type "clj")
-            single-form)
+            single-form
+            single-value)
     (files/init-target! full-target-path)
     (try
       (let [spec-with-items      (-> spec

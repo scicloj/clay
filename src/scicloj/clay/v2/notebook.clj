@@ -30,19 +30,18 @@
                                   (path/file-git-url relative-file-path))})))
 
 (defn complete-note [{:as note
-                      :keys [comment? code form]}]
-  (if comment?
+                      :keys [comment? code form value]}]
+  (if (or value comment?)
     note
     (assoc
      note
-     :value (if form
-              (-> form
-                  eval
-                  deref-if-needed)
-              (-> code
-                  read-string
-                  eval
-                  deref-if-needed)))))
+     :value (cond form (-> form
+                           eval
+                           deref-if-needed)
+                  code (-> code
+                           read-string
+                           eval
+                           deref-if-needed)))))
 
 (defn comment->item [comment]
   (-> comment
@@ -99,15 +98,19 @@
             title toc?
             base-target-path
             full-target-path
-            single-form]}]
+            single-form
+            single-value]}]
    (files/init-target! full-target-path)
    (let [code (some-> full-source-path
                       slurp)
-         notes  (if single-form
-                  (conj (when code
-                          [{:form (read/read-ns-form code)}])
-                        {:form single-form})
-                  (read/->safe-notes code))]
+         notes  (cond
+                  single-value (conj (when code
+                                       [{:form (read/read-ns-form code)}])
+                                     {:value single-value})
+                  single-form (conj (when code
+                                      [{:form (read/read-ns-form code)}])
+                                    {:form single-form})
+                  :else (read/->safe-notes code))]
      (-> notes
          (->> (mapcat (fn [note]
                         (-> note

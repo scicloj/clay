@@ -15,8 +15,7 @@
 
 (defn welcome! []
   (make/make!
-   {:format [:html]
-    :single-form '(kind/hiccup
+   {:single-value (kind/hiccup
                    [:div
                     [:p [:pre (str (java.util.Date.))]]
                     [:p [:pre [:a {:href "https://scicloj.github.io/clay/"}
