@@ -168,17 +168,6 @@
 (defn browse! []
   (browse/browse-url (url)))
 
-(defn welcome-page []
-  (hiccup.page/html5
-   [:head
-    avoid-favicon]
-   [:body
-    [:div
-     [:p [:pre (str (java.util.Date.))]]
-     [:p [:pre [:a {:href "https://scicloj.github.io/clay/"}
-                "Clay"]
-          " is ready, waiting for interaction."]]]]))
-
 (defn open! []
   (when-not @*stop-server!
     (let [port (get-free-port)
