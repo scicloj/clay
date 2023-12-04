@@ -101,6 +101,14 @@
                                         :height "300px"}}
                                cytoscape-example])})
 
+  ;; Render a single value
+  ;; as HTML
+  ;; and show it at the browser.
+  (clay/make! {:single-value (kind/cytoscape
+                              [{:style {:width "300px"
+                                        :height "300px"}}
+                               cytoscape-example])})
+
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
   ;; as a Quarto qmd file
