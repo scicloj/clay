@@ -63,20 +63,22 @@
   (clay/make! {:format [:html]
                :source-path "notebooks/index.clj"})
 
+  ;; Do the same as above
+  ;; (since `:format [:html]` is the default).
+  (clay/make! {:source-path "notebooks/index.clj"})
+
   ;; Evaluate and render
   ;; the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and do not show it at the browser.
-  (clay/make! {:format [:html]
-               :source-path "notebooks/index.clj"
+  (clay/make! {:source-path "notebooks/index.clj"
                :show false})
 
   ;; Evaluate and render
   ;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
   ;; as HTML
   ;; and do not show it at the browser.
-  (clay/make! {:format [:html]
-               :source-path ["notebooks/slides.clj"
+  (clay/make! {:source-path ["notebooks/slides.clj"
                              "notebooks/index.clj"]
                :show false})
 
@@ -84,8 +86,7 @@
   ;; in the context of the namespace in `"notebooks/index.clj"`
   ;; as HTML
   ;; and show it at the browser.
-  (clay/make! {:format      [:html]
-               :source-path "notebooks/index.clj"
+  (clay/make! {:source-path "notebooks/index.clj"
                :single-form '(kind/cytoscape
                               [{:style {:width "300px"
                                         :height "300px"}}
@@ -95,8 +96,7 @@
   ;; in the context of the current namespace (`*ns*`)
   ;; as HTML
   ;; and show it at the browser.
-  (clay/make! {:format      [:html]
-               :single-form '(kind/cytoscape
+  (clay/make! {:single-form '(kind/cytoscape
                               [{:style {:width "300px"
                                         :height "300px"}}
                                cytoscape-example])})
@@ -150,8 +150,7 @@
   ;; under the `"notebooks"` directory
   ;; as HTML
   ;; and show it at the browser.
-  (clay/make! {:format [:html]
-               :base-source-path "notebooks/"
+  (clay/make! {:base-source-path "notebooks/"
                :source-path "index.clj"})
 
   ;; Create a Quarto book
