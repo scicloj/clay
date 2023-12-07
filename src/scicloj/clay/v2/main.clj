@@ -6,7 +6,7 @@
 
 ;; TODO: option validation should be done by the API
 (def cli-options
-  [["-s" "--source-paths PATHS"
+  [["-s" "--source-path PATHS"
     :validate [sequential? (str "paths should be a sequence like " (pr-str ["notebooks"]))]
     :default-desc (pr-str ["notebooks"])
     :parse-fn edn/read-string]
@@ -25,6 +25,6 @@
           errors (do (println "ERROR:" errors)
                      (System/exit -1))
           :else (do (api/make! (merge (when (seq arguments)
-                                          {:paths (vec arguments)})
+                                          {:source-path (vec arguments)})
                                         options))
                     (System/exit 0)))))
