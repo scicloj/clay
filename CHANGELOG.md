@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha50]
+- adds main cli: `clojure -M:dev -m scicloj.clay.v2.main`
+
 ## [2-alpha49] - 2023-12-04
 - fixed broken welcome message on `start!`
 - fixed the preparation of :kind/map - just print where possible
