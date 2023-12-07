@@ -1,5 +1,6 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/tools.cli {:mvn/version "1.0.219"}
         com.cnuernber/charred {:mvn/version "1.033"}
         carocad/parcera {:mvn/version "0.11.6"}
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
