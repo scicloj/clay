@@ -225,7 +225,7 @@ Plotly.newPlot(document.currentScript.parentElement,
                    :as context}]
   (let [{:keys [data]} value
         data-to-use (or (when-let [{:keys [values format]} data]
-                          (when (-> format :type name (= "csv"))
+                          (when (some-> format :type name (= "csv"))
                             (let [csv-path (files/next-file!
                                             full-target-path
                                             ""
