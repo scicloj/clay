@@ -687,9 +687,24 @@ nested-structure-1
                 :y (map inc (range 33))}))
 
   [:hr]
-  [:h3 [:code "kind/vega"]]
+  [:h3 [:code "kind/vega-lite"]]
   (random-vega-lite-plot 9)
 
+  [:hr]
+  [:h3 [:code "kind/vega-lite"]]
+  (-> {:data {:values "x,y
+1,1
+2,4
+3,9
+-1,1
+-2,4
+-3,9"
+              :format {:type :csv}},
+       :mark "point"
+       :encoding
+       {:x {:field "x", :type "quantitative"}
+        :y {:field "y", :type "quantitative"}}}
+      kind/vega-lite)
 
   [:hr]
   [:h3 [:code "kind/reagent"]]
