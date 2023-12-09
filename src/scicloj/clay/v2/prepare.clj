@@ -104,11 +104,11 @@
  :kind/md
  #'item/md)
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/table
- (fn [table-spec]
-   (let [pre-hiccup (table/->table-hiccup
-                     table-spec)
+ (fn [{:as context
+       :keys [value]}]
+   (let [pre-hiccup (table/->table-hiccup value)
          *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
                      (claywalk/postwalk
@@ -119,9 +119,11 @@
                           (-> elem
                               (update
                                1
-                               (fn [value]
-                                 (let [item (prepare-or-str
-                                             {:value value})]
+                               (fn [subvalue]
+                                 (let [item (-> context
+                                                (dissoc :form)
+                                                (assoc :value subvalue)
+                                                prepare-or-str)]
                                    (swap! *deps concat (:deps item))
                                    (item->hiccup item nil)))))
                           ;; else - keep it
@@ -164,20 +166,22 @@
        with-out-str
        item/md)))
 
-
-
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/test
- (fn [t]
-   (prepare-or-pprint
-    {:value (-> t
-                meta
-                :test
-                (#(%)))})))
+ (fn [{:as context
+       :keys [value]}]
+   (-> context
+       (dissoc :form)
+       (assoc :value (-> value
+                         meta
+                         :test
+                         (#(%))))
+       prepare-or-pprint)))
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/map
- (fn [value]
+ (fn [{:as context
+       :keys [value]}]
    (if (->> value
             (apply concat)
             (some has-kind-with-preparer?))
@@ -188,8 +192,10 @@
                                           :prepared-kv
                                           (->> kv
                                                (map (fn [v]
-                                                      (let [item (prepare-or-pprint
-                                                                  {:value v})]
+                                                      (let [item (-> context
+                                                                     (dissoc :form)
+                                                                     (assoc :value v)
+                                                                     prepare-or-pprint)]
                                                         (swap! *deps concat (:deps item))
                                                         #_(item->hiccup item nil)
                                                         item))))})))]
@@ -230,13 +236,18 @@
      ;; else -- just print the whole value
      (item/pprint value))))
 
-(defn view-sequentially [value open-mark close-mark]
+(defn view-sequentially [{:as context
+                          :keys [value]}
+                         open-mark close-mark]
   (if (->> value
            (some has-kind-with-preparer?))
     (let [*deps (atom []) ; TODO: implement without mutable state
           prepared-parts (->> value
                               (map (fn [subvalue]
-                                     (prepare-or-pprint {:value subvalue}))))]
+                                     (-> context
+                                         (dissoc :form)
+                                         (assoc :value subvalue)
+                                         prepare-or-pprint))))]
       (if (->> prepared-parts
                (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively
@@ -256,20 +267,20 @@
     (item/pprint value)))
 
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/vector
- (fn [value]
-   (view-sequentially value "[" "]")))
+ (fn [context]
+   (view-sequentially context "[" "]")))
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/seq
- (fn [value]
-   (view-sequentially value "(" ")")))
+ (fn [context]
+   (view-sequentially context "(" ")")))
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/set
- (fn [value]
-   (view-sequentially value "#{" "}")))
+ (fn [context]
+   (view-sequentially context "#{" "}")))
 
 (def next-id
   (let [*counter (atom 0)]
@@ -283,20 +294,23 @@
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
                 :kind/hiccup}))
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/hiccup
- (fn [form]
+ (fn [{:as context
+       :keys [value]}]
    (let [*deps (atom []) ; TODO: implement without mutable state
-         hiccup (->> form
+         hiccup (->> value
                      (claywalk/prewalk
                       (fn [subform]
-                        (let [context {:value subform}]
-                          (if (some-> context
+                        (let [subcontext (-> context
+                                             (dissoc :form)
+                                             (assoc :value subform))]
+                          (if (some-> subcontext
                                       kindly-advice/advise
                                       :kind
                                       non-hiccup-kind?)
                             (let [item (prepare-or-pprint
-                                        context)]
+                                        subcontext)]
                               (swap! *deps concat (:deps item))
                               (item->hiccup item nil))
                             subform)))))]

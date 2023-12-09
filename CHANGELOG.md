@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha51] - 2023-12-10
+- bugfix: passing full context in recursive item preparation
+
 ## [2-alpha50] - 2023-12-10
 - When vega/vega-lite data is given in CSV format, Clay will serve it in a separate CSV file alongside the generated HTML.
 
