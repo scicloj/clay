@@ -475,6 +475,24 @@ nested-structure-1
 
 (random-vega-lite-plot 9)
 
+;; When the vega/vega-lite data is given in CSV format,
+;; Clay will serve it in a separate CSV file alongside the generated HTML.
+
+(-> {:data {:values "x,y
+1,1
+2,4
+3,9
+-1,1
+-2,4
+-3,9"
+            :format {:type :csv}},
+     :mark "point"
+     :encoding
+     {:x {:field "x", :type "quantitative"}
+      :y {:field "y", :type "quantitative"}}}
+    kind/vega-lite)
+
+
 ;; ### Cytoscape
 
 (def cytoscape-example
