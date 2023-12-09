@@ -91,15 +91,6 @@
   {:md string
    :hiccup [:p string]})
 
-(defn vega-embed [spec]
-  {:hiccup [:div
-            [:script (->> spec
-                          charred/write-json-str
-                          (format "vegaEmbed(document.currentScript.parentElement, %s);"))]]
-   :deps [:vega]})
-
-
-
 
 (def next-id
   (let [*counter (atom 0)]
@@ -226,3 +217,32 @@ Plotly.newPlot(document.currentScript.parentElement,
                                                base-target-path
                                                "/"))
                               ""))}]}))
+
+
+(defn vega-embed [{:keys [value
+                          full-target-path
+                          base-target-path]
+                   :as context}]
+  (let [{:keys [data]} value
+        data-to-use (or (when-let [{:keys [values format]} data]
+                          (when (-> format :type (= "csv"))
+                            (let [csv-path (files/next-file!
+                                            full-target-path
+                                            ""
+                                            values
+                                            ".csv")]
+                              (spit csv-path values)
+                              {:url (-> csv-path
+                                        (string/replace
+                                         (re-pattern (str "^"
+                                                          base-target-path
+                                                          "/"))
+                                         ""))
+                               :format format})))
+                        data)]
+    {:hiccup [:div
+              [:script (-> value
+                           (assoc :data data-to-use)
+                           charred/write-json-str
+                           (->> (format "vegaEmbed(document.currentScript.parentElement, %s);")))]]
+     :deps [:vega]}))

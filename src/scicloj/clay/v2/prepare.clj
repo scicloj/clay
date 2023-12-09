@@ -148,13 +148,7 @@
       item/structure-mark
       :hiccup))
 
-(add-preparer-from-value-fn!
- :kind/vega
- #'item/vega-embed)
 
-(add-preparer-from-value-fn!
- :kind/vega-lite
- #'item/vega-embed)
 
 (add-preparer-from-value-fn!
  :kind/code
@@ -336,3 +330,11 @@
 (add-preparer!
  :kind/image
  #'item/image)
+
+(add-preparer!
+ :kind/vega
+ #'item/vega-embed)
+
+(add-preparer!
+ :kind/vega-lite
+ #'item/vega-embed)
