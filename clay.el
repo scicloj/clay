@@ -1,3 +1,9 @@
+(defun clay/clean-buffer-file-name ()
+  ;; Clean up the buffer file name in TRAMP situations.
+  ;; E.g., "/ssh:myserver:/home/myuser/myfile" --> "/home/myuser/myfile"
+  (replace-regexp-in-string "^.*:"
+                            ""
+                            (buffer-file-name)))
 
 (defun clay/require ()
   (interactive)
@@ -17,7 +23,7 @@
   (clay/require)
   (let
       ((filename
-        (buffer-file-name)))
+        (clay/clean-buffer-file-name)))
     (when filename
       (cider-interactive-eval
        (concat "(scicloj.clay.v2.api/make! {:format " format " :source-path \"" filename "\" })")))))
@@ -48,7 +54,7 @@
   (clay/require)
   (let
       ((filename
-        (buffer-file-name)))
+        (clay/clean-buffer-file-name)))
     (clay/cider-interactive-notify-and-eval
      (concat "(scicloj.clay.v2.api/make! {:format [:html] :source-path \"" filename "\" :single-form (quote " code")})"))))
 
