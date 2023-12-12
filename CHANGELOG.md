@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha52] - 2023-12-12
+- kindly version update
+
 ## [2-alpha51] - 2023-12-10
 - bugfix: passing full context in recursive item preparation
 
