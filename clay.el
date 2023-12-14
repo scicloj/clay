@@ -1,3 +1,29 @@
+;;; clay.el --- Emacs commands for the Clay tool for literate programming and data visualization in Clojure  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2023  daslu
+
+;; Author: daslu <daslu@daslu-ThinkPad-P14s-Gen-3>
+;; Keywords: lisp
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;
+
+;;; Code:
+
 (defun clay/clean-buffer-file-name ()
   ;; Clean up the buffer file name in TRAMP situations.
   ;; E.g., "/ssh:myserver:/home/myuser/myfile" --> "/home/myuser/myfile"
@@ -65,3 +91,6 @@
 (defun clay/make-defun-at-point ()
   (interactive)
   (clay/make-form (thing-at-point 'defun)))
+
+(provide 'clay)
+;;; clay.el ends here
