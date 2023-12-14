@@ -34,14 +34,13 @@
 ;; ### VSCode Calva
 
 ;; If you now run a REPL with Clay version in  your classpath, then Calva will have the relevant [custom REPL commands](https://calva.io/custom-commands/), as defined [here](https://github.com/scicloj/clay/blob/main/resources/calva.exports/config.edn).
-
-;; `Clay make Namespace as HTML` - will genenrate an HTML rendering of the current namespace.
-
-;; `Clay make Namespace as Quarto, then HTML` - will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.
-
-;; `Clay make Namespace as Quarto, then reveal.js` - will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.
-
-;; `Clay make current form as HTML` - will generate an HTML rendering of the current form, in the context of the current namespace.
+;;
+;; |name|function|
+;; |--|--|
+;; |`Clay make Namespace as HTML`|will genenrate an HTML rendering of the current namespace.
+;; |`Clay make Namespace as Quarto, then HTML`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.|
+;; |`Clay make Namespace as Quarto, then reveal.js`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.|
+;; |`Clay make current form as HTML`|will generate an HTML rendering of the current form, in the context of the current namespace.|
 
 ;; ### Emacs CIDER
 ;;
