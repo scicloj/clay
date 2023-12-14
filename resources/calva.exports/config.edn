@@ -21,4 +21,4 @@
    :snippet (do
               (require '[scicloj.clay.v2.api])
               (scicloj.clay.v2.api/make! {:source-path "$file"
-                                          :single-form "$current-form"}))}]}
+                                          :single-form (quote $current-form)}))}]}
