@@ -27,10 +27,21 @@
 
 ;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
 ;;
+;; To use [Quarto](https://quarto.org/)-related actions, it is necessary to have the Quarto CLI [installed](https://quarto.org/docs/get-started/) in your system.
+;;
 ;; See the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
 
 ;; ### VSCode Calva
-;; **(coming soon)**
+
+;; If you now run a REPL with Clay version in  your classpath, then Calva will have the relevant [custom REPL commands](https://calva.io/custom-commands/), as defined [here](https://github.com/scicloj/clay/blob/main/resources/calva.exports/config.edn).
+
+;; `Clay make Namespace as HTML` - will genenrate an HTML rendering of the current namespace.
+
+;; `Clay make Namespace as Quarto, then HTML` - will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.
+
+;; `Clay make Namespace as Quarto, then reveal.js` - will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.
+
+;; `Clay make current form as HTML` - will generate an HTML rendering of the current form, in the context of the current namespace.
 
 ;; ### Emacs CIDER
 ;;
@@ -164,13 +175,13 @@
   ;; Create a Quarto book
   ;; (to be documented better soon).
   (clay/make! {:format [:quarto :html]
-          :base-source-path "notebooks"
-          :source-path ["index.clj"
-                        "chapter.clj"]
-          :base-target-path "book"
-          :show false
-          :run-quarto false
-          :book {:title "Book Example"}})
+               :base-source-path "notebooks"
+               :source-path ["index.clj"
+                             "chapter.clj"]
+               :base-target-path "book"
+               :show false
+               :run-quarto false
+               :book {:title "Book Example"}})
 
   ,)
 
