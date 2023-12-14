@@ -1,0 +1,4 @@
+{:customREPLCommandSnippets
+ [{:name "Clay test"
+   :key "c"
+   :snippet ($current-form)}]}
