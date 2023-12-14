@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2023  daslu
 
-;; Author: daslu <daslu@daslu-ThinkPad-P14s-Gen-3>
+;; Author: daslu
 ;; Keywords: lisp
 
 ;; This program is free software; you can redistribute it and/or modify
