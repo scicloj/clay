@@ -1,4 +1,24 @@
 {:customREPLCommandSnippets
- [{:name "Clay test"
-   :key "c"
-   :snippet ($current-form)}]}
+ [{:name "Clay make Namespace as HTML"
+   :key "n"
+   :snippet (do
+              (require '[scicloj.clay.v2.api])
+              (scicloj.clay.v2.api/make! {:source-path "$file"}))}
+  {:name "Clay make Namespace as Quarto, then HTML"
+   :key "q"
+   :snippet (do
+              (require '[scicloj.clay.v2.api])
+              (scicloj.clay.v2.api/make! {:source-path "$file"
+                                          :format [:quarto :html]}))}
+  {:name "Clay make Namespace as Quarto, then reveal.js"
+   :key "r"
+   :snippet (do
+              (require '[scicloj.clay.v2.api])
+              (scicloj.clay.v2.api/make! {:source-path "$file"
+                                          :format [:quarto :revealjs]}))}
+  {:name "Clay make current form as HTML"
+   :key ","
+   :snippet (do
+              (require '[scicloj.clay.v2.api])
+              (scicloj.clay.v2.api/make! {:source-path "$file"
+                                          :single-form "$current-form"}))}]}
