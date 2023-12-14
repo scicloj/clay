@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha53-SNAPSHOT]
+## [2-alpha53] - 2023-12-14
 - calva setup (WIP)
 
 ## [2-alpha52] - 2023-12-12
