@@ -25,12 +25,11 @@
   ;; you can also use the Clay API directly:
 
   ;; Show the whole namespace
-  (clay/show-namespace! "notebooks/example1.clj")
+  (clay/make! {:source-path "notebooks/example1.clj"})
 
   ;; Show a given value
-  (clay/handle-value!
-   (kind/hiccup
-    [:div {:style
-           {:background-color "#eeddcc"}}
-     [:p "hello"]]))
+  (clay/make! {:single-value (kind/hiccup
+                              [:div {:style
+                                     {:background-color "#eeddcc"}}
+                               [:p "hello"]])})
   ,)

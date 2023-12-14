@@ -1,2 +1,2 @@
-{:deps {org.scicloj/clay {:mvn/version "2-alpha32"}}
+{:deps {org.scicloj/clay {:mvn/version "2-alpha52"}}
  :paths ["src" "notebooks"]}
