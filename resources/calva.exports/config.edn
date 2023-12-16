@@ -3,14 +3,14 @@
    :key "n"
    :snippet (do
               (prn ["Clay make namespace as HTML"
-                    $file])
+                    "$file"])
               (require '[scicloj.clay.v2.api])
               (scicloj.clay.v2.api/make! {:source-path "$file"}))}
   {:name "Clay make namespace as Quarto, then HTML"
    :key "q"
    :snippet (do
               (prn ["Clay make namespace as Quarto, then HTML"
-                    $file])
+                    "$file"])
               (require '[scicloj.clay.v2.api])
               (scicloj.clay.v2.api/make! {:source-path "$file"
                                           :format [:quarto :html]}))}
@@ -18,7 +18,7 @@
    :key "r"
    :snippet (do
               (prn ["Clay make namespace as Quarto, then reveal.js"
-                    $file])
+                    "$file"])
               (require '[scicloj.clay.v2.api])
               (scicloj.clay.v2.api/make! {:source-path "$file"
                                           :format [:quarto :revealjs]}))}
@@ -26,7 +26,7 @@
    :key ","
    :snippet (do
               (prn ["Clay make current form as HTML"
-                    $file
+                    "$file"
                     $current-form])
               (require '[scicloj.clay.v2.api])
               (scicloj.clay.v2.api/make! {:source-path "$file"
