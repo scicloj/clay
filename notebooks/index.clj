@@ -9,17 +9,33 @@
 
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly/) convention.
 ;;
-;; Also see the [Babashka Conf 2023 talk](https://www.youtube.com/watch?v=HvhMsv3iVGM).
 
 ;; ## Status
-;; This project is still alpha-stage and changing. As of October 2023, it is going through extensive refactoring, mostly seeking simpler and leaner implemenation and API.
-;; Clay is developed in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
+;; This project will soon exit alpha-stage and have a stable release.
+;;
+;; Clay is developed by [Timothy Pratley](https://github.com/timothypratley/) & [Daniel Slutsky](https://github.com/daslu) in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
 
 ;; ## Goals
 
 ;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
 ;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
 ;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
+
+;; ## Video
+
+^{:kindly/hide-code? true
+  :kindly/kind :kind/hiccup}
+[:iframe
+ {:src "https://www.youtube.com/embed/HvhMsv3iVGM"
+  :allowfullscreen "allowfullscreen"}]
+
+^{:kindly/hide-code? true
+  :kindly/kind :kind/hiccup}
+[:iframe
+ {:src "https://www.youtube.com/embed/X_SsjhmG5Ok"
+  :allowfullscreen "allowfullscreen"}]
+
+
 
 ;; ## Setup
 
