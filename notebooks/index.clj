@@ -60,9 +60,19 @@
 
 ;; ### Emacs CIDER
 ;;
-;; Please load [clay.el](https://github.com/scicloj/clay/blob/main/clay.el) at your Emacs config.
+;; Please load the [clay.el](https://github.com/scicloj/clay.el) package.
 ;;
-;; It offers the following functions, that you may wish to create keybindings for:
+;; Using [use-package](https://github.com/jwiegley/use-package), you may do this as follows:
+;;
+;; ```elisp
+;; (use-package clay
+;; :straight (clay
+;;            :type git
+;;            :host github
+;;            :repo "scicloj/clay.el"))
+;; ```
+;;
+;; This package offers the following functions, that you may wish to create keybindings for:
 ;;
 ;; |name|function|
 ;; |--|--|
