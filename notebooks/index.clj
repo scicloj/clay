@@ -21,21 +21,16 @@
 ;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
 ;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
 
-;; ## Video
+;; ## Videos
 
 ^{:kindly/hide-code? true
   :kindly/kind :kind/hiccup}
-[:iframe
- {:src "https://www.youtube.com/embed/HvhMsv3iVGM"
-  :allowfullscreen "allowfullscreen"}]
-
-^{:kindly/hide-code? true
-  :kindly/kind :kind/hiccup}
-[:iframe
- {:src "https://www.youtube.com/embed/X_SsjhmG5Ok"
-  :allowfullscreen "allowfullscreen"}]
-
-
+(->> ["HvhMsv3iVGM" "X_SsjhmG5Ok" "fd4kjlws6Ts"]
+     (map (fn [id]
+            [:iframe
+             {:src (str "https://www.youtube.com/embed/" id)
+              :allowfullscreen "allowfullscreen"}]))
+     (into [:div]))
 
 ;; ## Setup
 
