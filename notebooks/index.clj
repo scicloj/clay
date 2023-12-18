@@ -101,7 +101,21 @@
 ;; ### IntelliJ Cursive
 ;; **(coming soon)**
 
+;; ## Starting a Clay namespace
+
+;; Now, we can write a namespace and play with Clay.
+
+(ns index
+  (:require [scicloj.kindly.v4.kind :as kind]))
+
+;; For the convenience of this tutorial:
+
+(defonce memoized-slurp
+  (memoize slurp))
+
 ;; ## API
+
+(require '[scicloj.clay.v2.api :as clay])
 
 ;; The entry point of the Clay API  is the `scicloj.clay.v2.api/make!` function.
 ;; Here are some usage examples.
@@ -236,6 +250,12 @@
                :run-quarto false
                :book {:title "Book Example"}}))
 
+;; Reopen the Clay view in the browser
+;; (in case you closed the browser tab previously opened):
+
+(comment
+  (clay/browse!))
+
 ;; ## Configutation
 
 ;; Calls to the `make!` function are affected by various parameters
@@ -254,47 +274,6 @@
 ;;
 ;; **(to be documented soon)**
 
-;; ## Starting a Clay namespace
-
-;; Now, we can write a namespace and play with Clay.
-
-(ns index
-  (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly.v4.kind :as kind]))
-
-(defonce memoized-slurp
-  (memoize slurp))
-
-;; ## A few useful actions
-
-;; Showing the whole namespace:
-(comment
-  (clay/show-doc! "notebooks/index.clj"))
-
-;; Writing the document:
-(comment
-  (clay/show-doc-and-write-html!
-   "notebooks/index.clj"
-   {:toc? true}))
-
-;; Reopening the Clay view in the browser (in case you closed the browser tab previously opened by `clay/start!`)
-(comment
-  (clay/browse!))
-
-;; These can be conveniently bound to functions and keys at your editor (to b documented soon).
-
-;; ## Interaction
-
-;; Clay responds to user evaluations by displaying the result visually.
-
-(+ 1111 2222)
-
-;; In Emacs CIDER, after evaluation of a form (or a region),
-;; the browser view should show the evaluation result.
-
-;; In VSCode Calva, a similar effect can be achieved
-;; using the dedicated command and keybinding defined above.
 
 ;; ## Kinds
 
