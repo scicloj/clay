@@ -25,7 +25,7 @@
 
 ^{:kindly/hide-code? true
   :kindly/kind :kind/hiccup}
-(->> ["HvhMsv3iVGM" "X_SsjhmG5Ok" "fd4kjlws6Ts"]
+(->> ["HvhMsv3iVGM" "skMMvxWjmNM" "X_SsjhmG5Ok" "fd4kjlws6Ts"]
      (map (fn [id]
             [:iframe
              {:src (str "https://www.youtube.com/embed/" id)
