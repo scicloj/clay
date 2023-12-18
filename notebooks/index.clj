@@ -108,11 +108,6 @@
 (ns index
   (:require [scicloj.kindly.v4.kind :as kind]))
 
-;; For the convenience of this tutorial:
-
-(defonce memoized-slurp
-  (memoize slurp))
-
 ;; ## API
 
 (require '[scicloj.clay.v2.api :as clay])
@@ -650,6 +645,9 @@ nested-structure-1
 
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
 
+(defonce pdb-2POR
+  (slurp "https://files.rcsb.org/download/2POR.pdb"))
+
 (kind/reagent
  ^{:deps [:three-d-mol]}
  ['(fn [{:keys [pdb-data]}]
@@ -674,7 +672,7 @@ nested-structure-1
                 (.zoomTo viewer)
                 (.render viewer)
                 (.zoom viewer 0.8 2000)))}])
-  {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
+  {:pdb-data pdb-2POR}])
 
 ;; ## Delays
 
