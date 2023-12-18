@@ -25,12 +25,32 @@
 
 ^{:kindly/hide-code? true
   :kindly/kind :kind/hiccup}
-(->> ["HvhMsv3iVGM" "skMMvxWjmNM" "X_SsjhmG5Ok" "fd4kjlws6Ts"]
-     (map (fn [id]
-            [:iframe
-             {:src (str "https://www.youtube.com/embed/" id)
-              :allowfullscreen "allowfullscreen"}]))
-     (into [:div]))
+(->> [["June 10th 2023"
+       "An early overview - babashka-conf"
+       "HvhMsv3iVGM"]
+      ["Dec. 1st 2023"
+       "Kindly & Clay overview - visual-tools group - see Daniel's & Tim's parts"
+       "DAQnvAgBma8"]
+      ["Dec. 12th 2023"
+       "Demo & Clay overview - London Clojurians - see Tim's part"
+       "skMMvxWjmNM"]
+      ["Dec. 16th 2023"
+       "Calva integration - datavis demo"
+       "X_SsjhmG5Ok"]
+      ["Dec. 17th 2023"
+       "CIDER integration - image processing demo"
+       "fd4kjlws6Ts"]
+      ["Dec. 17th 2023"
+       "Cursive integration, API, configuration - blogging demo"
+       "GsML75MtNXw"]]
+     (map (fn [[date title youtube-id]]
+            [:tr
+             [:td date]
+             [:td title]
+             [:td [:iframe
+                   {:src (str "https://www.youtube.com/embed/" youtube-id)
+                    :allowfullscreen "allowfullscreen"}]]]))
+     (into [:table]))
 
 ;; ## Setup
 
