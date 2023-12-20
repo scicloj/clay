@@ -10,4 +10,5 @@
                               :incremental true}}
           :highlight-style :solarized
           :code-block-background true
-          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}}
+          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}
+          :title "Clay documentation"}}
