@@ -1,4 +1,3 @@
-;; # Clay
 
 ^{:kindly/hide-code? true
   :kindly/kind :kind/hiccup}
