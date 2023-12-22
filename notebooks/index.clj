@@ -76,9 +76,34 @@
 ;;
 ;; See the [clay.el](https://github.com/scicloj/clay.el) package for the relevant interactive functions.
 
-;;
 ;; ### IntelliJ Cursive
-;; **(coming soon)**
+;;
+;; Under preferences, search for "REPL Commands"
+;; (or use the menu IntelliJ -> Preferences -> Languages and Frameworks -> Clojure -> REPL Commands)
+;;
+;; Add a global command, and edit it with these settings:
+;;
+;; **Name:** Send form to Clay\
+;; **Execution:** Command
+;;
+;; ```clojure
+;; (do (require '[scicloj.clay.v2.api :as clay])
+;;     (clay/make! {:single-form '~form-before-caret
+;;                  :source-path ["~file-path"]}))
+;; ```
+;;
+;; You might also like to create a command to compile the namespace:
+;;
+;; ```clojure
+;; (do (require '[scicloj.clay.v2.api :as clay])
+;;     (clay/make! {:source-path ["~file-path"]}))
+;; ```
+;;
+;; Or a `top-level-form` (replace `form-before-caret` with `top-level-form`).
+;;
+;; You can then add keybindings under Preferences -> Keymap for the new commands.
+;;
+;; For more information about commands, see the Cursive documentation on [REPL commands and substitutions](https://cursive-ide.com/userguide/repl.html#repl-commands).
 
 ;; ## Starting a Clay namespace
 
