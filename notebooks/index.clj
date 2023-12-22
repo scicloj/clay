@@ -678,19 +678,7 @@ nested-structure-1
                 (.zoom viewer 0.8 2000)))}])
   {:pdb-data pdb-2POR}])
 
-;; ## Delays
-
-;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
-
-;; Clay makes sure to dererence Delays when passing values for visualization.
-
-;; This is handy for slow example snippets and explorations, that one would typically not like to slow down the evaluation of the whole namespace, but would like to visualize them on demand and also include in them in the final document.
-
-(delay
-  (Thread/sleep 500)
-  (+ 1 2))
-
-;; ## Embedded Portal
+;; ### Embedded Portal
 
 (kind/portal {:x (range 3)})
 
@@ -704,7 +692,7 @@ nested-structure-1
  [(kind/hiccup [:big [:big "a plot"]])
   (random-vega-lite-plot 9)])
 
-;; ## Nesting kinds in Hiccup (WIP)
+;; ### Nesting kinds in Hiccup
 
 (kind/hiccup
  [:div {:style {:background "#f5f3ff"
@@ -758,7 +746,7 @@ nested-structure-1
     (vec (range 40))])])
 
 
-;; ## Nesting kinds in Tables (WIP)
+;; ### Nesting kinds in Tables
 
 (kind/table
  {:column-names [:x :y]
@@ -768,7 +756,7 @@ nested-structure-1
                               :y (map inc (range 3))})
                  (random-vega-lite-plot 9)]]})
 
-;; ## More nesting examples
+;; ### More nesting examples
 
 {:plot (random-vega-lite-plot 9)
  :dataset (tc/dataset {:x (range 3)
@@ -777,6 +765,18 @@ nested-structure-1
 [(random-vega-lite-plot 9)
  (tc/dataset {:x (range 3)
               :y (repeatedly 3 rand)})]
+
+;; ## Delays
+
+;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
+
+;; Clay makes sure to dererence Delays when passing values for visualization.
+
+;; This is handy for slow example snippets and explorations, that one would typically not like to slow down the evaluation of the whole namespace, but would like to visualize them on demand and also include in them in the final document.
+
+(delay
+  (Thread/sleep 500)
+  (+ 1 2))
 
 ;; ## Referring to files
 
