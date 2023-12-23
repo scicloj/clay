@@ -1,6 +1,3 @@
-;; **Upadted for version `2-alpha54-SNAPSHOT`**
-;;
-
 ^{:kindly/hide-code? true
   :kindly/kind :kind/hiccup}
 [:img
