@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha54-SNAPSHOT]
 - minor changes to Calva custom REPL commands: names, printing, etc.
+- updating Kindly version that supports, among other things, an `option` argument to kinds, and an API extension for hiding code
+- breaking changes in the way options are passed to `kind/cytoscape`, `kind/echarts`, `kind/plotly` -- now we use `[spec options]` rather than `[options spec]`
+- datatables options support for `kind/table`
 
 ## [2-alpha53] - 2023-12-14
 - Calva custom REPL commands
