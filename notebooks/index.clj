@@ -487,6 +487,18 @@ nested-structure-1
     tc/dataset
     kind/table)
 
+(-> people-as-maps
+    tc/dataset
+    (kind/table
+     {:datatables {:paging false
+                   :scrollY 400}}))
+
+(-> people-as-maps
+    tc/dataset
+    (kind/table
+     {:datatables {:paging false
+                   :scrollY 400}}))
+
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
 (defn vega-lite-point-plot [data]
