@@ -156,9 +156,9 @@
 (comment
   (clay/make! {:source-path "notebooks/index.clj"
                :single-form '(kind/cytoscape
-                              [{:style {:width "300px"
-                                        :height "300px"}}
-                               cytoscape-example])}))
+                              [cytoscape-example
+                               {:style {:width "300px"
+                                        :height "300px"}}])}))
 
 ;; Evaluate and render a single form
 ;; in the context of the current namespace (`*ns*`)
@@ -166,18 +166,18 @@
 ;; and show it at the browser:
 (comment
   (clay/make! {:single-form '(kind/cytoscape
-                              [{:style {:width "300px"
-                                        :height "300px"}}
-                               cytoscape-example])}))
+                              [cytoscape-example
+                               {:style {:width "300px"
+                                        :height "300px"}}])}))
 
 ;; Render a single value
 ;; as HTML
 ;; and show it at the browser:
 (comment
   (clay/make! {:single-value (kind/cytoscape
-                              [{:style {:width "300px"
-                                        :height "300px"}}
-                               cytoscape-example])}))
+                              [cytoscape-example
+                               {:style {:width "300px"
+                                        :height "300px"}}])}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
@@ -560,10 +560,23 @@ nested-structure-1
 (kind/cytoscape
  cytoscape-example)
 
+;; Passing general style options in a vector:
 (kind/cytoscape
- [{:style {:width "100px"
-           :height "100px"}}
-  cytoscape-example])
+ [cytoscape-example
+  {:style {:width "100px"
+           :height "100px"}}])
+
+;; Equivalently passing such options to the kind function:
+(kind/cytoscape
+ cytoscape-example
+ {:style {:width "100px"
+          :height "100px"}})
+
+;; Or, conveniently in data pipelines:
+(-> cytoscape-example
+    (kind/cytoscape
+     {:style {:width "100px"
+              :height "100px"}}))
 
 ;; ### ECharts
 
@@ -584,23 +597,57 @@ nested-structure-1
 (kind/echarts
  echarts-example)
 
+;; Passing general style options in a vector:
 (kind/echarts
- [{:style {:width "500px"
-           :height "200px"}}
-  echarts-example])
+ [echarts-example
+  {:style {:width "500px"
+           :height "200px"}}])
 
+;; Equivalently passing such options to the kind function:
+(kind/echarts
+ echarts-example
+ {:style {:width "500px"
+          :height "200px"}})
+
+;; Or, conveniently in data pipelines:
+(-> echarts-example
+    (kind/echarts
+     {:style {:width "500px"
+              :height "200px"}}))
 
 ;; ### Plotly
+
+(def plotly-example
+  {:data [{:x [0 1 3 2]
+           :y [0 6 4 5]
+           :z [0 8 9 7]
+           :type :scatter3d
+           :mode :lines+markers
+           :opacity 0.5
+           :line {:width 5}
+           :marker {:size 4
+                    :colorscale :Viridis}}]})
+
 (kind/plotly
- {:data [{:x [0 1 3 2]
-          :y [0 6 4 5]
-          :z [0 8 9 7]
-          :type :scatter3d
-          :mode :lines+markers
-          :opacity 0.5
-          :line {:width 5}
-          :marker {:size 4
-                   :colorscale :Viridis}}]})
+ plotly-example)
+
+;; Passing general style options in a vector:
+(kind/plotly
+ [plotly-example
+  {:style {:width "300px"
+           :height "300px"}}])
+
+;; Equivalently passing such options to the kind function:
+(kind/plotly
+ plotly-example
+ {:style {:width "300px"
+          :height "300px"}})
+
+;; Or, conveniently in data pipelines:
+(-> plotly-example
+    (kind/plotly
+     {:style {:width "300px"
+              :height "300px"}}))
 
 ;; ### Leaflet
 
