@@ -7,7 +7,8 @@
    [scicloj.kindly-advice.v1.api :as kindly-advice]
    [nextjournal.markdown :as md]
    [clojure.walk]
-   [hiccup.core :as hiccup]))
+   [hiccup.core :as hiccup]
+   [charred.api :as charred]))
 
 (def *kind->preparer
   (atom {}))
@@ -108,7 +109,20 @@
  :kind/table
  (fn [{:as context
        :keys [value]}]
-   (let [pre-hiccup (table/->table-hiccup value)
+   (let [[spec options] (item/extract-options-and-spec value {})
+         pre-hiccup (table/->table-hiccup spec)
+         datatables (or (:datatables options)
+                        ;; Check whether it makes sense to use
+                        ;; dataables by default:
+                        (-> pre-hiccup
+                            last ; the :tbody part
+                            count
+                            ;; a big table
+                            (> 20)))
+         datatables-options (if (map? datatables)
+                              datatables
+                              {:sPagunationType "full_numbers"
+                               :order []})
          *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
                      (claywalk/postwalk
@@ -128,16 +142,10 @@
                                    (item->hiccup item nil)))))
                           ;; else - keep it
                           elem))))]
-     (if (-> hiccup
-             last ; the :tbody part
-             count
-             (> 20)) ; a big table
-       ;; a big table
+     (if datatables
        {:hiccup (into hiccup
-                      [[:script "new DataTable(document.currentScript.parentElement,
- {\"sPaginationType\": \"full_numbers\", \"order\": []});"]
-                       'datatables ; to help Clay realize that th dependency is needed
-                       ])
+                      [[:script (format "new DataTable(document.currentScript.parentElement, %s);"
+                                        (charred/write-json-str datatables-options))]])
         :deps (->> @*deps
                    (cons :datatables)
                    distinct)}
