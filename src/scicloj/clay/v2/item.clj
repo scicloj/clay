@@ -107,16 +107,18 @@
      :deps (cons :reagent
                  (-> form meta :deps))}))
 
-(defn extract-options-and-spec [data]
+(defn extract-options-and-spec [data
+                                default-options]
   (if (vector? data)
     data
-    [{:style {:height "400px"
-              :width "400px"}}
-     data]))
+    [data default-options]))
 
 
 (defn cytoscape [data]
-  (let [[options spec] (extract-options-and-spec data)]
+  (let [[spec options] (extract-options-and-spec
+                        data
+                        {:style {:height "400px"
+                                 :width "400px"}})]
     {:hiccup [:div
               options
               [:script
@@ -133,7 +135,10 @@
 
 
 (defn echarts [data]
-  (let [[options spec] (extract-options-and-spec data)]
+  (let [[spec options] (extract-options-and-spec
+                        data
+                        {:style {:height "400px"
+                                 :width "400px"}})]
     {:hiccup [:div
               options
               [:script
@@ -149,7 +154,10 @@
 
 
 (defn plotly [data]
-  (let [[options spec] (extract-options-and-spec data)]
+  (let [[spec options] (extract-options-and-spec
+                        data
+                        {:style {:height "400px"
+                                 :width "400px"}})]
     {:hiccup [:div
               options
               [:script
