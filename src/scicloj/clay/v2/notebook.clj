@@ -56,12 +56,14 @@
 
 (defn note-to-items [{:as note
                       :keys [comment? code form value]}
-                     {:keys [hide-code? hide-nils? hide-vars?]}]
+                     {:keys [hide-code hide-nils hide-vars]}]
   (if (and comment? code)
     [(comment->item code)]
     [;; code
-     (when-not (or hide-code?
+     (when-not (or hide-code
+                   (-> form meta :kindly/hide-code)
                    (-> form meta :kindly/hide-code?)
+                   (-> value meta :kindly/hide-code)
                    (-> value meta :kindly/hide-code?)
                    (nil? code))
        (item/source-clojure code))
@@ -70,8 +72,8 @@
                 (and (sequential? form)
                      (-> form first hidden-form-starters))
                 (-> note :form meta :kind/hidden)
-                (and hide-nils? (nil? value))
-                (and hide-vars? (var? value)))
+                (and hide-nils (nil? value))
+                (and hide-vars (var? value)))
        (-> note
            (select-keys [:value :code :form
                          :base-target-path :full-target-path])
@@ -80,8 +82,8 @@
            ;; in-div ; TODO: is this needed?
            ))]))
 
-(defn add-info-line [items {:keys [full-source-path hide-info-line?]}]
-  (if hide-info-line?
+(defn add-info-line [items {:keys [full-source-path hide-info-line]}]
+  (if hide-info-line
     items
     (let [il (info-line full-source-path)]
       (concat #_[il
@@ -93,8 +95,8 @@
 (defn notebook-items
   ([{:as options
      :keys [full-source-path
-            hide-info-line?
-            hide-code? hide-nils? hide-vars?
+            hide-info-line
+            hide-code hide-nils hide-vars
             title toc?
             base-target-path
             full-target-path
