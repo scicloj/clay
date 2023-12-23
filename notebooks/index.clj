@@ -1,3 +1,5 @@
+;; **Upadted for version `2-alpha54-SNAPSHOT`**
+;;
 
 ^{:kindly/hide-code? true
   :kindly/kind :kind/hiccup}
@@ -5,6 +7,7 @@
  {:style {:width "100px"}
   :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
   :alt "Clay logo"}]
+
 
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly/) convention.
 ;;
