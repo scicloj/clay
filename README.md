@@ -9,7 +9,8 @@ Clay is a small Clojure tool for a dynamic workflow of data visualization and li
 
 ## Usage
 
-Add [org.scicloj/clay](https://clojars.org/org.scicloj/clay) as a dependency. If you are building a library and using Clay to document it, probably you do not need Clay to be a dependency of the library, but only of your dev environment, so you may define it as an extra dependency in a Deps alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).
+Add [org.scicloj/clay](https://clojars.org/org.scicloj/clay) as a dependency. 
+  * (If you are building a library and using Clay to document it, probably you do not need Clay to be a dependency of the library, but only of your dev environment, so you may define it as an extra dependency in a Deps alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).)
 
 Setup and usage can be found in the [Documentation](https://scicloj.github.io/clay/).
 
