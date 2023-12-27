@@ -9,7 +9,7 @@ Clay is a small Clojure tool for a dynamic workflow of data visualization and li
 
 ## Usage
 
-Add `org.scicloj/clay` as a dependency.
+Add [org.scicloj/clay](https://clojars.org/org.scicloj/clay) as a dependency.
 
 Setup and usage can be found in the [Documentation](https://scicloj.github.io/clay/).
 
@@ -17,17 +17,20 @@ Regular updates are given at the [visual-tools meetings](https://scicloj.github.
 
 ## Related projects
 
+The [Claykind](https://github.com/timothypratley/claykind) project is rethinking the Clay architecture and implementation from scratch, in a new code base. Currently (Fall 2023), the two projects are being developed in coordination.
+
 [Kindly](https://github.com/scicloj/kindly) is a common ground for defining how things should be visualized, seeking compatibility across tools.
 
-The [Claykind](https://github.com/timothypratley/claykind) project is rethinking the Clay architecture and implementation from scratch, in a new code base. Currently (Fall 2023), the two projects are being developed in coordination.
+[kindly-advice](https://github.com/scicloj/kindly-advice) is a library that helps tools such as Clay to be Kindly-compatible.
+
+[read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) from notebooks expressed as Clojure namespaces.
 
 ## Discussion
 
-The best places to discuss this project are (in this order)
+The best places to discuss this project are:
 * a topic thread under the [visual-tools stream](https://clojurians.zulipchat.com/#narrow/stream/313390-visual-tools) at the Clojurians Zulip (more about chat streams [here](https://scicloj.github.io/docs/community/chat/)) 
 * a [github issue](https://github.com/scicloj/clay/issues)
 * a thread at the [visual-tools channel](https://clojurians.slack.com/archives/C02V9TL2G3V) of the Clojurians slack
-
 
 ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
 (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
