@@ -487,12 +487,29 @@ nested-structure-1
     tc/dataset
     kind/table)
 
-(-> people-as-maps
-    tc/dataset
-    (kind/table
-     {:datatables {:paging false
-                   :scrollY 400}}))
+;; Additional options may be passed in a vector -
+;; see the example below.
+;;
+;; Depending on the visual tool in use,
+;; these options may hint at way the table should be rendered.
+;; Clay uses [datatables](https://datatables.net/) to reneder `kind/table`,
+;; and in this case the user may specify [datatables options](https://datatables.net/manual/options)
+;; (see [the full list](https://datatables.net/reference/option/)).
+(kind/table
+ [(-> people-as-maps
+      tc/dataset)
+  {:datatables {:paging false
+                :scrollY 400}}])
 
+;; Alternatively, options may be passed
+;; as an additional argument to the kind function:
+(kind/table
+ (-> people-as-maps
+     tc/dataset)
+ {:datatables {:paging false
+               :scrollY 400}})
+
+;; This may be convenient when using threading macros:
 (-> people-as-maps
     tc/dataset
     (kind/table
@@ -502,28 +519,28 @@ nested-structure-1
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
 (defn vega-lite-point-plot [data]
-  (-> {:data {:values data},
-       :mark "point"
-       :encoding
-       {:size {:field "w" :type "quantitative"}
-        :x {:field "x", :type "quantitative"},
-        :y {:field "y", :type "quantitative"},
-        :fill {:field "z", :type "nominal"}}}
-      kind/vega-lite))
+(-> {:data {:values data},
+     :mark "point"
+     :encoding
+     {:size {:field "w" :type "quantitative"}
+      :x {:field "x", :type "quantitative"},
+      :y {:field "y", :type "quantitative"},
+      :fill {:field "z", :type "nominal"}}}
+    kind/vega-lite))
 
 (defn random-data [n]
-  (->> (repeatedly n #(- (rand) 0.5))
-       (reductions +)
-       (map-indexed (fn [x y]
-                      {:w (rand-int 9)
-                       :z (rand-int 9)
-                       :x x
-                       :y y}))))
+(->> (repeatedly n #(- (rand) 0.5))
+     (reductions +)
+     (map-indexed (fn [x y]
+                    {:w (rand-int 9)
+                     :z (rand-int 9)
+                     :x x
+                     :y y}))))
 
 (defn random-vega-lite-plot [n]
-  (-> n
-      random-data
-      vega-lite-point-plot))
+(-> n
+    random-data
+    vega-lite-point-plot))
 
 (random-vega-lite-plot 9)
 
@@ -542,124 +559,124 @@ nested-structure-1
      :encoding
      {:x {:field "x", :type "quantitative"}
       :y {:field "y", :type "quantitative"}}}
-    kind/vega-lite)
+kind/vega-lite)
 
 
 ;; ### Cytoscape
 
 (def cytoscape-example
-  {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
-                      {:data {:id "b"}}
-                      {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
-                      {:data {:id "d"} :position {:x 215 :y 175}}
-                      {:data {:id "e"}}
-                      {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
-              :edges [{:data {:id "ad" :source "a" :target "d"}}
-                      {:data {:id "eb" :source "e" :target "b"}}]}
-   :style [{:selector "node"
-            :css {:content "data(id)"
-                  :text-valign "center"
-                  :text-halign "center"}}
-           {:selector "parent"
-            :css {:text-valign "top"
-                  :text-halign "center"}}
-           {:selector "edge"
-            :css {:curve-style "bezier"
-                  :target-arrow-shape "triangle"}}]
-   :layout {:name "preset"
-            :padding 5}})
+{:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
+                    {:data {:id "b"}}
+                    {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
+                    {:data {:id "d"} :position {:x 215 :y 175}}
+                    {:data {:id "e"}}
+                    {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
+            :edges [{:data {:id "ad" :source "a" :target "d"}}
+                    {:data {:id "eb" :source "e" :target "b"}}]}
+ :style [{:selector "node"
+          :css {:content "data(id)"
+                :text-valign "center"
+                :text-halign "center"}}
+         {:selector "parent"
+          :css {:text-valign "top"
+                :text-halign "center"}}
+         {:selector "edge"
+          :css {:curve-style "bezier"
+                :target-arrow-shape "triangle"}}]
+ :layout {:name "preset"
+          :padding 5}})
 
 (kind/cytoscape
- cytoscape-example)
+cytoscape-example)
 
 ;; Passing general style options in a vector:
 (kind/cytoscape
- [cytoscape-example
-  {:style {:width "100px"
-           :height "100px"}}])
+[cytoscape-example
+ {:style {:width "100px"
+          :height "100px"}}])
 
 ;; Equivalently passing such options to the kind function:
 (kind/cytoscape
- cytoscape-example
- {:style {:width "100px"
-          :height "100px"}})
+cytoscape-example
+{:style {:width "100px"
+         :height "100px"}})
 
 ;; Or, conveniently in data pipelines:
 (-> cytoscape-example
-    (kind/cytoscape
-     {:style {:width "100px"
-              :height "100px"}}))
+(kind/cytoscape
+ {:style {:width "100px"
+          :height "100px"}}))
 
 ;; ### ECharts
 
 ;; This example is taken from Apache ECharts' [Getting Started](https://echarts.apache.org/handbook/en/get-started/).
 
 (def echarts-example
-  {:title {:text "Echarts Example"}
-   :tooltip {}
-   :legend {:data ["sales"]}
-   :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
-                  "Pants", "Heels", "Socks"]}
-   :yAxis {}
-   :series [{:name "sales"
-             :type "bar"
-             :data [5 20 36
-                    10 10 20]}]})
+{:title {:text "Echarts Example"}
+ :tooltip {}
+ :legend {:data ["sales"]}
+ :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
+                "Pants", "Heels", "Socks"]}
+ :yAxis {}
+ :series [{:name "sales"
+           :type "bar"
+           :data [5 20 36
+                  10 10 20]}]})
 
 (kind/echarts
- echarts-example)
+echarts-example)
 
 ;; Passing general style options in a vector:
 (kind/echarts
- [echarts-example
-  {:style {:width "500px"
-           :height "200px"}}])
+[echarts-example
+ {:style {:width "500px"
+          :height "200px"}}])
 
 ;; Equivalently passing such options to the kind function:
 (kind/echarts
- echarts-example
- {:style {:width "500px"
-          :height "200px"}})
+echarts-example
+{:style {:width "500px"
+         :height "200px"}})
 
 ;; Or, conveniently in data pipelines:
 (-> echarts-example
-    (kind/echarts
-     {:style {:width "500px"
-              :height "200px"}}))
+(kind/echarts
+ {:style {:width "500px"
+          :height "200px"}}))
 
 ;; ### Plotly
 
 (def plotly-example
-  {:data [{:x [0 1 3 2]
-           :y [0 6 4 5]
-           :z [0 8 9 7]
-           :type :scatter3d
-           :mode :lines+markers
-           :opacity 0.5
-           :line {:width 5}
-           :marker {:size 4
-                    :colorscale :Viridis}}]})
+{:data [{:x [0 1 3 2]
+         :y [0 6 4 5]
+         :z [0 8 9 7]
+         :type :scatter3d
+         :mode :lines+markers
+         :opacity 0.5
+         :line {:width 5}
+         :marker {:size 4
+                  :colorscale :Viridis}}]})
 
 (kind/plotly
- plotly-example)
+plotly-example)
 
 ;; Passing general style options in a vector:
 (kind/plotly
- [plotly-example
-  {:style {:width "300px"
-           :height "300px"}}])
+[plotly-example
+ {:style {:width "300px"
+          :height "300px"}}])
 
 ;; Equivalently passing such options to the kind function:
 (kind/plotly
- plotly-example
- {:style {:width "300px"
-          :height "300px"}})
+plotly-example
+{:style {:width "300px"
+         :height "300px"}})
 
 ;; Or, conveniently in data pipelines:
 (-> plotly-example
-    (kind/plotly
-     {:style {:width "300px"
-              :height "300px"}}))
+(kind/plotly
+ {:style {:width "300px"
+          :height "300px"}}))
 
 ;; ### Leaflet
 
@@ -668,26 +685,26 @@ nested-structure-1
 ;; This example was adapted from [the Leaflet website](https://leafletjs.com/).
 
 (kind/reagent
- ^{:deps [:leaflet]}
- ['(fn []
-     [:div
-      [:div {:style {:height "200px"}
-             :ref (fn [el]
-                    (let [m (-> js/L
-                                (.map el)
-                                (.setView (clj->js [51.505 -0.09])
-                                          13))]
-                      (-> js/L
-                          (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                      (clj->js
-                                       {:maxZoom 19
-                                        :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
-                          (.addTo m))
-                      (-> js/L
-                          (.marker (clj->js [51.5 -0.09]))
-                          (.addTo m)
-                          (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
-                          (.openPopup))))}]])])
+^{:deps [:leaflet]}
+['(fn []
+    [:div
+     [:div {:style {:height "200px"}
+            :ref (fn [el]
+                   (let [m (-> js/L
+                               (.map el)
+                               (.setView (clj->js [51.505 -0.09])
+                                         13))]
+                     (-> js/L
+                         (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                     (clj->js
+                                      {:maxZoom 19
+                                       :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
+                         (.addTo m))
+                     (-> js/L
+                         (.marker (clj->js [51.5 -0.09]))
+                         (.addTo m)
+                         (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
+                         (.openPopup))))}]])])
 
 ;; ### 3DMol.js
 
