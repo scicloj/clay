@@ -24,7 +24,7 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 [kindly-advice](https://github.com/scicloj/kindly-advice) is a library that helps tools such as Clay to be Kindly-compatible.
 
-[read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) from notebooks expressed as Clojure namespaces.
+[read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
 ## Discussion
 
