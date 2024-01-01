@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha55] - 2024-01-01
 - minor refactoring for clarity
 - cancelled opinionated table styling
+- bugfix: using real paths when figuring out the path relative to repo
 
 
 ## [2-alpha54] - 2023-12-24

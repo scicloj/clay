@@ -59,6 +59,7 @@
                          git-parent)
                      (catch Exception e nil))]
     (-> file-path
+        real-path
         (string/replace (str gp "/")
                         ""))))
 
