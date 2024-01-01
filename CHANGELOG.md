@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha55] - 2024-01-01
+- minor refactoring for clarity
+
+
 ## [2-alpha54] - 2023-12-24
 - minor changes to Calva custom REPL commands: names, printing, etc.
 - updating to Kindly version `4-alpha9` supports, among other things, an `option` argument to kinds, and an API extension for hiding code

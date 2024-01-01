@@ -173,16 +173,16 @@ Plotly.newPlot(document.currentScript.parentElement,
 
 
 (defn portal [value]
-  {:hiccup (->> {:value value}
-                kind-portal/prepare
-                meta/pr-str-with-meta
-                pr-str
-                (format "portal_api.embed().renderOutputItem(
+  {:hiccup [:div
+            [:script
+             (->> {:value value}
+                  kind-portal/prepare
+                  meta/pr-str-with-meta
+                  pr-str
+                  (format "portal_api.embed().renderOutputItem(
                 {'mime': 'x-application/edn',
                  'text': (() => %s)}
-                , document.currentScript.parentElement);")
-                (vector :script)
-                (vector :div))
+                , document.currentScript.parentElement);"))]]
    :deps [:portal]})
 
 (def loader
