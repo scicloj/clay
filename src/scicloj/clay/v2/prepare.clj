@@ -42,7 +42,9 @@
             :md
             md/->hiccup
             (clojure.walk/postwalk-replace
-             {:<> :p}))))
+             {:<> :p})
+            (clojure.walk/postwalk-replace
+             {:table :table.table}))))
 
 (defn item->md [item {:keys [id]}]
   (or

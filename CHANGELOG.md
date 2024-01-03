@@ -1,11 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha56] - 2024-01-03
+- bugfix: marking table class when nesting markdown inside other structures
+
 ## [2-alpha55] - 2024-01-01
 - minor refactoring for clarity
 - cancelled opinionated table styling
 - bugfix: using real paths when figuring out the path relative to repo
-
 
 ## [2-alpha54] - 2023-12-24
 - minor changes to Calva custom REPL commands: names, printing, etc.
