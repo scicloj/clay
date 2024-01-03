@@ -2,7 +2,6 @@
 
 ![Clay logo](resources/Clay.svg)
 
-
 Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
@@ -13,8 +12,6 @@ Add [org.scicloj/clay](https://clojars.org/org.scicloj/clay) as a dependency.
   * (If you are building a library and using Clay to document it, probably you do not need Clay to be a dependency of the library, but only of your dev environment, so you may define it as an extra dependency in a Deps alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).)
 
 Setup and usage can be found in the [Documentation](https://scicloj.github.io/clay/).
-
-Regular updates are given at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
 ## Related projects
 
@@ -27,6 +24,8 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 [read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
 ## Discussion
+
+Regular updates are given at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
 The best places to discuss this project are:
 * a topic thread under the [visual-tools stream](https://clojurians.zulipchat.com/#narrow/stream/313390-visual-tools) at the Clojurians Zulip (more about chat streams [here](https://scicloj.github.io/docs/community/chat/)) 
