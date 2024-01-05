@@ -107,69 +107,58 @@
      :deps (cons :reagent
                  (-> form meta :deps))}))
 
-(defn extract-options-and-spec [data
-                                default-options]
-  (if (vector? data)
-    data
-    [data default-options]))
+(defn extract-style [value]
+  (-> value
+      meta
+      :kindly/options
+      :element/style
+      (or {:height "400px"
+           :width "400px"})))
 
-
-(defn cytoscape [data]
-  (let [[spec options] (extract-options-and-spec
-                        data
-                        {:style {:height "400px"
-                                 :width "400px"}})]
-    {:hiccup [:div
-              options
-              [:script
-               (->> spec
-                    charred/write-json-str
-                    (format
-                     "
+(defn cytoscape [spec]
+  {:hiccup [:div
+            {:style (extract-style spec)}
+            [:script
+             (->> spec
+                  charred/write-json-str
+                  (format
+                   "
 {
   value = %s;
   value['container'] = document.currentScript.parentElement;
   cytoscape(value);
 };"))]]
-     :deps [:cytoscape]}))
+   :deps [:cytoscape]})
 
 
-(defn echarts [data]
-  (let [[spec options] (extract-options-and-spec
-                        data
-                        {:style {:height "400px"
-                                 :width "400px"}})]
-    {:hiccup [:div
-              options
-              [:script
-               (->> spec
-                    charred/write-json-str
-                    (format
-                     "
+(defn echarts [spec]
+  {:hiccup [:div
+            {:style (extract-style spec)}
+            [:script
+             (->> spec
+                  charred/write-json-str
+                  (format
+                   "
 {
   var myChart = echarts.init(document.currentScript.parentElement);
   myChart.setOption(%s);
 };"))]]
-     :deps [:echarts]}))
+   :deps [:echarts]})
 
 
-(defn plotly [data]
-  (let [[spec options] (extract-options-and-spec
-                        data
-                        {:style {:height "400px"
-                                 :width "400px"}})]
-    {:hiccup [:div
-              options
-              [:script
-               (->> spec
-                    charred/write-json-str
-                    (format
-                     "
+(defn plotly [spec]
+  {:hiccup [:div
+            {:style (extract-style spec)}
+            [:script
+             (->> spec
+                  charred/write-json-str
+                  (format
+                   "
 Plotly.newPlot(document.currentScript.parentElement,
  %s['data']
 );
 "))]]
-     :deps [:plotly]}))
+   :deps [:plotly]})
 
 
 (defn portal [value]

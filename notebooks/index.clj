@@ -110,7 +110,8 @@
 ;; Now, we can write a namespace and play with Clay.
 
 (ns index
-  (:require [scicloj.kindly.v4.kind :as kind]))
+  (:require [scicloj.kindly.v4.kind :as kind]
+            [scicloj.kindly.v4.api :as kindly]))
 
 ;; ## API
 
@@ -487,34 +488,15 @@ nested-structure-1
     tc/dataset
     kind/table)
 
-;; Additional options may be passed in a vector -
-;; see the example below.
-;;
-;; Depending on the visual tool in use,
-;; these options may hint at way the table should be rendered.
+;; Additional options may hint at way the table should be rendered.
 ;; Clay uses [datatables](https://datatables.net/) to reneder `kind/table`,
 ;; and in this case the user may specify [datatables options](https://datatables.net/manual/options)
 ;; (see [the full list](https://datatables.net/reference/option/)).
-(kind/table
- [(-> people-as-maps
-      tc/dataset)
-  {:datatables {:paging false
-                :scrollY 400}}])
-
-;; Alternatively, options may be passed
-;; as an additional argument to the kind function:
-(kind/table
- (-> people-as-maps
-     tc/dataset)
- {:datatables {:paging false
-               :scrollY 400}})
-
-;; This may be convenient when using threading macros:
 (-> people-as-maps
     tc/dataset
-    (kind/table
-     {:datatables {:paging false
-                   :scrollY 400}}))
+    (kind/table {:datatables
+                 {:paging false
+                  :scrollY 400}}))
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
@@ -589,23 +571,10 @@ nested-structure-1
 (kind/cytoscape
  cytoscape-example)
 
-;; Passing general style options in a vector:
-(kind/cytoscape
- [cytoscape-example
-  {:style {:width "100px"
-           :height "100px"}}])
-
-;; Equivalently passing such options to the kind function:
-(kind/cytoscape
- cytoscape-example
- {:style {:width "100px"
-          :height "100px"}})
-
-;; Or, conveniently in data pipelines:
 (-> cytoscape-example
-    (kind/cytoscape
-     {:style {:width "100px"
-              :height "100px"}}))
+    (kind/cytoscape {:element/style
+                     {:width "100px"
+                      :height "100px"}}))
 
 ;; ### ECharts
 
@@ -626,23 +595,10 @@ nested-structure-1
 (kind/echarts
  echarts-example)
 
-;; Passing general style options in a vector:
-(kind/echarts
- [echarts-example
-  {:style {:width "500px"
-           :height "200px"}}])
-
-;; Equivalently passing such options to the kind function:
-(kind/echarts
- echarts-example
- {:style {:width "500px"
-          :height "200px"}})
-
-;; Or, conveniently in data pipelines:
 (-> echarts-example
-    (kind/echarts
-     {:style {:width "500px"
-              :height "200px"}}))
+    (kind/echarts {:element/style
+                   {:width "500px"
+                    :height "200px"}}))
 
 ;; ### Plotly
 
@@ -660,23 +616,12 @@ nested-structure-1
 (kind/plotly
  plotly-example)
 
-;; Passing general style options in a vector:
-(kind/plotly
- [plotly-example
-  {:style {:width "300px"
-           :height "300px"}}])
-
-;; Equivalently passing such options to the kind function:
-(kind/plotly
- plotly-example
- {:style {:width "300px"
-          :height "300px"}})
-
-;; Or, conveniently in data pipelines:
 (-> plotly-example
-    (kind/plotly
-     {:style {:width "300px"
-              :height "300px"}}))
+    (kind/plotly {:element/style
+                  {:width "300px"
+                   :height "300px"}}))
+
+
 
 ;; ### Leaflet
 

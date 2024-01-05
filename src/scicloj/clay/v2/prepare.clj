@@ -67,11 +67,11 @@
                  subform)))
             hiccup/html)))
 
-
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
   (when-let [preparer (-> context
+                          (merge (-> value meta :kindly/options))
                           kindly-advice/advise
                           :kind
                           (@*kind->preparer)
@@ -111,9 +111,11 @@
  :kind/table
  (fn [{:as context
        :keys [value]}]
-   (let [[spec options] (item/extract-options-and-spec value {})
-         pre-hiccup (table/->table-hiccup spec)
-         datatables (or (:datatables options)
+   (let [pre-hiccup (table/->table-hiccup value)
+         datatables (or (-> value
+                            meta
+                            :kindly/options
+                            :datatables)
                         ;; Check whether it makes sense to use
                         ;; dataables by default:
                         (-> pre-hiccup

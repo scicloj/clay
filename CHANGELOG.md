@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha57] - 2024-01-05
+- adapting to Kindly changes: kindly options are passed as metadata
+
 ## [2-alpha56] - 2024-01-03
 - bugfix: marking table class when nesting markdown inside other structures
 
