@@ -1,5 +1,5 @@
 (ns build
-  "Kindly's build script.
+  "Clay's build script.
 
   clojure -T:build ci
   clojure -T:build deploy
