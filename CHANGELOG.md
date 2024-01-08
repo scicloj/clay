@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha58] - 2024-01-08
+- fixed the handling of `:kindly/options` in context
+
 ## [2-alpha57] - 2024-01-05
 - adapting to Kindly changes: kindly options are passed as metadata
 

@@ -494,9 +494,12 @@ nested-structure-1
 ;; (see [the full list](https://datatables.net/reference/option/)).
 (-> people-as-maps
     tc/dataset
-    (kind/table {:datatables
-                 {:paging false
-                  :scrollY 400}}))
+    (kind/table {:use-datatables true}))
+
+(-> people-as-maps
+    tc/dataset
+    (kind/table {:use-datatables true
+                 :datatables {:scrollY 600}}))
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 

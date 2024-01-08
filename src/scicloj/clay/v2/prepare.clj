@@ -67,16 +67,19 @@
                  subform)))
             hiccup/html)))
 
+
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
-  (when-let [preparer (-> context
-                          (merge (-> value meta :kindly/options))
-                          kindly-advice/advise
-                          :kind
-                          (@*kind->preparer)
-                          (or fallback-preparer))]
-    (preparer context)))
+  (let [complete-context (-> context
+                             (update :kindly/options
+                                     merge (-> value meta :kindly/options)))]
+    (when-let [preparer (-> complete-context
+                            kindly-advice/advise
+                            :kind
+                            (@*kind->preparer)
+                            (or fallback-preparer))]
+      (preparer complete-context))))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
@@ -112,21 +115,6 @@
  (fn [{:as context
        :keys [value]}]
    (let [pre-hiccup (table/->table-hiccup value)
-         datatables (or (-> value
-                            meta
-                            :kindly/options
-                            :datatables)
-                        ;; Check whether it makes sense to use
-                        ;; dataables by default:
-                        (-> pre-hiccup
-                            last ; the :tbody part
-                            count
-                            ;; a big table
-                            (> 20)))
-         datatables-options (if (map? datatables)
-                              datatables
-                              {:sPagunationType "full_numbers"
-                               :order []})
          *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
                      (claywalk/postwalk
@@ -146,10 +134,15 @@
                                    (item->hiccup item nil)))))
                           ;; else - keep it
                           elem))))]
-     (if datatables
+     (if (->> context
+              :kindly/options
+              :use-datatables)
        {:hiccup (into hiccup
-                      [[:script (format "new DataTable(document.currentScript.parentElement, %s);"
-                                        (charred/write-json-str datatables-options))]])
+                      [[:script (->> context
+                                     :kindly/options
+                                     :datatables
+                                     charred/write-json-str
+                                     (format "new DataTable(document.currentScript.parentElement, %s);"))]])
         :deps (->> @*deps
                    (cons :datatables)
                    distinct)}
@@ -341,15 +334,15 @@
        item/portal)))
 
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/cytoscape
  #'item/cytoscape)
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/echarts
  #'item/echarts)
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/plotly
  #'item/plotly)
 
