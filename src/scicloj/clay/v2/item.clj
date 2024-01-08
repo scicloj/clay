@@ -107,19 +107,19 @@
      :deps (cons :reagent
                  (-> form meta :deps))}))
 
-(defn extract-style [value]
-  (-> value
-      meta
+(defn extract-style [context]
+  (-> context
       :kindly/options
       :element/style
       (or {:height "400px"
            :width "400px"})))
 
-(defn cytoscape [spec]
+(defn cytoscape [{:as context
+                  :keys [value]}]
   {:hiccup [:div
-            {:style (extract-style spec)}
+            {:style (extract-style context)}
             [:script
-             (->> spec
+             (->> value
                   charred/write-json-str
                   (format
                    "
@@ -131,11 +131,12 @@
    :deps [:cytoscape]})
 
 
-(defn echarts [spec]
+(defn echarts [{:as context
+                :keys [value]}]
   {:hiccup [:div
-            {:style (extract-style spec)}
+            {:style (extract-style context)}
             [:script
-             (->> spec
+             (->> value
                   charred/write-json-str
                   (format
                    "
@@ -146,11 +147,12 @@
    :deps [:echarts]})
 
 
-(defn plotly [spec]
+(defn plotly [{:as context
+               :keys [value]}]
   {:hiccup [:div
-            {:style (extract-style spec)}
+            {:style (extract-style context)}
             [:script
-             (->> spec
+             (->> value
                   charred/write-json-str
                   (format
                    "
