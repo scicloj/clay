@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha58] - 2024-01-08
 - fixed the handling of `:kindly/options` in context
+- changed the default behaviour of `kind/table` (WIP)
+
 
 ## [2-alpha57] - 2024-01-05
 - adapting to Kindly changes: kindly options are passed as metadata
