@@ -133,7 +133,7 @@
               [:link {:rel "icon" :href "data:,"}] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
               #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
               font-links
-              #_[:style (styles/main :table)]
+              [:style (styles/main :table)]
               [:style (styles/main :loader)]
               #_[:style (styles/main :code)]
               [:style (styles/highlight :qtcreator-light)]
@@ -236,7 +236,7 @@
         (format "\n---\n%s\n---\n"))
    ;; " "
    (hiccup/html
-    #_[:style (styles/main :table)]
+    [:style (styles/main :table)]
     [:style (styles/main :md-main)])
    (->> items
         (mapcat :deps)

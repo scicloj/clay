@@ -1,16 +1,4 @@
-table {
-  border-style: thin;
-}
-th, td {
-  padding: 6px;
-}
-td {
-  text-align: left;
-}
-th {
-  text-align: center;
-  background-color: #ddd;
-}
-tr:nth-child(even) {
-  background-color: #f6f6f6;
+.table {
+    height: 400px;
+    overflow-y: scroll;
 }
