@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha59] - 2024-01-11
 - updated some deps
+- improved book making: taking care of rendering and repositioning the rendered files
 
 ## [2-alpha58] - 2024-01-08
 - fixed the handling of `:kindly/options` in context

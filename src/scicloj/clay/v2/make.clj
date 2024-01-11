@@ -14,7 +14,8 @@
             [clj-yaml.core :as yaml]
             [clojure.java.io :as io]
             [babashka.fs]
-            [scicloj.clay.v2.util.fs :as util.fs]))
+            [scicloj.clay.v2.util.fs :as util.fs]
+            [clojure.string :as str]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
   (when source-path
@@ -78,6 +79,7 @@
                                         merge-ns-config
                                         (merge (dissoc spec :source-path)) ; prioritize spec over the ns config
                                         (config/add-field :full-target-path spec->full-target-path)))))]
+
     {:main-spec (-> base-spec
                     (assoc :full-target-paths
                            (->> single-ns-specs
@@ -142,13 +144,32 @@
           [:wrote main-index-path])
       [:ok])))
 
-(defn make-book! [spec]
+(defn make-book! [{:as spec
+                   :keys [base-target-path
+                          run-quarto
+                          show]}]
   [(-> spec
        quarto-book-config
        (write-quarto-book-config! spec))
    (-> spec
        quarto-book-index
-       (write-quarto-book-index-if-needed! spec))])
+       (write-quarto-book-index-if-needed! spec))
+   (when run-quarto
+     (prn [:render-book])
+     (->> (shell/sh "quarto" "render")
+          (shell/with-sh-dir base-target-path)
+          ((juxt :err :out))
+          (mapv println))
+     (babashka.fs/copy-tree (str base-target-path "/_book")
+                            base-target-path
+                            {:replace-existing true})
+     (babashka.fs/delete-tree (str base-target-path "/_book"))
+     (when show
+       (-> spec
+           (merge {:full-target-path "index.html"})
+           server/update-page!))
+     [:ok])])
+
 
 (defn handle-main-spec! [{:as spec
                           :keys [book]}]
@@ -163,7 +184,8 @@
                                           format
                                           full-target-path
                                           show
-                                          run-quarto]}]
+                                          run-quarto
+                                          book]}]
   (when (or (= source-type "clj")
             single-form
             single-value)
@@ -189,29 +211,29 @@
                         page/md
                         (->> (spit qmd-path)))
                     (println [:wrote qmd-path (time/now)])
-                    (if run-quarto
-                      (do (->> (shell/sh "quarto" "render" qmd-path)
-                               ((juxt :err :out))
-                               (mapv println))
-                          (println [:created full-target-path (time/now)])
-                          (-> spec
-                              (merge {:full-target-path full-target-path})
-                              server/update-page!))
-                      ;; else, just show the qmd file
-                      (-> spec
-                          (merge {:full-target-path qmd-path})
-                          server/update-page!))
+                    (when-not book
+                      (if run-quarto
+                        (do (->> (shell/sh "quarto" "render" qmd-path)
+                                 ((juxt :err :out))
+                                 (mapv println))
+                            (println [:created full-target-path (time/now)])
+                            (-> spec
+                                (merge {:full-target-path full-target-path})
+                                server/update-page!))
+                        ;; else, just show the qmd file
+                        (-> spec
+                            (merge {:full-target-path qmd-path})
+                            server/update-page!)))
                     (vec
                      (concat [:wrote qmd-path]
                              (when run-quarto
                                [full-target-path]))))))
       (catch Exception e
-        (when show
-          (-> spec
-              (assoc :page (-> spec
-                               (assoc :items [(item/pprint e)])
-                               page/html))
-              server/update-page!))
+        (-> spec
+            (assoc :page (-> spec
+                             (assoc :items [(item/pprint e)])
+                             page/html))
+            server/update-page!)
         (throw e)))))
 
 
@@ -227,7 +249,9 @@
 (defn make! [spec]
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge spec))
-        {:keys [show]} main-spec]
+        {:keys [show book base-target-path]} main-spec]
+    (when book
+      (babashka.fs/delete-tree base-target-path))
     (sync-resources! main-spec)
     (when show
       (-> main-spec
