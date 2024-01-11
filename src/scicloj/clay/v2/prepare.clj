@@ -171,6 +171,13 @@
        with-out-str
        item/md)))
 
+(add-preparer-from-value-fn!
+ :kind/smile-model
+ (fn [v]
+   (-> v
+       str
+       item/printed-clojure)))
+
 (add-preparer!
  :kind/test
  (fn [{:as context

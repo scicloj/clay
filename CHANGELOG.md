@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha60] - 2024-01-11
+- support for `:kind/smile-model`
+
 ## [2-alpha59] - 2024-01-11
 - updated some deps
 - improved book making: taking care of rendering and repositioning the rendered files

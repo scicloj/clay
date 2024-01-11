@@ -498,6 +498,19 @@ nested-structure-1
                  :datatables {:scrollY 300
                               :paging false}}))
 
+;; ### ML models
+
+(require '[scicloj.noj.v1.datasets :as datasets]
+         '[scicloj.noj.v1.stats :as noj.stats]
+         '[scicloj.ml.core :as ml])
+
+(-> datasets/iris
+    (noj.stats/linear-regression-model :sepal-length
+                                       [:sepal-width
+                                        :petal-width
+                                        :petal-length])
+    ml/thaw-model)
+
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
 (defn vega-lite-point-plot [data]
