@@ -19,7 +19,8 @@
   #{'ns 'comment
     'def 'defonce 'defn 'defmacro
     'defrecord 'defprotocol 'deftype
-    'extend-protocol 'extend})
+    'extend-protocol 'extend
+    'require})
 
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha60] - 2024-01-11
 - support for `:kind/smile-model`
+- hiding the ouptout of calls to `require`
 
 ## [2-alpha59] - 2024-01-11
 - updated some deps
