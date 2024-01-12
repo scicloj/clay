@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha63] - 2024-01-14
+- expressing classes in Quarto more idiomatically (using `::: ... :::` rather than explicit `div`s)
+
 ## [2-alpha62] - 2024-01-12
 - bugfix: passing `:kindly/options` to the item context
 - cleaned up the default table.css, for now 

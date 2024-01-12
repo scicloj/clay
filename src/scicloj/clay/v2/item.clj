@@ -34,11 +34,11 @@
        :md (->> strings
                 (map (fn [s]
                        (format "
-<div class=\"%s\">
+::: {.%s}
 ```clojure
 %s
 ```
-</div>
+:::
 " (name md-class) s)))
                 (string/join "\n"))})))
 
