@@ -16,4 +16,5 @@
  :kindly/options {:datatables {:paging false
                                :scrollY 400
                                :sPaginationType "full_numbers"
-                               :order []}}}
+                               :order []}
+                  :element/max-height "600px"}}

@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha62] - 2024-01-12
 - bugfix: passing `:kindly/options` to the item context
 - cleaned up the default table.css, for now 
+- limiting the height of output elements by default
 
 ## [2-alpha61] - 2024-01-11
 - updated vega-lite versions (#34)

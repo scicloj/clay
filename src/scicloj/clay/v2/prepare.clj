@@ -67,6 +67,16 @@
                  subform)))
             hiccup/html)))
 
+(defn limit-height [hiccup context]
+  #_(prn [:context context])
+  (when hiccup
+    (if-let [max-element-height (-> context
+                                    :kindly/options
+                                    :element/max-height)]
+      [:div {:style {:max-height max-element-height
+                     :overflow-y :auto}}
+       hiccup]
+      hiccup)))
 
 (defn prepare [{:as context
                 :keys [value]}
@@ -79,7 +89,9 @@
                             :kind
                             (@*kind->preparer)
                             (or fallback-preparer))]
-      (preparer complete-context))))
+      (-> complete-context
+          preparer
+          (update :hiccup limit-height complete-context)))))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
