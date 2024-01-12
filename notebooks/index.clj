@@ -1,4 +1,4 @@
-^{:kindly/hide-code? true
+^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
 [:img
  {:style {:width "100px"}
@@ -22,7 +22,7 @@
 
 ;; ## Videos
 
-^{:kindly/hide-code? true
+^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
 (->> [["June 10th 2023"
        "An early overview - babashka-conf"
