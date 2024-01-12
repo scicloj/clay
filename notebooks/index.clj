@@ -111,7 +111,8 @@
 
 (ns index
   (:require [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly.v4.api :as kindly]))
+            [scicloj.kindly.v4.api :as kindly]
+            [tablecloth.api :as tc]))
 
 ;; ## API
 
@@ -484,16 +485,28 @@ nested-structure-1
  {:column-names [:preferred-language :age]
   :row-maps (take 5 people-as-maps)})
 
-(-> people-as-maps
-    tc/dataset
+(def people-as-dataset
+  (tc/dataset people-as-maps))
+
+(-> people-as-dataset
     kind/table)
 
 ;; Additional options may hint at way the table should be rendered.
-;; Clay uses [datatables](https://datatables.net/) to reneder `kind/table`,
+(-> people-as-dataset
+    (kind/table {:element/max-height "300px"}))
+
+(-> people-as-dataset
+    (kind/table {:element/max-height nil}))
+
+;; It is possible to use [datatables](https://datatables.net/) to reneder `kind/table`,
 ;; and in this case the user may specify [datatables options](https://datatables.net/manual/options)
 ;; (see [the full list](https://datatables.net/reference/option/)).
+
 (-> people-as-maps
     tc/dataset
+    (kind/table {:use-datatables true}))
+
+(-> people-as-dataset
     (kind/table {:use-datatables true
                  :datatables {:scrollY 300
                               :paging false}}))
