@@ -247,9 +247,9 @@
                :source-path ["index.clj"
                              "chapter.clj"]
                :base-target-path "book"
-               :show false
-               :run-quarto false
-               :book {:title "Book Example"}}))
+               :book {:title "Book Example"}
+               ;; Empty the target directory first:
+               :clean-up-target-dir true}))
 
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
