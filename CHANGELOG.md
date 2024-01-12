@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha63] - 2024-01-14
 - expressing classes in Quarto more idiomatically (using `::: ... :::` rather than explicit `div`s)
+- the target directory can now be cleaned up by explicitly specifying `:clean-up-target-dir true`, but not by defaults on books as it used to be.
 
 ## [2-alpha62] - 2024-01-12
 - bugfix: passing `:kindly/options` to the item context

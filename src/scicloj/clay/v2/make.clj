@@ -250,8 +250,8 @@
 (defn make! [spec]
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge spec))
-        {:keys [show book base-target-path]} main-spec]
-    (when book
+        {:keys [show book base-target-path clean-up-target-dir]} main-spec]
+    (when clean-up-target-dir
       (babashka.fs/delete-tree base-target-path))
     (sync-resources! main-spec)
     (when show
