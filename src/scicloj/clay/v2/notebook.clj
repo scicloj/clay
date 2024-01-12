@@ -77,7 +77,9 @@
                 (and hide-vars (var? value)))
        (-> note
            (select-keys [:value :code :form
-                         :base-target-path :full-target-path])
+                         :base-target-path
+                         :full-target-path
+                         :kindly/options])
            (update :value deref-if-needed)
            prepare/prepare-or-pprint
            ;; in-div ; TODO: is this needed?
@@ -118,8 +120,10 @@
          (->> (mapcat (fn [note]
                         (-> note
                             complete-note
-                            (assoc :base-target-path base-target-path
-                                   :full-target-path full-target-path)
+                            (merge (-> options
+                                       (select-keys [:base-target-path
+                                                     :full-target-path
+                                                     :kindly/options])))
                             (note-to-items options))))
               (remove nil?))
          (add-info-line options)

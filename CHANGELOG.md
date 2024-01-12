@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha62] - 2024-01-12
+- bugfix: passing `:kindly/options` to the item context
+
+
 ## [2-alpha61] - 2024-01-11
 - updated vega-lite versions (#34)
 
