@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: passing `:kindly/options` to the item context
 - cleaned up the default table.css, for now 
 - limiting the height of output elements by default
+- the subdirectories to synchronize with targets are now configurable through `:subdirs-to-sync`
 
 ## [2-alpha61] - 2024-01-11
 - updated vega-lite versions (#34)

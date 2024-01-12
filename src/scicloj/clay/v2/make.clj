@@ -237,8 +237,9 @@
         (throw e)))))
 
 
-(defn sync-resources! [{:keys [base-target-path]}]
-  (doseq [subdir ["src" "notebooks"]]
+(defn sync-resources! [{:keys [base-target-path
+                               subdirs-to-sync]}]
+  (doseq [subdir subdirs-to-sync]
     (when (babashka.fs/exists? subdir)
       (let [target (str base-target-path "/" subdir)]
         (when (babashka.fs/exists? target)

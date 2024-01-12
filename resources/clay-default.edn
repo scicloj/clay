@@ -1,4 +1,5 @@
 {:base-target-path "docs"
+ :subdirs-to-sync ["src" "notebooks"]
  :format [:html]
  :show true
  :run-quarto true
