@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha64] - 2024-01-14
+- nested kinds in `kind/map`:
+  - bugfix: some kv pairs were skipped
+  - styling change
+
 ## [2-alpha63] - 2024-01-14
 - expressing classes in Quarto more idiomatically (using `::: ... :::` rather than explicit `div`s)
 - the target directory can now be cleaned up by explicitly specifying `:clean-up-target-dir true`, but not by default on books as it used to be.

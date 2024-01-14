@@ -240,16 +240,16 @@
                                      [:td {:valign :top}
                                       (item->hiccup pk nil)]
                                      [:td [:div
-                                           {:style {:margin-top "10px"
-                                                    ;; :border "1px inset"
-                                                    }}
+                                           {:style {:margin-left "10px"}}
                                            (item->hiccup pv nil)]]]])
                                  ;; else
-                                 (->> kv
-                                      (map pr-str)
-                                      (string/join " ")
-                                      item/printed-clojure
-                                      (item->hiccup nil)))))
+                                 (-> (->> kv
+                                          (map pr-str)
+                                          (string/join " ")
+                                          item/printed-clojure)
+                                     (item->hiccup nil)))))
+                        (#(do (prn [:DBG %])
+                              %))
                         (into [:div
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))
