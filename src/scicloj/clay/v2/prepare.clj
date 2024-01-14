@@ -248,8 +248,6 @@
                                           (string/join " ")
                                           item/printed-clojure)
                                      (item->hiccup nil)))))
-                        (#(do (prn [:DBG %])
-                              %))
                         (into [:div
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))

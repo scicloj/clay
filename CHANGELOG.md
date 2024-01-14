@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha65] - 2024-01-14
+- removed unnecessary printing
+
 ## [2-alpha64] - 2024-01-14
 - nested kinds in `kind/map`:
   - bugfix: some kv pairs were skipped
