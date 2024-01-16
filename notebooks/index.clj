@@ -159,8 +159,8 @@
   (clay/make! {:source-path "notebooks/index.clj"
                :single-form '(kind/cytoscape
                               cytoscape-example
-                              {:style {:width "300px"
-                                       :height "300px"}})}))
+                              {:element/style {:width "300px"
+                                               :height "300px"}})}))
 
 ;; Evaluate and render a single form
 ;; in the context of the current namespace (`*ns*`)
@@ -169,8 +169,8 @@
 (comment
   (clay/make! {:single-form '(kind/cytoscape
                               cytoscape-example
-                              {:style {:width "300px"
-                                       :height "300px"}})}))
+                              {:element/style {:width "300px"
+                                               :height "300px"}})}))
 
 ;; Render a single value
 ;; as HTML
@@ -178,8 +178,8 @@
 (comment
   (clay/make! {:single-value (kind/cytoscape
                               cytoscape-example
-                              {:style {:width "300px"
-                                       :height "300px"}})}))
+                              {:element/style {:width "300px"
+                                               :height "300px"}})}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
