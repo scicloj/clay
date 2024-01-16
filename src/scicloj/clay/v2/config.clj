@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.config
   (:require [clojure.java.io :as io]
-            [clojure.edn :as edn]))
+            [clojure.edn :as edn]
+            [scicloj.clay.v2.util.merge :as merge]))
 
 (defn slurp-when-exists [path]
   (when (-> path
@@ -26,4 +27,4 @@
 
 (defn config []
   (-> (default-config)
-      (merge (maybe-user-config))))
+      (merge/deep-merge (maybe-user-config))))

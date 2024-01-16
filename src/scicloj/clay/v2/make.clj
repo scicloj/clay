@@ -15,7 +15,8 @@
             [clojure.java.io :as io]
             [babashka.fs]
             [scicloj.clay.v2.util.fs :as util.fs]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [scicloj.clay.v2.util.merge :as merge]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
   (when source-path
@@ -60,12 +61,14 @@
           :clay))
 
 (defn merge-ns-config [spec]
-  (merge spec
-         (spec->ns-config spec)))
+  (merge/deep-merge
+   spec
+   (spec->ns-config spec)))
 
 (defn extract-specs [config spec]
   (let [{:as base-spec :keys [source-path]}
-        (merge config spec) ; prioritize spec over global config
+        (merge/deep-merge
+         config spec) ; prioritize spec over global config
         ;;
         single-ns-specs (->> (if (sequential? source-path)
                                (->> source-path
@@ -77,7 +80,8 @@
                                         (config/add-field :source-type spec->source-type)
                                         (config/add-field :ns-form spec->ns-form)
                                         merge-ns-config
-                                        (merge (dissoc spec :source-path)) ; prioritize spec over the ns config
+                                        (merge/deep-merge
+                                         (dissoc spec :source-path)) ; prioritize spec over the ns config
                                         (config/add-field :full-target-path spec->full-target-path)))))]
 
     {:main-spec (-> base-spec
@@ -102,22 +106,23 @@
                              (some index-path?))]
     (-> quarto
         (select-keys [:format])
-        (merge {:project {:type "book"}
-                :book {:title (:title book)
-                       :chapters (-> full-target-paths
-                                     (->> (map
-                                           (fn [path]
-                                             (-> path
-                                                 (string/replace
-                                                  (re-pattern (str "^"
-                                                                   base-target-path
-                                                                   "/"))
-                                                  "")
-                                                 (string/replace
-                                                  #"\.html$"
-                                                  ".qmd")))))
-                                     (cond->> index-included?
-                                       (cons (str base-target-path "/index.qmd"))))}}))))
+        (merge/deep-merge
+         {:project {:type "book"}
+          :book {:title (:title book)
+                 :chapters (-> full-target-paths
+                               (->> (map
+                                     (fn [path]
+                                       (-> path
+                                           (string/replace
+                                            (re-pattern (str "^"
+                                                             base-target-path
+                                                             "/"))
+                                            "")
+                                           (string/replace
+                                            #"\.html$"
+                                            ".qmd")))))
+                               (cond->> index-included?
+                                 (cons (str base-target-path "/index.qmd"))))}}))))
 
 (defn write-quarto-book-config! [quarto-book-config
                                  {:keys [base-target-path]}]
@@ -166,7 +171,7 @@
      (babashka.fs/delete-tree (str base-target-path "/_book"))
      (when show
        (-> spec
-           (merge {:full-target-path "index.html"})
+           (assoc :full-target-path "index.html")
            server/update-page!))
      [:ok])])
 
@@ -218,11 +223,11 @@
                                  (mapv println))
                             (println [:created full-target-path (time/now)])
                             (-> spec
-                                (merge {:full-target-path full-target-path})
+                                (assoc :full-target-path full-target-path)
                                 server/update-page!))
                         ;; else, just show the qmd file
                         (-> spec
-                            (merge {:full-target-path qmd-path})
+                            (assoc :full-target-path qmd-path)
                             server/update-page!)))
                     (vec
                      (concat [:wrote qmd-path]
@@ -249,7 +254,8 @@
 
 (defn make! [spec]
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
-                                                           (merge spec))
+                                                           (merge/deep-merge
+                                                            spec))
         {:keys [show book base-target-path clean-up-target-dir]} main-spec]
     (when clean-up-target-dir
       (babashka.fs/delete-tree base-target-path))

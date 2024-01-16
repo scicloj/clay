@@ -8,7 +8,8 @@
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read :as read]
    [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.files :as files]))
+   [scicloj.clay.v2.files :as files]
+   [scicloj.clay.v2.util.merge :as merge]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -120,10 +121,11 @@
          (->> (mapcat (fn [note]
                         (-> note
                             complete-note
-                            (merge (-> options
-                                       (select-keys [:base-target-path
-                                                     :full-target-path
-                                                     :kindly/options])))
+                            (merge/deep-merge
+                             (-> options
+                                 (select-keys [:base-target-path
+                                               :full-target-path
+                                               :kindly/options])))
                             (note-to-items options))))
               (remove nil?))
          (add-info-line options)

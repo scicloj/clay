@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha66] - 2024-01-15
+- using deep merge when merging configurations
+
 ## [2-alpha65] - 2024-01-14
 - removed unnecessary printing
 

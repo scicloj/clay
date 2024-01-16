@@ -8,7 +8,8 @@
    [nextjournal.markdown :as md]
    [clojure.walk]
    [hiccup.core :as hiccup]
-   [charred.api :as charred]))
+   [charred.api :as charred]
+   [scicloj.clay.v2.util.merge :as merge]))
 
 (def *kind->preparer
   (atom {}))
@@ -83,7 +84,8 @@
                {:keys [fallback-preparer]}]
   (let [complete-context (-> context
                              (update :kindly/options
-                                     merge (-> value meta :kindly/options)))]
+                                     merge/deep-merge
+                                     (-> value meta :kindly/options)))]
     (when-let [preparer (-> complete-context
                             kindly-advice/advise
                             :kind
