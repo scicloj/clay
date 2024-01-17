@@ -23,6 +23,15 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 [read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
+## Example projects using Clay
+
+- [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
+- [Clay documentation](https://scicloj.github.io/clay/)
+- [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
+- [Noj documentation](https://scicloj.github.io/noj/) - WIP
+- [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
+- [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
+
 ## Discussion
 
 Regular updates are given at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/).
