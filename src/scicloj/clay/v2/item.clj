@@ -96,16 +96,19 @@
   (let [*counter (atom 0)]
     #(str "id" (swap! *counter inc))))
 
-(defn reagent [form]
+(defn reagent [{:as context
+                :keys [value]}]
   (let [id (next-id)]
     {:hiccup [:div {:id id}
               [:script {:type "application/x-scittle"}
                (pr-str
                 (list 'reagent.dom/render
-                      form
+                      value
                       (list 'js/document.getElementById id)))]]
      :deps (cons :reagent
-                 (-> form meta :deps))}))
+                 (-> context
+                     :kindly/options
+                     :reagent/deps))}))
 
 (defn extract-style [context]
   (-> context

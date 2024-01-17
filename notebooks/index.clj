@@ -656,7 +656,6 @@ nested-structure-1
 ;; This example was adapted from [the Leaflet website](https://leafletjs.com/).
 
 (kind/reagent
- ^{:deps [:leaflet]}
  ['(fn []
      [:div
       [:div {:style {:height "200px"}
@@ -675,14 +674,14 @@ nested-structure-1
                           (.marker (clj->js [51.5 -0.09]))
                           (.addTo m)
                           (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
-                          (.openPopup))))}]])])
+                          (.openPopup))))}]])]
+ {:reagent/deps [:leaflet]})
 
 ;; ### 3DMol.js
 
 ;; Embedding a 3Dmol Viewer ([original example](https://3dmol.csb.pitt.edu/doc/tutorial-embeddable.html)):
 
 (kind/reagent
- ^{:deps [:three-d-mol]}
  ['(fn [{:keys [data-pdb]}]
      [:div {:style {:height "400px"
                     :width "400px"
@@ -692,7 +691,8 @@ nested-structure-1
             :data-backgroundcolor "0xffffff"
             :data-style "stick"
             :data-ui true}])
-  {:data-pdb "2POR"}])
+  {:data-pdb "2POR"}]
+ {:reagent/deps [:three-d-mol]})
 
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
 
@@ -700,7 +700,6 @@ nested-structure-1
   (slurp "https://files.rcsb.org/download/2POR.pdb"))
 
 (kind/reagent
- ^{:deps [:three-d-mol]}
  ['(fn [{:keys [pdb-data]}]
      [:div
       {:style {:width "100%"
@@ -723,7 +722,8 @@ nested-structure-1
                 (.zoomTo viewer)
                 (.render viewer)
                 (.zoom viewer 0.8 2000)))}])
-  {:pdb-data pdb-2POR}])
+  {:pdb-data pdb-2POR}]
+ {:reagent/deps [:three-d-mol]})
 
 ;; ### Embedded Portal
 

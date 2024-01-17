@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha67] - 2024-01-17
+- reagent deps are now expressed through kindly options
+
+
 ## [2-alpha66] - 2024-01-15
 - using deep merge when merging configurations
 

@@ -310,7 +310,7 @@
   (let [*counter (atom 0)]
     #(str "id" (swap! *counter inc))))
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/reagent
  #'item/reagent)
 
