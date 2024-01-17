@@ -248,3 +248,19 @@ Plotly.newPlot(document.currentScript.parentElement,
                            charred/write-json-str
                            (->> (format "vegaEmbed(document.currentScript.parentElement, %s);")))]]
      :deps [:vega]}))
+
+
+(defn video [{:keys [youtube-id
+                     iframe-width
+                     iframe-height
+                     allowfullscreen]
+              :or {allowfullscreen true}}]
+  {:hiccup [:iframe
+            (merge
+             (when iframe-height
+               {:height iframe-height})
+             (when iframe-width
+               {:width iframe-width})
+             {:src (str "https://www.youtube.com/embed/"
+                        youtube-id)
+              :allowfullscreen allowfullscreen})]})

@@ -376,3 +376,7 @@
 (add-preparer!
  :kind/vega-lite
  #'item/vega-embed)
+
+(add-preparer-from-value-fn!
+ :kind/video
+ #'item/video)

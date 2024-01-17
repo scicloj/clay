@@ -708,6 +708,14 @@ nested-structure-1
   {:pdb-data pdb-2POR}]
  {:reagent/deps [:three-d-mol]})
 
+;; ### Video
+
+(kind/video {:youtube-id "MXHI4mgfVk8"})
+
+(kind/video {:youtube-id "MXHI4mgfVk8"
+             :iframe-width 480
+             :iframe-height 270})
+
 ;; ### Embedded Portal
 
 (kind/portal {:x (range 3)})

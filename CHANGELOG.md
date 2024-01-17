@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha68] - 2024-01-18
+- `kind/video` support
+
 ## [2-alpha67] - 2024-01-17
 - reagent deps are now expressed through kindly options
 
