@@ -6,7 +6,8 @@
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
-            [hiccup.page]))
+            [hiccup.page]
+            [clojure.string :as str]))
 
 (defn in-vector [v]
   (if (vector? v)
@@ -253,7 +254,8 @@ Plotly.newPlot(document.currentScript.parentElement,
 (defn video [{:keys [youtube-id
                      iframe-width
                      iframe-height
-                     allowfullscreen]
+                     allowfullscreen
+                     embed-options]
               :or {allowfullscreen true}}]
   {:hiccup [:iframe
             (merge
@@ -262,5 +264,10 @@ Plotly.newPlot(document.currentScript.parentElement,
              (when iframe-width
                {:width iframe-width})
              {:src (str "https://www.youtube.com/embed/"
-                        youtube-id)
+                        youtube-id
+                        (some->> embed-options
+                                 (map (fn [[k v]]
+                                        (format "%s=%s" (name k) v)))
+                                 (str/join "&")
+                                 (str "?")))
               :allowfullscreen allowfullscreen})]})

@@ -713,8 +713,17 @@ nested-structure-1
 (kind/video {:youtube-id "MXHI4mgfVk8"})
 
 (kind/video {:youtube-id "MXHI4mgfVk8"
+             :allowfullscreen false})
+
+(kind/video {:youtube-id "MXHI4mgfVk8"
              :iframe-width 480
              :iframe-height 270})
+
+(kind/video {:youtube-id "MXHI4mgfVk8"
+             :embed-options {:mute 1
+                             :controls 0}})
+
+;; See, e.g.,  [HTML Youtube Videos](https://www.w3schools.com/html/html_youtube.asp) on w3schools.
 
 ;; ### Embedded Portal
 
