@@ -6,9 +6,8 @@ Clay is a small Clojure tool for a dynamic workflow of data visualization and li
 
 
 ## Getting Started
-rendere 
-
 Add Clay to your project dependencies:
+
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 
 (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).)
