@@ -4,14 +4,26 @@
 
 Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
+
+## Getting Started
+rendere 
+
+Add Clay to your project dependencies:
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 
-## Usage
+(If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).)
 
-Add [org.scicloj/clay](https://clojars.org/org.scicloj/clay) as a dependency. 
-  * (If you are building a library and using Clay to document it, probably you do not need Clay to be a dependency of the library, but only of your dev environment, so you may define it as an extra dependency in a Deps alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).)
+To render a given Clojure namespace, say `"notebooks/index.clj"`, you may do the following:
+```clj
+(require '[scicloj.clay.v2.api :as clay])
+(clay/make! {:source-path "notebooks/index.clj"})
+```
+This will render an HTML page and serve it in Clay's browser view.
+Note that Clay does not need to be mentioned in the namespace itself.
 
-Setup and usage can be found in the [Documentation](https://scicloj.github.io/clay/).
+More details may be found in the [Documentation](https://scicloj.github.io/clay/). In particular:
+* See the [API](scicloj.github.io/clay#api) and [Configuration](scicloj.github.io/clay#configuration) subsections for more options and variations.
+* See the [Setup](scicloj.github.io/clay#setup) section and recent [Videos](scicloj.github.io/clay#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 
 ## Related projects
 
