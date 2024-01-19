@@ -5,15 +5,18 @@
   :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
   :alt "Clay logo"}]
 
+;; ## About
 
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly-noted/kindly) convention.
+;; It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from source code and comments.
+;;
 ;;
 ;; Source: [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
 ;;
 ;; Artifact: [![(Clojars coordinates)](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
-
-;; ## Status
-;; This project will soon exit alpha-stage and have a stable release.
+;;
+;; Status: This project will soon exit alpha-stage and have a stable release.
+;;
 ;;
 ;; Clay is developed by [Timothy Pratley](https://github.com/timothypratley/) & [Daniel Slutsky](https://github.com/daslu) in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
 
@@ -135,14 +138,45 @@
 ;;
 ;; For more information about commands, see the Cursive documentation on [REPL commands and substitutions](https://cursive-ide.com/userguide/repl.html#repl-commands).
 
-;; ## Starting a Clay namespace
+;; ## Example notebook namespace
 
-;; Now, we can write a namespace and play with Clay.
+;; This notebook is created by [a Clojure namespace](https://github.com/scicloj/clay/blob/main/notebooks/index.clj).
+;; Here is the namespace definition and a few examples of what such a namespace may contain.
 
 (ns index
   (:require [scicloj.kindly.v4.kind :as kind]
             [scicloj.kindly.v4.api :as kindly]
-            [tablecloth.api :as tc]))
+            [tablecloth.api :as tc]
+            [scicloj.noj.v1.datasets :as datasets]
+            [scicloj.noj.v1.stats :as noj.stats]
+            [scicloj.noj.v1.vis.hanami :as hanami]
+            [scicloj.noj.v1.vis.hanami.templates :as vht]
+            [scicloj.ml.core :as ml]))
+
+;; A Hiccup spec:
+(kind/hiccup
+ [:div {:style {:background "#efe9e6"
+                :border-style :solid}}
+  [:ul
+   [:li "one"]
+   [:li "two"]
+   [:li "three"]]])
+
+;; A dataset using [Tablecloth](https://scicloj.github.io/tablecloth/):
+(-> {:x (range 5)
+     :y (repeatedly 5 rand)}
+    tc/dataset
+    (tc/set-dataset-name "my dataset"))
+
+;; A plot using [Hanami](https://github.com/jsa-aerial/hanami) and [Noj](https://scicloj.github.io/noj/):
+
+(-> datasets/iris
+    (hanami/plot vht/rule-chart
+                 {:X "sepal-width"
+                  :X2 "sepal-length"
+                  :Y "sepal-length"
+                  :Y2 "sepal-length"
+                  :COLOR "species"}))
 
 ;; ## API
 
@@ -527,10 +561,6 @@ nested-structure-1
                               :paging false}}))
 
 ;; ### ML models
-
-(require '[scicloj.noj.v1.datasets :as datasets]
-         '[scicloj.noj.v1.stats :as noj.stats]
-         '[scicloj.ml.core :as ml])
 
 (-> datasets/iris
     (noj.stats/linear-regression-model :sepal-length
