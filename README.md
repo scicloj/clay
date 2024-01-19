@@ -12,7 +12,7 @@ Add Clay to your project dependencies:
 
 (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj).)
 
-To render a given Clojure namespace, say `"notebooks/index.clj"`, you may do the following:
+To render a given Clojure namespace, say `"notebooks/index.clj"`, you may run the following in the REPL:
 ```clj
 (require '[scicloj.clay.v2.api :as clay])
 (clay/make! {:source-path "notebooks/index.clj"})
