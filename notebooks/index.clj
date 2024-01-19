@@ -42,6 +42,7 @@
       ["Dec. 17th 2023"
        "Cursive integration, API, configuration - blogging demo"
        "GsML75MtNXw"]]
+     reverse
      (map (fn [[date title youtube-id]]
             [:tr
              [:td date]
