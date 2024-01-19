@@ -68,9 +68,7 @@
             [:tr
              [:td date]
              [:td title]
-             [:td [:iframe
-                   {:src (str "https://www.youtube.com/embed/" youtube-id)
-                    :allowfullscreen "allowfullscreen"}]]]))
+             [:td ^:kind/video {:youtube-id youtube-id}]]))
      (into [:table]))
 
 ;; ## Setup
