@@ -20,6 +20,8 @@ To render a given Clojure namespace, say `"notebooks/index.clj"`, you may run th
 This will render an HTML page and serve it in Clay's browser view.
 Note that Clay does not need to be mentioned in the namespace itself.
 
+## Docs
+
 More details may be found in the [Documentation](https://scicloj.github.io/clay/). In particular:
 * See the [API](https://scicloj.github.io/clay#api) and [Configuration](https://scicloj.github.io/clay#configuration) subsections for more options and variations.
 * See the [Setup](https://scicloj.github.io/clay#setup) section and recent [Videos](https://scicloj.github.io/clay#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
