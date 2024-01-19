@@ -36,7 +36,7 @@
 ["(require '[scicloj.clay.v2.api :as clay])
 (clay/make! {:source-path \"notebooks/index.clj\"})"]
 ;; This will render an HTML page and serve it in Clay's browser view.
-;; Note that Clay does not need to be mentioned in the namespace itself.
+;; Note that Clay does not need to be mentioned in the namespace we wish to render.
 ;;
 ;; See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
 ;;
