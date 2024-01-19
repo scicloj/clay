@@ -37,7 +37,7 @@
 ;;
 ;; See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
 ;;
-;; See [Setup](index.html#setup) & [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+;; See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 
 ;;
 
