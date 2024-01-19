@@ -20,6 +20,27 @@
 ;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
 ;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
 
+;; ## Getting started
+
+;; Add Clay to your project dependencies (or if you wish, to the extra dependencies under [an alias](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/):
+;;
+;; [![(the current coordinates at Clojars)](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
+
+;;
+;; To render a given Clojure namespace, say `"notebooks/index.clj"`, you may do the following:
+^{:kindly/hide-code true
+  :kindly/kind :kind/code}
+["(require '[scicloj.clay.v2.api :as clay])
+(clay/make! {:source-path \"notebooks/index.clj\"})"]
+;; This will render an HTML page and serve it in Clay's browser view.
+;; Note that Clay does not need to be mentioned in the namespace itself.
+;;
+;; See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
+;;
+;; See [Setup](index.html#setup) & [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+
+;;
+
 ;; ## Videos
 
 ^{:kindly/hide-code true
