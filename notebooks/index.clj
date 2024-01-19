@@ -42,7 +42,14 @@
 ;;
 ;; See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 
-;;
+;; ## Example projects using Clay
+
+;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
+;; - [Clay documentation](https://scicloj.github.io/clay/)
+;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
+;; - [Noj documentation](https://scicloj.github.io/noj/) - WIP
+;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
+;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 
 ;; ## Videos
 
@@ -866,12 +873,3 @@ nested-structure-1
              :y2 {:field "petal_length", :type "quantitative"},
              :color {:field "species", :type "nominal"}}
   :background "floralwhite"})
-
-;; ## Example projects using Clay
-
-;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
-;; - [Clay documentation](https://scicloj.github.io/clay/)
-;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
-;; - [Noj documentation](https://scicloj.github.io/noj/) - WIP
-;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
-;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
