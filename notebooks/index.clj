@@ -257,7 +257,7 @@
 (comment
   (clay/browse!))
 
-;; ## Configutation
+;; ## Configuration
 
 ;; Calls to the `make!` function are affected by various parameters
 ;; which collected as one nested map.
