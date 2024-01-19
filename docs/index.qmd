@@ -29,9 +29,33 @@ Clay is developed by [Timothy Pratley](https://github.com/timothypratley/) & [Da
 - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
 - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
 
+## Getting started
+Add Clay to your project dependencies (or if you wish, to the extra dependencies under [an alias](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/):
+
+[![(the current coordinates at Clojars)](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
+
+To render a given Clojure namespace, say `"notebooks/index.clj"`, you may do the following:
+
+
+::: {.sourceClojure}
+```clojure
+(require '[scicloj.clay.v2.api :as clay])
+(clay/make! {:source-path "notebooks/index.clj"})
+```
+:::
+
+
+This will render an HTML page and serve it in Clay's browser view.
+Note that Clay does not need to be mentioned in the namespace itself.
+
+See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
+
+See [Setup](index.html#setup) & [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+
+
 ## Videos
 
-<div style="max-height:600px;overflow-y:auto;"><table><tr><td>June 10th 2023</td><td>An early overview - babashka-conf</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/HvhMsv3iVGM"></iframe></td></tr><tr><td>Dec. 1st 2023</td><td>Kindly & Clay overview - visual-tools group - see Daniel's & Tim's parts</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/DAQnvAgBma8"></iframe></td></tr><tr><td>Dec. 12th 2023</td><td>Demo & Clay overview - London Clojurians - see Tim's part</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/skMMvxWjmNM"></iframe></td></tr><tr><td>Dec. 16th 2023</td><td>Calva integration - datavis demo</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/X_SsjhmG5Ok"></iframe></td></tr><tr><td>Dec. 17th 2023</td><td>CIDER integration - image processing demo</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/fd4kjlws6Ts"></iframe></td></tr><tr><td>Dec. 17th 2023</td><td>Cursive integration, API, configuration - blogging demo</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/GsML75MtNXw"></iframe></td></tr></table></div>
+<div style="max-height:600px;overflow-y:auto;"><table><tr><td>Dec. 17th 2023</td><td>Cursive integration, API, configuration - blogging demo</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/GsML75MtNXw"></iframe></td></tr><tr><td>Dec. 17th 2023</td><td>CIDER integration - image processing demo</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/fd4kjlws6Ts"></iframe></td></tr><tr><td>Dec. 16th 2023</td><td>Calva integration - datavis demo</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/X_SsjhmG5Ok"></iframe></td></tr><tr><td>Dec. 12th 2023</td><td>Demo & Clay overview - London Clojurians - see Tim's part</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/skMMvxWjmNM"></iframe></td></tr><tr><td>Dec. 1st 2023</td><td>Kindly & Clay overview - visual-tools group - see Daniel's & Tim's parts</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/DAQnvAgBma8"></iframe></td></tr><tr><td>June 10th 2023</td><td>An early overview - babashka-conf</td><td><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/HvhMsv3iVGM"></iframe></td></tr></table></div>
 
 
 ## Setup
