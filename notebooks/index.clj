@@ -6,7 +6,7 @@
   :alt "Clay logo"}]
 
 
-;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly/) convention.
+;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly-noted/kindly) convention.
 ;;
 ;; Source: [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
 ;;
@@ -302,7 +302,7 @@
 ;; ## Kinds
 
 ;; The way things should be visualized is determined by the advice of
-;; [Kindly](https://github.com/scicloj/kindly).
+;; [Kindly](https://scicloj.github.io/kindly-noted/kindly).
 
 ;; In this namespace we demonstrate Kindly's default advice.
 ;; User-defined Kindly advices should work as well.
