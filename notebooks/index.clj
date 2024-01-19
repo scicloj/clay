@@ -174,9 +174,11 @@
     (hanami/plot vht/rule-chart
                  {:X "sepal-width"
                   :X2 "sepal-length"
-                  :Y "sepal-length"
-                  :Y2 "sepal-length"
-                  :COLOR "species"}))
+                  :Y "petal-width"
+                  :Y2 "petal-length"
+                  :COLOR "species"
+                  :SIZE 3
+                  :OPACITY 0.2}))
 
 ;; ## API
 
