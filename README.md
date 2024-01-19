@@ -21,8 +21,8 @@ This will render an HTML page and serve it in Clay's browser view.
 Note that Clay does not need to be mentioned in the namespace itself.
 
 More details may be found in the [Documentation](https://scicloj.github.io/clay/). In particular:
-* See the [API](scicloj.github.io/clay#api) and [Configuration](scicloj.github.io/clay#configuration) subsections for more options and variations.
-* See the [Setup](scicloj.github.io/clay#setup) section and recent [Videos](scicloj.github.io/clay#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+* See the [API](https://scicloj.github.io/clay#api) and [Configuration](https://scicloj.github.io/clay#configuration) subsections for more options and variations.
+* See the [Setup](https://scicloj.github.io/clay#setup) section and recent [Videos](https://scicloj.github.io/clay#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 
 ## Related projects
 
