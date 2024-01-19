@@ -18,7 +18,7 @@ To render a given Clojure namespace, say `"notebooks/index.clj"`, you may run th
 (clay/make! {:source-path "notebooks/index.clj"})
 ```
 This will render an HTML page and serve it in Clay's browser view.
-Note that Clay does not need to be mentioned in the namespace itself.
+Note that Clay does not need to be mentioned in the namespace we are rendering.
 
 ## Docs
 
