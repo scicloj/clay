@@ -135,8 +135,8 @@
               font-links
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
-              #_[:style (styles/main :code)]
-              [:style (styles/highlight :qtcreator-light)]
+              [:style (styles/main :code)]
+              [:style (styles/highlight :panda-syntax-light)]
               (include-from-a-local-file
                "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
                "bootstrap"

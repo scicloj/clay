@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha69]
 - updated highlight.js (version 11.9.0)
-
+- code style change for `[:html]` target
 
 ## [2-alpha68] - 2024-01-18
 - `kind/video` support
