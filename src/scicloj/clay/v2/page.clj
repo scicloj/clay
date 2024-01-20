@@ -60,8 +60,7 @@
    :portal {:js {:from-local-copy [portal/url]}}
    :html-default {:js {:from-local-copy
                        ["https://code.jquery.com/jquery-3.6.0.min.js"
-                        "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                        "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"]}}
+                        "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
    :md-default {:js {:from-local-copy
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
                       "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}})
@@ -136,12 +135,8 @@
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
               [:style (styles/main :code)]
+              [:style (styles/main :bootswatch-spacelab-bootstrap.min)]
               [:style (styles/highlight :panda-syntax-light)]
-              (include-from-a-local-file
-               "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-               "bootstrap"
-               :css
-               spec)
               (when toc?
                 (include-from-a-local-file
                  "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"
