@@ -119,18 +119,18 @@
 ;; **Name:** Send form to Clay\
 ;; **Execution:** Command
 ;;
-;; ```clojure
-;; (do (require '[scicloj.clay.v2.api :as clay])
-;;     (clay/make! {:single-form '~form-before-caret
-;;                  :source-path ["~file-path"]}))
-;; ```
+^{:kind/code true
+  :kindly/hide-code true}
+["(do (require '[scicloj.clay.v2.api :as clay])
+    (clay/make! {:single-form '~form-before-caret
+                 :source-path [\"~file-path\"]}))"]
 ;;
 ;; You might also like to create a command to compile the namespace:
 ;;
-;; ```clojure
-;; (do (require '[scicloj.clay.v2.api :as clay])
-;;     (clay/make! {:source-path ["~file-path"]}))
-;; ```
+^{:kind/code true
+  :kindly/hide-code true}
+["(do (require '[scicloj.clay.v2.api :as clay])
+    (clay/make! {:source-path [\"~file-path\"]}))"]
 ;;
 ;; Or a `top-level-form` (replace `form-before-caret` with `top-level-form`).
 ;;
