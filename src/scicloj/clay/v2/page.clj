@@ -136,6 +136,7 @@
               [:style (styles/main :loader)]
               [:style (styles/main :code)]
               [:style (styles/main :bootswatch-spacelab-bootstrap-adapted-bg-light.min)]
+              [:style (styles/main :bootstrap-generated-by-quarto.min)]
               [:style (styles/highlight :panda-syntax-light)]
               (when toc?
                 (include-from-a-local-file
