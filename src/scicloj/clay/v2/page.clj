@@ -165,9 +165,9 @@
                                           :css
                                           spec)))))))
               [:title (or title "Clay")]]
-        body [:body  {:style {:background "#fcfcfc"
-                              :font-family "'Roboto', sans-serif"
-                              :width "90%"
+        body [:body  {:style {;;:background "#fcfcfc"
+                              ;; :font-family "'Roboto', sans-serif"
+                              ;; :width "95%"
                               :margin "auto"}
                       :data-spy "scroll"
                       :data-target "#toc"}
