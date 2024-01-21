@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha72] - 2024-01-21
+- removed highlighting theme from default config - using the Quarto default now
+
 ## [2-alpha71] - 2024-01-21
 - bugfix - adding a Portal item to ensure Portal syntax highlight on `[:html]` targets
 
