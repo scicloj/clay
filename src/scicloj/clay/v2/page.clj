@@ -135,7 +135,7 @@
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
               [:style (styles/main :code)]
-              [:style (styles/main :bootswatch-spacelab-bootstrap.min)]
+              [:style (styles/main :bootswatch-spacelab-bootstrap-adapted-bg-light.min)]
               [:style (styles/highlight :panda-syntax-light)]
               (when toc?
                 (include-from-a-local-file
