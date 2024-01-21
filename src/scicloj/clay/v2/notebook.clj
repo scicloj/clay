@@ -106,7 +106,8 @@
             base-target-path
             full-target-path
             single-form
-            single-value]}]
+            single-value
+            format]}]
    (files/init-target! full-target-path)
    (let [code (some-> full-source-path
                       slurp)
