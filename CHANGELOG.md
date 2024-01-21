@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha69]
+## [2-alpha69] - 2024-01-21
 - updated highlight.js (version 11.9.0) - but we'll use it through the standalone Portal bundle for now
 - code style change for `[:html]` target - using Portal's syntax highlighting
 - using Bootswatch Spacelab theme for `[:html]` target - adapted for lighter bg-light
