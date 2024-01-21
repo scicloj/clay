@@ -119,13 +119,13 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
 
-
 (defn html [{:as spec
              :keys [items title toc?]}]
   (let [special-libs (->> items
                           (mapcat :deps)
                           distinct
-                          (cons :html-default))
+                          (concat [:html-default
+                                   :portal]))
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
@@ -177,10 +177,7 @@
                  "bootstrap-toc"
                  :js
                  spec))
-              [:script {:type "text/javascript"}
-               (-> "highlight/highlight.min.js"
-                   io/resource
-                   slurp)]
+
               (->> special-libs
                    (mapcat (fn [lib]
                              (->> lib
@@ -214,6 +211,10 @@
                            (prepare/item->hiccup item
                                                  {:id (str "item" i)})]))
                        (into [:div]))]]]]
+              [:script {:type "text/javascript"}
+               (-> "highlight/highlight.min.js"
+                   io/resource
+                   slurp)]
               [:script {:type "text/javascript"}
                "hljs.highlightAll();"]]]
     (-> (hiccup.page/html5 head body)

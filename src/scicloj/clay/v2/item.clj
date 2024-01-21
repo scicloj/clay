@@ -45,12 +45,12 @@
 
 (def source-clojure
   (clojure-code-item {:tag :source-clojure
-                      :hiccup-element :code.language-clojure.bg-light
+                      :hiccup-element :code.sourceCode.language-clojure.source-clojure.bg-light
                       :md-class :sourceClojure}))
 
 (def printed-clojure
   (clojure-code-item {:tag :printed-clojure
-                      :hiccup-element :code.language-clojure
+                      :hiccup-element :code.sourceCode.language-clojure.printed-clojure
                       :md-class :printedClojure}))
 
 

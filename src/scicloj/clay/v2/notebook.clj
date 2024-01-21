@@ -9,7 +9,8 @@
    [scicloj.clay.v2.read :as read]
    [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.files :as files]
-   [scicloj.clay.v2.util.merge :as merge]))
+   [scicloj.clay.v2.util.merge :as merge]
+   [scicloj.kindly.v4.kind :as kind]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -129,6 +130,9 @@
                             (note-to-items options))))
               (remove nil?))
          (add-info-line options)
+         (cond-> (= format [:html])
+           ;; a trick to use portal syntax highlighting
+           (concat [(item/portal [])]))
          doall))))
 
 
