@@ -702,24 +702,23 @@ nested-structure-1
 
 (kind/reagent
  ['(fn []
-     [:div
-      [:div {:style {:height "200px"}
-             :ref (fn [el]
-                    (let [m (-> js/L
-                                (.map el)
-                                (.setView (clj->js [51.505 -0.09])
-                                          13))]
-                      (-> js/L
-                          (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                      (clj->js
-                                       {:maxZoom 19
-                                        :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
-                          (.addTo m))
-                      (-> js/L
-                          (.marker (clj->js [51.5 -0.09]))
-                          (.addTo m)
-                          (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
-                          (.openPopup))))}]])]
+     [:div {:style {:height "200px"}
+            :ref (fn [el]
+                   (let [m (-> js/L
+                               (.map el)
+                               (.setView (clj->js [51.505 -0.09])
+                                         13))]
+                     (-> js/L
+                         (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                     (clj->js
+                                      {:maxZoom 19
+                                       :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
+                         (.addTo m))
+                     (-> js/L
+                         (.marker (clj->js [51.5 -0.09]))
+                         (.addTo m)
+                         (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
+                         (.openPopup))))}])]
  {:reagent/deps [:leaflet]})
 
 ;; ### 3DMol.js
