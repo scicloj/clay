@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha72] - 2024-01-21
 - removed highlighting theme from default config - using the Quarto default now
+- added missing css (forgot to commit in `"2-alpha70"`)
 
 ## [2-alpha71] - 2024-01-21
 - bugfix - adding a Portal item to ensure Portal syntax highlight on `[:html]` targets
