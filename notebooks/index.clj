@@ -437,6 +437,9 @@
 (kind/md
  "Let $x=9$. Then $$x+11=20$$")
 
+;; One current known issue is that LaTeX would not render correctly
+;; when nesting `kind/md` inside other kinds.
+
 ;; ### Images
 
 ;; Java BufferedImage objects are displayed as images.
@@ -619,6 +622,8 @@ nested-structure-1
 
 ;; ### Cytoscape
 
+;; See the [Cytoscape docs](https://cytoscape.org/).
+
 (def cytoscape-example
   {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
                       {:data {:id "b"}}
@@ -675,6 +680,8 @@ nested-structure-1
 
 ;; ### Plotly
 
+;; See [the plotly.js docs](https://plotly.com/javascript/).
+
 (def plotly-example
   {:data [{:x [0 1 3 2]
            :y [0 6 4 5]
@@ -719,6 +726,7 @@ nested-structure-1
                          (.addTo m)
                          (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
                          (.openPopup))))}])]
+ ;; Note we need to mention the dependency:
  {:reagent/deps [:leaflet]})
 
 ;; ### 3DMol.js
@@ -736,6 +744,7 @@ nested-structure-1
             :data-style "stick"
             :data-ui true}])
   {:data-pdb "2POR"}]
+ ;; Note we need to mention the dependency:
  {:reagent/deps [:three-d-mol]})
 
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
@@ -767,6 +776,7 @@ nested-structure-1
                 (.render viewer)
                 (.zoom viewer 0.8 2000)))}])
   {:pdb-data pdb-2POR}]
+ ;; Note we need to mention the dependency:
  {:reagent/deps [:three-d-mol]})
 
 ;; ### Video
