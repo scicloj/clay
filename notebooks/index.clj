@@ -788,8 +788,10 @@ nested-structure-1
 
 ;; ### Embedded Portal
 
+;; We may embed [Portal](https://github.com/djblue/portal)'s data-navigating viewers using `kind/portal`.
 (kind/portal {:x (range 3)})
 
+;; Note that `kind/portal` applies the [kind-portal](https://github.com/scicloj/kind-portal) adapter to nested kinds.
 (kind/portal
  [(kind/hiccup [:img {:height 50 :width 50
                       :src "https://clojure.org/images/clojure-logo-120b.png"}])
