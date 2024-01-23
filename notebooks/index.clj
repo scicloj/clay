@@ -814,6 +814,8 @@ nested-structure-1
 
 ;; ### Nesting kinds in Hiccup
 
+;; Kinds are treated recursively inside Hiccup:
+
 (kind/hiccup
  [:div {:style {:background "#f5f3ff"
                 :border "solid"}}
@@ -867,6 +869,9 @@ nested-structure-1
 
 
 ;; ### Nesting kinds in Tables
+
+;; Kinds are treated recursively inside Tables:
+
 
 (kind/table
  {:column-names [:x :y]
