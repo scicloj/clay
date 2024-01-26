@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha73] - 2024-01-26
 - added d3 js dependency
 
-
 ## [2-alpha72] - 2024-01-21
 - removed highlighting theme from default config - using the Quarto default now
 - added missing css (forgot to commit in `"2-alpha70"`)
