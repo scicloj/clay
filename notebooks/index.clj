@@ -729,6 +729,66 @@ nested-structure-1
  ;; Note we need to mention the dependency:
  {:reagent/deps [:leaflet]})
 
+;; ### D3
+;; The following example is adapted from [hiccup-d3](https://rollacaster.github.io/hiccup-d3/).
+;; The code is a bit different, e.g. `(.scaleOrdinal js/d3 (.-schemeCategory10 js/d3))`
+;; instead of `(d3/scaleOrdinal d3/schemeCategory10)`.
+;; We still need to figure out how to make hiccup-d3's examples work as they are.
+
+(let [letter-frequencies [{:letter "A", :frequency 0.08167}
+                          {:letter "B", :frequency 0.01492}
+                          {:letter "C", :frequency 0.02782}
+                          {:letter "D", :frequency 0.04253}
+                          {:letter "E", :frequency 0.12702}
+                          {:letter "F", :frequency 0.02288}
+                          {:letter "G", :frequency 0.02015}
+                          {:letter "H", :frequency 0.06094}
+                          {:letter "I", :frequency 0.06966}
+                          {:letter "J", :frequency 0.00153}
+                          {:letter "K", :frequency 0.00772}
+                          {:letter "L", :frequency 0.04025}
+                          {:letter "M", :frequency 0.02406}
+                          {:letter "N", :frequency 0.06749}
+                          {:letter "O", :frequency 0.07507}
+                          {:letter "P", :frequency 0.01929}
+                          {:letter "Q", :frequency 0.00095}
+                          {:letter "R", :frequency 0.05987}
+                          {:letter "S", :frequency 0.06327}
+                          {:letter "T", :frequency 0.09056}
+                          {:letter "U", :frequency 0.02758}
+                          {:letter "V", :frequency 0.00978}
+                          {:letter "W", :frequency 0.0236}
+                          {:letter "X", :frequency 0.0015}
+                          {:letter "Y", :frequency 0.01974}
+                          {:letter "Z", :frequency 0.00074}]]
+  (kind/reagent
+   ['(fn [data]
+       (let [size 400
+             x (-> js/d3
+                   .scaleLinear
+                   (.range (into-array [0 size]))
+                   (.domain (into-array [0 (apply max (map :frequency data))])))
+             y (-> js/d3
+                   .scaleBand
+                   (.domain (into-array (map :letter data)))
+                   (.range (into-array [0 size])))
+             color (.scaleOrdinal js/d3 (.-schemeCategory10 js/d3))]
+         [:svg
+          {:viewBox (str "0 0 " size " " size)}
+          (map
+           (fn
+             [{:keys [letter frequency]}]
+             [:g
+              {:key letter, :transform (str "translate(" 0 "," (y letter) ")")}
+              [:rect
+               {:x (x 0),
+                :height (.bandwidth y),
+                :fill (color letter),
+                :width (x frequency)}]])
+           data)]))
+    letter-frequencies]
+   {:reagent/deps [:d3]}))
+
 ;; ### 3DMol.js
 
 ;; Embedding a 3Dmol Viewer ([original example](https://3dmol.csb.pitt.edu/doc/tutorial-embeddable.html)):
