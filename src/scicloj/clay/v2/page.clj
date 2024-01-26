@@ -58,6 +58,8 @@
    :mathbox {:js {:from-local-copy
                   ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}
    :portal {:js {:from-local-copy [portal/url]}}
+   :d3 {:js {:from-local-copy
+             ["https://cdn.jsdelivr.net/npm/d3@7"]}}
    :html-default {:js {:from-local-copy
                        ["https://code.jquery.com/jquery-3.6.0.min.js"
                         "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
