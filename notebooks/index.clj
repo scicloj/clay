@@ -705,7 +705,7 @@ nested-structure-1
 
 ;; ### Leaflet
 
-;; This example was adapted from [the Leaflet website](https://leafletjs.com/).
+;; This example was adapted from [the Leaflet website](https://leafletjs.com/). Note we are defining a tile layer using [leaflet-providers](https://github.com/leaflet-extras/leaflet-providers#providers).
 
 (kind/reagent
  ['(fn []
@@ -716,10 +716,8 @@ nested-structure-1
                                (.setView (clj->js [51.505 -0.09])
                                          13))]
                      (-> js/L
-                         (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                     (clj->js
-                                      {:maxZoom 19
-                                       :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
+                         .-tileLayer
+                         (.provider "OpenStreetMap.Mapnik")
                          (.addTo m))
                      (-> js/L
                          (.marker (clj->js [51.5 -0.09]))
