@@ -41,7 +41,8 @@
              ;; to avoid fetching the images locally,
              ;; which would need a bit more care.
              :js {:from-the-web
-                  ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
+                  ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                   "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]}
              :css {:from-the-web
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
    :reagent {:js {:from-local-copy
