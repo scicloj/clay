@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha75] - 2024-01-28
 - added a dedicated namespace of Quarto themes
+- added a dedicated namespace of Quarto code highlight styles
 
 ## [2-alpha74] - 2024-01-27
 - added leaflet-providers support

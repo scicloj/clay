@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.quarto.themes)
 
-;; All the [Quarto themes](https://quarto.org/docs/output-formats/html-themes.html)
+;; All the [Quarto themes](https://quarto.org/docs/output-formats/html-themes.html):
 (def default :default)
 (def cerulean :cerulean)
 (def cosmo :cosmo)
