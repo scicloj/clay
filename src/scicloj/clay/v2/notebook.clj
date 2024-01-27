@@ -131,9 +131,9 @@
                             (note-to-items options))))
               (remove nil?))
          (add-info-line options)
-         (cond-> (= format [:html])
-           ;; a trick to use portal syntax highlighting
-           (concat [(item/portal [])]))
+         ;; (cond-> (= format [:html])
+         ;;   ;; a trick to use portal syntax highlighting
+         ;;   (concat [(item/portal [])]))
          doall))))
 
 

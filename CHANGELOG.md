@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha76] - 2024-01-27
+- using a temporary Portal build to enjoy some fixes
+- not relying on Portal for syntax highlighting anymore
+
 ## [2-alpha75] - 2024-01-27
 - added a dedicated namespace of Quarto themes
 - added a dedicated namespace of Quarto code highlight styles
