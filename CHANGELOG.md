@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha75] - 2024-01-28
+- added a dedicated namespace of Quarto themes
+
 ## [2-alpha74] - 2024-01-27
 - added leaflet-providers support
 
