@@ -705,7 +705,7 @@ nested-structure-1
 
 ;; ### Leaflet
 
-;; This example was adapted from [the Leaflet website](https://leafletjs.com/). Note we are defining a tile layer using [leaflet-providers](https://github.com/leaflet-extras/leaflet-providers#providers).
+;; This example was adapted from [the Leaflet website](https://leafletjs.com/). Note we are defining a tile layer using [leaflet-providers](https://github.com/leaflet-extras/leaflet-providers).
 
 (kind/reagent
  ['(fn []
