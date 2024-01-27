@@ -152,7 +152,8 @@
             [scicloj.noj.v1.vis.hanami :as hanami]
             [scicloj.noj.v1.vis.hanami.templates :as vht]
             [scicloj.ml.core :as ml]
-            [scicloj.clay.v2.quarto.themes :as quarto.themes]))
+            [scicloj.clay.v2.quarto.themes :as quarto.themes]
+            [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]))
 
 ;; A Hiccup spec:
 (kind/hiccup
@@ -302,15 +303,18 @@
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
 ;; with a custom Quarto config
-;; where the theme is fetched from
-;; the `scicloj.clay.v2.quarto.themes` namespace
+;; where the higlight style is fetched from
+;; the `scicloj.clay.v2.quarto.highlight-styles` namespace,
+;; and the theme is fetched from
+;; the `scicloj.clay.v2.quarto.themes` namespace,
 ;; then, using Quarto, render that file as HTML
 ;; and show it at the browser:
 (comment
-  (require '[scicloj.clay.v2.quarto.themes :as quarto.themes])
+  (require '[scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
+           '[scicloj.clay.v2.quarto.themes :as quarto.themes])
   (clay/make! {:format [:quarto :html]
                :source-path "notebooks/index.clj"
-               :quarto {:highlight-style :nord
+               :quarto {:highlight-style quarto.highlight-styles/nord
                         :format {:html {:theme quarto.themes/journal}}}}))
 
 ;; Evaluate and render
