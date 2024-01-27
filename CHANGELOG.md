@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha76] - 2024-01-27
+## [2-alpha76] - 2024-01-28
 - using a temporary Portal build to enjoy some fixes
 - not relying on Portal for syntax highlighting anymore
 
