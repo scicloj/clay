@@ -11,6 +11,7 @@
         org.scicloj/kindly-advice {:mvn/version "1-alpha6"}
         org.scicloj/tempfiles {:mvn/version "1-alpha2"}
         org.scicloj/kind-portal {:mvn/version "1-alpha10"}
+        org.clojars.daslu/portal {:mvn/version "0.51.1-temporary-2b2a18e"}
         org.clojure/tools.reader {:mvn/version "1.3.7"}
         babashka/fs {:mvn/version "0.4.19"}}
  :aliases {:dev {:extra-paths ["notebooks"]
