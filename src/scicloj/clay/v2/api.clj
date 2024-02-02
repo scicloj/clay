@@ -40,6 +40,3 @@
 
 (defn config []
   (config/config))
-
-(defn make-book! [options]
-  (book/write-book! options))
