@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - `kind/fragment` support
 - avoiding `:element/max-size` by default
 - supporting kinds that hide code globally
+- removed the obsolete `scicloj.clay.v2.book` ns and the corresponding API function
 
 ## [2-alpha76] - 2024-01-28
 - using a temporary Portal build to enjoy some fixes
