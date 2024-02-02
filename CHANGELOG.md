@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha77] - 2024-02-02
 - `kind/fragment` support
+- avoiding `:element/max-size` by default
 
 ## [2-alpha76] - 2024-01-28
 - using a temporary Portal build to enjoy some fixes
