@@ -62,14 +62,15 @@
                      {:keys [hide-code hide-nils hide-vars]}]
   (if (and comment? code)
     [(comment->item code)]
-    [;; code
-     (when-not (or hide-code
-                   (-> form meta :kindly/hide-code)
-                   (-> form meta :kindly/hide-code?)
-                   (-> value meta :kindly/hide-code)
-                   (-> value meta :kindly/hide-code?)
-                   (nil? code))
-       (item/source-clojure code))
+    (concat
+     ;; code
+     [(when-not (or hide-code
+                    (-> form meta :kindly/hide-code)
+                    (-> form meta :kindly/hide-code?)
+                    (-> value meta :kindly/hide-code)
+                    (-> value meta :kindly/hide-code?)
+                    (nil? code))
+        (item/source-clojure code))]
      ;; value
      (when-not (or
                 (and (sequential? form)
@@ -83,9 +84,7 @@
                          :full-target-path
                          :kindly/options])
            (update :value deref-if-needed)
-           prepare/prepare-or-pprint
-           ;; in-div ; TODO: is this needed?
-           ))]))
+           prepare/prepare-or-pprint)))))
 
 (defn add-info-line [items {:keys [full-source-path hide-info-line]}]
   (if hide-info-line

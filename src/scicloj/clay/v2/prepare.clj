@@ -33,21 +33,23 @@
       kindly-advice/advise
       :kind))
 
-(defn item->hiccup [item {:keys [id]}]
-  (or
-   (:hiccup item)
-   (some->> item
-            :html
-            (vector :div))
-   (some->> item
-            :md
-            md/->hiccup
-            (clojure.walk/postwalk-replace
-             {:<> :p})
-            (clojure.walk/postwalk-replace
-             {:table :table.table}))))
+(defn item->hiccup
+  ([item] (item->hiccup item nil))
+  ([item {:keys [id]}]
+   (or
+    (:hiccup item)
+    (some->> item
+             :html
+             (vector :div))
+    (some->> item
+             :md
+             md/->hiccup
+             (clojure.walk/postwalk-replace
+              {:<> :p})
+             (clojure.walk/postwalk-replace
+              {:table :table.table})))))
 
-(defn item->md [item {:keys [id]}]
+(defn item->md [item]
   (or
    (:md item)
    (:html item)
@@ -79,21 +81,35 @@
        hiccup]
       hiccup)))
 
+(defn advise-if-needed [context]
+  (if (:advise context)
+    context
+    (kindly-advice/advise context)))
+
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
   (let [complete-context (-> context
                              (update :kindly/options
                                      merge/deep-merge
-                                     (-> value meta :kindly/options)))]
-    (when-let [preparer (-> complete-context
-                            kindly-advice/advise
-                            :kind
-                            (@*kind->preparer)
-                            (or fallback-preparer))]
-      (-> complete-context
-          preparer
-          (update :hiccup limit-height complete-context)))))
+                                     (-> value meta :kindly/options)))
+        kind (-> complete-context
+                 advise-if-needed
+                 :kind)]
+    (if (= kind :kind/fragment)
+      ;; splice the fragment
+      (->> value
+           (mapcat (fn [subvalue]
+                     (-> context
+                         (assoc :value subvalue)
+                         (prepare {fallback-preparer fallback-preparer})))))
+      ;; else - not a fragment
+      (when-let [preparer (-> kind
+                              (@*kind->preparer)
+                              (or fallback-preparer))]
+        [(-> complete-context
+             preparer
+             (update :hiccup limit-height complete-context))]))))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
@@ -136,16 +152,12 @@
                         (if (and (vector? elem)
                                  (-> elem first (= :td)))
                           ;; a table data cell - handle it
-                          (-> elem
-                              (update
-                               1
-                               (fn [subvalue]
-                                 (let [item (-> context
-                                                (dissoc :form)
-                                                (assoc :value subvalue)
-                                                prepare-or-str)]
-                                   (swap! *deps concat (:deps item))
-                                   (item->hiccup item nil)))))
+                          [:td (let [items (-> context
+                                               (dissoc :form)
+                                               (assoc :value (second elem))
+                                               prepare-or-str)]
+                                 (swap! *deps concat (mapcat :deps items))
+                                 (map item->hiccup items))]
                           ;; else - keep it
                           elem))))]
      (if (->> context
@@ -217,17 +229,15 @@
                                          {:kv kv
                                           :prepared-kv
                                           (->> kv
-                                               (map (fn [v]
-                                                      (let [item (-> context
-                                                                     (dissoc :form)
-                                                                     (assoc :value v)
-                                                                     prepare-or-pprint)]
-                                                        (swap! *deps concat (:deps item))
-                                                        #_(item->hiccup item nil)
-                                                        item))))})))]
+                                               (mapcat (fn [v]
+                                                         (let [items (-> context
+                                                                         (dissoc :form)
+                                                                         (assoc :value v)
+                                                                         prepare-or-pprint)]
+                                                           (swap! *deps concat (mapcat :deps items))
+                                                           items))))})))]
        (if (->> prepared-kv-pairs
-                (map :prepared-kv)
-                (apply concat)
+                (mapcat :prepared-kv)
                 (some (complement :printed-clojure)))
          ;; some parts are not just printed values - handle recursively
          {:hiccup [:div
@@ -240,16 +250,16 @@
                                    [:table
                                     [:tr
                                      [:td {:valign :top}
-                                      (item->hiccup pk nil)]
+                                      (item->hiccup pk)]
                                      [:td [:div
                                            {:style {:margin-left "10px"}}
-                                           (item->hiccup pv nil)]]]])
+                                           (item->hiccup pv)]]]])
                                  ;; else
-                                 (-> (->> kv
-                                          (map pr-str)
-                                          (string/join " ")
-                                          item/printed-clojure)
-                                     (item->hiccup nil)))))
+                                 (item->hiccup
+                                  (->> kv
+                                       (map pr-str)
+                                       (string/join " ")
+                                       item/printed-clojure)))))
                         (into [:div
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))
@@ -267,20 +277,21 @@
            (some has-kind-with-preparer?))
     (let [*deps (atom []) ; TODO: implement without mutable state
           prepared-parts (->> value
-                              (map (fn [subvalue]
-                                     (-> context
-                                         (dissoc :form)
-                                         (assoc :value subvalue)
-                                         prepare-or-pprint))))]
+                              (mapcat (fn [subvalue]
+                                        (-> context
+                                            (dissoc :form)
+                                            (assoc :value subvalue)
+                                            prepare-or-pprint))))]
+      (prn [:prepared-parts prepared-parts])
       (if (->> prepared-parts
                (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively
         {:hiccup [:div
                   (structure-mark-hiccup open-mark)
-                  (into [:div {:style {:margin-left "10%"
-                                       :width "110%"}}]
-                        (->> prepared-parts
-                             (map #(item->hiccup % nil))))
+                  (->> prepared-parts
+                       (map item->hiccup)
+                       (into [:div {:style {:margin-left "10%"
+                                            :width "110%"}}]))
                   (structure-mark-hiccup close-mark)]
          :deps (->> prepared-parts
                     (mapcat :deps)
@@ -318,6 +329,13 @@
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
                 :kind/hiccup}))
 
+(defn wrap-with-div-if-many [hiccups]
+  (if (-> hiccups
+          count
+          (> 1))
+    (into [:div] hiccups)
+    (first hiccups)))
+
 (add-preparer!
  :kind/hiccup
  (fn [{:as context
@@ -333,10 +351,12 @@
                                       kindly-advice/advise
                                       :kind
                                       non-hiccup-kind?)
-                            (let [item (prepare-or-pprint
-                                        subcontext)]
-                              (swap! *deps concat (:deps item))
-                              (item->hiccup item nil))
+                            (let [items (prepare-or-pprint
+                                         subcontext)]
+                              (swap! *deps concat (mapcat :deps items))
+                              (->> items
+                                   (map item->hiccup)
+                                   wrap-with-div-if-many))
                             subform)))))]
      {:hiccup hiccup
       :deps (distinct @*deps)})))
@@ -351,7 +371,6 @@
    (-> value
        (vary-meta dissoc :kindly/kind)
        item/portal)))
-
 
 (add-preparer!
  :kind/cytoscape
