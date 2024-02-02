@@ -246,6 +246,5 @@
    (->> items
         (map-indexed
          (fn [i item]
-           (prepare/item->md item
-                             {:id (str "item" i)})))
+           (prepare/item->md item)))
         (string/join "\n\n"))))
