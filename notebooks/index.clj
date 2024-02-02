@@ -970,6 +970,20 @@ nested-structure-1
  (tc/dataset {:x (range 3)
               :y (repeatedly 3 rand)})]
 
+;; ## Fragments
+
+;; `kind/fragment` is a special kind. It expects a sequential value and generates multiple items, of potentially multiple kinds, from its elements.
+
+(->> ["purple" "darkgreen" "brown"]
+     (mapcat (fn [color]
+               [(kind/md (str "### subsection: " color))
+                (kind/hiccup [:div {:style {:background-color color
+                                            :color "lightgrey"}}
+                              [:big [:p color]]])]))
+     kind/fragment)
+
+;; Importantly, markdown subsections affect the Quarto table of contents.
+
 ;; ## Delays
 
 ;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
