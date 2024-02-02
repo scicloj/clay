@@ -282,7 +282,6 @@
                                             (dissoc :form)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
-      (prn [:prepared-parts prepared-parts])
       (if (->> prepared-parts
                (some (complement :printed-clojure)))
         ;; some parts are not just printed values - handle recursively

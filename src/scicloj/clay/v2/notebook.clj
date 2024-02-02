@@ -66,9 +66,17 @@
      ;; code
      [(when-not (or hide-code
                     (-> form meta :kindly/hide-code)
-                    (-> form meta :kindly/hide-code?)
+                    (-> form meta :kindly/hide-code?) ; legacy convention
                     (-> value meta :kindly/hide-code)
-                    (-> value meta :kindly/hide-code?)
+                    (-> value meta :kindly/hide-code?) ; legacy convention
+                    (some-> note
+                            :kindly/options
+                            :kinds-that-hide-code
+                            (as-> kthc
+                                (-> value
+                                    meta
+                                    :kindly/kind
+                                    kthc)))
                     (nil? code))
         (item/source-clojure code))]
      ;; value
