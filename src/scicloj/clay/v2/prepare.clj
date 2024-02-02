@@ -33,21 +33,19 @@
       kindly-advice/advise
       :kind))
 
-(defn item->hiccup
-  ([item] (item->hiccup item nil))
-  ([item {:keys [id]}]
-   (or
-    (:hiccup item)
-    (some->> item
-             :html
-             (vector :div))
-    (some->> item
-             :md
-             md/->hiccup
-             (clojure.walk/postwalk-replace
-              {:<> :p})
-             (clojure.walk/postwalk-replace
-              {:table :table.table})))))
+(defn item->hiccup [item]
+  (or
+   (:hiccup item)
+   (some->> item
+            :html
+            (vector :div))
+   (some->> item
+            :md
+            md/->hiccup
+            (clojure.walk/postwalk-replace
+             {:<> :p})
+            (clojure.walk/postwalk-replace
+             {:table :table.table}))))
 
 (defn item->md [item]
   (or
