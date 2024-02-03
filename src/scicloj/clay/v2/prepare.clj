@@ -33,40 +33,20 @@
       kindly-advice/advise
       :kind))
 
-(defn item->hiccup [item]
-  (or
-   (:hiccup item)
-   (some->> item
-            :html
-            (vector :div))
-   (some->> item
-            :md
-            md/->hiccup
-            (clojure.walk/postwalk-replace
-             {:<> :p})
-            (clojure.walk/postwalk-replace
-             {:table :table.table}))))
+(defn item->hiccup [{:keys [hiccup html md]}]
+  (or hiccup
+      (some->> html
+               (vector :div))
+      (some->> md
+               md/->hiccup
+               (clojure.walk/postwalk-replace {:<> :p})
+               (clojure.walk/postwalk-replace {:table :table.table}))))
 
-(defn item->md [item]
-  (or
-   (:md item)
-   (:html item)
-   (some->> item
-            :hiccup
-            (clojure.walk/postwalk
-             (fn [subform]
-               (if (and (vector? subform)
-                        (-> subform first (= :p)))
-                 (->> subform
-                      (mapv (fn [subsubform]
-                              (if (string? subsubform)
-                                (-> subsubform
-                                    (clojure.string/replace "[" (str \\ "["))
-                                    (clojure.string/replace "]" (str \\ "]")))
-                                subsubform))))
-                 ;; else
-                 subform)))
-            hiccup/html)))
+(defn item->md [{:keys [hiccup html md]}]
+  (or md
+      (format "\n```{=html}\n%s\n```\n"
+              (or html
+                  (some-> hiccup hiccup/html)))))
 
 (defn limit-height [hiccup context]
   #_(prn [:context context])
