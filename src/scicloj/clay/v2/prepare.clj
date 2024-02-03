@@ -33,14 +33,20 @@
       kindly-advice/advise
       :kind))
 
-(defn item->hiccup [{:keys [hiccup html md]}]
+(defn item->hiccup [{:keys [hiccup html md]}
+                    {:as context
+                     :keys [format]}]
   (or hiccup
       (some->> html
                (vector :div))
-      (some->> md
+      (when md
+        (if (and (vector? format)
+                 (-> format first (= :quarto)))
+          [:span {:data-qmd md}]
+          (->> md
                md/->hiccup
                (clojure.walk/postwalk-replace {:<> :p})
-               (clojure.walk/postwalk-replace {:table :table.table}))))
+               (clojure.walk/postwalk-replace {:table :table.table}))))))
 
 (defn item->md [{:keys [hiccup html md]}]
   (or md
@@ -135,7 +141,7 @@
                                                (assoc :value (second elem))
                                                prepare-or-str)]
                                  (swap! *deps concat (mapcat :deps items))
-                                 (map item->hiccup items))]
+                                 (map #(item->hiccup % context) items))]
                           ;; else - keep it
                           elem))))]
      (if (->> context
@@ -228,16 +234,16 @@
                                    [:table
                                     [:tr
                                      [:td {:valign :top}
-                                      (item->hiccup pk)]
+                                      (item->hiccup pk context)]
                                      [:td [:div
                                            {:style {:margin-left "10px"}}
-                                           (item->hiccup pv)]]]])
+                                           (item->hiccup pv context)]]]])
                                  ;; else
-                                 (item->hiccup
-                                  (->> kv
-                                       (map pr-str)
-                                       (string/join " ")
-                                       item/printed-clojure)))))
+                                 (item->hiccup (->> kv
+                                                    (map pr-str)
+                                                    (string/join " ")
+                                                    item/printed-clojure)
+                                               context))))
                         (into [:div
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))
@@ -266,7 +272,7 @@
         {:hiccup [:div
                   (structure-mark-hiccup open-mark)
                   (->> prepared-parts
-                       (map item->hiccup)
+                       (map #(item->hiccup % context))
                        (into [:div {:style {:margin-left "10%"
                                             :width "110%"}}]))
                   (structure-mark-hiccup close-mark)]
@@ -332,7 +338,7 @@
                                          subcontext)]
                               (swap! *deps concat (mapcat :deps items))
                               (->> items
-                                   (map item->hiccup)
+                                   (map #(item->hiccup % context))
                                    wrap-with-div-if-many))
                             subform)))))]
      {:hiccup hiccup
