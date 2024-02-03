@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha78]
 - some code simplification
+- using Quarto raw-html and data-qmd support (WIP)
 
 ## [2-alpha77] - 2024-02-02
 - `kind/fragment` support

@@ -1,7 +1,6 @@
 (ns scicloj.clay.v2.notebook
   (:require
    [clojure.string :as string]
-   [hiccup.core :as hiccup]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.item :as item]

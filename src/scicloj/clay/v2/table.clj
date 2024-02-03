@@ -1,9 +1,4 @@
-(ns scicloj.clay.v2.table
-  "Interactive table visualisations."
-  (:require [hiccup.core :as hiccup]
-            [hiccup.element :as elem])
-  (:import java.io.File
-           java.util.UUID))
+(ns scicloj.clay.v2.table)
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
   [:table {:class :table}

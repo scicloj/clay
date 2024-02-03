@@ -31,7 +31,7 @@
 ;; Add Clay to your project dependencies:
 ;; [![(Clojars coordinates)](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 ;;
-;; (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add under it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj). If you do not know what this means, just add it under the main `:deps` section of your `deps.edn` file.)
+;; (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add under it to the extra dependencies under an alias. See, for example, thel[deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj). If you do not know what this means, just add it under the main `:deps` section of your `deps.edn` file.)
 ;;
 ;; To render a given Clojure namespace, say `"notebooks/index.clj"`, you may run the following in the REPL:
 ^{:kindly/hide-code true
@@ -900,30 +900,30 @@ nested-structure-1
                 :border "solid"}}
 
   [:hr]
-  [:h3 [:code ":kind/md"]]
+  [:pre [:code "kind/md"]]
   (kind/md "*some text* **some more text**")
 
   [:hr]
-  [:h3 [:code ":kind/code"]]
+  [:pre [:code "kind/code"]]
   (kind/code "{:x (1 2 [3 4])}")
 
   [:hr]
-  [:h3 [:code "kind/dataset"]]
+  [:pre [:code "kind/dataset"]]
   (tc/dataset {:x (range 33)
                :y (map inc (range 33))})
 
   [:hr]
-  [:h3 [:code "kind/table"]]
+  [:pre [:code "kind/table"]]
   (kind/table
    (tc/dataset {:x (range 33)
                 :y (map inc (range 33))}))
 
   [:hr]
-  [:h3 [:code "kind/vega-lite"]]
+  [:pre [:code "kind/vega-lite"]]
   (random-vega-lite-plot 9)
 
   [:hr]
-  [:h3 [:code "kind/vega-lite"]]
+  [:pre [:code "kind/vega-lite"]]
   (-> {:data {:values "x,y
 1,1
 2,4
@@ -939,7 +939,7 @@ nested-structure-1
       kind/vega-lite)
 
   [:hr]
-  [:h3 [:code "kind/reagent"]]
+  [:pre [:code "kind/reagent"]]
   (kind/reagent
    ['(fn [numbers]
        [:p {:style {:background "#d4ebe9"}}

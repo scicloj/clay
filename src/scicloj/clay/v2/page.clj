@@ -211,7 +211,7 @@
                        (map-indexed
                         (fn [i item]
                           [:div {:style {:margin "15px"}}
-                           (prepare/item->hiccup item)]))
+                           (prepare/item->hiccup item spec)]))
                        (into [:div]))]]]]
               [:script {:type "text/javascript"}
                (-> "highlight/highlight.min.js"
