@@ -89,7 +89,8 @@
            (select-keys [:value :code :form
                          :base-target-path
                          :full-target-path
-                         :kindly/options])
+                         :kindly/options
+                         :format])
            (update :value deref-if-needed)
            prepare/prepare-or-pprint)))))
 
@@ -133,7 +134,8 @@
                              (-> options
                                  (select-keys [:base-target-path
                                                :full-target-path
-                                               :kindly/options])))
+                                               :kindly/options
+                                               :format])))
                             (note-to-items options))))
               (remove nil?))
          (add-info-line options)
