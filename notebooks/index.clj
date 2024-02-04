@@ -958,7 +958,10 @@ nested-structure-1
                  (kind/code "{:x (1 2 [3 4])}")]
                 [(tc/dataset {:x (range 3)
                               :y (map inc (range 3))})
-                 (random-vega-lite-plot 9)]]})
+                 (random-vega-lite-plot 9)]
+                [(kind/hiccup [:div {:style {:height 200}}
+                               clay-image])
+                 (kind/md "$x^2$")]]})
 
 ;; ### More nesting examples
 
