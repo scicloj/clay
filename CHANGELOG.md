@@ -3,7 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha78] - unreleased
 - using Quarto raw-html and data-qmd support (thus supporting formulae in tables)
+- showing keywords correctly in column names
 - some code simplification
+
 
 ## [2-alpha77] - 2024-02-02
 - `kind/fragment` support
