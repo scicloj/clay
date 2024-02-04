@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-alpha78] - unreleased
-- using Quarto raw-html and data-qmd support (thus supporting formulae in tables)
-- showing keywords correctly in column names
+- using Quarto raw-html and data-qmd support (thus supporting formulae in tables) - fixing #54
+- showing keywords correctly in column names - fixing #52
 - some code simplification
 
 
