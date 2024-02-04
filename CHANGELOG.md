@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file. This change
 - showing keywords correctly in column names - fixing #52
 - some code simplification
 
-
 ## [2-alpha77] - 2024-02-02
 - `kind/fragment` support
 - avoiding `:element/max-size` by default
