@@ -4,7 +4,7 @@
   [:table {:class :table}
    [:thead
     (->> column-names
-         (mapv (fn [x] [:th x]))
+         (mapv (fn [x] [:th (str x)]))
          (into [:tr]))]
    (->> row-vectors
         (map-indexed
