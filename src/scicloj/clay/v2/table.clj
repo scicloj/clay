@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.table)
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
-  [:table {:class :table}
+  [:table {:class "table table-striped table-hover table-responsive"}
    [:thead
     (->> column-names
          (mapv (fn [x] [:th (str x)]))

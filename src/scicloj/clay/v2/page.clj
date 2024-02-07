@@ -219,9 +219,7 @@
                    slurp)]
               [:script {:type "text/javascript"}
                "hljs.highlightAll();"]]]
-    (-> (hiccup.page/html5 head body)
-        (string/replace #"<table>"
-                        "<table class='table table-hover'>"))))
+    (hiccup.page/html5 head body)))
 
 
 
