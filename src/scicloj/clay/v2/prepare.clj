@@ -33,29 +33,37 @@
       kindly-advice/advise
       :kind))
 
-(defn item->hiccup [{:keys [hiccup html md]}
+(defn item->hiccup [{:keys [hiccup html md
+                            script]}
                     {:as context
                      :keys [format]}]
-  (or hiccup
-      (some->> html
-               (vector :div))
-      (when md
-        (if (and (vector? format)
-                 (-> format first (= :quarto)))
-          [:span {:data-qmd md}]
-          (->> md
-               md/->hiccup
-               (clojure.walk/postwalk-replace {:<> :p})
-               (clojure.walk/postwalk-replace {:table :table.table}))))))
+  (-> (or hiccup
+          (some->> html
+                   (vector :div))
+          (when md
+            (if (and (vector? format)
+                     (-> format first (= :quarto)))
+              [:span {:data-qmd md}]
+              (->> md
+                   md/->hiccup
+                   (clojure.walk/postwalk-replace {:<> :p})
+                   (clojure.walk/postwalk-replace {:table :table.table})))))
+      (cond-> script
+        (conj script))))
 
-(defn item->md [{:keys [hiccup html md]}]
-  (or md
-      (format "\n```{=html}\n%s\n```\n"
-              (or html
-                  (some-> hiccup hiccup/html)))))
 
-(defn limit-height [hiccup context]
-  #_(prn [:context context])
+(defn item->md [{:keys [hiccup html md
+                        script]}]
+  (if script
+    (-> hiccup
+        (conj script)
+        hiccup/html)
+    (-> (or md
+            (format "\n```{=html}\n%s\n```\n"
+                    (or html
+                        (some-> hiccup hiccup/html)))))))
+
+(defn limit-hiccup-height [hiccup context]
   (when hiccup
     (if-let [max-element-height (-> context
                                     :kindly/options
@@ -64,6 +72,17 @@
                      :overflow-y :auto}}
        hiccup]
       hiccup)))
+
+(defn limit-md-height [md context]
+  (when md
+    (if-let [max-element-height (-> context
+                                    :kindly/options
+                                    :element/max-height)]
+      (hiccup/html
+       [:div {:style {:max-height max-element-height
+                      :overflow-y :auto}}
+        md])
+      md)))
 
 (defn advise-if-needed [context]
   (if (:advise context)
@@ -93,7 +112,8 @@
                               (or fallback-preparer))]
         [(-> complete-context
              preparer
-             (update :hiccup limit-height complete-context))]))))
+             (update :hiccup limit-hiccup-height complete-context)
+             (update :md limit-md-height complete-context))]))))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
@@ -128,7 +148,10 @@
  :kind/table
  (fn [{:as context
        :keys [value]}]
-   (let [pre-hiccup (table/->table-hiccup value)
+   (let [use-datatables (->> context
+                             :kindly/options
+                             :use-datatables)
+         pre-hiccup (table/->table-hiccup value)
          *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
                      (claywalk/postwalk
@@ -138,21 +161,25 @@
                           ;; a table data cell - handle it
                           [:td (let [items (-> context
                                                (dissoc :form)
+                                               (update :kindly/options :dissoc :element/max-height)
                                                (assoc :value (second elem))
                                                prepare-or-str)]
                                  (swap! *deps concat (mapcat :deps items))
-                                 (map #(item->hiccup % context) items))]
+                                 (map #(item->hiccup
+                                        %
+                                        (-> context
+                                            (cond-> use-datatables (assoc :format [:html]))))
+                                      items))]
                           ;; else - keep it
                           elem))))]
-     (if (->> context
-              :kindly/options
-              :use-datatables)
-       {:hiccup (into hiccup
-                      [[:script (->> context
-                                     :kindly/options
-                                     :datatables
-                                     charred/write-json-str
-                                     (format "new DataTable(document.currentScript.parentElement, %s);"))]])
+     (if use-datatables
+       {:hiccup hiccup
+        :script [:script
+                 (->> context
+                      :kindly/options
+                      :datatables
+                      charred/write-json-str
+                      (format "new DataTable(document.currentScript.parentElement, %s);"))]
         :deps (->> @*deps
                    (cons :datatables)
                    distinct)}
@@ -194,6 +221,7 @@
        :keys [value]}]
    (-> context
        (dissoc :form)
+       (update :kindly/options :dissoc :element/max-height)
        (assoc :value (-> value
                          meta
                          :test
@@ -216,6 +244,7 @@
                                                (mapcat (fn [v]
                                                          (let [items (-> context
                                                                          (dissoc :form)
+                                                                         (update :kindly/options :dissoc :element/max-height)
                                                                          (assoc :value v)
                                                                          prepare-or-pprint)]
                                                            (swap! *deps concat (mapcat :deps items))
@@ -264,6 +293,7 @@
                               (mapcat (fn [subvalue]
                                         (-> context
                                             (dissoc :form)
+                                            (update :kindly/options :dissoc :element/max-height)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
       (if (->> prepared-parts
@@ -329,6 +359,7 @@
                       (fn [subform]
                         (let [subcontext (-> context
                                              (dissoc :form)
+                                             (update :kindly/options :dissoc :element/max-height)
                                              (assoc :value subform))]
                           (if (some-> subcontext
                                       kindly-advice/advise
