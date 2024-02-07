@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha79] - unreleased
+## [2-alpha79] - 2024-02-08
 - handling element max height in markdown
 - refactoring item preparation, making sure datatables works in Quarto in the new setup
 - bugfix: making sure a book index page is available if not provided
