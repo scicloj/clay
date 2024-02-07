@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha79] - 2024-02-08
 - handling element max height in markdown
-- refactoring item preparation, making sure datatables works in Quarto in the new setup
+- refactoring item preparation, making sure datatables.js works in Quarto in the new setup
 - bugfix: making sure a book index page is available if not provided
-- added .table-hover .table-responsive classed for `kind/table`
+- added `.table-hover` & `.table-responsive` classes for `kind/table`
 
 ## [2-alpha78] - 2024-02-04
 - using Quarto raw-html and data-qmd support (thus supporting formulae in tables) - fixing #54
