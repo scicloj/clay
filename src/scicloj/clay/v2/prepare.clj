@@ -33,26 +33,35 @@
       kindly-advice/advise
       :kind))
 
-(defn item->hiccup [{:keys [hiccup html md]}
+(defn item->hiccup [{:keys [hiccup html md
+                            script]}
                     {:as context
                      :keys [format]}]
-  (or hiccup
-      (some->> html
-               (vector :div))
-      (when md
-        (if (and (vector? format)
-                 (-> format first (= :quarto)))
-          [:span {:data-qmd md}]
-          (->> md
-               md/->hiccup
-               (clojure.walk/postwalk-replace {:<> :p})
-               (clojure.walk/postwalk-replace {:table :table.table}))))))
+  (-> (or hiccup
+          (some->> html
+                   (vector :div))
+          (when md
+            (if (and (vector? format)
+                     (-> format first (= :quarto)))
+              [:span {:data-qmd md}]
+              (->> md
+                   md/->hiccup
+                   (clojure.walk/postwalk-replace {:<> :p})
+                   (clojure.walk/postwalk-replace {:table :table.table})))))
+      (cond-> script
+        (conj script))))
 
-(defn item->md [{:keys [hiccup html md]}]
-  (or md
-      (format "\n```{=html}\n%s\n```\n"
-              (or html
-                  (some-> hiccup hiccup/html)))))
+
+(defn item->md [{:keys [hiccup html md
+                        script]}]
+  (if script
+    (-> hiccup
+        (conj script)
+        hiccup/html)
+    (-> (or md
+            (format "\n```{=html}\n%s\n```\n"
+                    (or html
+                        (some-> hiccup hiccup/html)))))))
 
 (defn limit-hiccup-height [hiccup context]
   (when hiccup
@@ -139,7 +148,10 @@
  :kind/table
  (fn [{:as context
        :keys [value]}]
-   (let [pre-hiccup (table/->table-hiccup value)
+   (let [use-datatables (->> context
+                             :kindly/options
+                             :use-datatables)
+         pre-hiccup (table/->table-hiccup value)
          *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
                      (claywalk/postwalk
@@ -153,18 +165,21 @@
                                                (assoc :value (second elem))
                                                prepare-or-str)]
                                  (swap! *deps concat (mapcat :deps items))
-                                 (map #(item->hiccup % context) items))]
+                                 (map #(item->hiccup
+                                        %
+                                        (-> context
+                                            (cond-> use-datatables (assoc :format [:html]))))
+                                      items))]
                           ;; else - keep it
                           elem))))]
-     (if (->> context
-              :kindly/options
-              :use-datatables)
-       {:hiccup (into hiccup
-                      [[:script (->> context
-                                     :kindly/options
-                                     :datatables
-                                     charred/write-json-str
-                                     (format "new DataTable(document.currentScript.parentElement, %s);"))]])
+     (if use-datatables
+       {:hiccup hiccup
+        :script [:script
+                 (->> context
+                      :kindly/options
+                      :datatables
+                      charred/write-json-str
+                      (format "new DataTable(document.currentScript.parentElement, %s);"))]
         :deps (->> @*deps
                    (cons :datatables)
                    distinct)}
