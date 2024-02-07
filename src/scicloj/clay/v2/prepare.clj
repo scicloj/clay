@@ -54,8 +54,7 @@
               (or html
                   (some-> hiccup hiccup/html)))))
 
-(defn limit-height [hiccup context]
-  #_(prn [:context context])
+(defn limit-hiccup-height [hiccup context]
   (when hiccup
     (if-let [max-element-height (-> context
                                     :kindly/options
@@ -64,6 +63,17 @@
                      :overflow-y :auto}}
        hiccup]
       hiccup)))
+
+(defn limit-md-height [md context]
+  (when md
+    (if-let [max-element-height (-> context
+                                    :kindly/options
+                                    :element/max-height)]
+      (hiccup/html
+       [:div {:style {:max-height max-element-height
+                      :overflow-y :auto}}
+        md])
+      md)))
 
 (defn advise-if-needed [context]
   (if (:advise context)
@@ -93,7 +103,8 @@
                               (or fallback-preparer))]
         [(-> complete-context
              preparer
-             (update :hiccup limit-height complete-context))]))))
+             (update :hiccup limit-hiccup-height complete-context)
+             (update :md limit-md-height complete-context))]))))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
@@ -138,6 +149,7 @@
                           ;; a table data cell - handle it
                           [:td (let [items (-> context
                                                (dissoc :form)
+                                               (update :kindly/options :dissoc :element/max-height)
                                                (assoc :value (second elem))
                                                prepare-or-str)]
                                  (swap! *deps concat (mapcat :deps items))
@@ -194,6 +206,7 @@
        :keys [value]}]
    (-> context
        (dissoc :form)
+       (update :kindly/options :dissoc :element/max-height)
        (assoc :value (-> value
                          meta
                          :test
@@ -216,6 +229,7 @@
                                                (mapcat (fn [v]
                                                          (let [items (-> context
                                                                          (dissoc :form)
+                                                                         (update :kindly/options :dissoc :element/max-height)
                                                                          (assoc :value v)
                                                                          prepare-or-pprint)]
                                                            (swap! *deps concat (mapcat :deps items))
@@ -264,6 +278,7 @@
                               (mapcat (fn [subvalue]
                                         (-> context
                                             (dissoc :form)
+                                            (update :kindly/options :dissoc :element/max-height)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
       (if (->> prepared-parts
@@ -329,6 +344,7 @@
                       (fn [subform]
                         (let [subcontext (-> context
                                              (dissoc :form)
+                                             (update :kindly/options :dissoc :element/max-height)
                                              (assoc :value subform))]
                           (if (some-> subcontext
                                       kindly-advice/advise
