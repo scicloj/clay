@@ -331,8 +331,8 @@
 (comment
   (clay/make! {:format [:quarto :html]
                :base-source-path "notebooks"
-               :source-path ["index.clj"
-                             "chapter.clj"]
+               :source-path ["chapter.clj"
+                             "another_chapter.md"]
                :base-target-path "book"
                :book {:title "Book Example"}
                ;; Empty the target directory first:
