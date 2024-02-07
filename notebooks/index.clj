@@ -570,9 +570,6 @@ nested-structure-1
 (-> people-as-dataset
     (kind/table {:element/max-height "300px"}))
 
-(-> people-as-dataset
-    (kind/table {:element/max-height nil}))
-
 ;; It is possible to use [datatables](https://datatables.net/) to reneder `kind/table`,
 ;; and in this case the user may specify [datatables options](https://datatables.net/manual/options)
 ;; (see [the full list](https://datatables.net/reference/option/)).
