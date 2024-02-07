@@ -121,8 +121,8 @@
                                            (string/replace
                                             #"\.html$"
                                             ".qmd")))))
-                               (cond->> index-included?
-                                 (cons (str base-target-path "/index.qmd"))))}}))))
+                               (cond->> (not index-included?)
+                                 (cons "index.qmd")))}}))))
 
 (defn write-quarto-book-config! [quarto-book-config
                                  {:keys [base-target-path]}]
@@ -136,7 +136,7 @@
 
 (defn quarto-book-index [{{:keys [toc title]} :book}]
   (str "---\n"
-       (yaml/generate-string {:format {:html {:toc toc}}})
+       (yaml/generate-string {:format {:html {:toc (some? toc)}}})
        "\n---\n"
        "# " title))
 
