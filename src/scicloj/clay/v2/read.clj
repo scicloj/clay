@@ -85,8 +85,11 @@
                                                 (apply str (-> region
                                                                first
                                                                (- max-line)
-                                                               (repeat " ")))
-                                                code)})
+                                                               (repeat "\n")))
+                                                code)
+                         :max-line (-> region
+                                       (nth 2)
+                                       (max max-line))})
                       {:generated-string ""
                        :max-line (->> comment-blocks-sorted-by-region
                                       first
