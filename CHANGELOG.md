@@ -1,12 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha80] - unreleased
+## [2-alpha80] - 2024-02-17
 - avoiding the iframe when serving the page (simplifies URL handling, etc.)
 - slight changes in styling
 - handling space lines between comments carefully
 - passing content-type information on the web server
-- `kind/observable` support (when rendering through Quarto)
+- `kind/observable` ([Observable](https://observablehq.com/)) support (when rendering through Quarto)
 
 ## [2-alpha79] - 2024-02-08
 - handling element max height in markdown
