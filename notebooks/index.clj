@@ -729,7 +729,8 @@ nested-structure-1
 ;; Note that you can save your Clojure data as a csv file and refer to it
 ;; from within your Observable code.
 ;; See [Referring to files](./#referring-to-files)
-;; for more information.
+;; for more information. In this case, we are using the local file, `"notebooks/datasets/palmer-penguins.csv"`,
+;; which is transparently copied by Clay alongside the target HTML.
 
 (kind/observable
  "
