@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha80] - unreleased
+- avoiding the iframe when serving the page (simplifies URL handling, etc.)
+- slight changes in styling
+
 ## [2-alpha79] - 2024-02-08
 - handling element max height in markdown
 - refactoring item preparation, making sure datatables.js works in Quarto in the new setup
