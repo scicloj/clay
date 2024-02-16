@@ -70,7 +70,6 @@
        (filter some?)))
 
 (defn unified-cleaned-comment-block [comment-blocks-sorted-by-region]
-  (prn [:debug1 comment-blocks-sorted-by-region])
   {:region  (vec (concat (->> comment-blocks-sorted-by-region
                               first
                               :region
@@ -95,13 +94,6 @@
                                       first)})
               :generated-string)
    :comment? true})
-
-
-;; ABCD
-;; EFGH
-
-;; IJKL
-
 
 (defn ->notes [code]
   (->> code
