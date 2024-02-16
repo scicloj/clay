@@ -719,7 +719,56 @@ nested-structure-1
                   {:width "300px"
                    :height "300px"}}))
 
+;; ### Observable
 
+;; [Observable](https://observablehq.com/) visualizations are supported
+;; when rendering through Quarto.
+
+;; The following is adapted from the [Penguins example](https://quarto.org/docs/interactive/ojs/examples/penguins.html) in Quarto's documentation.
+
+;; Note that you can save your Clojure data as a csv file and refer to it
+;; from within your Observable code.
+;; See [Referring to files](./#referring-to-files)
+;; for more information.
+
+(kind/observable
+ "
+//| panel: input
+viewof bill_length_min = Inputs.range(
+                                      [32, 50],
+                                      {value: 35, step: 1, label: 'Bill length (min):'}
+                                      )
+viewof islands = Inputs.checkbox(
+                                 ['Torgersen', 'Biscoe', 'Dream'],
+                                 { value: ['Torgersen', 'Biscoe'],
+                                  label: 'Islands:'
+                                  }
+                                 )
+
+Plot.rectY(filtered,
+            Plot.binX(
+                      {y: 'count'},
+                      {x: 'body_mass_g', fill: 'species', thresholds: 20}
+                      ))
+ .plot({
+        facet: {
+                data: filtered,
+                x: 'sex',
+                y: 'species',
+                marginRight: 80
+                },
+        marks: [
+                Plot.frame(),
+                ]
+        }
+       )
+Inputs.table(filtered)
+data = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })
+filtered = data.filter(function(penguin) {
+                                           return bill_length_min < penguin.bill_length_mm &&
+                                           islands.includes(penguin.island);
+                                           })
+")
 
 ;; ### Leaflet
 
