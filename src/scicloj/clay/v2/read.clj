@@ -2,7 +2,8 @@
   (:require [clojure.tools.reader]
             [clojure.tools.reader.reader-types]
             [parcera.core :as parcera]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.string :as str]))
 
 (def *generation (atom 0))
 
@@ -78,8 +79,23 @@
                               :region
                               (drop 2))))
    :code (->> comment-blocks-sorted-by-region
-              (map :code)
-              (string/join "\n\n"))
+              (reduce (fn [{:keys [generated-string max-line]}
+                           {:keys [region code]}]
+                        {:generated-string (str generated-string
+                                                (apply str (-> region
+                                                               first
+                                                               (- max-line)
+                                                               (repeat "\n")))
+                                                code)
+                         :max-line (-> region
+                                       (nth 2)
+                                       (max max-line))})
+                      {:generated-string ""
+                       :max-line (->> comment-blocks-sorted-by-region
+                                      first
+                                      :region
+                                      first)})
+              :generated-string)
    :comment? true})
 
 (defn ->notes [code]
