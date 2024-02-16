@@ -10,7 +10,9 @@
    [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
-   [scicloj.kindly.v4.api :as kindly]))
+   [scicloj.kindly.v4.api :as kindly]
+   [clojure.string :as str]
+   [hiccup.core :as hiccup]))
 
 (def default-port 1971)
 
@@ -87,9 +89,11 @@
      #_[:big [:big "(Clay)"]]
      [:div {:style {:display "inline-block"
                     :margin "20px"}}
-      [:pre (some->> state
-                     :full-target-path)]
-      [:pre (time/now)]]]
+      [:pre {:style {:margin 0}}
+       (some->> state
+                :full-target-path)]
+      [:pre {:style {:margin 0}}
+       (time/now)]]]
     #_(:hiccup item/separator)]))
 
 (def avoid-favicon
@@ -100,26 +104,27 @@
   ([]
    (page @server.state/*state))
   ([state]
-   (hiccup.page/html5
-    [:head avoid-favicon]
-    [:body {:style {:overflow-x "hidden"}}
-     [:style "* {margin: 0; padding: 0; top: 0;}"]
-     [:div {:style {:left "0px"
-                    :top "0px"
-                    :height "70px"
-                    :background-color "#ddd"}}
-      (header state)]
-     ;; https://makersaid.com/make-iframe-fit-100-of-remaining-height/
-     [:iframe {:style {:height "calc(100vh - 100px)"
-                       :width "100%"
-                       :border "none"}
-               :src (some-> state
-                            :full-target-path
-                            (string/replace (re-pattern (str "^"
-                                                             (:base-target-path state)
-                                                             "/"))
-                                            ""))}]
-     (communication-script state)])))
+   (let [relative-path (some-> state
+                               :full-target-path
+                               (string/replace (re-pattern (str "^"
+                                                                (:base-target-path state)
+                                                                "/"))
+                                               ""))]
+     (some-> state
+             :full-target-path
+             slurp
+             (str/replace #"(<\s*head[^>]*>)"
+                          (str "$1"
+                               (hiccup/html
+                                avoid-favicon)))
+             (str/replace #"(<\s*body[^>]*>)"
+                          (str "$1"
+                               (hiccup/html
+                                #_[:style "* {margin: 0; padding: 0; top: 0;}"]
+                                [:div {:style {:height "70px"
+                                               :background-color "#eee"}}
+                                 (header state)])
+                               (communication-script state)))))))
 
 
 (defn routes [{:keys [:body :request-method :uri]
