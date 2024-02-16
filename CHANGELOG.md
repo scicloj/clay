@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-alpha80] - unreleased
 - avoiding the iframe when serving the page (simplifies URL handling, etc.)
 - slight changes in styling
+- making sure there is an empty markdown line between markdown texts of consecutive comments
 
 ## [2-alpha79] - 2024-02-08
 - handling element max height in markdown
