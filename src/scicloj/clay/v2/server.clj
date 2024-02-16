@@ -136,22 +136,25 @@
                                :on-receive (fn [_ch msg])})
       (case [request-method uri]
         [:get "/"] {:body (page state)
+                    :headers {"Content-Type" "text/html"}
                     :status 200}
         [:get "/counter"] {:body (-> state
                                      :counter
                                      str)
                            :status 200}
         ;; else
-        {:body (try (->> uri
-                         (str (:base-target-path state))
-                         (java.io.FileInputStream.))
-                    (catch java.io.FileNotFoundException e
-                      ;; Ignoring missing source maps.
-                      ;; TODO: Figure this problem out.
-                      (if (.endsWith ^String uri ".map")
-                        nil
-                        (throw e))))
-         :status 200}))))
+        (merge {:body (try (->> uri
+                                (str (:base-target-path state))
+                                (java.io.FileInputStream.))
+                           (catch java.io.FileNotFoundException e
+                             ;; Ignoring missing source maps.
+                             ;; TODO: Figure this problem out.
+                             (if (.endsWith ^String uri ".map")
+                               nil
+                               (throw e))))
+                :status 200}
+               (when (.endsWith ^String uri ".js")
+                 {:headers {"Content-Type" "text/javascript"}}))))))
 
 (defonce *stop-server! (atom nil))
 
