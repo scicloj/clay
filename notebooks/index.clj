@@ -1047,7 +1047,9 @@ filtered = data.filter(function(penguin) {
 
 ;; ## Referring to files
 
-;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`.
+;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`. By default, all files except of these directories, except for Clojure files, are copied alongside the HTML target.
+;;
+;; This default can be overridden using the `:subdirs-to-sync` config option. E.g., `:subdirs-to-sync ["notebooks" "data"]` will copy files from the `"notebooks"` and `"data"` directories, but not from `"src"`.
 
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
