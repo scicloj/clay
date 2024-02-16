@@ -79,7 +79,7 @@
                               (drop 2))))
    :code (->> comment-blocks-sorted-by-region
               (map :code)
-              (string/join "\n"))
+              (string/join "\n\n"))
    :comment? true})
 
 (defn ->notes [code]
