@@ -271,3 +271,13 @@ Plotly.newPlot(document.currentScript.parentElement,
                                  (str/join "&")
                                  (str "?")))
               :allowfullscreen allowfullscreen})]})
+
+(defn observable [code]
+  {:md (->> code
+            in-vector
+            (string/join "\n")
+            (format "
+```{ojs}
+//| echo: false
+%s
+```"))})

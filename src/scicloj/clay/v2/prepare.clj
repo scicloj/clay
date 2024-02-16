@@ -413,3 +413,7 @@
 (add-preparer-from-value-fn!
  :kind/video
  #'item/video)
+
+(add-preparer-from-value-fn!
+ :kind/observable
+ #'item/observable)
