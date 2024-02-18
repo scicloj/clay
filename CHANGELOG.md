@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha81] - unreleased
+- bugfix: typo in handlinh :kindly/options of nested elements
+
 ## [2-alpha80] - 2024-02-17
 - avoiding the iframe when serving the page (simplifies URL handling, etc.)
 - slight changes in styling

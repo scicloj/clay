@@ -359,7 +359,7 @@
                       (fn [subform]
                         (let [subcontext (-> context
                                              (dissoc :form)
-                                             (update :kindly/options :dissoc :element/max-height)
+                                             (update :kindly/options dissoc :element/max-height)
                                              (assoc :value subform))]
                           (if (some-> subcontext
                                       kindly-advice/advise
