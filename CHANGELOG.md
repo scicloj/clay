@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha81] - unreleased
 - bugfix: typo in handlinh :kindly/options of nested elements
+- added scittle promesa dependency
 
 ## [2-alpha80] - 2024-02-17
 - avoiding the iframe when serving the page (simplifies URL handling, etc.)
