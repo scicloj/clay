@@ -190,17 +190,26 @@
             page-paths]]
         (let [page-component (fn [path]
                                (let [*rows (reagent.core/atom nil)]
-                                 (promesa.core/let [response (js/fetch path)
-                                                    edn (.text response)]
-                                   (reset! *rows (read-string edn)))
+
                                  (fn []
-                                   (into (->> table-hiccup-without-rows
-                                              (filter (fn [v]
-                                                        (not
-                                                         (and (vector? v)
-                                                              (-> v first (= :thead))))))
-                                              vec)
-                                         @*rows))))
+                                   [:div
+                                    (if @*rows
+                                      (into (->> table-hiccup-without-rows
+                                                 (filter (fn [v]
+                                                           (not
+                                                            (and (vector? v)
+                                                                 (-> v first (= :thead))))))
+                                                 vec)
+                                            @*rows)
+                                      ;; else
+                                      [:div {:style {:height "20px"}
+                                             :on-mouse-over
+                                             (fn []
+                                               (when-not @*rows
+                                                 (promesa.core/let [response (js/fetch path)
+                                                                    edn (.text response)]
+                                                   (reset! *rows (read-string edn)))))}
+                                       [:p "..."]])])))
               *pages (reagent.core/atom
                       (->> page-paths
                            (map (fn [path]
