@@ -9,7 +9,9 @@
    [clojure.walk]
    [hiccup.core :as hiccup]
    [charred.api :as charred]
-   [scicloj.clay.v2.util.merge :as merge]))
+   [scicloj.clay.v2.util.merge :as merge]
+   [scicloj.clay.v2.files :as files]
+   [clojure.string :as str]))
 
 (def *kind->preparer
   (atom {}))
@@ -144,55 +146,130 @@
  :kind/md
  #'item/md)
 
+(defn table-hiccup->paged-reagent-table [table-hiccup
+                                         {:as context
+                                          :keys [base-target-path
+                                                 full-target-path]}]
+  (let [page-size (-> context
+                      :kindly/options
+                      :table/page-size)
+        tbody-idx (->> table-hiccup
+                       (map-indexed (fn [i v]
+                                      (when (and (vector? v)
+                                                 (-> v first (= :tbody)))
+                                        i)))
+                       (filter some?)
+                       first)
+        rows (-> table-hiccup
+                 (get tbody-idx)
+                 rest
+                 vec)
+        table-hiccup-without-rows (-> table-hiccup
+                                      (assoc tbody-idx '[:tbody]))
+        page-paths (->> rows
+                        (partition page-size)
+                        (mapv (fn [page-rows]
+                                (let [full-path (files/next-file!
+                                                 full-target-path
+                                                 ""
+                                                 page-rows
+                                                 ".edn")
+                                      path (string/replace
+                                            full-path
+                                            (re-pattern
+                                             (str "^"
+                                                  base-target-path
+                                                  "/"))
+                                            "")]
+                                  (->> page-rows
+                                       pr-str
+                                       (spit full-path))
+                                  path))))]
+    ['(fn [[table-hiccup-without-rows
+            tbody-idx
+            page-paths]]
+        (let [page-component (fn [path]
+                               (let [*rows (reagent.core/atom nil)]
+                                 (promesa.core/let [response (js/fetch path)
+                                                    edn (.text response)]
+                                   (reset! *rows (read-string edn)))
+                                 (fn []
+                                   (into (->> table-hiccup-without-rows
+                                              (filter (fn [v]
+                                                        (not
+                                                         (and (vector? v)
+                                                              (-> v first (= :thead))))))
+                                              vec)
+                                         @*rows))))
+              *pages (reagent.core/atom
+                      (->> page-paths
+                           (map (fn [path]
+                                  ^{:key path}
+                                  [page-component path]))))]
+          (fn []
+            (into [:div
+                   table-hiccup-without-rows]
+                  @*pages))))
+     [table-hiccup-without-rows
+      tbody-idx
+      page-paths]]))
+
+(defn prepare-table [{:as context
+                      :keys [value]}]
+  (let [page-size (-> context
+                      :kindly/options
+                      :table/page-size)
+        {:keys [use-datatables]} (:kindly/options context)
+        pre-hiccup (table/->table-hiccup value)
+        *deps (atom []) ; TODO: implement without mutable state
+        hiccup (->> pre-hiccup
+                    (claywalk/postwalk
+                     (fn [elem]
+                       (if (and (vector? elem)
+                                (-> elem first (= :td)))
+                         ;; a table data cell - handle it
+                         (let [items (-> context
+                                         (dissoc :form)
+                                         (update :kindly/options :dissoc :element/max-height)
+                                         (assoc :value (second elem))
+                                         prepare-or-str)]
+                           (swap! *deps concat (mapcat :deps items))
+                           (->> items
+                                (map #(item->hiccup
+                                       %
+                                       (-> context
+                                           (cond-> (or page-size use-datatables)
+                                             (assoc :format [:html])))))
+                                (into [:td])))
+                         ;; else - keep it
+                         elem))))]
+    (cond page-size (-> context
+                        (assoc :value (table-hiccup->paged-reagent-table
+                                       hiccup
+                                       context))
+                        item/reagent)
+          use-datatables {:hiccup hiccup
+                          :script [:script
+                                   (->> context
+                                        :kindly/options
+                                        :datatables
+                                        charred/write-json-str
+                                        (format "new DataTable(document.currentScript.parentElement, %s);"))]
+                          :deps (->> @*deps
+                                     (cons :datatables)
+                                     distinct)}
+
+          :else {:hiccup hiccup
+                 :deps (distinct @*deps)})))
+
 (add-preparer!
  :kind/table
- (fn [{:as context
-       :keys [value]}]
-   (let [use-datatables (->> context
-                             :kindly/options
-                             :use-datatables)
-         pre-hiccup (table/->table-hiccup value)
-         *deps (atom []) ; TODO: implement without mutable state
-         hiccup (->> pre-hiccup
-                     (claywalk/postwalk
-                      (fn [elem]
-                        (if (and (vector? elem)
-                                 (-> elem first (= :td)))
-                          ;; a table data cell - handle it
-                          [:td (let [items (-> context
-                                               (dissoc :form)
-                                               (update :kindly/options :dissoc :element/max-height)
-                                               (assoc :value (second elem))
-                                               prepare-or-str)]
-                                 (swap! *deps concat (mapcat :deps items))
-                                 (map #(item->hiccup
-                                        %
-                                        (-> context
-                                            (cond-> use-datatables (assoc :format [:html]))))
-                                      items))]
-                          ;; else - keep it
-                          elem))))]
-     (if use-datatables
-       {:hiccup hiccup
-        :script [:script
-                 (->> context
-                      :kindly/options
-                      :datatables
-                      charred/write-json-str
-                      (format "new DataTable(document.currentScript.parentElement, %s);"))]
-        :deps (->> @*deps
-                   (cons :datatables)
-                   distinct)}
-       ;; else - a small table
-       {:hiccup hiccup
-        :deps (distinct @*deps)}))))
+ #'prepare-table)
 
 (defn structure-mark-hiccup [mark]
   (-> mark
       item/structure-mark
       :hiccup))
-
-
 
 (add-preparer-from-value-fn!
  :kind/code
