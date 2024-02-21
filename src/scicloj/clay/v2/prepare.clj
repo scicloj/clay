@@ -188,37 +188,68 @@
     ['(fn [[table-hiccup-without-rows
             tbody-idx
             page-paths]]
-        (let [page-component (fn [path]
-                               (let [*rows (reagent.core/atom nil)]
-
-                                 (fn []
-                                   [:div
-                                    (if @*rows
-                                      (into (->> table-hiccup-without-rows
-                                                 (filter (fn [v]
-                                                           (not
-                                                            (and (vector? v)
-                                                                 (-> v first (= :thead))))))
-                                                 vec)
-                                            @*rows)
-                                      ;; else
-                                      [:div {:style {:height "20px"}
-                                             :on-mouse-over
-                                             (fn []
-                                               (when-not @*rows
-                                                 (promesa.core/let [response (js/fetch path)
-                                                                    edn (.text response)]
-                                                   (reset! *rows (read-string edn)))))}
-                                       [:p "..."]])])))
-              *pages (reagent.core/atom
-                      (->> page-paths
-                           (map (fn [path]
-                                  ^{:key path}
-                                  [page-component path]))))]
+        (let [*state (reagent.core/atom
+                      {:pages (-> page-paths
+                                  count
+                                  (repeat nil)
+                                  vec)
+                       :max-idx-fetched -1
+                       :current-idx 0})
+              ;;
+              page-component
+              (fn [i path]
+                (fn []
+                  (reagent.core/create-class
+                   {:reagent-render
+                    (fn []
+                      (let [{:keys [pages max-idx-fetched current-idx]} @*state
+                            page (pages i)]
+                        [:div
+                         (if page
+                           (into (->> table-hiccup-without-rows
+                                      (filter (fn [v]
+                                                (not
+                                                 (and (vector? v)
+                                                      (-> v first (= :thead))))))
+                                      vec)
+                                 page)
+                           ;; else
+                           [:div {:style {:height "20px"}
+                                  :on-click
+                                  (fn []
+                                    (when (> i current-idx)
+                                      (swap! *state assoc :current-idx i)))}
+                            [:p "..."]])]))
+                    :component-did-update
+                    (fn []
+                      (let [{:keys [pages max-idx-fetched current-idx]} @*state]
+                        (when (> current-idx max-idx-fetched)
+                          (->> (range (inc max-idx-fetched)
+                                      (inc current-idx))
+                               (run!
+                                (fn [j]
+                                  (promesa.core/let [_ (promesa.core/delay 100)
+                                                     response (-> j
+                                                                  page-paths
+                                                                  js/fetch)
+                                                     edn (.text response)]
+                                    (swap! *state
+                                           (fn [state]
+                                             (-> state
+                                                 (assoc-in [:pages j]
+                                                           (read-string edn))
+                                                 (assoc :max-idx-fetched current-idx)))))))))))})))]
           (fn []
             (into [:div
+                   (-> @*state
+                       (select-keys [:max-idx-fetched
+                                     :current-idx])
+                       pr-str)
                    table-hiccup-without-rows]
-                  @*pages))))
+                  (->> page-paths
+                       (map-indexed (fn [i path]
+                                      ^{:key i}
+                                      [page-component i path])))))))
      [table-hiccup-without-rows
       tbody-idx
       page-paths]]))
