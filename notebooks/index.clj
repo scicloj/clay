@@ -906,17 +906,16 @@ filtered = data.filter(function(penguin) {
  {:reagent/deps [:three-d-mol]})
 
 ;; ### Video
+(kind/video {:youtube-id "DAQnvAgBma8"})
 
-(kind/video {:youtube-id "MXHI4mgfVk8"})
-
-(kind/video {:youtube-id "MXHI4mgfVk8"
+(kind/video {:youtube-id "DAQnvAgBma8"
              :allowfullscreen false})
 
-(kind/video {:youtube-id "MXHI4mgfVk8"
+(kind/video {:youtube-id "DAQnvAgBma8"
              :iframe-width 480
              :iframe-height 270})
 
-(kind/video {:youtube-id "MXHI4mgfVk8"
+(kind/video {:youtube-id "DAQnvAgBma8"
              :embed-options {:mute 1
                              :controls 0}})
 
