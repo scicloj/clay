@@ -771,6 +771,36 @@ filtered = data.filter(function(penguin) {
                                            })
 ")
 
+
+;; More examples from [Quarto's Observable documentation](https://quarto.org/docs/interactive/ojs/):
+
+(kind/observable
+ "
+athletes = FileAttachment('notebooks/athletes.csv').csv({typed: true})
+
+Plot.plot({
+  grid: true,
+  facet: {
+    data: athletes,
+    y: 'sex'
+  },
+  marks: [
+    Plot.rectY(
+      athletes,
+      Plot.binX({y: 'count'}, {x: 'weight', fill: 'sex'})
+    ),
+    Plot.ruleY([0])
+  ]
+})
+")
+
+
+
+
+
+
+
+
 ;; ### Leaflet
 
 ;; This example was adapted from [the Leaflet website](https://leafletjs.com/). Note we are defining a tile layer using [leaflet-providers](https://github.com/leaflet-extras/leaflet-providers).
