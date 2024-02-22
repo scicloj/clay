@@ -1,2 +1,2 @@
-palmer-penguins.csv is from the R package palmerpenguins
-https://allisonhorst.github.io/palmerpenguins/
+palmer-penguins.csv, athletes.csv, population.json are from the Quarto Observable docs.
+(https://quarto.org/docs/interactive/ojs/)
