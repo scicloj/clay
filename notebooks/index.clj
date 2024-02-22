@@ -776,7 +776,10 @@ filtered = data.filter(function(penguin) {
 
 
 (kind/observable
- "athletes = FileAttachment('notebooks/athletes.csv').csv({typed: true})")
+ "athletes = FileAttachment('notebooks/datasets/athletes.csv').csv({typed: true})")
+
+(kind/observable
+ "athletes")
 
 (kind/observable
  "Inputs.table(athletes)")
@@ -799,10 +802,15 @@ Plot.plot({
 })
 ")
 
+(kind/observable
+ "population = FileAttachment('notebooks/datasets/population.json').json()")
 
+(kind/observable
+ "population")
 
-
-
+(kind/observable
+ " import { chart } with { population as data } from '@d3/zoomable-sunburst'
+ chart")
 
 
 
