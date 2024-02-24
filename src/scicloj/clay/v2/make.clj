@@ -97,13 +97,19 @@
           last
           (#{"index.qmd" "index.clj"})))
 
+(defn index-target-path? [path]
+  (some-> path
+          (string/split #"/")
+          last
+          (#{"index.html"})))
+
 (defn quarto-book-config [{:as spec
                            :keys [book
                                   quarto
                                   base-target-path
                                   full-target-paths]}]
   (let [index-included? (->> full-target-paths
-                             (some index-path?))]
+                             (some index-target-path?))]
     (-> quarto
         (select-keys [:format])
         (merge/deep-merge
@@ -213,6 +219,8 @@
                                    select-keys [(second format)])
                         (update-in [:quarto :format (second format)]
                                    assoc :output-file output-file)
+                        (cond-> book
+                          (update :quarto dissoc :title))
                         page/md
                         (->> (spit qmd-path)))
                     (println [:wrote qmd-path (time/now)])
