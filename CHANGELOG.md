@@ -2,7 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-alpha81] - unreleased
-- bugfix: typo in handlinh :kindly/options of nested elements
+- bugfix: typo in handling :kindly/options of nested elements
+- bugfix: assigning the full target path to a book's index page
 
 ## [2-alpha80] - 2024-02-17
 - avoiding the iframe when serving the page (simplifies URL handling, etc.)

@@ -338,6 +338,20 @@
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
 
+
+;; Create a Quarto book
+;; with a specified index page:
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path ["index.clj"
+                             "chapter.clj"
+                             "another_chapter.md"]
+               :base-target-path "book"
+               :book {:title "Book Example"}
+               ;; Empty the target directory first:
+               :clean-up-target-dir true}))
+
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
 

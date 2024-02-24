@@ -171,7 +171,7 @@
      (babashka.fs/delete-tree (str base-target-path "/_book"))
      (when show
        (-> spec
-           (assoc :full-target-path "index.html")
+           (assoc :full-target-path (str base-target-path "/index.html"))
            server/update-page!))
      [:ok])])
 
