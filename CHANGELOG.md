@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: typo in handling :kindly/options of nested elements
 - bugfix: assigning the full target path to a book's index page
 - bugfix: avoiding global quarto title in book chapters
+- bugfix: making sure all book pages are wrapped with header and live-reload script 
 
 ## [2-alpha80] - 2024-02-17
 - avoiding the iframe when serving the page (simplifies URL handling, etc.)

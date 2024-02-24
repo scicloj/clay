@@ -110,20 +110,21 @@
                                                ""))]
      (some-> state
              :full-target-path
-             slurp
-             (str/replace #"(<\s*head[^>]*>)"
-                          (str "$1"
-                               (hiccup/html
-                                item/avoid-favicon)))
-             (str/replace #"(<\s*body[^>]*>)"
-                          (str "$1"
-                               (hiccup/html
-                                #_[:style "* {margin: 0; padding: 0; top: 0;}"]
-                                [:div {:style {:height "70px"
-                                               :background-color "#eee"}}
-                                 (header state)])
-                               (communication-script state)))))))
+             slurp))))
 
+(defn wrap-html [html state]
+  (-> html
+      (str/replace #"(<\s*head[^>]*>)"
+                   (str "$1"
+                        item/avoid-favicon-html))
+      (str/replace #"(<\s*body[^>]*>)"
+                   (str "$1"
+                        (hiccup/html
+                         #_[:style "* {margin: 0; padding: 0; top: 0;}"]
+                         [:div {:style {:height "70px"
+                                        :background-color "#eee"}}
+                          (header state)])
+                        (communication-script state)))))
 
 (defn routes [{:keys [:body :request-method :uri]
                :as req}]
@@ -133,7 +134,9 @@
                                :on-close (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
       (case [request-method uri]
-        [:get "/"] {:body (page state)
+        [:get "/"] {:body (-> state
+                              page
+                              (wrap-html state))
                     :headers {"Content-Type" "text/html"}
                     :status 200}
         [:get "/counter"] {:body (-> state
@@ -141,9 +144,15 @@
                                      str)
                            :status 200}
         ;; else
-        (merge {:body (try (->> uri
-                                (str (:base-target-path state))
-                                (java.io.FileInputStream.))
+        (merge {:body (try (if (re-matches #".*\.html$" uri)
+                             (-> uri
+                                 (->> (str (:base-target-path state)))
+                                 slurp
+                                 (wrap-html state))
+                             ;; else
+                             (->> uri
+                                  (str (:base-target-path state))
+                                  (java.io.FileInputStream.)))
                            (catch java.io.FileNotFoundException e
                              ;; Ignoring missing source maps.
                              ;; TODO: Figure this problem out.

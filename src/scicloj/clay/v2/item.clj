@@ -7,6 +7,7 @@
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
             [hiccup.page]
+            [hiccup.core :as hiccup]
             [clojure.string :as str]))
 
 (defn in-vector [v]
@@ -282,6 +283,7 @@ Plotly.newPlot(document.currentScript.parentElement,
 %s
 ```"))})
 
-(def avoid-favicon
+(def avoid-favicon-html
   ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
-  [:link {:rel "icon" :href "data:,"}])
+  (hiccup/html
+   [:link {:rel "icon" :href "data:,"}]))
