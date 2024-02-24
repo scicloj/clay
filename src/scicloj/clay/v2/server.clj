@@ -39,7 +39,7 @@
     clay_port = %d;
     clay_server_counter = '%d';
 
-    clay_refresh = function() {location.reload();}
+    clay_refresh = function() {location.assign('http://localhost:'+clay_port);}
 
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
 
