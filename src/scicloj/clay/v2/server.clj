@@ -96,9 +96,7 @@
        (time/now)]]]
     #_(:hiccup item/separator)]))
 
-(def avoid-favicon
-  ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
-  [:link {:rel "icon" :href "data:,"}])
+
 
 (defn page
   ([]
@@ -116,7 +114,7 @@
              (str/replace #"(<\s*head[^>]*>)"
                           (str "$1"
                                (hiccup/html
-                                avoid-favicon)))
+                                item/avoid-favicon)))
              (str/replace #"(<\s*body[^>]*>)"
                           (str "$1"
                                (hiccup/html

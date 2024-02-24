@@ -281,3 +281,7 @@ Plotly.newPlot(document.currentScript.parentElement,
 //| echo: false
 %s
 ```"))})
+
+(def avoid-favicon
+  ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
+  [:link {:rel "icon" :href "data:,"}])
