@@ -327,7 +327,7 @@
                :source-path "index.clj"}))
 
 ;; Create a Quarto book
-;; (to be documented better soon):
+;; with a default generated index page:
 (comment
   (clay/make! {:format [:quarto :html]
                :base-source-path "notebooks"
@@ -778,8 +778,8 @@ Plot.rectY(filtered,
         }
        )
 Inputs.table(filtered)
-data = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })
-filtered = data.filter(function(penguin) {
+penguins = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })
+filtered = penguins.filter(function(penguin) {
                                            return bill_length_min < penguin.bill_length_mm &&
                                            islands.includes(penguin.island);
                                            })
