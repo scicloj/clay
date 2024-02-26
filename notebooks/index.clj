@@ -334,7 +334,12 @@
                :source-path ["chapter.clj"
                              "another_chapter.md"]
                :base-target-path "book"
-               :book {:title "Book Example"}
+               :book {:title "Book Example"
+                      :generated-index {:title "Preface"
+                                        :text "
+This is a book example.
+
+Note that the index page has been generated from config."}}
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
 
