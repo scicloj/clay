@@ -140,11 +140,34 @@
     (prn [:wrote config-path])
     [:wrote config-path]))
 
-(defn quarto-book-index [{{:keys [toc title]} :book}]
-  (str "---\n"
-       (yaml/generate-string {:format {:html {:toc (some? toc)}}})
-       "\n---\n"
-       "# " title))
+(defn quarto-book-index [{:keys [book]}
+                         single-ns-specs]
+  (let [{:keys [toc generated-index]} book
+        {:keys [title text]} generated-index]
+    (str "---\n"
+         (yaml/generate-string {:format {:html {:toc (some? toc)}}})
+         "\n---\n"
+         "# " title "\n"
+         text "\n\n"
+         "Contents:\n\n"
+         (->> single-ns-specs
+              (map (fn [{:keys [source-path full-source-path]}]
+                     (let [ext (-> source-path
+                                   (string/split #"\.")
+                                   last)
+                           header-pattern (case ext
+                                            "clj" #"^;; # "
+                                            "md" #"^# ")]
+                       (format "- [%s](%s)\n"
+                               (-> (some-> full-source-path
+                                           slurp
+                                           (str/split #"\n")
+                                           (->> (filter (partial re-find header-pattern)))
+                                           first
+                                           (str/replace header-pattern ""))
+                                   (or source-path))
+                               full-source-path))))
+              (str/join "\n")))))
 
 (defn write-quarto-book-index-if-needed! [quarto-index
                                           {:keys [base-target-path]}]
@@ -158,12 +181,13 @@
 (defn make-book! [{:as spec
                    :keys [base-target-path
                           run-quarto
-                          show]}]
+                          show]}
+                  single-ns-specs]
   [(-> spec
        quarto-book-config
        (write-quarto-book-config! spec))
    (-> spec
-       quarto-book-index
+       (quarto-book-index single-ns-specs)
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
@@ -182,11 +206,7 @@
      [:ok])])
 
 
-(defn handle-main-spec! [{:as spec
-                          :keys [book]}]
-  (if book
-    (make-book! spec)
-    [:ok]))
+
 
 (defn handle-single-source-spec! [{:as spec
                                    :keys [source-type
@@ -260,7 +280,8 @@
         (io/make-parents target)
         (util.fs/copy-tree-no-clj subdir target)))))
 
-(defn make! [spec]
+(defn make! [{:as spec
+              :keys [book]}]
   (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge/deep-merge
                                                             spec))
@@ -275,7 +296,8 @@
                            (assoc :items [item/loader])
                            page/html))
           server/update-page!))
-    [(->> single-ns-specs
-          (mapv handle-single-source-spec!))
-     (-> main-spec
-         handle-main-spec!)]))
+    [(mapv handle-single-source-spec!
+           single-ns-specs)
+     (when book
+       (make-book! main-spec
+                   single-ns-specs))]))
