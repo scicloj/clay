@@ -199,7 +199,7 @@
         :deps (->> @*deps
                    (cons :datatables)
                    distinct)}
-       ;; else - a small table
+       ;; else
        {:hiccup hiccup
         :deps (distinct @*deps)}))))
 
