@@ -140,6 +140,7 @@
               [:style (styles/main :bootswatch-spacelab-bootstrap-adapted-bg-light.min)]
               [:style (styles/main :bootstrap-generated-by-quarto.min)]
               [:style (styles/highlight :panda-syntax-light)]
+              [:style (styles/main :main)]
               (when toc?
                 (include-from-a-local-file
                  "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"
@@ -233,7 +234,8 @@
    ;; " "
    (hiccup/html
     [:style (styles/main :table)]
-    [:style (styles/main :md-main)])
+    [:style (styles/main :md-main)]
+    [:style (styles/main :main)])
    (->> items
         (mapcat :deps)
         distinct
