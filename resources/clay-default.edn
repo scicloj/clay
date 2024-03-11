@@ -5,7 +5,7 @@
  :run-quarto true
  :quarto {:format {:html {:toc true
                           :toc-depth 4
-                          :theme :spacelab}
+                          :theme :cosmo}
                    :revealjs {:theme :solarized
                               :navigation-mode :vertical
                               :transition :slide
