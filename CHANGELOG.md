@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-alpha82] - unreleased
 - changed default Quarto theme
+- support for dedicated CSS classed of certain items (e.g., "clay-img")
 
 ## [2-alpha81] - 2024-02-24
 - bugfix: typo in handling :kindly/options of nested elements

@@ -33,10 +33,25 @@
       kindly-advice/advise
       :kind))
 
+(defn add-class-to-class-str [class-str cls]
+  (if class-str
+    (str class-str " " cls)
+    cls))
+
+(defn add-class-to-hiccup [hiccup cls]
+  (if cls
+    (if (-> hiccup second map?)
+      (update-in hiccup [1 :class] #(add-class-to-class-str % cls))
+      (vec (concat [(first hiccup)
+                    {:class cls}]
+                   (rest hiccup))))
+    hiccup))
+
 (defn item->hiccup [{:keys [hiccup html md
-                            script]}
+                            script
+                            item-class]}
                     {:as context
-                     :keys [format]}]
+                     :keys [format kind]}]
   (-> (or hiccup
           (some->> html
                    (vector :div))
@@ -48,6 +63,7 @@
                    md/->hiccup
                    (clojure.walk/postwalk-replace {:<> :p})
                    (clojure.walk/postwalk-replace {:table :table.table})))))
+      (add-class-to-hiccup item-class)
       (cond-> script
         (conj script))))
 
