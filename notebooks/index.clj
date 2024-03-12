@@ -489,6 +489,13 @@
 
 clay-image
 
+;; The `.clay-limit-image-width` class on a surrounding `div`
+;; may be used to limit the image width to fit at most the notebook's width.
+
+(kind/hiccup
+ [:div.clay-limit-image-width
+  clay-image])
+
 ;; ### Plain data structures
 
 ;; Plain data structures (lists and sequnces, vectors, sets, maps)
