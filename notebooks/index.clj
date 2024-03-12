@@ -574,6 +574,9 @@ nested-structure-1
   :row-vectors people-as-vectors})
 
 (kind/table
+ {:row-vectors people-as-vectors})
+
+(kind/table
  {:column-names [:preferred-language :age]
   :row-maps people-as-maps})
 
