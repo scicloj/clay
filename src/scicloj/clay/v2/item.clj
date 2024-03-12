@@ -220,7 +220,7 @@ Plotly.newPlot(document.currentScript.parentElement,
                                                base-target-path
                                                "/"))
                               ""))}]
-     :item-class "clay-img"}))
+     :item-class "clay-image"}))
 
 
 (defn vega-embed [{:keys [value
