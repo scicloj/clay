@@ -1,21 +1,24 @@
 (ns scicloj.clay.v2.table)
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
-  [:table {:class "table table-hover table-responsive"}
-   [:thead
-    (->> column-names
-         (mapv (fn [x] [:th (str x)]))
-         (into [:tr]))]
-   (->> row-vectors
-        (map-indexed
-         (fn [i row]
-           (->> row
-                (mapv (fn [x] [:td x #_(-> x
-                                           println
-                                           with-out-str)]))
-                (into [:tr]))))
-        vec
-        (into [:tbody]))])
+  (->> [:table {:class "table table-hover table-responsive"}
+        (when column-names
+          [:thead
+           (->> column-names
+                (mapv (fn [x] [:th (str x)]))
+                (into [:tr]))])
+        (->> row-vectors
+             (map-indexed
+              (fn [i row]
+                (->> row
+                     (mapv (fn [x] [:td x #_(-> x
+                                                println
+                                                with-out-str)]))
+                     (into [:tr]))))
+             vec
+             (into [:tbody]))]
+       (filter some?)
+       vec))
 
 (defn row-maps->table-hiccup
   ([row-maps]
@@ -45,7 +48,6 @@
           (= "class tech.v3.dataset.impl.dataset.Dataset"))
     (dataset->table-hiccup dataset-or-options)
     (let [{:keys [row-maps row-vectors column-names]} dataset-or-options]
-      (assert column-names)
       (if row-vectors
         (row-vectors->table-hiccup column-names row-vectors)
         (do

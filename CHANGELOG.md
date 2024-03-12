@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - changed default Quarto theme
 - support for dedicated CSS classed of certain items (e.g., "clay-image")
 - images are styled through classes, keeping original size by default
+- support for `kind/table` with no head
 
 ## [2-alpha81] - 2024-02-24
 - bugfix: typo in handling :kindly/options of nested elements
