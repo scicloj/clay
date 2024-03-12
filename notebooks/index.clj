@@ -1064,7 +1064,6 @@ Plot.plot({
 
 ;; Kinds are treated recursively inside Tables:
 
-
 (kind/table
  {:column-names [:x :y]
   :row-vectors [[(kind/md "*some text* **some more text**")
@@ -1072,7 +1071,7 @@ Plot.plot({
                 [(tc/dataset {:x (range 3)
                               :y (map inc (range 3))})
                  (random-vega-lite-plot 9)]
-                [(kind/hiccup [:div {:style {:height 200}}
+                [(kind/hiccup [:div.clay-limit-image-width
                                clay-image])
                  (kind/md "$x^2$")]]})
 
