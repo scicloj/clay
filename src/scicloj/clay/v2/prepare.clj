@@ -191,27 +191,26 @@
                                       items))]
                           ;; else - keep it
                           elem))))]
-     (if use-datatables
-       {:hiccup hiccup
-        :script [:script
-                 (->> context
-                      :kindly/options
-                      :datatables
-                      charred/write-json-str
-                      (format "new DataTable(document.currentScript.parentElement, %s);"))]
-        :deps (->> @*deps
-                   (cons :datatables)
-                   distinct)}
-       ;; else
-       {:hiccup hiccup
-        :deps (distinct @*deps)}))))
+     (merge
+      {:hiccup hiccup
+       :item-class "clay-table"}
+      (if use-datatables
+        {:script [:script
+                  (->> context
+                       :kindly/options
+                       :datatables
+                       charred/write-json-str
+                       (format "new DataTable(document.currentScript.parentElement, %s);"))]
+         :deps (->> @*deps
+                    (cons :datatables)
+                    distinct)}
+        ;; else
+        {:deps (distinct @*deps)})))))
 
 (defn structure-mark-hiccup [mark]
   (-> mark
       item/structure-mark
       :hiccup))
-
-
 
 (add-preparer-from-value-fn!
  :kind/code
@@ -225,7 +224,8 @@
    (-> v
        println
        with-out-str
-       item/md)))
+       item/md
+       (merge {:item-class "clay-dataset"}))))
 
 (add-preparer-from-value-fn!
  :kind/smile-model
