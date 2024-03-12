@@ -69,15 +69,18 @@
 
 
 (defn item->md [{:keys [hiccup html md
-                        script]}]
-  (if script
-    (-> hiccup
-        (conj script)
-        hiccup/html)
-    (-> (or md
-            (format "\n```{=html}\n%s\n```\n"
-                    (or html
-                        (some-> hiccup hiccup/html)))))))
+                        script
+                        item-class]}]
+  (-> (if script
+        (-> hiccup
+            (conj script)
+            hiccup/html)
+        (-> (or md
+                (format "\n```{=html}\n%s\n```\n"
+                        (or html
+                            (some-> hiccup hiccup/html))))))
+      (cond-> item-class
+        (#(format "::: {.%s}\n%s\n:::\n" item-class %)))))
 
 (defn limit-hiccup-height [hiccup context]
   (when hiccup
