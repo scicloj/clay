@@ -182,9 +182,7 @@
                                                         (dissoc :form)
                                                         (update :kindly/options :dissoc :element/max-height)
                                                         (assoc :value (second elem))
-                                                        (spy [:DBG1 elem])
-                                                        prepare-or-str
-                                                        (spy [:DBG2 elem]))]
+                                                        prepare-or-str)]
                                           (swap! *deps concat (mapcat :deps items))
                                           (map #(item->hiccup
                                                  %
