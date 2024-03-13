@@ -68,13 +68,15 @@
         (conj script))))
 
 
-(defn item->md [{:keys [hiccup html md
+(defn item->md [{:as context
+                 :keys [hiccup html md
                         script
                         item-class]}]
   (-> (if script
-        (-> hiccup
-            (conj script)
-            hiccup/html)
+        (-> context
+            (dissoc :script)
+            (update :hiccup conj script)
+            item->md)
         (-> (or md
                 (format "\n```{=html}\n%s\n```\n"
                         (or html
