@@ -45,6 +45,9 @@
     "md" (str base-target-path
               "/"
               full-source-path)
+    "ipynb" (str base-target-path
+                 "/"
+                 full-source-path)
     "clj" (path/ns->target-path base-target-path
                                 (-> ns-form
                                     second
