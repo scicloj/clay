@@ -124,7 +124,7 @@
            (mapcat (fn [subvalue]
                      (-> context
                          (assoc :value subvalue)
-                         (prepare {fallback-preparer fallback-preparer})))))
+                         (prepare {:fallback-preparer fallback-preparer})))))
       ;; else - not a fragment
       (when-let [preparer (-> kind
                               (@*kind->preparer)
