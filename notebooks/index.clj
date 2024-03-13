@@ -1097,6 +1097,9 @@ Plot.plot({
                               [:big [:p color]]])]))
      kind/fragment)
 
+(->> (range 3)
+     kind/fragment)
+
 ;; Importantly, markdown subsections affect the Quarto table of contents.
 
 ;; ## Delays
