@@ -49,7 +49,8 @@
 
 (defn item->hiccup [{:keys [hiccup html md
                             script
-                            item-class]}
+                            item-class
+                            inside-a-table]}
                     {:as context
                      :keys [format kind]}]
   (-> (or hiccup
@@ -57,7 +58,8 @@
                    (vector :div))
           (when md
             (if (and (vector? format)
-                     (-> format first (= :quarto)))
+                     (-> format first (= :quarto))
+                     inside-a-table)
               [:span {:data-qmd md}]
               (->> md
                    md/->hiccup
@@ -66,7 +68,6 @@
       (add-class-to-hiccup item-class)
       (cond-> script
         (conj script))))
-
 
 (defn item->md [{:as context
                  :keys [hiccup html md
@@ -186,10 +187,13 @@
                                                         (assoc :value (second elem))
                                                         prepare-or-str)]
                                           (swap! *deps concat (mapcat :deps items))
-                                          (map #(item->hiccup
-                                                 %
-                                                 (-> context
-                                                     (cond-> use-datatables (assoc :format [:html]))))
+                                          (map (fn [item]
+                                                 (-> item
+                                                     (assoc :inside-a-table true)
+                                                     (item->hiccup
+                                                      (-> context
+                                                          (cond-> use-datatables
+                                                            (assoc :format [:html]))))))
                                                items))]
                           ;; else - keep it
                           elem))))]

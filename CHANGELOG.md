@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 - support for nested kinds in `kint/table` column names
 - bugfix: passing fallback preparer inside fragments (#85)
 - bugfix: handling markdown generation consistently when a js script is included
+- bugfix: using Quarto's data-qmd approach only inside tables (#80)
 
 ## [2-alpha81] - 2024-02-24
 - bugfix: typo in handling :kindly/options of nested elements
