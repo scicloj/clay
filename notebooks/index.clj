@@ -532,7 +532,9 @@ clay-image
    :map-of-different-things {:markdown (kind/md ["*hi*, **hi**"])
                              :number 9999}
    :hiccup (kind/hiccup
-            [:big [:big "bye"]])})
+            [:big [:big "bye"]])
+   :dataset (tc/dataset {:x (range 3)
+                         :y [:A :B :C]})})
 
 nested-structure-1
 
