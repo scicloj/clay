@@ -1065,7 +1065,10 @@ Plot.plot({
 ;; Kinds are treated recursively inside Tables:
 
 (kind/table
- {:column-names [:x :y]
+ {:column-names [(kind/hiccup
+                  [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
+                 (kind/hiccup
+                  [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
   :row-vectors [[(kind/md "*some text* **some more text**")
                  (kind/code "{:x (1 2 [3 4])}")]
                 [(tc/dataset {:x (range 3)
