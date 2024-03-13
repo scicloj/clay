@@ -1,6 +1,5 @@
 (ns scicloj.clay.v2.make
   (:require [scicloj.clay.v2.config :as config]
-            [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.read :as read]
             [scicloj.clay.v2.item :as item]
@@ -200,7 +199,6 @@
   (when (or (= source-type "clj")
             single-form
             single-value)
-    (files/init-target! full-target-path)
     (try
       (let [spec-with-items      (-> spec
                                      (config/add-field :items notebook/notebook-items))]
