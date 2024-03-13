@@ -15,7 +15,8 @@
             [babashka.fs]
             [scicloj.clay.v2.util.fs :as util.fs]
             [clojure.string :as str]
-            [scicloj.clay.v2.util.merge :as merge]))
+            [scicloj.clay.v2.util.merge :as merge]
+            [scicloj.clay.v2.files :as files]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
   (when source-path
@@ -200,6 +201,7 @@
             single-form
             single-value)
     (try
+      (files/init-target! full-target-path)
       (let [spec-with-items      (-> spec
                                      (config/add-field :items notebook/notebook-items))]
         (case (first format)
@@ -245,7 +247,8 @@
                              (assoc :items [(item/pprint e)])
                              page/html))
             server/update-page!)
-        (throw e)))))
+        (throw e))
+      (finally (files/init-target! full-target-path)))))
 
 
 (defn sync-resources! [{:keys [base-target-path

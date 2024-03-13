@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: passing fallback preparer inside fragments (#85)
 - bugfix: handling markdown generation consistently when a js script is included
 - bugfix: using Quarto's data-qmd approach only inside tables (#80)
-- file management - avoiding unnecessary init
+- file management - cleaning up memory to avoid memory leakage (#84)
 
 ## [2-alpha81] - 2024-02-24
 - bugfix: typo in handling :kindly/options of nested elements

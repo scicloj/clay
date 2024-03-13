@@ -7,7 +7,6 @@
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.read :as read]
    [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.files :as files]
    [scicloj.clay.v2.util.merge :as merge]
    [scicloj.kindly.v4.kind :as kind]))
 
@@ -115,7 +114,6 @@
             single-form
             single-value
             format]}]
-   (files/init-target! full-target-path)
    (let [code (some-> full-source-path
                       slurp)
          notes  (cond
@@ -125,24 +123,25 @@
                   single-form (conj (when code
                                       [{:form (read/read-ns-form code)}])
                                     {:form single-form})
-                  :else (read/->safe-notes code))]
-     (-> notes
-         (->> (mapcat (fn [note]
-                        (-> note
-                            complete-note
-                            (merge/deep-merge
-                             (-> options
-                                 (select-keys [:base-target-path
-                                               :full-target-path
-                                               :kindly/options
-                                               :format])))
-                            (note-to-items options))))
-              (remove nil?))
-         (add-info-line options)
-         ;; (cond-> (= format [:html])
-         ;;   ;; a trick to use portal syntax highlighting
-         ;;   (concat [(item/portal [])]))
-         doall))))
+                  :else (read/->safe-notes code))
+         items (-> notes
+                   (->> (mapcat (fn [note]
+                                  (-> note
+                                      complete-note
+                                      (merge/deep-merge
+                                       (-> options
+                                           (select-keys [:base-target-path
+                                                         :full-target-path
+                                                         :kindly/options
+                                                         :format])))
+                                      (note-to-items options))))
+                        (remove nil?))
+                   (add-info-line options)
+                   ;; (cond-> (= format [:html])
+                   ;;   ;; a trick to use portal syntax highlighting
+                   ;;   (concat [(item/portal [])]))
+                   doall)]
+     items)))
 
 
 (comment
