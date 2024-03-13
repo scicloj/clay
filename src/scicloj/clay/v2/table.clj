@@ -5,15 +5,13 @@
         (when column-names
           [:thead
            (->> column-names
-                (mapv (fn [x] [:th (str x)]))
+                (mapv (fn [x] [:th x]))
                 (into [:tr]))])
         (->> row-vectors
              (map-indexed
               (fn [i row]
                 (->> row
-                     (mapv (fn [x] [:td x #_(-> x
-                                                println
-                                                with-out-str)]))
+                     (mapv (fn [x] [:td x]))
                      (into [:tr]))))
              vec
              (into [:tbody]))]

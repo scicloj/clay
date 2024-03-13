@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 - images are styled through classes, keeping original size by default
 - support for `kind/table` with no head
 - bugfix: passing fallback preparer inside fragments (#85)
+- support for nested kinds in `kint/table` column names
 
 ## [2-alpha81] - 2024-02-24
 - bugfix: typo in handling :kindly/options of nested elements

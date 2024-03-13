@@ -176,19 +176,21 @@
                      (claywalk/postwalk
                       (fn [elem]
                         (if (and (vector? elem)
-                                 (-> elem first (= :td)))
-                          ;; a table data cell - handle it
-                          [:td (let [items (-> context
-                                               (dissoc :form)
-                                               (update :kindly/options :dissoc :element/max-height)
-                                               (assoc :value (second elem))
-                                               prepare-or-str)]
-                                 (swap! *deps concat (mapcat :deps items))
-                                 (map #(item->hiccup
-                                        %
-                                        (-> context
-                                            (cond-> use-datatables (assoc :format [:html]))))
-                                      items))]
+                                 (-> elem first (#{:th :td})))
+                          ;; a table cell - handle it
+                          [(first elem) (let [items (-> context
+                                                        (dissoc :form)
+                                                        (update :kindly/options :dissoc :element/max-height)
+                                                        (assoc :value (second elem))
+                                                        (spy [:DBG1 elem])
+                                                        prepare-or-str
+                                                        (spy [:DBG2 elem]))]
+                                          (swap! *deps concat (mapcat :deps items))
+                                          (map #(item->hiccup
+                                                 %
+                                                 (-> context
+                                                     (cond-> use-datatables (assoc :format [:html]))))
+                                               items))]
                           ;; else - keep it
                           elem))))]
      (merge
