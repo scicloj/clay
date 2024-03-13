@@ -1078,6 +1078,18 @@ Plot.plot({
                                clay-image])
                  (kind/md "$x^2$")]]})
 
+(kind/table
+ {:column-names ["size" "square"]
+  :row-vectors (for [i (range 20)]
+                 (let [size (* i 10)
+                       px (str size "px")]
+                   [size
+                    (kind/hiccup
+                     [:div {:style {:height px
+                                    :width px
+                                    :background-color "purple"}}])]))}
+ {:use-datatables true})
+
 ;; ### More nesting examples
 
 {:plot (random-vega-lite-plot 9)
