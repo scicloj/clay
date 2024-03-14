@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-alpha82] - 2024-03-14
-- changed default Quarto theme
-- support for dedicated CSS classed of certain items (e.g., "clay-image")
+- changed default Quarto theme to `cosmo`
+- support for dedicated CSS classes of certain items (e.g., "clay-image")
 - images are styled through classes, keeping original size by default
 - support for `kind/table` with no head
 - support for nested kinds in `kint/table` column names
