@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha83] - 2024-03-15
+- more input kinds supported by `kind/table` (PR by @genmeblog)
+  - added `seq-of-seqs`, `seq-of-maps` and `map-of-seqs` with better infering column names for `seq-of-maps`
+
 ## [2-alpha82] - 2024-03-14
 - changed default Quarto theme to `cosmo`
 - support for dedicated CSS classes of certain items (e.g., "clay-image")
