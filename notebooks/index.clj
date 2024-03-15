@@ -563,22 +563,42 @@ nested-structure-1
 
 ;; ### Tables
 
-;; The `:kind/table` kind can be handy for an interactive table view.
+;; The `:kind/table` kind can be handy for an interactive table view. `:kind/table` understands many structures which can be rendered as a table.
+
+;; A map containing either `:row-vectors` (sequence of sequences) or `row-maps` (sequence of maps) keys with optional `:column-names`.
 
 (kind/table
  {:column-names [:preferred-language :age]
   :row-vectors people-as-vectors})
 
-(kind/table
- {:row-vectors people-as-vectors})
+;; Lack of column names produces table without a header.
 
 (kind/table
- {:column-names [:preferred-language :age]
-  :row-maps people-as-maps})
+ {:row-vectors (take 5 people-as-vectors)})
+
+;; Column names are inferred from a sequence of maps
 
 (kind/table
- {:column-names [:preferred-language :age]
+ {:row-maps (take 5 people-as-maps)})
+
+;; We can limit displayed columns for sequence of maps case.
+
+(kind/table
+ {:column-names [:preferred-language]
   :row-maps (take 5 people-as-maps)})
+
+;; Sequence of sequences and sequence of maps also work
+
+(kind/table (take 5 people-as-vectors))
+
+(kind/table (take 5 people-as-maps))
+
+;; Additionally map of sequences is supported (unless it contains `:row-vectors` or `:row-maps` key, see such case above). 
+
+(kind/table {:x (range 6)
+             :y [:A :B :C :A :B :C]})
+
+;; A dataset can be also treated as a table input.
 
 (def people-as-dataset
   (tc/dataset people-as-maps))
