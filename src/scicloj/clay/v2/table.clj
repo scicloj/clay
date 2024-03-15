@@ -8,11 +8,10 @@
                 (mapv (fn [x] [:th x]))
                 (into [:tr]))])
         (->> row-vectors
-             (map-indexed
-              (fn [i row]
-                (->> row
-                     (mapv (fn [x] [:td x]))
-                     (into [:tr]))))
+             (map (fn [row]
+                    (->> row
+                         (mapv (fn [x] [:td x]))
+                         (into [:tr]))))
              vec
              (into [:tbody]))]
        (filter some?)
@@ -68,16 +67,3 @@
               row-maps (row-maps->table-hiccup column-names row-maps)
               ;; treat any other cases as map of seqs
               :else (dataset->table-hiccup dataset-or-data)))))
-
-#_(defn ->table-hiccup-old [dataset-or-options]
-    (if (-> dataset-or-options
-            class
-            str
-            (= "class tech.v3.dataset.impl.dataset.Dataset"))
-      (dataset->table-hiccup dataset-or-options)
-      (let [{:keys [row-maps row-vectors column-names]} dataset-or-options]
-        (if row-vectors
-          (row-vectors->table-hiccup column-names row-vectors)
-          (do
-            (assert row-maps)
-            (row-maps->table-hiccup column-names row-maps))))))
