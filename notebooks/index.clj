@@ -593,7 +593,7 @@ nested-structure-1
 
 (kind/table (take 5 people-as-maps))
 
-;; Additionally map of sequences is supported (unless it contains `:row-vectors` or `:row-maps` key, see such case above). 
+;; Additionally map of sequences is supported (unless it contains `:row-vectors` or `:row-maps` key, see such case above).
 
 (kind/table {:x (range 6)
              :y [:A :B :C :A :B :C]})
@@ -620,8 +620,7 @@ nested-structure-1
 
 (-> people-as-dataset
     (kind/table {:use-datatables true
-                 :datatables {:scrollY 300
-                              :paging false}}))
+                 :datatables {:scrollY 300}}))
 
 ;; ### ML models
 
