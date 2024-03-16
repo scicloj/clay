@@ -1,9 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha84]
+## [2-alpha84] - 2024-03-16
 - bugfix in `kind/table` preparation: dissocing irrelevant details correctly
-- simpler handling of plain values inside `kind/table` 
+- simpler handling of plain values inside `kind/table` - solving some of the crashes of big tables and making the resulting HTML more lightweight
 
 ## [2-alpha83] - 2024-03-15
 - more input kinds supported by `kind/table` (PR by @genmeblog)
