@@ -153,18 +153,18 @@
 
 
 (defn plotly [{:as context
-               :keys [value]}]
+               {:keys [data layout config]
+                :or {layout {}
+                     config {}}} :value}]
   {:hiccup [:div
             {:style (extract-style context)}
             [:script
-             (->> value
-                  charred/write-json-str
-                  (format
-                   "
-Plotly.newPlot(document.currentScript.parentElement,
- %s['data']
-);
-"))]]
+             (format
+              "Plotly.newPlot(document.currentScript.parentElement,
+              %s, %s, %s);"
+              (charred/write-json-str data)
+              (charred/write-json-str layout)
+              (charred/write-json-str config))]]
    :deps [:plotly]})
 
 
