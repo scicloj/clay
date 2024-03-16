@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-alpha84]
-- bugfix in `kind/table` prepartion: dissocing irrelevant details correctly
+- bugfix in `kind/table` preparation: dissocing irrelevant details correctly
 - simpler handling of plain values inside `kind/table` 
 
 ## [2-alpha83] - 2024-03-15
