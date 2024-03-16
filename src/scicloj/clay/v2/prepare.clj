@@ -181,20 +181,22 @@
                         (if (and (vector? elem)
                                  (-> elem first (#{:th :td})))
                           ;; a table cell - handle it
-                          [(first elem) (let [items (-> context
-                                                        (dissoc :form)
-                                                        (update :kindly/options dissoc :element/max-height)
-                                                        (assoc :value (second elem))
-                                                        prepare-or-str)]
-                                          (swap! *deps concat (mapcat :deps items))
-                                          (map (fn [item]
-                                                 (-> item
-                                                     (assoc :inside-a-table true)
-                                                     (item->hiccup
-                                                      (-> context
-                                                          (cond-> use-datatables
-                                                            (assoc :format [:html]))))))
-                                               items))]
+                          [(first elem) (if-let [items (-> context
+                                                           (dissoc :form)
+                                                           (update :kindly/options dissoc :element/max-height)
+                                                           (assoc :value (second elem))
+                                                           (prepare {}))]
+                                          (do (swap! *deps concat (mapcat :deps items))
+                                              (map (fn [item]
+                                                     (-> item
+                                                         (assoc :inside-a-table true)
+                                                         (item->hiccup
+                                                          (-> context
+                                                              (cond-> use-datatables
+                                                                (assoc :format [:html]))))))
+                                                   items))
+                                          ;; else - a plain value
+                                          (second elem))]
                           ;; else - keep it
                           elem))))]
      (merge
