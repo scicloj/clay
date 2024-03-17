@@ -137,7 +137,7 @@
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
               [:style (styles/main :code)]
-              [:style (styles/main :bootswatch-spacelab-bootstrap-adapted-bg-light.min)]
+              [:style (styles/main :bootswatch-cosmo-bootstrap.min)]
               [:style (styles/main :bootstrap-generated-by-quarto.min)]
               [:style (styles/highlight :panda-syntax-light)]
               [:style (styles/main :main)]
