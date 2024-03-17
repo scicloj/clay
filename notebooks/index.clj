@@ -748,7 +748,8 @@ nested-structure-1
            :opacity 0.5
            :line {:width 5}
            :marker {:size 4
-                    :colorscale :Viridis}}]})
+                    :colorscale :Viridis}}]
+   :layout {:title "Plotly example"}})
 
 (kind/plotly
  plotly-example)
