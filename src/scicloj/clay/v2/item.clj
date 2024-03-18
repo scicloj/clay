@@ -107,10 +107,13 @@
                 (list 'reagent.dom/render
                       value
                       (list 'js/document.getElementById id)))]]
-     :deps (cons :reagent
-                 (-> context
-                     :kindly/options
-                     :reagent/deps))}))
+     :deps (concat [:reagent]
+                   (-> context
+                       :kindly/options
+                       :html/deps)
+                   (-> context
+                       :kindly/options
+                       :reagent/deps))}))
 
 (defn extract-style [context]
   (-> context
