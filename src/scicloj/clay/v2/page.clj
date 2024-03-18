@@ -149,25 +149,7 @@
                  spec))
               (when toc?
                 [:style (styles/main :bootstrap-toc-customization)])
-              (->> special-libs
-                   (mapcat (comp :from-the-web :css special-lib-resources))
-                   distinct
-                   (map #(-> %
-                             hiccup.page/include-css
-                             hiccup/html))
-                   (string/join "\n"))
-              (->> special-libs
-                   (mapcat (fn [lib]
-                             (->> lib
-                                  special-lib-resources
-                                  :css
-                                  :from-local-copy
-                                  (map (fn [url]
-                                         (include-from-a-local-file
-                                          url
-                                          lib
-                                          :css
-                                          spec)))))))
+              (include-libs spec [:css] special-libs)
               [:title (or title "Clay")]]
         body [:body  {:style {;;:background "#fcfcfc"
                               ;; :font-family "'Roboto', sans-serif"
@@ -181,23 +163,7 @@
                  "bootstrap-toc"
                  :js
                  spec))
-
-              (->> special-libs
-                   (mapcat (fn [lib]
-                             (->> lib
-                                  special-lib-resources
-                                  :js
-                                  :from-local-copy
-                                  (map (fn [url]
-                                         (include-from-a-local-file
-                                          url
-                                          lib
-                                          :js
-                                          spec)))))))
-              (->> special-libs
-                   (mapcat (comp :from-the-web :js special-lib-resources))
-                   distinct
-                   (apply hiccup.page/include-js))
+              (include-libs spec [:js] special-libs)
               [:div.container
                [:div.row
                 (when toc?
