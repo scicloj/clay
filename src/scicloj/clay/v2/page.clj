@@ -91,8 +91,8 @@
          "")
         ((include js-or-css)))))
 
-(defn include-libs [spec libs]
-  (->> [:js :css]
+(defn include-libs [spec deps-types libs]
+  (->> deps-types
        (mapcat (fn [js-or-css]
                  (->> libs
                       (mapcat
@@ -240,7 +240,7 @@
         (mapcat :deps)
         distinct
         (cons :md-default)
-        (include-libs spec)
+        (include-libs spec [:js :css])
         time)
    (->> items
         (map-indexed
