@@ -876,7 +876,7 @@ Plot.plot({
                          (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
                          (.openPopup))))}])]
  ;; Note we need to mention the dependency:
- {:reagent/deps [:leaflet]})
+ {:html/deps [:leaflet]})
 
 ;; ### D3
 ;; The following example is adapted from [hiccup-d3](https://rollacaster.github.io/hiccup-d3/).
@@ -936,7 +936,7 @@ Plot.plot({
                 :width (x frequency)}]])
            data)]))
     letter-frequencies]
-   {:reagent/deps [:d3]}))
+   {:html/deps [:d3]}))
 
 ;; ### 3DMol.js
 
@@ -954,7 +954,7 @@ Plot.plot({
             :data-ui true}])
   {:data-pdb "2POR"}]
  ;; Note we need to mention the dependency:
- {:reagent/deps [:three-d-mol]})
+ {:html/deps [:three-d-mol]})
 
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
 
@@ -986,7 +986,7 @@ Plot.plot({
                 (.zoom viewer 0.8 2000)))}])
   {:pdb-data pdb-2POR}]
  ;; Note we need to mention the dependency:
- {:reagent/deps [:three-d-mol]})
+ {:html/deps [:three-d-mol]})
 
 ;; ### Video
 (kind/video {:youtube-id "DAQnvAgBma8"})
