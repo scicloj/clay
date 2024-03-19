@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-alpha86] - 2024-03-19
+- bugfix: copying the `:htmlwidgets-plotly` deps correctly (avoiding copying the `.git` subdirectory which breaks the doc served on github pages)
+
 ## [2-alpha85] - 2024-03-19
 - extended `kind/plotly` API - PR by @roterski
 - using `:html/deps` to specify dependencies in `:kindly/options` (depracating the confusing `:reagent/deps`, still supported though)
