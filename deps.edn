@@ -7,7 +7,7 @@
         io.github.nextjournal/markdown {:mvn/version "0.5.148"}
         hiccup/hiccup {:mvn/version "2.0.0-RC2"}
         clj-commons/clj-yaml {:mvn/version "1.0.27"}
-        org.scicloj/kindly {:mvn/version "4-alpha18"}
+        org.scicloj/kindly {:mvn/version "4-alpha19"}
         org.scicloj/kindly-advice {:mvn/version "1-alpha6"}
         org.scicloj/tempfiles {:mvn/version "1-alpha2"}
         org.scicloj/kind-portal {:mvn/version "1-alpha10"}
