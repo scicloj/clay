@@ -153,7 +153,8 @@
             [scicloj.noj.v1.vis.hanami.templates :as vht]
             [scicloj.ml.core :as ml]
             [scicloj.clay.v2.quarto.themes :as quarto.themes]
-            [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]))
+            [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
+            [clojure.math :as math]))
 
 ;; A Hiccup spec:
 (kind/hiccup
@@ -938,6 +939,208 @@ Plot.plot({
     letter-frequencies]
    {:html/deps [:d3]}))
 
+;; ### ggplotly
+;; (WIP)
+
+;; Clay supports rendering plogs through the JS client side of [ggplotly](https://plotly.com/ggplot2/)
+;; - an R package offering a Plotly fronted for ggplot2's grammar of graphics implementation.
+;; This package is part of the [htmlwidgets](https://www.htmlwidgets.org/) ecosystem,
+;; and we represent that in the kind's name.
+
+;; The following is a work-in-progress attempt to generate
+;; JSON specs of the kind consumed by ggplotly's client side.
+
+;; The following spec function was generaged by mimicking R's
+;; `ggplotly(ggplot(mtcars, aes(wt, mpg)) + geom_point())`.
+;; Therefore, some parts are hard-coded and require generalization.
+;; Other parts are missing (e.g., specifying colours).
+
+(defn ->ggplotly-spec [{:keys [layers labels]}]
+  (kind/htmlwidgets-ggplotly
+   (let [;; assuming a single layer for now:
+         {:keys [data xmin xmax ymin ymax]} (first layers)
+         ;; an auxiliary function to compute tick values:
+         ->tickvals (fn [l r]
+                      (let [jump (-> (- r l)
+                                     (/ 6)
+                                     math/floor
+                                     int
+                                     (max 1))]
+                        (-> l
+                            math/ceil
+                            (range r jump))))]
+     {:x
+      {:config
+       {:doubleClick "reset",
+        :modeBarButtonsToAdd ["hoverclosest" "hovercompare"],
+        :showSendToCloud false},
+       :layout
+       {:plot_bgcolor "rgba(235,235,235,1)",
+        :paper_bgcolor "rgba(255,255,255,1)",
+        :legend
+        {:bgcolor "rgba(255,255,255,1)",
+         :bordercolor "transparent",
+         :borderwidth 1.88976377952756,
+         :font {:color "rgba(0,0,0,1)", :family "", :size 11.689497716895}},
+        :xaxis (let [tickvals (->tickvals xmin xmax)
+                     ticktext (mapv str tickvals)
+                     range-len (- xmax xmin)
+                     range-expansion (* 0.1 range-len)
+                     expanded-range [(- xmin range-expansion)
+                                     (+ xmax range-expansion)]]
+                 {:linewidth 0,
+                  :nticks nil,
+                  :linecolor nil,
+                  :ticklen 3.65296803652968,
+                  :tickcolor "rgba(51,51,51,1)",
+                  :tickmode "array",
+                  :gridcolor "rgba(255,255,255,1)",
+                  :automargin true,
+                  :type "linear",
+                  :tickvals tickvals
+                  :zeroline false,
+                  :title
+                  {:text (:x labels),
+                   :font {:color "rgba(0,0,0,1)", :family "", :size 14.6118721461187}},
+                  :tickfont {:color "rgba(77,77,77,1)", :family "", :size 11.689497716895},
+                  :autorange false,
+                  :showticklabels true,
+                  :showline false,
+                  :showgrid true,
+                  :ticktext ticktext
+                  :ticks "outside",
+                  :gridwidth 0.66417600664176,
+                  :anchor "y",
+                  :domain [0 1],
+                  :hoverformat ".2f",
+                  :tickangle 0,
+                  :tickwidth 0.66417600664176,
+                  :categoryarray ticktext,
+                  :categoryorder "array",
+                  :range expanded-range},)
+        :font {:color "rgba(0,0,0,1)", :family "", :size 14.6118721461187},
+        :showlegend false,
+        :barmode "relative",
+        :yaxis (let [tickvals (->tickvals ymin ymax)
+                     ticktext (mapv str tickvals)
+                     range-len (- ymax ymin)
+                     range-expansion (* 0.1 range-len)
+                     expanded-range [(- ymin range-expansion)
+                                     (+ ymax range-expansion)]]
+                 {:linewidth 0,
+                  :nticks nil,
+                  :linecolor nil,
+                  :ticklen 3.65296803652968,
+                  :tickcolor "rgba(51,51,51,1)",
+                  :tickmode "array",
+                  :gridcolor "rgba(255,255,255,1)",
+                  :automargin true,
+                  :type "linear",
+                  :tickvals tickvals,
+                  :zeroline false,
+                  :title
+                  {:text (:y labels),
+                   :font {:color "rgba(0,0,0,1)", :family "", :size 14.6118721461187}},
+                  :tickfont {:color "rgba(77,77,77,1)", :family "", :size 11.689497716895},
+                  :autorange false,
+                  :showticklabels true,
+                  :showline false,
+                  :showgrid true,
+                  :ticktext ticktext,
+                  :ticks "outside",
+                  :gridwidth 0.66417600664176,
+                  :anchor "x",
+                  :domain [0 1],
+                  :hoverformat ".2f",
+                  :tickangle 0,
+                  :tickwidth 0.66417600664176,
+                  :categoryarray ticktext,
+                  :categoryorder "array",
+                  :range expanded-range},)
+        :hovermode "closest",
+        :margin
+        {:t 25.7412480974125,
+         :r 7.30593607305936,
+         :b 39.6955859969559,
+         :l 37.2602739726027},
+        :shapes
+        [{:yref "paper",
+          :fillcolor nil,
+          :xref "paper",
+          :y1 1,
+          :type "rect",
+          :line {:color nil, :width 0, :linetype []},
+          :y0 0,
+          :x1 1,
+          :x0 0}]},
+       :highlight
+       {:on "plotly_click",
+        :persistent false,
+        :dynamic false,
+        :selectize false,
+        :opacityDim 0.2,
+        :selected {:opacity 1},
+        :debounce 0},
+       :base_url "https://plot.ly",
+       :cur_data "1f2fea5b54d146",
+       :source "A",
+       :shinyEvents
+       ["plotly_hover"
+        "plotly_click"
+        "plotly_selected"
+        "plotly_relayout"
+        "plotly_brushed"
+        "plotly_brushing"
+        "plotly_clickannotation"
+        "plotly_doubleclick"
+        "plotly_deselect"
+        "plotly_afterplot"
+        "plotly_sunburstclick"],
+       :attrs {:1f2fea5b54d146 {:x {}, :y {}, :type "scatter"}},
+       :data
+       [{:y (:y data)
+         :hoveron "points",
+         :frame nil,
+         :hoverinfo "text",
+         :marker
+         {:autocolorscale false,
+          :color "rgba(0,0,0,1)",
+          :opacity 1,
+          :size 5.66929133858268,
+          :symbol "circle",
+          :line {:width 1.88976377952756, :color "rgba(0,0,0,1)"}},
+         :mode "markers"
+         :type "scatter",
+         :xaxis "x",
+         :showlegend false,
+         :yaxis "y",
+         :x (:x data)
+         :text (-> data
+                   (tc/select-columns [:x :y])
+                   (tc/rows :as-maps)
+                   (->> (mapv pr-str)))}]},
+      :evals [],
+      :jsHooks []})))
+
+(require '[tech.v3.datatype.functional :as fun])
+
+;; A random walk example:
+(let [n 100
+      xs (range n)
+      ys (reductions + (repeatedly n #(- (rand) 0.5)))
+      xmin (fun/reduce-min xs)
+      xmax (fun/reduce-max xs)
+      ymin (fun/reduce-min ys)
+      ymax (fun/reduce-max ys)
+      data (tc/dataset {:x xs
+                        :y ys})]
+  (->ggplotly-spec
+   {:layers [{:data data
+              :xmin xmin :xmax xmax
+              :ymin ymin :ymax ymax}]
+    :labels {:x "wt"
+             :y "mpg"}}))
+
 ;; ### 3DMol.js
 
 ;; Embedding a 3Dmol Viewer ([original example](https://3dmol.csb.pitt.edu/doc/tutorial-embeddable.html)):
@@ -959,34 +1162,34 @@ Plot.plot({
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
 
 (defonce pdb-2POR
-  (slurp "https://files.rcsb.org/download/2POR.pdb"))
+(slurp "https://files.rcsb.org/download/2POR.pdb"))
 
 (kind/reagent
- ['(fn [{:keys [pdb-data]}]
-     [:div
-      {:style {:width "100%"
-               :height "500px"
-               :position "relative"}
-       :ref (fn [el]
-              (let [config (clj->js
-                            {:backgroundColor "0xffffff"})
-                    viewer (.createViewer js/$3Dmol el)]
-                (.setViewStyle viewer (clj->js
-                                       {:style "outline"}))
-                (.addModelsAsFrames viewer pdb-data "pdb")
-                (.addSphere viewer (clj->js
-                                    {:center {:x 0
-                                              :y 0
-                                              :z 0}
-                                     :radius 5
-                                     :color "green"
-                                     :alpha 0.2}))
-                (.zoomTo viewer)
-                (.render viewer)
-                (.zoom viewer 0.8 2000)))}])
-  {:pdb-data pdb-2POR}]
- ;; Note we need to mention the dependency:
- {:html/deps [:three-d-mol]})
+['(fn [{:keys [pdb-data]}]
+    [:div
+     {:style {:width "100%"
+              :height "500px"
+              :position "relative"}
+      :ref (fn [el]
+             (let [config (clj->js
+                           {:backgroundColor "0xffffff"})
+                   viewer (.createViewer js/$3Dmol el)]
+               (.setViewStyle viewer (clj->js
+                                      {:style "outline"}))
+               (.addModelsAsFrames viewer pdb-data "pdb")
+               (.addSphere viewer (clj->js
+                                   {:center {:x 0
+                                             :y 0
+                                             :z 0}
+                                    :radius 5
+                                    :color "green"
+                                    :alpha 0.2}))
+               (.zoomTo viewer)
+               (.render viewer)
+               (.zoom viewer 0.8 2000)))}])
+ {:pdb-data pdb-2POR}]
+;; Note we need to mention the dependency:
+{:html/deps [:three-d-mol]})
 
 ;; ### Video
 (kind/video {:youtube-id "DAQnvAgBma8"})
@@ -1011,14 +1214,14 @@ Plot.plot({
 
 ;; Note that `kind/portal` applies the [kind-portal](https://github.com/scicloj/kind-portal) adapter to nested kinds.
 (kind/portal
- [(kind/hiccup [:img {:height 50 :width 50
-                      :src "https://clojure.org/images/clojure-logo-120b.png"}])
-  (kind/hiccup [:img {:height 50 :width 50
-                      :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
+[(kind/hiccup [:img {:height 50 :width 50
+                     :src "https://clojure.org/images/clojure-logo-120b.png"}])
+ (kind/hiccup [:img {:height 50 :width 50
+                     :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
 
 (kind/portal
- [(kind/hiccup [:big [:big "a plot"]])
-  (random-vega-lite-plot 9)])
+[(kind/hiccup [:big [:big "a plot"]])
+ (random-vega-lite-plot 9)])
 
 ;; ### Nesting kinds in Hiccup
 
@@ -1081,30 +1284,30 @@ Plot.plot({
 ;; Kinds are treated recursively inside Tables:
 
 (kind/table
- {:column-names [(kind/hiccup
-                  [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
-                 (kind/hiccup
-                  [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
-  :row-vectors [[(kind/md "*some text* **some more text**")
-                 (kind/code "{:x (1 2 [3 4])}")]
-                [(tc/dataset {:x (range 3)
-                              :y (map inc (range 3))})
-                 (random-vega-lite-plot 9)]
-                [(kind/hiccup [:div.clay-limit-image-width
-                               clay-image])
-                 (kind/md "$x^2$")]]})
+{:column-names [(kind/hiccup
+                 [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
+                (kind/hiccup
+                 [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
+ :row-vectors [[(kind/md "*some text* **some more text**")
+                (kind/code "{:x (1 2 [3 4])}")]
+               [(tc/dataset {:x (range 3)
+                             :y (map inc (range 3))})
+                (random-vega-lite-plot 9)]
+               [(kind/hiccup [:div.clay-limit-image-width
+                              clay-image])
+                (kind/md "$x^2$")]]})
 
 (kind/table
- {:column-names ["size" "square"]
-  :row-vectors (for [i (range 20)]
-                 (let [size (* i 10)
-                       px (str size "px")]
-                   [size
-                    (kind/hiccup
-                     [:div {:style {:height px
-                                    :width px
-                                    :background-color "purple"}}])]))}
- {:use-datatables true})
+{:column-names ["size" "square"]
+ :row-vectors (for [i (range 20)]
+                (let [size (* i 10)
+                      px (str size "px")]
+                  [size
+                   (kind/hiccup
+                    [:div {:style {:height px
+                                   :width px
+                                   :background-color "purple"}}])]))}
+{:use-datatables true})
 
 ;; ### More nesting examples
 
