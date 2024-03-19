@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - using `:html/deps` to specify dependencies in `:kindly/options` (depracating the confusing `:reagent/deps`, still supported though)
 - page generation - minor refactoring
 - updated Kindly version: `"4-alpha18"`
+- support for JS & CSS deps from github repos
 
 ## [2-alpha84] - 2024-03-16
 - bugfix in `kind/table` preparation: dissocing irrelevant details correctly

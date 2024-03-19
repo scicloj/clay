@@ -10,7 +10,8 @@
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]))
+   [scicloj.clay.v2.files :as files]
+   [clojure.java.shell :as shell]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -91,6 +92,33 @@
          "")
         ((include js-or-css)))))
 
+(defn clone-repo-if-needed! [gh-repo]
+  (let [target-path (str "/tmp/.clay/clones/" gh-repo)]
+    (io/make-parents target-path)
+    (when-not
+        (.exists (io/file target-path))
+      (let [repo-url (str "https://github.com/" gh-repo)]
+        (prn [:cloning repo-url])
+        (shell/sh "git" "clone" repo-url target-path)))
+    target-path))
+
+(defn include-from-a-local-copy-of-repo [{:as details
+                                          :keys [gh-repo relative-path paths]}
+                                         lib
+                                         js-or-css
+                                         {:keys [base-target-path]}]
+  (let [repo-path (clone-repo-if-needed! gh-repo)
+        target-repo-path (str (name lib) "/gh-repos/" gh-repo)
+        target-copy-path (str base-target-path "/" target-repo-path)]
+    (when-not (.exists (io/file target-copy-path))
+      (babashka.fs/copy-tree (str repo-path "/" relative-path)
+                             target-copy-path))
+    (->> paths
+         (map (fn [path]
+                (->> path
+                     (str target-repo-path "/")
+                     ((include js-or-css))))))))
+
 (defn include-libs [spec deps-types libs]
   (->> deps-types
        (mapcat (fn [js-or-css]
@@ -100,7 +128,9 @@
                          (->> lib
                               special-lib-resources
                               js-or-css
-                              ((fn [{:keys [from-the-web from-local-copy]}]
+                              ((fn [{:keys [from-the-web
+                                            from-local-copy
+                                            from-local-copy-of-repo]}]
                                  (concat
                                   (some->> from-the-web
                                            (apply (include js-or-css))
@@ -109,6 +139,13 @@
                                            (map (fn [url]
                                                   (include-from-a-local-file
                                                    url
+                                                   lib
+                                                   js-or-css
+                                                   spec))))
+                                  (some->> from-local-copy-of-repo
+                                           (map (fn [details]
+                                                  (include-from-a-local-copy-of-repo
+                                                   details
                                                    lib
                                                    js-or-css
                                                    spec)))))))))))))
