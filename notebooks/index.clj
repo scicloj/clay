@@ -982,7 +982,7 @@ Plot.plot({
 ;; ### ggplotly
 ;; (WIP)
 
-;; Clay supports rendering plogs through the JS client side of [ggplotly](https://plotly.com/ggplot2/)
+;; Clay supports rendering plots through the JS client side of [ggplotly](https://plotly.com/ggplot2/)
 ;; - an R package offering a Plotly fronted for ggplot2's grammar of graphics implementation.
 ;; This package is part of the [htmlwidgets](https://www.htmlwidgets.org/) ecosystem,
 ;; and we represent that in the kind's name.
