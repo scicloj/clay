@@ -10,6 +10,11 @@
             [hiccup.core :as hiccup]
             [clojure.string :as str]))
 
+(def *id (atom 0))
+
+(defn next-id! []
+  (swap! *id inc))
+
 (defn in-vector [v]
   (if (vector? v)
     v
@@ -282,6 +287,27 @@
 //| echo: false
 %s
 ```"))})
+
+(defn ggplotly [spec]
+  (let [id (str "htmlwidget-1" (next-id!))]
+    {:hiccup [:div {:class "plotly html-widget html-fill-item-overflow-hidden html-fill-item"
+                    :id id
+                    :style "width:100%;height:400px;"}
+              [:script {:type "application/htmlwidget-sizing"
+                        :data-for id}
+               (charred/write-json-str {:viewer {:width "100%"
+                                                 :height 400
+                                                 :padding "0"
+                                                 :fille true}
+                                        :browser {:width "100%"
+                                                  :height 400
+                                                  :padding "0"
+                                                  :fille true}})]
+              [:script {:type "application/json"
+                        :data-for id}
+               (charred/write-json-str spec)]]
+     :deps [:htmlwidgets-ggplotly]}))
+
 
 (def avoid-favicon-html
   ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888

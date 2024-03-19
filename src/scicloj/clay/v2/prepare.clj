@@ -444,3 +444,7 @@
 (add-preparer-from-value-fn!
  :kind/observable
  #'item/observable)
+
+(add-preparer-from-value-fn!
+ :kind/htmlwidgets-ggplotly
+ #'item/ggplotly)
