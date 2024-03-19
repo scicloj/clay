@@ -29,3 +29,5 @@
 /target
 .clerk
 .clay.html
+/.clj-kondo/
+/temp/
