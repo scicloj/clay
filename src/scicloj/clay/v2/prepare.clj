@@ -451,3 +451,7 @@
 (add-preparer-from-value-fn!
  :kind/htmlwidgets-ggplotly
  #'item/ggplotly)
+
+(add-preparer-from-value-fn!
+ :kind/highcharts
+ #'item/highcharts)
