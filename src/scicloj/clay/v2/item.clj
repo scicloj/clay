@@ -70,10 +70,6 @@
       escape
       printed-clojure))
 
-(defn hiccup [hiccup]
-  {:hiccup hiccup
-   :deps (-> hiccup meta :deps)})
-
 (defn md [text]
   {:md (->> text
             in-vector
