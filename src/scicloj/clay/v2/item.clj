@@ -313,3 +313,13 @@
   ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
   (hiccup/html
    [:link {:rel "icon" :href "data:,"}]))
+
+(defn highcharts
+  "Prepare Highcharts JSON data for plotting."
+  [value]
+  {:hiccup [:div
+            [:script
+             (format
+              "Highcharts.chart(document.currentScript.parentElement, %s);"
+              (charred/write-json-str value))]]
+   :deps [:highcharts]})
