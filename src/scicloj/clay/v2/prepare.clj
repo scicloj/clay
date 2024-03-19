@@ -380,7 +380,10 @@
  :kind/hiccup
  (fn [{:as context
        :keys [value]}]
-   (let [*deps (atom []) ; TODO: implement without mutable state
+   (let [*deps (atom
+                (-> context
+                    :kindly/options
+                    :html/deps)) ; TODO: implement without mutable state
          hiccup (->> value
                      (claywalk/prewalk
                       (fn [subform]

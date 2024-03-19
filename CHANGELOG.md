@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - updated Kindly version: `"4-alpha18"`
 - support for JS & CSS deps from github repos
 - `kind/htmlwidgets-ggplotly` support - WIP
+- support for adding deps on `kind/hiccup`, not only `kind/reagent`
 
 ## [2-alpha84] - 2024-03-16
 - bugfix in `kind/table` preparation: dissocing irrelevant details correctly
