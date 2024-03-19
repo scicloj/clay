@@ -111,6 +111,7 @@
                    (-> context
                        :kindly/options
                        :html/deps)
+                   ;; depracated:
                    (-> context
                        :kindly/options
                        :reagent/deps))}))
