@@ -147,11 +147,11 @@
   (:require [scicloj.kindly.v4.kind :as kind]
             [scicloj.kindly.v4.api :as kindly]
             [tablecloth.api :as tc]
-            [scicloj.noj.v1.datasets :as datasets]
+            [scicloj.metamorph.ml :as ml]
+            [scicloj.metamorph.ml.toydata :as toydata]
             [scicloj.noj.v1.stats :as noj.stats]
             [scicloj.noj.v1.vis.hanami :as hanami]
-            [scicloj.noj.v1.vis.hanami.templates :as vht]
-            [scicloj.ml.core :as ml]
+            [aerial.hanami.templates :as ht]
             [scicloj.clay.v2.quarto.themes :as quarto.themes]
             [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
             [clojure.math :as math]))
@@ -173,12 +173,12 @@
 
 ;; A plot using [Hanami](https://github.com/jsa-aerial/hanami) and [Noj](https://scicloj.github.io/noj/):
 
-(-> datasets/iris
-    (hanami/plot vht/rule-chart
-                 {:X "sepal-width"
-                  :X2 "sepal-length"
-                  :Y "petal-width"
-                  :Y2 "petal-length"
+(-> (toydata/iris-ds)
+    (hanami/plot ht/rule-chart
+                 {:X "sepal_width"
+                  :X2 "sepal_length"
+                  :Y "petal_width"
+                  :Y2 "petal_length"
                   :COLOR "species"
                   :SIZE 3
                   :OPACITY 0.2}))
@@ -625,11 +625,11 @@ nested-structure-1
 
 ;; ### ML models
 
-(-> datasets/iris
-    (noj.stats/linear-regression-model :sepal-length
-                                       [:sepal-width
-                                        :petal-width
-                                        :petal-length])
+(-> (toydata/iris-ds)
+    (noj.stats/linear-regression-model :sepal_length
+                                       [:sepal_width
+                                        :petal_width
+                                        :petal_length])
     ml/thaw-model)
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
