@@ -45,7 +45,7 @@
 ;;
 ;; See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 
-;; ## Example projects using Clay
+;; ## Projects using Clay
 
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
