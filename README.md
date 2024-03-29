@@ -36,7 +36,7 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 [read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
-## Example projects using Clay
+## Projects using Clay
 
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 - [Clay documentation](https://scicloj.github.io/clay/)
