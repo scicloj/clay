@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta1]
+- updated deps (no longer using a temporary adaptation of Portal)
+
 ## [2-alpha87] - 2024-03-19
 - `kind/highcharts` support - PR by @adham-omran
 
