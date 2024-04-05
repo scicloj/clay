@@ -122,7 +122,7 @@
       :kindly/options
       :element/style
       (or {:height "400px"
-           :width "400px"})))
+           :width "100%"})))
 
 (defn cytoscape [{:as context
                   :keys [value]}]
