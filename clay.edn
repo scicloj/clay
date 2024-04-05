@@ -1,10 +1,6 @@
 {:remote-repo {:git-url "https://github.com/scicloj/clay"
                :branch "main"}
- :quarto {:format {:html {:toc true
-                          :toc-depth 4
-                          :theme [:cosmo "notebooks/custom.scss"]}}
+ :quarto {:format {:html {:theme [:cosmo "notebooks/custom.scss"]}}
           :fontsize "0.9em"
-          :code-block-background true
-          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}
           :title "Clay documentation"}
  :base-target-path "temp"}
