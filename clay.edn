@@ -1,6 +1,5 @@
 {:remote-repo {:git-url "https://github.com/scicloj/clay"
                :branch "main"}
  :quarto {:format {:html {:theme [:cosmo "notebooks/custom.scss"]}}
-          :fontsize "0.9em"
           :title "Clay documentation"}
  :base-target-path "temp"}
