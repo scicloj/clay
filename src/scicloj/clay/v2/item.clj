@@ -65,14 +65,14 @@
   (-> value
       println
       with-out-str
-      escape
+      ;; escape
       printed-clojure))
 
 (defn pprint [value]
   (-> value
       pp/pprint
       with-out-str
-      escape
+      ;; escape
       printed-clojure))
 
 (defn md [text]
