@@ -5,14 +5,16 @@
               (prn ["Clay make namespace as HTML"
                     "$file"])
               (require '[scicloj.clay.v2.api])
-              (scicloj.clay.v2.api/make! {:source-path "$file"}))}
+              (scicloj.clay.v2.api/make! {:base-source-path nil
+                                          :source-path "$file"}))}
   {:name "Clay make namespace as Quarto, then HTML"
    :key "q"
    :snippet (do
               (prn ["Clay make namespace as Quarto, then HTML"
                     "$file"])
               (require '[scicloj.clay.v2.api])
-              (scicloj.clay.v2.api/make! {:source-path "$file"
+              (scicloj.clay.v2.api/make! {:base-source-path nil
+                                          :source-path "$file"
                                           :format [:quarto :html]}))}
   {:name "Clay make namespace as Quarto, then reveal.js"
    :key "r"
@@ -20,7 +22,8 @@
               (prn ["Clay make namespace as Quarto, then reveal.js"
                     "$file"])
               (require '[scicloj.clay.v2.api])
-              (scicloj.clay.v2.api/make! {:source-path "$file"
+              (scicloj.clay.v2.api/make! {:base-source-path nil
+                                          :source-path "$file"
                                           :format [:quarto :revealjs]}))}
   {:name "Clay make current form as HTML"
    :key ","
@@ -29,5 +32,6 @@
                     "$file"
                     $current-form])
               (require '[scicloj.clay.v2.api])
-              (scicloj.clay.v2.api/make! {:source-path "$file"
+              (scicloj.clay.v2.api/make! {:base-source-path nil
+                                          :source-path "$file"
                                           :single-form (quote $current-form)}))}]}

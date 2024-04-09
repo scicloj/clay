@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta6] - unreleased
+- Calva custom REPL commands - making sure `:base-source-path` is `nil` in all `make!` calls (#96)
+
 ## [2-beta5] - 2024-04-06
 - removed escaping in printed values (probably not needed anymore in current pathways and did create problems with `<` `>` symbols)
 
