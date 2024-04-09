@@ -273,8 +273,7 @@
 (defn make! [spec]
   (let [{:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs (config/config)
-                                                           (merge/deep-merge
-                                                            spec))
+                                                           spec)
         {:keys [show book base-target-path clean-up-target-dir]} main-spec]
     (when (and clean-up-target-dir
                (not (or single-form single-value)))

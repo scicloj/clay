@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - Calva custom REPL commands - making sure `:base-source-path` is `nil` in all `make!` calls (#96)
 - bugfix: using a temporary target HTML in single form evaluations (#93)
 - avoiding target directory cleanup on single form evaluations (#97)
+- removing redundant merge operation in `make!` implementation (should not change any behavior)
 
 ## [2-beta5] - 2024-04-06
 - removed escaping in printed values (probably not needed anymore in current pathways and did create problems with `<` `>` symbols)
