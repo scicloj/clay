@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta6] - unreleased
+## [2-beta6] - 2024-04-09
 - Calva custom REPL commands - making sure `:base-source-path` is `nil` in all `make!` calls (#96)
 - bugfix: using a temporary target HTML in single form evaluations (#93)
 - avoiding target directory cleanup on single form evaluations (#97)
