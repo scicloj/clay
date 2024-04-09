@@ -38,25 +38,31 @@
                                       source-type
                                       base-target-path
                                       format
-                                      ns-form]}]
-  (case source-type
-    nil (str base-target-path
-             "/.clay.html")
-    "md" (str base-target-path
-              "/"
-              full-source-path)
-    "ipynb" (str base-target-path
-                 "/"
-                 full-source-path)
-    "clj" (path/ns->target-path base-target-path
-                                (-> ns-form
-                                    second
-                                    name)
-                                (str (when (-> format
-                                               second
-                                               (= :revealjs))
-                                       "-revealjs")
-                                     ".html"))))
+                                      ns-form
+                                      single-form
+                                      single-value]}]
+  (if (or single-value
+          single-form
+          (nil? source-type))
+    (str base-target-path
+         "/.clay.html")
+    ;; else
+    (case source-type
+      "md" (str base-target-path
+                "/"
+                full-source-path)
+      "ipynb" (str base-target-path
+                   "/"
+                   full-source-path)
+      "clj" (path/ns->target-path base-target-path
+                                  (-> ns-form
+                                      second
+                                      name)
+                                  (str (when (-> format
+                                                 second
+                                                 (= :revealjs))
+                                         "-revealjs")
+                                       ".html")))))
 
 (defn spec->ns-config [{:keys [ns-form]}]
   (some-> ns-form
