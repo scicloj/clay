@@ -271,11 +271,13 @@
         (util.fs/copy-tree-no-clj subdir target)))))
 
 (defn make! [spec]
-  (let [{:keys [main-spec single-ns-specs]} (extract-specs (config/config)
+  (let [{:keys [single-form single-value]} spec
+        {:keys [main-spec single-ns-specs]} (extract-specs (config/config)
                                                            (merge/deep-merge
                                                             spec))
         {:keys [show book base-target-path clean-up-target-dir]} main-spec]
-    (when clean-up-target-dir
+    (when (and clean-up-target-dir
+               (not (or single-form single-value)))
       (babashka.fs/delete-tree base-target-path))
     (sync-resources! main-spec)
     (when show
