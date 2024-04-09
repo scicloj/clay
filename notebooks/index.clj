@@ -53,6 +53,7 @@
 ;; - [Noj documentation](https://scicloj.github.io/noj/) - WIP
 ;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
 ;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
+;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 
 ;; ## Videos
 
