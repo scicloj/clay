@@ -1377,6 +1377,20 @@ Plot.plot({
 
 ;; Importantly, markdown subsections affect the Quarto table of contents.
 
+;; ## Functions
+
+;; `kind/fn` is a special kind. It is displayed by first evaluating
+;; the given function and arguments, then proceeding recursively
+;; with the resulting value.
+
+(kind/fn
+  [+ 1 2])
+
+(kind/fn
+  [tc/dataset
+   {:x (range 3)
+    :y (repeatedly 3 rand)}])
+
 ;; ## Delays
 
 ;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
