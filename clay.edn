@@ -1,5 +1,9 @@
 {:remote-repo {:git-url "https://github.com/scicloj/clay"
                :branch "main"}
  :quarto {:format {:html {:theme [:cosmo "notebooks/custom.scss"]}}
-          :title "Clay documentation"}
+          :title "Clay documentation"
+          :include-in-header {:text "<meta property=\"og:image\" content=\"notebooks/images/Clay.svg.png\"/>
+<meta property=\"og:title\" content=\"Clojure Data Scrapbook\"/>
+<meta property=\"og:description\" content=\"A minimalistic Clojure tool for data visualization and literate programming\"/>
+<link rel = \"icon\" href = \"data:,\" />"}}
  :base-target-path "temp"}
