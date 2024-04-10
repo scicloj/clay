@@ -121,14 +121,22 @@
         kind (-> complete-context
                  advise-if-needed
                  :kind)]
-    (if (= kind :kind/fragment)
-      ;; splice the fragment
-      (->> value
-           (mapcat (fn [subvalue]
-                     (-> context
-                         (assoc :value subvalue)
-                         (prepare {:fallback-preparer fallback-preparer})))))
-      ;; else - not a fragment
+    (case kind
+      :kind/fragment (->> value
+                          ;; splice the fragment
+                          (mapcat (fn [subvalue]
+                                    (-> context
+                                        (assoc :value subvalue)
+                                        (prepare {:fallback-preparer fallback-preparer})))))
+      :kind/fn (let [[f & args] value
+                     ;; apply the fn
+                     new-value (apply f args)]
+                 (-> context
+                     (assoc :value new-value)
+                     (dissoc :form)
+                     (dissoc :kind)
+                     (prepare {:fallback-preparer fallback-preparer})))
+      ;; else - a regular kind
       (when-let [preparer (-> kind
                               (@*kind->preparer)
                               (or fallback-preparer))]
@@ -137,6 +145,8 @@
              (update :hiccup limit-hiccup-height complete-context)
              (update :md limit-md-height complete-context))]))))
 
+
+
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
                     (preparer-from-value-fn #'item/pprint)}))
@@ -144,6 +154,8 @@
 (defn prepare-or-str [context]
   (prepare context {:fallback-preparer
                     (preparer-from-value-fn #'item/md)}))
+
+
 
 (defn has-kind-with-preparer? [value]
   (some-> value
