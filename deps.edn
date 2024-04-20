@@ -14,8 +14,8 @@
         org.clojure/tools.reader {:mvn/version "1.3.7"}
         babashka/fs {:mvn/version "0.4.19"}}
  :aliases {:dev {:extra-paths ["notebooks"]
-                 :extra-deps {scicloj/tablecloth {:mvn/version "7.029.1"}
-                              org.scicloj/noj {:mvn/version "1-alpha31"}}}
+                 :extra-deps {scicloj/tablecloth {:mvn/version "7.029.2"}
+                              org.scicloj/noj {:mvn/version "1-alpha34"}}}
            :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
                           slipset/deps-deploy {:mvn/version "0.2.1"}}
                    :ns-default build}
@@ -23,4 +23,4 @@
                   :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
                                io.github.cognitect-labs/test-runner
                                {:git/tag "v0.5.0" :git/sha "48c3c67"}
-                               scicloj/tablecloth {:mvn/version "7.029.1"}}}}}
+                               scicloj/tablecloth {:mvn/version "7.029.2"}}}}}
