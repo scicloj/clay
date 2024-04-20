@@ -51,6 +51,9 @@
       "md" (str base-target-path
                 "/"
                 full-source-path)
+      "Rmd" (str base-target-path
+                 "/"
+                 full-source-path)
       "ipynb" (str base-target-path
                    "/"
                    full-source-path)

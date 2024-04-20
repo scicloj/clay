@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta8] - unreleased
+- allowing `.Rmd` files in Quarto books
+
 ## [2-beta7] - 2024-04-10
 - added `kind/fn` support - evaluating given function and arguments and displaying the result
 
