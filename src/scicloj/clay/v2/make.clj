@@ -16,7 +16,9 @@
             [scicloj.clay.v2.util.fs :as util.fs]
             [clojure.string :as str]
             [scicloj.clay.v2.util.merge :as merge]
-            [scicloj.clay.v2.files :as files]))
+            [scicloj.clay.v2.files :as files]
+            [clojure.pprint :as pp]
+            [scicloj.kindly.v4.kind :as kind]))
 
 (defn spec->full-source-path [{:keys [base-source-path source-path]}]
   (when source-path
@@ -200,6 +202,33 @@
     (make-book! spec)
     [:ok]))
 
+
+(defn write-test-forms-as-ns [forms]
+  (let [path (-> forms
+                 (->> (filter notebook/ns-form?))
+                 first
+                 second
+                 str
+                 (str/replace #"\." "/")
+                 (str/replace #"-" "_")
+                 (->> (format "test/%s.clj")))]
+    (io/make-parents path)
+    (prn [:PATH path])
+    (->> forms
+         (map (fn [form]
+                (-> form
+                    pp/pprint
+                    with-out-str)))
+         (str/join "\n\n")
+         (spit path))
+    [:wrote path]))
+
+(+ 11 2)
+
+(kind/test-last
+ [> 9])
+
+
 (defn handle-single-source-spec! [{:as spec
                                    :keys [source-type
                                           single-form
@@ -214,8 +243,12 @@
             single-value)
     (try
       (files/init-target! full-target-path)
-      (let [spec-with-items      (-> spec
-                                     (config/add-field :items notebook/notebook-items))]
+      (let [{:keys [items test-forms]} (notebook/notebook-items
+                                        spec)
+            spec-with-items      (-> spec
+                                     (assoc :items items))]
+        (when test-forms
+          (write-test-forms-as-ns test-forms))
         (case (first format)
           :html (do (-> spec-with-items
                         (config/add-field :page page/html)

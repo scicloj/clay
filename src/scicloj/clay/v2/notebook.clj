@@ -119,33 +119,41 @@
            :kind
            (= :kind/test-last))))
 
-(defn def-form [var-name form])
+(defn def-form [var-name form]
+  (list 'def
+        var-name
+        form))
 
-(defn deftest-form [test-name var-name [f-symbol & args]]
-  (list 'deftest
-        test-name
-        (concat (list 'is
-                      f-symbol
-                      var-name)
-                args)))
+(defn deftest-form [test-name var-name form]
+  (if (-> form first (= 'kind/test-last))
+    (deftest-form test-name var-name (second form))
+    (let [[f-symbol & args] form]
+      (list 'deftest
+            test-name
+            (concat (list 'is
+                          (concat (list f-symbol
+                                        var-name)
+                                  args)))))))
 
 (defn ns-form? [form]
   (and (sequential? form)
        (-> form first (= 'ns))))
 
-(defn test-ns-form [ns-symbol & rest-ns-form]
-  (cons (-> ns-symbol
-            (str "-generated-test")
-            symbol)
-        (->> rest-ns-form
-             (map (fn [part]
-                    (if (and (list? part)
-                             (-> part first (= :require)))
-                      (concat part
-                              '[[clojure.test :refer [deftest is]]])
-                      part))))))
+(defn test-ns-form [[_ ns-symbol & rest-ns-form]]
+  (concat (list 'ns
+                (-> ns-symbol
+                    (str "-generated-test")
+                    symbol))
+          (->> rest-ns-form
+               (map (fn [part]
+                      (if (and (list? part)
+                               (-> part first (= :require)))
+                        (concat part
+                                '[[clojure.test :refer [deftest is]]])
+                        part))))))
 
-(defn notebook-items
+
+(defn notebook-items-and-test-forms
   ([{:as options
      :keys [full-source-path
             hide-info-line
@@ -221,8 +229,7 @@
                  (fn [test-forms]
                    (when (->> test-forms
                               (some #(-> % first (= 'deftest))))
-                     test-forms)))
-         :items))))
+                     test-forms)))))))
 
 
 (comment
