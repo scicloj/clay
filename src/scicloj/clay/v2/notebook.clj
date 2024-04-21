@@ -104,10 +104,10 @@
               [item/separator
                il]))))
 
-(defn var-name [i]
+(defn ->var-name [i]
   (symbol (str "var" i)))
 
-(defn test-name [i]
+(defn ->test-name [i]
   (symbol (str "test" i)))
 
 (defn test-last? [complete-note]
@@ -118,6 +118,32 @@
            kindly-advice/advise
            :kind
            (= :kind/test-last))))
+
+(defn def-form [var-name form])
+
+(defn deftest-form [test-name var-name [f-symbol & args]]
+  (list 'deftest
+        test-name
+        (concat (list 'is
+                      f-symbol
+                      var-name)
+                args)))
+
+(defn ns-form? [form]
+  (and (sequential? form)
+       (-> form first (= 'ns))))
+
+(defn test-ns-form [ns-symbol & rest-ns-form]
+  (cons (-> ns-symbol
+            (str "-generated-test")
+            symbol)
+        (->> rest-ns-form
+             (map (fn [part]
+                    (if (and (list? part)
+                             (-> part first (= :require)))
+                      (concat part
+                              '[[clojure.test :refer [deftest is]]])
+                      part))))))
 
 (defn notebook-items
   ([{:as options
@@ -144,42 +170,39 @@
               (reduce (fn [{:as aggregation :keys [i
                                                    items
                                                    test-forms
-                                                   last-testable-i]}
+                                                   last-nontest-i]}
                            note]
-                        (let [{:as complete-note :keys [form]} (complete note)]
-                          (if (test-last? complete-note)
-                            ;; a test note
-                            (let [[f-symbol & args] form
-                                  new-test-form (list 'deftest
-
-                                                      (concat (list 'is
-                                                                    f-symbol
-                                                                    (var-name last-testable-i))
-                                                              args))]
-                              {:i (inc i)
-                               :items items
-                               :test-forms (conj test-forms new-test-form)
-                               :last-nontest-i last-testable-i})
-                            ;; else - non-test note
-                            (let [new-test-form (list 'def
-                                                      (var-name i)
-                                                      form)
-                                  new-items (-> complete-note
-                                                (merge/deep-merge
-                                                 (-> options
-                                                     (select-keys [:base-target-path
-                                                                   :full-target-path
-                                                                   :kindly/options
-                                                                   :format])))
-                                                (note-to-items options))]
-                              {:i (inc i)
-                               :items (concat items new-items)
-                               :test-forms (conj test-forms new-test-form)
-                               :last-nontest-i (if (:comment? complete-note)
-                                                 ;; A comment note is not testable.
-                                                 last-testable-i
-                                                 ;; This note is testable.
-                                                 i)}))))
+                        (let [{:as complete-note :keys [form]} (complete note)
+                              test-note (test-last? complete-note)
+                              new-items (when-not test-note
+                                          (-> complete-note
+                                              (merge/deep-merge
+                                               (-> options
+                                                   (select-keys [:base-target-path
+                                                                 :full-target-path
+                                                                 :kindly/options
+                                                                 :format])))
+                                              (note-to-items options)))
+                              test-form (if test-note
+                                          ;; a deftest form
+                                          (deftest-form
+                                            (->test-name i)
+                                            (->var-name last-nontest-i)
+                                            form)
+                                          (if (ns-form? form)
+                                            ;; the test ns form
+                                            (test-ns-form form)
+                                            ;; the regular case, just a def
+                                            (def-form
+                                              (->var-name i)
+                                              form)))]
+                          {:i (inc i)
+                           :items (concat items new-items)
+                           :test-forms (conj test-forms test-form)
+                           :last-nontest-i (if (or (:comment? complete-note)
+                                                   test-note)
+                                             last-nontest-i
+                                             i)}))
                       ;; initial value
                       {:i 0
                        :items []
