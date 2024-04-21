@@ -8,7 +8,8 @@
    [scicloj.clay.v2.read :as read]
    [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.kind :as kind]))
+   [scicloj.kindly.v4.kind :as kind]
+   [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -30,8 +31,8 @@
                                   :remote-repo
                                   (path/file-git-url relative-file-path))})))
 
-(defn complete-note [{:as note
-                      :keys [comment? code form value]}]
+(defn complete [{:as note
+                 :keys [comment? code form value]}]
   (if (or value comment?)
     note
     (assoc
@@ -103,6 +104,21 @@
               [item/separator
                il]))))
 
+(defn var-name [i]
+  (symbol (str "var" i)))
+
+(defn test-name [i]
+  (symbol (str "test" i)))
+
+(defn test-last? [complete-note]
+  (and (-> complete-note
+           :comment?
+           not)
+       (-> complete-note
+           kindly-advice/advise
+           :kind
+           (= :kind/test-last))))
+
 (defn notebook-items
   ([{:as options
      :keys [full-source-path
@@ -123,25 +139,67 @@
                   single-form (conj (when code
                                       [{:form (read/read-ns-form code)}])
                                     {:form single-form})
-                  :else (read/->safe-notes code))
-         items (-> notes
-                   (->> (mapcat (fn [note]
-                                  (-> note
-                                      complete-note
-                                      (merge/deep-merge
-                                       (-> options
-                                           (select-keys [:base-target-path
-                                                         :full-target-path
-                                                         :kindly/options
-                                                         :format])))
-                                      (note-to-items options))))
-                        (remove nil?))
-                   (add-info-line options)
-                   ;; (cond-> (= format [:html])
-                   ;;   ;; a trick to use portal syntax highlighting
-                   ;;   (concat [(item/portal [])]))
-                   doall)]
-     items)))
+                  :else (read/->safe-notes code))]
+     (-> (->> notes
+              (reduce (fn [{:as aggregation :keys [i
+                                                   items
+                                                   test-forms
+                                                   last-testable-i]}
+                           note]
+                        (let [{:as complete-note :keys [form]} (complete note)]
+                          (if (test-last? complete-note)
+                            ;; a test note
+                            (let [[f-symbol & args] form
+                                  new-test-form (list 'deftest
+
+                                                      (concat (list 'is
+                                                                    f-symbol
+                                                                    (var-name last-testable-i))
+                                                              args))]
+                              {:i (inc i)
+                               :items items
+                               :test-forms (conj test-forms new-test-form)
+                               :last-nontest-i last-testable-i})
+                            ;; else - non-test note
+                            (let [new-test-form (list 'def
+                                                      (var-name i)
+                                                      form)
+                                  new-items (-> complete-note
+                                                (merge/deep-merge
+                                                 (-> options
+                                                     (select-keys [:base-target-path
+                                                                   :full-target-path
+                                                                   :kindly/options
+                                                                   :format])))
+                                                (note-to-items options))]
+                              {:i (inc i)
+                               :items (concat items new-items)
+                               :test-forms (conj test-forms new-test-form)
+                               :last-nontest-i (if (:comment? complete-note)
+                                                 ;; A comment note is not testable.
+                                                 last-testable-i
+                                                 ;; This note is testable.
+                                                 i)}))))
+                      ;; initial value
+                      {:i 0
+                       :items []
+                       :test-forms []
+                       :last-nontest-i nil}))
+         (update :items
+                 ;; final processing of items
+                 (fn [items]
+                   (-> items
+                       (->> (remove nil?))
+                       (add-info-line options)
+                       doall)))
+         (update :test-forms
+                 ;; Leave the test-form only when
+                 ;; at least one of them is a `deftest`.
+                 (fn [test-forms]
+                   (when (->> test-forms
+                              (some #(-> % first (= 'deftest))))
+                     test-forms)))
+         :items))))
 
 
 (comment
@@ -151,3 +209,6 @@
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
                        :single-form '(+ 1 2)})))
+
+
+;; aa
