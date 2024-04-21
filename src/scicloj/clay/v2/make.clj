@@ -223,11 +223,6 @@
          (spit path))
     [:wrote path]))
 
-(+ 11 2)
-
-(kind/test-last
- [> 9])
-
 
 (defn handle-single-source-spec! [{:as spec
                                    :keys [source-type
