@@ -213,7 +213,6 @@
                  (str/replace #"-" "_")
                  (->> (format "test/%s.clj")))]
     (io/make-parents path)
-    (prn [:PATH path])
     (->> forms
          (map (fn [form]
                 (-> form
