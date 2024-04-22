@@ -1493,22 +1493,22 @@
 (def var191 (+ 1 2))
 
 
-(def var192 nil)
+(deftest test192 (is (> var191 2.9)))
+
+
+(deftest test193 (is (> var191 2.9)))
+
+
+(deftest test194 (is (> var191 2.9)))
+
+
+(def var195 nil)
 
 
 (def
- var193
+ var196
  (kind/code
   "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)"))
-
-
-(deftest test194 (is (> var193 2.9)))
-
-
-(deftest test195 (is (> var193 2.9)))
-
-
-(deftest test196 (is (> var193 2.9)))
 
 
 (def var197 nil)
