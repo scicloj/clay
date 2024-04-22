@@ -1440,16 +1440,16 @@ Plot.plot({
 
 (+ 1 2)
 
-;; Let us generate tests checking whether
-;; this last value is greater than 2.9.
-;; We can do it in a few ways.
-
 (kind/test-last [> 2.9])
 
 ^kind/test-last
 [> 2.9]
 
 (kindly/check > 2.9)
+
+;; We generate tests checking whether
+;; this last value is greater than 2.9.
+;; We can do it in a few ways.
 
 ;; We include the test annotations in the markdown text,
 ;; since the annotations themselves are invisible.
