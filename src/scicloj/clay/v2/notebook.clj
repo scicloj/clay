@@ -125,7 +125,8 @@
         form))
 
 (defn deftest-form [test-name var-name form]
-  (if (-> form first (= 'kind/test-last))
+  (if (-> form first (#{(= 'kindly/check
+                           'kind/test-last)}))
     (deftest-form test-name var-name (second form))
     (let [[f-symbol & args] form]
       (list 'deftest
