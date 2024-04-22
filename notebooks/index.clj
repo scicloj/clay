@@ -1433,3 +1433,32 @@ Plot.plot({
 ;; 1. Add the metadata `:kindly/hide-code true` to the form (e.g., by preceding it with `^:kindly/hide-code`).
 ;; 2. Add the metadata `:kindly/hide-code true` to the value.
 ;; 3. Globally define certain kinds (e.g., `:kind/md`, `:kind/hiccup`) to always hide code (on project level or namespace level) by adding thme as a set to the project config or namespace config, e.g., `:kindly/options {:kinds-that-hide-code #{:kind/md :kind/hiccup}}`.
+
+;; ## Test generation
+
+;; (experimental 🛠)
+
+(+ 1 2)
+
+;; Let us generate tests checking whether
+;; this last value is greater than 2.9.
+;; We can do it in a few ways.
+;; We include the test annotations in the markdown text,
+;; since the annotations themselves are invisible.
+
+(kind/code
+ "(kind/test-last [> 2.9])
+
+^kind/test-last
+[> 2.9]
+
+(kindly/check > 2.9)")
+
+(kind/test-last [> 2.9])
+
+^kind/test-last
+[> 2.9]
+
+(kindly/check > 2.9)
+
+;; See the generated [test/index_generated_test.clj](https://github.com/scicloj/clay/blob/main/test/index_generated_test.clj).
