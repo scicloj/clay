@@ -241,45 +241,45 @@
                                         spec)
             spec-with-items      (-> spec
                                      (assoc :items items))]
-        (when test-forms
-          (write-test-forms-as-ns test-forms))
-        (case (first format)
-          :html (do (-> spec-with-items
-                        (config/add-field :page page/html)
-                        server/update-page!)
-                    [:wrote full-target-path])
-          :quarto (let [qmd-path (-> full-target-path
-                                     (string/replace #"\.html$" ".qmd"))
-                        output-file (-> full-target-path
-                                        (string/split #"/")
-                                        last)]
-                    (-> spec-with-items
-                        (update-in [:quarto :format]
-                                   select-keys [(second format)])
-                        (update-in [:quarto :format (second format)]
-                                   assoc :output-file output-file)
-                        (cond-> book
-                          (update :quarto dissoc :title))
-                        page/md
-                        (->> (spit qmd-path)))
-                    (println [:wrote qmd-path (time/now)])
-                    (when-not book
-                      (if run-quarto
-                        (do (->> (shell/sh "quarto" "render" qmd-path)
-                                 ((juxt :err :out))
-                                 (mapv println))
-                            (println [:created full-target-path (time/now)])
-                            (-> spec
-                                (assoc :full-target-path full-target-path)
-                                server/update-page!))
-                        ;; else, just show the qmd file
-                        (-> spec
-                            (assoc :full-target-path qmd-path)
-                            server/update-page!)))
-                    (vec
-                     (concat [:wrote qmd-path]
-                             (when run-quarto
-                               [full-target-path]))))))
+        [(case (first format)
+           :html (do (-> spec-with-items
+                         (config/add-field :page page/html)
+                         server/update-page!)
+                     [:wrote full-target-path])
+           :quarto (let [qmd-path (-> full-target-path
+                                      (string/replace #"\.html$" ".qmd"))
+                         output-file (-> full-target-path
+                                         (string/split #"/")
+                                         last)]
+                     (-> spec-with-items
+                         (update-in [:quarto :format]
+                                    select-keys [(second format)])
+                         (update-in [:quarto :format (second format)]
+                                    assoc :output-file output-file)
+                         (cond-> book
+                           (update :quarto dissoc :title))
+                         page/md
+                         (->> (spit qmd-path)))
+                     (println [:wrote qmd-path (time/now)])
+                     (when-not book
+                       (if run-quarto
+                         (do (->> (shell/sh "quarto" "render" qmd-path)
+                                  ((juxt :err :out))
+                                  (mapv println))
+                             (println [:created full-target-path (time/now)])
+                             (-> spec
+                                 (assoc :full-target-path full-target-path)
+                                 server/update-page!))
+                         ;; else, just show the qmd file
+                         (-> spec
+                             (assoc :full-target-path qmd-path)
+                             server/update-page!)))
+                     (vec
+                      (concat [:wrote qmd-path]
+                              (when run-quarto
+                                [full-target-path])))))
+         (when test-forms
+           (write-test-forms-as-ns test-forms))])
       (catch Exception e
         (-> spec
             (assoc :page (-> spec
