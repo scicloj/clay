@@ -153,7 +153,7 @@
                         part))))))
 
 
-(defn notebook-items-and-test-forms
+(defn items-and-test-forms
   ([{:as options
      :keys [full-source-path
             hide-info-line
@@ -239,6 +239,3 @@
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
                        :single-form '(+ 1 2)})))
-
-
-;; aa

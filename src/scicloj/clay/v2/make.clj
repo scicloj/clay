@@ -238,7 +238,7 @@
             single-value)
     (try
       (files/init-target! full-target-path)
-      (let [{:keys [items test-forms]} (notebook/notebook-items
+      (let [{:keys [items test-forms]} (notebook/items-and-test-forms
                                         spec)
             spec-with-items      (-> spec
                                      (assoc :items items))]
