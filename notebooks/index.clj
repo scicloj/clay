@@ -1454,12 +1454,13 @@ Plot.plot({
 ;; We include the test annotations in the markdown text,
 ;; since the annotations themselves are invisible.
 
-(kind/code
- "(kind/test-last [> 2.9])
+(kindly/hide-code
+ (kind/code
+  "(kind/test-last [> 2.9])
 
 ^kind/test-last
 [> 2.9]
 
-(kindly/check > 2.9)")
+(kindly/check > 2.9)"))
 
 ;; See the generated [test/index_generated_test.clj](https://github.com/scicloj/clay/blob/main/test/index_generated_test.clj).
