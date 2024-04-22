@@ -335,6 +335,7 @@
                :base-source-path "notebooks"
                :source-path ["chapter.clj"
                              "another_chapter.md"
+                             "a_chapter_with_R_code.Rmd"
                              "test.ipynb"]
                :base-target-path "book"
                :book {:title "Book Example"}
