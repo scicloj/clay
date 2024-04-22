@@ -1507,8 +1507,9 @@
 
 (def
  var196
- (kind/code
-  "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)"))
+ (kindly/hide-code
+  (kind/code
+   "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
 (def var197 nil)
