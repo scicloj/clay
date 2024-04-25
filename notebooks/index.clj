@@ -48,6 +48,7 @@
 ;; ## Projects using Clay
 
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
+;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
 ;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
 ;; - [Noj documentation](https://scicloj.github.io/noj/) - WIP
