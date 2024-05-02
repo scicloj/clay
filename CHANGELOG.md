@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta9] - unreleased
+- extended the `kind/fn` semantics to a map spec (WIP)
+
 ## [2-beta8] - 2024-04-22
 - allowing `.Rmd` files in Quarto books
 - test-generation support - experimental

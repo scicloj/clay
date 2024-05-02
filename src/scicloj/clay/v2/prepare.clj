@@ -128,9 +128,12 @@
                                     (-> context
                                         (assoc :value subvalue)
                                         (prepare {:fallback-preparer fallback-preparer})))))
-      :kind/fn (let [[f & args] value
-                     ;; apply the fn
-                     new-value (apply f args)]
+      :kind/fn (let [new-value (cond (vector? value) (let [[f & args] value]
+                                                       (apply f args))
+                                     (map? value) (let [{:keys [kindly/f]} value]
+                                                    (-> value
+                                                        (dissoc :kindly/f)
+                                                        f)))]
                  (-> context
                      (assoc :value new-value)
                      (dissoc :form)
