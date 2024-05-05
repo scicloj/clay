@@ -1456,23 +1456,33 @@
 
 (def
  var184
+ (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
+
+
+(def
+ var185
  (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
 
 
-(def var185 nil)
-
-
-(def var186 (delay (Thread/sleep 500) (+ 1 2)))
+(def
+ var186
+ (kind/fn {:kindly/f tc/dataset, :x (range 3), :y (repeatedly 3 rand)}))
 
 
 (def var187 nil)
 
 
-(def var188 (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
+(def var188 (delay (Thread/sleep 500) (+ 1 2)))
+
+
+(def var189 nil)
+
+
+(def var190 (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
 
 
 (def
- var189
+ var191
  (kind/vega-lite
   {:data {:url "notebooks/datasets/iris.csv"},
    :mark "rule",
@@ -1487,29 +1497,29 @@
    :background "floralwhite"}))
 
 
-(def var190 nil)
+(def var192 nil)
 
 
-(def var191 (+ 1 2))
+(def var193 (+ 1 2))
 
 
-(deftest test192 (is (> var191 2.9)))
+(deftest test194 (is (> var193 2.9)))
 
 
-(deftest test193 (is (> var191 2.9)))
+(deftest test195 (is (> var193 2.9)))
 
 
-(deftest test194 (is (> var191 2.9)))
+(deftest test196 (is (> var193 2.9)))
 
 
-(def var195 nil)
+(def var197 nil)
 
 
 (def
- var196
+ var198
  (kindly/hide-code
   (kind/code
    "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
-(def var197 nil)
+(def var199 nil)
