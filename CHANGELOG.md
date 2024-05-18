@@ -1,8 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta9-SNAPSHOT] - unreleased
-- extended the `kind/fn` semantics to a map spec (WIP)
+## [2-beta9] - 2024-05-18
+- extended the `kind/fn` semantics to a map spec
 
 ## [2-beta8] - 2024-04-22
 - allowing `.Rmd` files in Quarto books
@@ -233,7 +233,6 @@ All notable changes to this project will be documented in this file. This change
 - refactoring of parameter flow
 - displaying errors on the browser view
 - support for markdown files in books through `make!`
-
 
 ## [2-alpha41] - 2023-11-25
 - using `qmd` rather than `md` for Quarto files (to support R code blocks, etc.)
