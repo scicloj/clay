@@ -315,7 +315,7 @@
                                                     (string/join " ")
                                                     item/printed-clojure)
                                                context))))
-                        (into [:div
+                        (into [:div.clay-map
                                {:style {:margin-left "10%"
                                         :width "110%"}}]))
                    (structure-mark-hiccup "}")]
@@ -345,8 +345,8 @@
                   (structure-mark-hiccup open-mark)
                   (->> prepared-parts
                        (map #(item->hiccup % context))
-                       (into [:div {:style {:margin-left "10%"
-                                            :width "110%"}}]))
+                       (into [:div.clay-sequential {:style {:margin-left "10%"
+                                                            :width "110%"}}]))
                   (structure-mark-hiccup close-mark)]
          :deps (->> prepared-parts
                     (mapcat :deps)
