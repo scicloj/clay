@@ -8,7 +8,8 @@
             [scicloj.clay.v2.util.meta :as meta]
             [hiccup.page]
             [hiccup.core :as hiccup]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [scicloj.kindly.v4.api :as kindly]))
 
 (def *id (atom 0))
 
@@ -325,9 +326,16 @@
    :deps [:highcharts]})
 
 (defn dataset [{:as context
-                :keys [value]}]
-  (-> value
-      println
-      with-out-str
-      md
-      (merge {:item-class "clay-dataset"})))
+                :keys [value kindly/options]}]
+  (let [{:keys [dataset/default-table-row-print-length]} options
+        printed-string (if default-table-row-print-length
+                         (binding [tech.v3.dataset.print/*default-table-row-print-length* default-table-row-print-length]
+                           (-> value
+                               println
+                               with-out-str))
+                         (-> value
+                             println
+                             with-out-str))]
+    (-> printed-string
+        md
+        (merge {:item-class "clay-dataset"}))))
