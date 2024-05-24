@@ -565,6 +565,12 @@ nested-structure-1
 (-> people-as-maps
     tc/dataset)
 
+;; Some kind options of `kind/dataset` control the way a dataset is printed.
+
+(-> {:x (range 30)}
+    tc/dataset
+    (kind/dataset {:dataset/print-range 6}))
+
 ;; ### Tables
 
 ;; The `:kind/table` kind can be handy for an interactive table view. `:kind/table` understands many structures which can be rendered as a table.
