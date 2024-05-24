@@ -327,15 +327,11 @@
 
 (defn dataset [{:as context
                 :keys [value kindly/options]}]
-  (let [{:keys [dataset/default-table-row-print-length]} options
-        printed-string (if default-table-row-print-length
-                         (binding [tech.v3.dataset.print/*default-table-row-print-length* default-table-row-print-length]
-                           (-> value
-                               println
-                               with-out-str))
-                         (-> value
-                             println
-                             with-out-str))]
-    (-> printed-string
+  (let [{:keys [dataset/print-range]} options]
+    (-> value
+        (cond-> print-range
+          (tech.v3.dataset.print/print-range print-range))
+        println
+        with-out-str
         md
         (merge {:item-class "clay-dataset"}))))
