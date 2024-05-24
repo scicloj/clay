@@ -323,3 +323,11 @@
               "Highcharts.chart(document.currentScript.parentElement, %s);"
               (charred/write-json-str value))]]
    :deps [:highcharts]})
+
+(defn dataset [{:as context
+                :keys [value]}]
+  (-> value
+      println
+      with-out-str
+      md
+      (merge {:item-class "clay-dataset"})))

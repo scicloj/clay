@@ -241,14 +241,9 @@
    (->> codes
         item/source-clojure)))
 
-(add-preparer-from-value-fn!
+(add-preparer!
  :kind/dataset
- (fn [v]
-   (-> v
-       println
-       with-out-str
-       item/md
-       (merge {:item-class "clay-dataset"}))))
+ #'item/dataset)
 
 (add-preparer-from-value-fn!
  :kind/smile-model
