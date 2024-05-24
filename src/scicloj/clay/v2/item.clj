@@ -330,7 +330,7 @@
   (let [{:keys [dataset/print-range]} options]
     (-> value
         (cond-> print-range
-          (tech.v3.dataset.print/print-range print-range))
+          ((resolve 'tech.v3.dataset.print/print-range) print-range))
         println
         with-out-str
         md
