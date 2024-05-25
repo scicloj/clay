@@ -198,9 +198,8 @@
 
 (defn handle-main-spec! [{:as spec
                           :keys [book]}]
-  (if book
-    (make-book! spec)
-    [:ok]))
+  (when book
+    (make-book! spec)))
 
 
 (defn write-test-forms-as-ns [forms]
