@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta10] - unreleased
+## [2-beta10] - 2024-05-25
 - added classes to elements that have styling applied to faciliate custom styles (#102)
 - added partial support for dataset print options as kindly options
 - made a minor change in `make!` return values for clarity
