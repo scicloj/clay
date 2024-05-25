@@ -29,6 +29,13 @@
 (defn make! [spec]
   (make/make! spec))
 
+(defn make-hiccup [spec]
+  (-> spec
+      (assoc :format [:hiccup]
+             :show false)
+      make/make!
+      first first first))
+
 (defn browse! []
   (server/browse!))
 (defn port []

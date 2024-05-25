@@ -134,7 +134,7 @@
                      (str target-repo-path "/")
                      ((include js-or-css))))))))
 
-(defn include-libs [spec deps-types libs]
+(defn include-libs-hiccup [spec deps-types libs]
   (->> deps-types
        (mapcat (fn [js-or-css]
                  (->> libs
@@ -164,7 +164,11 @@
                                                    lib
                                                    js-or-css
                                                    spec)))))))))))))
-       (apply concat)
+       (apply concat)))
+
+(defn include-libs [spec deps-types libs]
+  (->> libs
+       (include-libs-hiccup spec deps-types)
        hiccup/html
        (format "\n%s\n")))
 
@@ -258,10 +262,20 @@
         (mapcat :deps)
         distinct
         (cons :md-default)
-        (include-libs spec [:js :css])
-        time)
+        (include-libs spec [:js :css]))
    (->> items
         (map-indexed
          (fn [i item]
            (prepare/item->md item)))
         (string/join "\n\n"))))
+
+
+(defn hiccup [{:as spec
+               :keys [items title quarto]}]
+  (->> items
+       (mapv #(prepare/item->hiccup % spec))
+       (concat (->> items
+                    (mapcat :deps)
+                    distinct
+                    (include-libs-hiccup spec [:js :css])))
+       vec))

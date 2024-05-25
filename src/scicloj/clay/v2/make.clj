@@ -241,6 +241,9 @@
             spec-with-items      (-> spec
                                      (assoc :items items))]
         [(case (first format)
+           :hiccup (let [qmd-path (-> full-target-path
+                                      (string/replace #"\.html$" ".edn"))]
+                     (page/hiccup spec-with-items))
            :html (do (-> spec-with-items
                          (config/add-field :page page/html)
                          server/update-page!)
