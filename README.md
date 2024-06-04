@@ -4,7 +4,6 @@
 
 Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
 
-
 ## Getting Started
 Add Clay to your project dependencies:
 
@@ -30,9 +29,9 @@ More details may be found in the [Documentation](https://scicloj.github.io/clay/
 
 The [Claykind](https://github.com/timothypratley/claykind) project is rethinking the Clay architecture and implementation from scratch, in a new code base. Currently (Fall 2023), the two projects are being developed in coordination.
 
-[Kindly](https://github.com/scicloj/kindly) is a common ground for defining how things should be visualized, seeking compatibility across tools.
+[Kindly](https://scicloj.github.io/kindly-noted/kindly) is a common ground for defining how things should be visualized, seeking compatibility across tools.
 
-[kindly-advice](https://github.com/scicloj/kindly-advice) is a library that helps tools such as Clay to be Kindly-compatible.
+[kindly-advice](https://scicloj.github.io/kindly-noted/kindly_advice) is a library that helps tools such as Clay to be Kindly-compatible.
 
 [read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
