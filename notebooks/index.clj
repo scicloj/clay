@@ -363,6 +363,15 @@
 (comment
   (clay/browse!))
 
+;; ### Hiccup output
+
+;; (experimental 🛠)
+
+;; Render a notebook in Hiccup format and return the resulting Hiccup structure:
+
+(comment
+  (clay/make-hiccup {:source-path "notebooks/index.clj"}))
+
 ;; ## Configuration
 
 ;; Calls to the `make!` function are affected by various parameters
