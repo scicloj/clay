@@ -327,27 +327,24 @@
 (def var53 nil)
 
 
-(def var54 (+ 4 5))
+(def
+ var54
+ (comment (clay/make-hiccup {:source-path "notebooks/index.clj"})))
 
 
-(def var55 (str "abcd" "efgh"))
+(def var55 nil)
 
 
-(def var56 nil)
+(def var56 (+ 4 5))
 
 
-(def var57 (kind/hidden 9))
+(def var57 (str "abcd" "efgh"))
 
 
 (def var58 nil)
 
 
-(def
- var59
- (kind/hiccup
-  [:ul
-   [:li [:p "hi"]]
-   [:li [:big [:big [:p {:style {:color "#7F5F3F"}} "hello"]]]]]))
+(def var59 (kind/hidden 9))
 
 
 (def var60 nil)
@@ -355,11 +352,10 @@
 
 (def
  var61
- (kind/reagent
-  ['(fn
-     [numbers]
-     [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))])
-   (vec (range 40))]))
+ (kind/hiccup
+  [:ul
+   [:li [:p "hi"]]
+   [:li [:big [:big [:p {:style {:color "#7F5F3F"}} "hello"]]]]]))
 
 
 (def var62 nil)
@@ -367,6 +363,18 @@
 
 (def
  var63
+ (kind/reagent
+  ['(fn
+     [numbers]
+     [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))])
+   (vec (range 40))]))
+
+
+(def var64 nil)
+
+
+(def
+ var65
  (kind/reagent
   ['(fn
      []
@@ -386,50 +394,50 @@
           :on-click (fn* [] (swap! *click-count inc))}]])))]))
 
 
-(def var64 nil)
+(def var66 nil)
 
 
 (def
- var65
+ var67
  (kind/html
   "<div style='height:40px; width:40px; background:purple'></div> "))
 
 
 (def
- var66
+ var68
  (kind/html
   "\n<svg height=100 width=100>\n<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />\n</svg> "))
 
 
-(def var67 nil)
+(def var69 nil)
 
 
 (def
- var68
+ var70
  (kind/md "This is [markdown](https://www.markdownguide.org/)."))
 
 
 (def
- var69
+ var71
  (kind/md
   ["\n* This is [markdown](https://www.markdownguide.org/).\n  * *Isn't it??*"
    "\n* Here is **some more** markdown."]))
 
 
-(def var70 nil)
-
-
-(def var71 (kind/md "Let $x=9$. Then $$x+11=20$$"))
-
-
 (def var72 nil)
 
 
-(def var73 (import javax.imageio.ImageIO java.net.URL))
+(def var73 (kind/md "Let $x=9$. Then $$x+11=20$$"))
+
+
+(def var74 nil)
+
+
+(def var75 (import javax.imageio.ImageIO java.net.URL))
 
 
 (def
- var74
+ var76
  (defonce
   clay-image
   (->
@@ -438,14 +446,14 @@
    (ImageIO/read))))
 
 
-(def var75 clay-image)
+(def var77 clay-image)
 
 
-(def var76 nil)
+(def var78 nil)
 
 
 (def
- var77
+ var79
  (def
   people-as-maps
   (->>
@@ -459,26 +467,26 @@
 
 
 (def
- var78
+ var80
  (def
   people-as-vectors
   (->> people-as-maps (mapv (juxt :preferred-language :age)))))
 
 
-(def var79 (take 5 people-as-maps))
+(def var81 (take 5 people-as-maps))
 
 
-(def var80 (take 5 people-as-vectors))
+(def var82 (take 5 people-as-vectors))
 
 
-(def var81 (->> people-as-vectors (take 5) set))
+(def var83 (->> people-as-vectors (take 5) set))
 
 
-(def var82 nil)
+(def var84 nil)
 
 
 (def
- var83
+ var85
  (def
   nested-structure-1
   {:vector-of-numbers [2 9 -1],
@@ -490,42 +498,31 @@
    :dataset (tc/dataset {:x (range 3), :y [:A :B :C]})}))
 
 
-(def var84 nested-structure-1)
-
-
-(def var85 nil)
-
-
-(def var86 (kind/pprint nested-structure-1))
+(def var86 nested-structure-1)
 
 
 (def var87 nil)
 
 
-(def var88 (require '[tablecloth.api :as tc]))
+(def var88 (kind/pprint nested-structure-1))
 
 
-(def var89 (-> {:x (range 6), :y [:A :B :C :A :B :C]} tc/dataset))
+(def var89 nil)
 
 
-(def var90 (-> {:x [1 [2 3] 4], :y [:A :B :C]} tc/dataset))
+(def var90 (require '[tablecloth.api :as tc]))
 
 
-(def var91 (-> [{:x 1, :y 2, :z 3} {:y 4, :z 5}] tc/dataset))
+(def var91 (-> {:x (range 6), :y [:A :B :C :A :B :C]} tc/dataset))
 
 
-(def var92 (-> people-as-maps tc/dataset))
+(def var92 (-> {:x [1 [2 3] 4], :y [:A :B :C]} tc/dataset))
 
 
-(def var93 nil)
+(def var93 (-> [{:x 1, :y 2, :z 3} {:y 4, :z 5}] tc/dataset))
 
 
-(def
- var94
- (->
-  {:x (range 30)}
-  tc/dataset
-  (kind/dataset #:dataset{:print-range 6})))
+(def var94 (-> people-as-maps tc/dataset))
 
 
 (def var95 nil)
@@ -533,63 +530,66 @@
 
 (def
  var96
- (kind/table
-  {:column-names [:preferred-language :age],
-   :row-vectors people-as-vectors}))
+ (->
+  {:x (range 30)}
+  tc/dataset
+  (kind/dataset #:dataset{:print-range 6})))
 
 
 (def var97 nil)
 
 
-(def var98 (kind/table {:row-vectors (take 5 people-as-vectors)}))
+(def
+ var98
+ (kind/table
+  {:column-names [:preferred-language :age],
+   :row-vectors people-as-vectors}))
 
 
 (def var99 nil)
 
 
-(def var100 (kind/table {:row-maps (take 5 people-as-maps)}))
+(def var100 (kind/table {:row-vectors (take 5 people-as-vectors)}))
 
 
 (def var101 nil)
 
 
-(def
- var102
- (kind/table
-  {:column-names [:preferred-language],
-   :row-maps (take 5 people-as-maps)}))
+(def var102 (kind/table {:row-maps (take 5 people-as-maps)}))
 
 
 (def var103 nil)
 
 
-(def var104 (kind/table (take 5 people-as-vectors)))
+(def
+ var104
+ (kind/table
+  {:column-names [:preferred-language],
+   :row-maps (take 5 people-as-maps)}))
 
 
-(def var105 (kind/table (take 5 people-as-maps)))
+(def var105 nil)
 
 
-(def var106 nil)
+(def var106 (kind/table (take 5 people-as-vectors)))
 
 
-(def var107 (kind/table {:x (range 6), :y [:A :B :C :A :B :C]}))
+(def var107 (kind/table (take 5 people-as-maps)))
 
 
 (def var108 nil)
 
 
-(def var109 (def people-as-dataset (tc/dataset people-as-maps)))
+(def var109 (kind/table {:x (range 6), :y [:A :B :C :A :B :C]}))
 
 
-(def var110 (-> people-as-dataset kind/table))
+(def var110 nil)
 
 
-(def var111 nil)
+(def var111 (def people-as-dataset (tc/dataset people-as-maps)))
 
 
-(def
- var112
- (-> people-as-dataset (kind/table #:element{:max-height "300px"})))
+(def var112 (-> people-as-dataset kind/table))
 
 
 (def var113 nil)
@@ -597,21 +597,29 @@
 
 (def
  var114
+ (-> people-as-dataset (kind/table #:element{:max-height "300px"})))
+
+
+(def var115 nil)
+
+
+(def
+ var116
  (-> people-as-maps tc/dataset (kind/table {:use-datatables true})))
 
 
 (def
- var115
+ var117
  (->
   people-as-dataset
   (kind/table {:use-datatables true, :datatables {:scrollY 300}})))
 
 
-(def var116 nil)
+(def var118 nil)
 
 
 (def
- var117
+ var119
  (->
   (toydata/iris-ds)
   (noj.stats/linear-regression-model
@@ -620,11 +628,11 @@
   ml/thaw-model))
 
 
-(def var118 nil)
+(def var120 nil)
 
 
 (def
- var119
+ var121
  (defn
   vega-lite-point-plot
   [data]
@@ -640,7 +648,7 @@
 
 
 (def
- var120
+ var122
  (defn
   random-data
   [n]
@@ -652,21 +660,21 @@
 
 
 (def
- var121
+ var123
  (defn
   random-vega-lite-plot
   [n]
   (-> n random-data vega-lite-point-plot)))
 
 
-(def var122 (random-vega-lite-plot 9))
+(def var124 (random-vega-lite-plot 9))
 
 
-(def var123 nil)
+(def var125 nil)
 
 
 (def
- var124
+ var126
  (->
   {:data
    {:values "x,y\n1,1\n2,4\n3,9\n-1,1\n-2,4\n-3,9",
@@ -678,11 +686,11 @@
   kind/vega-lite))
 
 
-(def var125 nil)
+(def var127 nil)
 
 
 (def
- var126
+ var128
  (def
   cytoscape-example
   {:elements
@@ -709,21 +717,21 @@
    :layout {:name "preset", :padding 5}}))
 
 
-(def var127 (kind/cytoscape cytoscape-example))
+(def var129 (kind/cytoscape cytoscape-example))
 
 
 (def
- var128
+ var130
  (->
   cytoscape-example
   (kind/cytoscape #:element{:style {:width "100px", :height "100px"}})))
 
 
-(def var129 nil)
+(def var131 nil)
 
 
 (def
- var130
+ var132
  (def
   echarts-example
   {:title {:text "Echarts Example"},
@@ -735,21 +743,21 @@
    :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}))
 
 
-(def var131 (kind/echarts echarts-example))
+(def var133 (kind/echarts echarts-example))
 
 
 (def
- var132
+ var134
  (->
   echarts-example
   (kind/echarts #:element{:style {:width "500px", :height "200px"}})))
 
 
-(def var133 nil)
+(def var135 nil)
 
 
 (def
- var134
+ var136
  (def
   plotly-example
   {:data
@@ -764,21 +772,21 @@
    :layout {:title "Plotly example"}}))
 
 
-(def var135 (kind/plotly plotly-example))
+(def var137 (kind/plotly plotly-example))
 
 
 (def
- var136
+ var138
  (->
   plotly-example
   (kind/plotly #:element{:style {:width "300px", :height "300px"}})))
 
 
-(def var137 nil)
+(def var139 nil)
 
 
 (def
- var138
+ var140
  (kind/highcharts
   {:title {:text "Line chart"},
    :subtitle {:text "By Job Category"},
@@ -853,56 +861,56 @@
         :verticalAlign "bottom"}}}]}}))
 
 
-(def var139 nil)
-
-
-(def
- var140
- (kind/observable
-  "\n//| panel: input\nviewof bill_length_min = Inputs.range(\n                                      [32, 50],\n                                      {value: 35, step: 1, label: 'Bill length (min):'}\n                                      )\nviewof islands = Inputs.checkbox(\n                                 ['Torgersen', 'Biscoe', 'Dream'],\n                                 { value: ['Torgersen', 'Biscoe'],\n                                  label: 'Islands:'\n                                  }\n                                 )\n\nPlot.rectY(filtered,\n            Plot.binX(\n                      {y: 'count'},\n                      {x: 'body_mass_g', fill: 'species', thresholds: 20}\n                      ))\n .plot({\n        facet: {\n                data: filtered,\n                x: 'sex',\n                y: 'species',\n                marginRight: 80\n                },\n        marks: [\n                Plot.frame(),\n                ]\n        }\n       )\nInputs.table(filtered)\npenguins = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })\nfiltered = penguins.filter(function(penguin) {\n                                           return bill_length_min < penguin.bill_length_mm &&\n                                           islands.includes(penguin.island);\n                                           })\n"))
-
-
 (def var141 nil)
 
 
 (def
  var142
  (kind/observable
-  "athletes = FileAttachment('notebooks/datasets/athletes.csv').csv({typed: true})"))
+  "\n//| panel: input\nviewof bill_length_min = Inputs.range(\n                                      [32, 50],\n                                      {value: 35, step: 1, label: 'Bill length (min):'}\n                                      )\nviewof islands = Inputs.checkbox(\n                                 ['Torgersen', 'Biscoe', 'Dream'],\n                                 { value: ['Torgersen', 'Biscoe'],\n                                  label: 'Islands:'\n                                  }\n                                 )\n\nPlot.rectY(filtered,\n            Plot.binX(\n                      {y: 'count'},\n                      {x: 'body_mass_g', fill: 'species', thresholds: 20}\n                      ))\n .plot({\n        facet: {\n                data: filtered,\n                x: 'sex',\n                y: 'species',\n                marginRight: 80\n                },\n        marks: [\n                Plot.frame(),\n                ]\n        }\n       )\nInputs.table(filtered)\npenguins = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })\nfiltered = penguins.filter(function(penguin) {\n                                           return bill_length_min < penguin.bill_length_mm &&\n                                           islands.includes(penguin.island);\n                                           })\n"))
 
 
-(def var143 (kind/observable "athletes"))
-
-
-(def var144 (kind/observable "Inputs.table(athletes)"))
+(def var143 nil)
 
 
 (def
- var145
+ var144
+ (kind/observable
+  "athletes = FileAttachment('notebooks/datasets/athletes.csv').csv({typed: true})"))
+
+
+(def var145 (kind/observable "athletes"))
+
+
+(def var146 (kind/observable "Inputs.table(athletes)"))
+
+
+(def
+ var147
  (kind/observable
   "\nPlot.plot({\n  grid: true,\n  facet: {\n    data: athletes,\n    y: 'sex'\n  },\n  marks: [\n    Plot.rectY(\n      athletes,\n      Plot.binX({y: 'count'}, {x: 'weight', fill: 'sex'})\n    ),\n    Plot.ruleY([0])\n  ]\n})\n"))
 
 
 (def
- var146
+ var148
  (kind/observable
   "population = FileAttachment('notebooks/datasets/population.json').json()"))
 
 
-(def var147 (kind/observable "population"))
-
-
-(def
- var148
- (kind/observable
-  " import { chart } with { population as data } from '@d3/zoomable-sunburst'\n chart"))
-
-
-(def var149 nil)
+(def var149 (kind/observable "population"))
 
 
 (def
  var150
+ (kind/observable
+  " import { chart } with { population as data } from '@d3/zoomable-sunburst'\n chart"))
+
+
+(def var151 nil)
+
+
+(def
+ var152
  (kind/reagent
   ['(fn
      []
@@ -927,11 +935,11 @@
   #:html{:deps [:leaflet]}))
 
 
-(def var151 nil)
+(def var153 nil)
 
 
 (def
- var152
+ var154
  (let
   [letter-frequencies
    [{:letter "A", :frequency 0.08167}
@@ -998,11 +1006,11 @@
    #:html{:deps [:d3]})))
 
 
-(def var153 nil)
+(def var155 nil)
 
 
 (def
- var154
+ var156
  (defn
   ->ggplotly-spec
   [{:keys [layers labels]}]
@@ -1198,14 +1206,14 @@
      :jsHooks []}))))
 
 
-(def var155 (require '[tech.v3.datatype.functional :as fun]))
+(def var157 (require '[tech.v3.datatype.functional :as fun]))
 
 
-(def var156 nil)
+(def var158 nil)
 
 
 (def
- var157
+ var159
  (let
   [n
    100
@@ -1229,11 +1237,11 @@
     :labels {:x "wt", :y "mpg"}})))
 
 
-(def var158 nil)
+(def var160 nil)
 
 
 (def
- var159
+ var161
  (kind/reagent
   ['(fn
      [{:keys [data-pdb]}]
@@ -1248,16 +1256,16 @@
   #:html{:deps [:three-d-mol]}))
 
 
-(def var160 nil)
+(def var162 nil)
 
 
 (def
- var161
+ var163
  (defonce pdb-2POR (slurp "https://files.rcsb.org/download/2POR.pdb")))
 
 
 (def
- var162
+ var164
  (kind/reagent
   ['(fn
      [{:keys [pdb-data]}]
@@ -1287,40 +1295,40 @@
   #:html{:deps [:three-d-mol]}))
 
 
-(def var163 nil)
+(def var165 nil)
 
 
-(def var164 (kind/video {:youtube-id "DAQnvAgBma8"}))
+(def var166 (kind/video {:youtube-id "DAQnvAgBma8"}))
 
 
 (def
- var165
+ var167
  (kind/video {:youtube-id "DAQnvAgBma8", :allowfullscreen false}))
 
 
 (def
- var166
+ var168
  (kind/video
   {:youtube-id "DAQnvAgBma8", :iframe-width 480, :iframe-height 270}))
 
 
 (def
- var167
+ var169
  (kind/video
   {:youtube-id "DAQnvAgBma8", :embed-options {:mute 1, :controls 0}}))
-
-
-(def var168 nil)
-
-
-(def var169 (kind/portal {:x (range 3)}))
 
 
 (def var170 nil)
 
 
+(def var171 (kind/portal {:x (range 3)}))
+
+
+(def var172 nil)
+
+
 (def
- var171
+ var173
  (kind/portal
   [(kind/hiccup
     [:img
@@ -1336,16 +1344,16 @@
 
 
 (def
- var172
+ var174
  (kind/portal
   [(kind/hiccup [:big [:big "a plot"]]) (random-vega-lite-plot 9)]))
 
 
-(def var173 nil)
+(def var175 nil)
 
 
 (def
- var174
+ var176
  (kind/hiccup
   [:div
    {:style {:background "#f5f3ff", :border "solid"}}
@@ -1386,11 +1394,11 @@
      (vec (range 40))])]))
 
 
-(def var175 nil)
+(def var177 nil)
 
 
 (def
- var176
+ var178
  (kind/table
   {:column-names
    [(kind/hiccup
@@ -1407,7 +1415,7 @@
 
 
 (def
- var177
+ var179
  (kind/table
   {:column-names ["size" "square"],
    :row-vectors
@@ -1423,26 +1431,26 @@
   {:use-datatables true}))
 
 
-(def var178 nil)
+(def var180 nil)
 
 
 (def
- var179
+ var181
  {:plot (random-vega-lite-plot 9),
   :dataset (tc/dataset {:x (range 3), :y (repeatedly 3 rand)})})
 
 
 (def
- var180
+ var182
  [(random-vega-lite-plot 9)
   (tc/dataset {:x (range 3), :y (repeatedly 3 rand)})])
 
 
-(def var181 nil)
+(def var183 nil)
 
 
 (def
- var182
+ var184
  (->>
   ["purple" "darkgreen" "brown"]
   (mapcat
@@ -1456,44 +1464,44 @@
   kind/fragment))
 
 
-(def var183 (->> (range 3) kind/fragment))
+(def var185 (->> (range 3) kind/fragment))
 
 
-(def var184 nil)
+(def var186 nil)
 
 
-(def var185 (kind/fn [+ 1 2]))
-
-
-(def
- var186
- (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
-
-
-(def
- var187
- (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
+(def var187 (kind/fn [+ 1 2]))
 
 
 (def
  var188
+ (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
+
+
+(def
+ var189
+ (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
+
+
+(def
+ var190
  (kind/fn {:kindly/f tc/dataset, :x (range 3), :y (repeatedly 3 rand)}))
-
-
-(def var189 nil)
-
-
-(def var190 (delay (Thread/sleep 500) (+ 1 2)))
 
 
 (def var191 nil)
 
 
-(def var192 (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
+(def var192 (delay (Thread/sleep 500) (+ 1 2)))
+
+
+(def var193 nil)
+
+
+(def var194 (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
 
 
 (def
- var193
+ var195
  (kind/vega-lite
   {:data {:url "notebooks/datasets/iris.csv"},
    :mark "rule",
@@ -1508,29 +1516,29 @@
    :background "floralwhite"}))
 
 
-(def var194 nil)
+(def var196 nil)
 
 
-(def var195 (+ 1 2))
+(def var197 (+ 1 2))
 
 
-(deftest test196 (is (> var195 2.9)))
+(deftest test198 (is (> var197 2.9)))
 
 
-(deftest test197 (is (> var195 2.9)))
+(deftest test199 (is (> var197 2.9)))
 
 
-(deftest test198 (is (> var195 2.9)))
+(deftest test200 (is (> var197 2.9)))
 
 
-(def var199 nil)
+(def var201 nil)
 
 
 (def
- var200
+ var202
  (kindly/hide-code
   (kind/code
    "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
-(def var201 nil)
+(def var203 nil)
