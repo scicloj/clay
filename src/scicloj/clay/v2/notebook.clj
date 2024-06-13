@@ -33,17 +33,19 @@
 
 (defn complete [{:as note
                  :keys [comment? code form value]}]
-  (if (or value comment?)
-    note
-    (assoc
-     note
-     :value (cond form (-> form
-                           eval
-                           deref-if-needed)
-                  code (-> code
-                           read-string
-                           eval
-                           deref-if-needed)))))
+  (-> (if (or value comment?)
+        note
+        (assoc
+         note
+         :value (cond form (-> form
+                               eval
+                               deref-if-needed)
+                      code (-> code
+                               read-string
+                               eval
+                               deref-if-needed))))
+      (cond-> (not comment?)
+        kindly-advice/advise)))
 
 (defn comment->item [comment]
   (-> comment
@@ -57,7 +59,7 @@
       item/md))
 
 (defn note-to-items [{:as note
-                      :keys [comment? code form value]}
+                      :keys [comment? code form value kind]}
                      {:keys [hide-code hide-nils hide-vars]}]
   (if (and comment? code)
     [(comment->item code)]
@@ -68,14 +70,11 @@
                     (-> form meta :kindly/hide-code?) ; legacy convention
                     (-> value meta :kindly/hide-code)
                     (-> value meta :kindly/hide-code?) ; legacy convention
-                    (some-> note
-                            :kindly/options
-                            :kinds-that-hide-code
-                            (as-> kthc
-                                (-> value
-                                    meta
-                                    :kindly/kind
-                                    kthc)))
+                    (when kind
+                      (some-> note
+                              :kindly/options
+                              :kinds-that-hide-code
+                              kind))
                     (nil? code))
         (item/source-clojure code))]
      ;; value
@@ -115,7 +114,6 @@
            :comment?
            not)
        (-> complete-note
-           kindly-advice/advise
            :kind
            (= :kind/test-last))))
 
@@ -187,7 +185,7 @@
                                                    test-forms
                                                    last-nontest-i]}
                            note]
-                        (let [{:as complete-note :keys [form]} (complete note)
+                        (let [{:as complete-note :keys [form kind]} (complete note)
                               test-note (test-last? complete-note)
                               new-items (when-not test-note
                                           (-> complete-note

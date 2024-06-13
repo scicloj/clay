@@ -107,7 +107,7 @@
       md)))
 
 (defn advise-if-needed [context]
-  (if (:advise context)
+  (if (:advice context)
     context
     (kindly-advice/advise context)))
 
