@@ -24,7 +24,12 @@
 (defn escape [string]
   (-> string
       (string/escape
-       {\< "&lt;" \> "&gt;"})))
+       {\< "&lt;"
+        \> "&gt;"
+        \& "&amp;"
+        \" "&quot;"
+        \' "&apos;"})))
+
 
 (defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
   (fn [string-or-strings]

@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta11] - unreleased
 - added support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html`
-
+- mode careful escaping of characters
 
 ## [2-beta10] - 2024-05-25
 - added classes to elements that have styling applied to facilitate custom styles (#102)
