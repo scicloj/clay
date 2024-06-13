@@ -17,7 +17,7 @@
   (swap! *id inc))
 
 (defn in-vector [v]
-  (if (vector? v)
+  (if (sequential? v)
     v
     [v]))
 

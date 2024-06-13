@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta11] - unreleased
+- added support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html`
+
+
 ## [2-beta10] - 2024-05-25
 - added classes to elements that have styling applied to facilitate custom styles (#102)
 - added partial support for dataset print options as kindly options
