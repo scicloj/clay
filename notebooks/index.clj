@@ -481,6 +481,14 @@
   "
 * Here is **some more** markdown."])
 
+(kind/md
+ (list
+  "
+* This is [markdown](https://www.markdownguide.org/).
+  * *Isn't it??*"
+  "
+* Here is **some more** markdown."))
+
 ;; When rendering through Quarto, LaTeX formulae are supported as well.
 
 (kind/md
