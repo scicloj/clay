@@ -497,6 +497,21 @@
 ;; One current known issue is that LaTeX would not render correctly
 ;; when nesting `kind/md` inside other kinds.
 
+;; ### Code
+
+;; Clojure code can be annotated with `kind/code`.
+
+(kind/code "(update {:x 9} :x inc)")
+
+(kind/code
+ ["(update {:x 9} :x inc)"
+  "(update {:x 9} :x dec)"])
+
+(kind/code
+ (list
+  "(update {:x 9} :x inc)"
+  "(update {:x 9} :x dec)"))
+
 ;; ### Images
 
 ;; Java BufferedImage objects are displayed as images.
