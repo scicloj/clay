@@ -217,13 +217,16 @@
                      full-target-path
                      base-target-path]
               :as context}]
-  (let [png-path (files/next-file!
+  (let [image (if (sequential? value)
+                (first value)
+                value)
+        png-path (files/next-file!
                   full-target-path
                   ""
-                  value
+                  image
                   ".png")]
     (when-not
-        (util.image/write! value "png" png-path)
+        (util.image/write! image "png" png-path)
       (throw (ex-message "Failed to save image as PNG.")))
     {:hiccup [:img {:src (-> png-path
                              (string/replace
