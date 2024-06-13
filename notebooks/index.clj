@@ -469,7 +469,7 @@
 
 ;; ### Markdown
 
-;; Markdown text (a vector of strings) can be handled using a kind too.
+;; Markdown text (a string or a vector of strings) can be handled using a kind too.
 
 (kind/md
  "This is [markdown](https://www.markdownguide.org/).")
