@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 - using kindly-advice earlier in the pipeline, e.g. to recognize kinds where code should be hidden (#105)
 - bugfix: the `kind/image` annotation failed to render (#105)
 - updated Kindly version
+- `kind/tex` support
 
 ## [2-beta10] - 2024-05-25
 - added classes to elements that have styling applied to facilitate custom styles (#102)

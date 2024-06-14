@@ -181,6 +181,10 @@
  :kind/md
  #'item/md)
 
+(add-preparer-from-value-fn!
+ :kind/tex
+ #'item/tex)
+
 (add-preparer!
  :kind/table
  (fn [{:as context

@@ -86,6 +86,12 @@
             in-vector
             (string/join "\n"))})
 
+(defn tex [text]
+  {:md (->> text
+            in-vector
+            (map (partial format "$$%s$$"))
+            (string/join "\n"))})
+
 (def separator
   {:hiccup [:div {:style
                   {:height "2px"
