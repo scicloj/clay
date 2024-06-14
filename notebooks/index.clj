@@ -513,7 +513,6 @@
 
 (kind/tex "x^2=\\alpha")
 
-
 ;; ### Code
 
 ;; Clojure code can be annotated with `kind/code`.
