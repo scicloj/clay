@@ -507,6 +507,13 @@
 ;; One current known issue is that LaTeX would not render correctly
 ;; when nesting `kind/md` inside other kinds.
 
+;; ### TeX
+
+;; (currently supported only when rendering through Quarto)
+
+(kind/tex "x^2=\\alpha")
+
+
 ;; ### Code
 
 ;; Clojure code can be annotated with `kind/code`.
