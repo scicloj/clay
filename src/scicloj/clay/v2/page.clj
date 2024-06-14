@@ -272,10 +272,9 @@
 
 (defn hiccup [{:as spec
                :keys [items title quarto]}]
-  (->> items
-       (mapv #(prepare/item->hiccup % spec))
-       (concat (->> items
+  (vec (concat (->> items
                     (mapcat :deps)
                     distinct
-                    (include-libs-hiccup spec [:js :css])))
-       vec))
+                    (include-libs-hiccup spec [:js :css]))
+               (->> items
+                    (map #(prepare/item->hiccup % spec))))))
