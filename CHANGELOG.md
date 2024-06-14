@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 - updated Kindly version
 - `kind/tex` support
 - updated version for KaTeX js dependency
+- supporting TeX inside Markdown in all cases (not just some Quarto cases as before)
 
 ## [2-beta10] - 2024-05-25
 - added classes to elements that have styling applied to facilitate custom styles (#102)

@@ -86,11 +86,24 @@
             in-vector
             (string/join "\n"))})
 
+(defn katex-hiccup [string]
+  [:div
+   [:script
+    (->> string
+         charred/write-json-str
+         (format
+          "katex.render(%s, document.currentScript.parentElement, {throwOnError: false});"))]])
+
 (defn tex [text]
   {:md (->> text
             in-vector
             (map (partial format "$$%s$$"))
-            (string/join "\n"))})
+            (string/join "\n"))
+   :hiccup (->> text
+                in-vector
+                (map katex-hiccup)
+                (into [:div]))
+   :deps [:katex]})
 
 (def separator
   {:hiccup [:div {:style

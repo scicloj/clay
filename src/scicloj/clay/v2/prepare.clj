@@ -47,6 +47,10 @@
                    (rest hiccup))))
     hiccup))
 
+(defn vector-that-starts-with? [v x]
+  (and (vector? v)
+       (-> v first (= x))))
+
 (defn item->hiccup [{:keys [hiccup html md
                             script
                             item-class
@@ -57,14 +61,23 @@
           (some->> html
                    (vector :div))
           (when md
-            (if (and (vector? format)
-                     (-> format first (= :quarto))
-                     inside-a-table)
+            (if (and inside-a-table
+                     (vector-that-starts-with?
+                      format
+                      :quarto))
               [:span {:data-qmd md}]
               (->> md
                    md/->hiccup
                    (clojure.walk/postwalk-replace {:<> :p})
-                   (clojure.walk/postwalk-replace {:table :table.table})))))
+                   (clojure.walk/postwalk-replace {:table :table.table})
+                   (claywalk/postwalk (fn [form]
+                                        (if (vector-that-starts-with?
+                                             form
+                                             :span.formula)
+                                          (-> form
+                                              second
+                                              item/katex-hiccup)
+                                          form)))))))
       (add-class-to-hiccup item-class)
       (cond-> script
         (conj script))))

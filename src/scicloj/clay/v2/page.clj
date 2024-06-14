@@ -187,7 +187,7 @@
              :keys [items title toc?]}]
   (let [special-libs (->> items
                           items->deps
-                          (concat [:html-default]))
+                          (concat [:html-default :katex]))
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
