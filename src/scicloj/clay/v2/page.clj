@@ -35,7 +35,7 @@
                  ;; to avoid fetching the fonts locally,
                  ;; which would need a bit more care
                  ;; (see https://katex.org/docs/font.html)
-                 ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"]}}
+                 ["https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"]}}
    :three-d-mol {:js {:from-the-web
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
    :leaflet {;; fetching Leaflet from the web
