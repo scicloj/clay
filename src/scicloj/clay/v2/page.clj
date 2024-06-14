@@ -29,7 +29,7 @@
    :plotly {:js {:from-local-copy
                  ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}
    :katex {:js {:from-local-copy
-                ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"]}
+                ["https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"]}
            :css {:from-the-web
                  ;; fetching the KaTeX css from the web
                  ;; to avoid fetching the fonts locally,

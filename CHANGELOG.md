@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: the `kind/image` annotation failed to render (#105)
 - updated Kindly version
 - `kind/tex` support
+- updated version for KaTeX js dependency
 
 ## [2-beta10] - 2024-05-25
 - added classes to elements that have styling applied to facilitate custom styles (#102)
