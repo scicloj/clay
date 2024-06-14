@@ -178,11 +178,15 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
 
+(defn items->deps [items]
+  (->> items
+       (mapcat :deps)
+       distinct))
+
 (defn html [{:as spec
              :keys [items title toc?]}]
   (let [special-libs (->> items
-                          (mapcat :deps)
-                          distinct
+                          items->deps
                           (concat [:html-default]))
         head [:head
               [:meta {:charset "UTF-8"}]
@@ -259,8 +263,7 @@
     [:style (styles/main :md-main)]
     [:style (styles/main :main)])
    (->> items
-        (mapcat :deps)
-        distinct
+        items->deps
         (cons :md-default)
         (include-libs spec [:js :css]))
    (->> items
@@ -271,10 +274,9 @@
 
 
 (defn hiccup [{:as spec
-               :keys [items title quarto]}]
+               :keys [items title quarto inline-js]}]
   (vec (concat (->> items
-                    (mapcat :deps)
-                    distinct
+                    items->deps
                     (include-libs-hiccup spec [:js :css]))
                (->> items
                     (map #(prepare/item->hiccup % spec))))))
