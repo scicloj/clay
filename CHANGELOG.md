@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta11] - unreleased
+## [2-beta11-SNAPSHOT]
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
 - mode careful escaping of characters (#104)
 - using kindly-advice earlier in the pipeline, e.g. to recognize kinds where code should be hidden (#105)
