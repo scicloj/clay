@@ -88,6 +88,14 @@
   {:js hiccup.page/include-js
    :css hiccup.page/include-css})
 
+(defn include-inline [js-or-css]
+  (fn [url]
+    (->> url
+         ((include js-or-css))
+         (map (fn [script-tag]
+                (-> script-tag
+                    (update-in [1 :src] slurp)))))))
+
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]
   (let [path (files/next-file!
@@ -134,7 +142,8 @@
                      (str target-repo-path "/")
                      ((include js-or-css))))))))
 
-(defn include-libs-hiccup [spec deps-types libs]
+(defn include-libs-hiccup [{:as spec :keys [inline-js-and-css]}
+                           deps-types libs]
   (->> deps-types
        (mapcat (fn [js-or-css]
                  (->> libs
@@ -146,24 +155,30 @@
                               ((fn [{:keys [from-the-web
                                             from-local-copy
                                             from-local-copy-of-repo]}]
-                                 (concat
-                                  (some->> from-the-web
-                                           (apply (include js-or-css))
-                                           vector)
-                                  (some->> from-local-copy
-                                           (map (fn [url]
-                                                  (include-from-a-local-file
-                                                   url
-                                                   lib
-                                                   js-or-css
-                                                   spec))))
-                                  (some->> from-local-copy-of-repo
-                                           (map (fn [details]
-                                                  (include-from-a-local-copy-of-repo
-                                                   details
-                                                   lib
-                                                   js-or-css
-                                                   spec)))))))))))))
+                                 (if inline-js-and-css
+                                   (->> (concat from-the-web
+                                                from-local-copy
+                                                from-local-copy-of-repo)
+                                        (mapcat (include-inline js-or-css)))
+                                   ;; else
+                                   (concat
+                                    (some->> from-the-web
+                                             (apply (include js-or-css))
+                                             vector)
+                                    (some->> from-local-copy
+                                             (map (fn [url]
+                                                    (include-from-a-local-file
+                                                     url
+                                                     lib
+                                                     js-or-css
+                                                     spec))))
+                                    (some->> from-local-copy-of-repo
+                                             (map (fn [details]
+                                                    (include-from-a-local-copy-of-repo
+                                                     details
+                                                     lib
+                                                     js-or-css
+                                                     spec))))))))))))))
        (apply concat)))
 
 (defn include-libs [spec deps-types libs]
@@ -274,7 +289,7 @@
 
 
 (defn hiccup [{:as spec
-               :keys [items title quarto inline-js]}]
+               :keys [items title quarto]}]
   (vec (concat (->> items
                     items->deps
                     (include-libs-hiccup spec [:js :css]))
