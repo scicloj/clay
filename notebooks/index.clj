@@ -499,17 +499,12 @@
   "
 * Here is **some more** markdown."))
 
-;; When rendering through Quarto, LaTeX formulae are supported as well.
+;; LaTeX formulae are supported as well.
 
 (kind/md
  "Let $x=9$. Then $$x+11=20$$")
 
-;; One current known issue is that LaTeX would not render correctly
-;; when nesting `kind/md` inside other kinds.
-
 ;; ### TeX
-
-;; (currently supported only when rendering through Quarto)
 
 (kind/tex "x^2=\\alpha")
 
