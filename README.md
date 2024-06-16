@@ -37,6 +37,8 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 ## Projects using Clay
 
+Please reach out to add your project to this list.
+
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 - [ClojisR documentation](https://scicloj.github.io/clojisr/)
 - [Clay documentation](https://scicloj.github.io/clay/)
