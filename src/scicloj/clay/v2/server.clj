@@ -186,9 +186,9 @@
 (defn open! []
   (when-not @*stop-server!
     (let [port (get-free-port)
-          server (core-http-server port)]
+          stop-server (core-http-server port)]
       (server.state/set-port! port)
-      (reset! *stop-server! port)
+      (reset! *stop-server! stop-server)
       (println "serving Clay at" (port->url port))
       (browse!))))
 
