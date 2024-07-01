@@ -21,10 +21,13 @@
                                "Clay"]
                          " is ready, waiting for interaction."]]])}))
 
-(defn start! []
-  (server/open!)
-  (welcome!)
-  [:ok])
+(defn start!
+  ([]
+   (start! {}))
+  ([{:as opts :keys [port]}]
+   (server/open! opts)
+   (welcome!)
+   [:ok]))
 
 (defn make! [spec]
   (make/make! spec))
