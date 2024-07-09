@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta12-SNAPSHOT]
 - Regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
-- Teach `start!` to take a port number - thanks, @olavfosse
+- Teach `start!` to take a port number (#107) - thanks, @olavfosse
 
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
