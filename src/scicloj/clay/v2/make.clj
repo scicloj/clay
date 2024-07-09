@@ -128,21 +128,21 @@
         (select-keys [:format])
         (merge/deep-merge
          {:project {:type "book"}
-          :book {:title (:title book)
-                 :chapters (-> full-target-paths
-                               (->> (map
-                                     (fn [path]
-                                       (-> path
-                                           (string/replace
-                                            (re-pattern (str "^"
-                                                             base-target-path
-                                                             "/"))
-                                            "")
-                                           (string/replace
-                                            #"\.html$"
-                                            ".qmd")))))
-                               (cond->> (not index-included?)
-                                 (cons "index.qmd")))}}))))
+          :book (merge {:chapters (-> full-target-paths
+                                      (->> (map
+                                            (fn [path]
+                                              (-> path
+                                                  (string/replace
+                                                   (re-pattern (str "^"
+                                                                    base-target-path
+                                                                    "/"))
+                                                   "")
+                                                  (string/replace
+                                                   #"\.html$"
+                                                   ".qmd")))))
+                                      (cond->> (not index-included?)
+                                        (cons "index.qmd")))}
+                       book)}))))
 
 (defn write-quarto-book-config! [quarto-book-config
                                  {:keys [base-target-path]}]
