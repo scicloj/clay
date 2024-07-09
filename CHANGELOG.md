@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta12-SNAPSHOT]
+- Regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
+- Teach `start!` to take a port number - thanks, @olavfosse
+
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
 - mode careful escaping of characters (#104)
