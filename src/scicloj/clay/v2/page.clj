@@ -93,8 +93,10 @@
     (->> url
          ((include js-or-css))
          (map (fn [script-tag]
-                (-> script-tag
-                    (update-in [1 :src] slurp)))))))
+                (let [{:keys [src]} (second script-tag)]
+                  (-> script-tag
+                      (conj (slurp src))
+                      (update 1 dissoc :src))))))))
 
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
 - teach `start!` to take a port number (#107) - thanks, @olavfosse
 - pass all relevant uptions to Quarto book setup (#114)
+- bugfix: correctly include inline JS
 
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
