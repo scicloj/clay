@@ -2,17 +2,18 @@
   (:require
    [clojure.java.browse :as browse]
    [clojure.java.io :as io]
-   [clojure.java.shell :as shell]
    [clojure.string :as string]
    [hiccup.page]
    [org.httpkit.server :as httpkit]
    [scicloj.clay.v2.server.state :as server.state]
-   [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
-   [scicloj.kindly.v4.api :as kindly]
    [clojure.string :as str]
-   [hiccup.core :as hiccup]))
+   [hiccup.core :as hiccup])
+  (:import (java.io FileInputStream)
+           (java.net ServerSocket)))
+
+(set! *warn-on-reflection* true)
 
 (def default-port 1971)
 
@@ -23,10 +24,10 @@
     (httpkit/send! ch msg)))
 
 (defn get-free-port []
-  (loop [port 1971]
+  (loop [port default-port]
     ;; Check if the port is free:
     ;; (https://codereview.stackexchange.com/a/31591)
-    (or (try (do (.close (java.net.ServerSocket. port))
+    (or (try (do (.close (ServerSocket. port))
                  port)
              (catch Exception e nil))
         (recur (inc port)))))
@@ -67,13 +68,6 @@
           port
           counter))
 
-(defn add-communication-script [page state]
-  (-> page
-      (string/replace #"</body></html>$"
-                      (str "\n"
-                           (communication-script state)
-                           "\n</body></html>"))))
-
 (defn header [state]
   (hiccup.core/html
    [:div
@@ -95,8 +89,6 @@
       [:pre {:style {:margin 0}}
        (time/now)]]]
     #_(:hiccup item/separator)]))
-
-
 
 (defn page
   ([]
@@ -127,11 +119,11 @@
                         (communication-script state)))))
 
 (defn routes [{:keys [:body :request-method :uri]
-               :as req}]
+               :as   req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
-      (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
-                               :on-close (fn [ch _reason] (swap! *clients disj ch))
+      (httpkit/as-channel req {:on-open    (fn [ch] (swap! *clients conj ch))
+                               :on-close   (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
       (case [request-method uri]
         [:get "/"] {:body (-> state
@@ -139,10 +131,12 @@
                               (wrap-html state))
                     :headers {"Content-Type" "text/html"}
                     :status 200}
-        [:get "/counter"] {:body (-> state
-                                     :counter
-                                     str)
+        [:get "/counter"] {:body   (-> state
+                                       :counter
+                                       str)
                            :status 200}
+        [:get "/favicon.ico"] {:body   (FileInputStream. (io/file (io/resource "favicon.ico")))
+                               :status 200}
         ;; else
         (merge {:body (try (if (re-matches #".*\.html$" uri)
                              (-> uri

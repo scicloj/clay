@@ -5,13 +5,11 @@
    [clojure.string :as string]
    [hiccup.core :as hiccup]
    [hiccup.page]
-   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]
-   [clojure.java.shell :as shell]))
+   [scicloj.clay.v2.files :as files]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -85,7 +83,7 @@
    :highcharts {:js {:from-the-web ["https://code.highcharts.com/highcharts.js"]}}})
 
 (def include
-  {:js hiccup.page/include-js
+  {:js  hiccup.page/include-js
    :css hiccup.page/include-css})
 
 (defn include-inline [js-or-css]
@@ -101,20 +99,20 @@
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]
   (let [path (files/next-file!
-              full-target-path
-              custom-name
-              url
-              (str "." (name js-or-css)))]
+               full-target-path
+               custom-name
+               url
+               (str "." (name js-or-css)))]
     (io/make-parents path)
     (->> url
          resource/get
          (spit path))
     (-> path
         (string/replace
-         (re-pattern (str "^"
-                          base-target-path
-                          "/"))
-         "")
+          (re-pattern (str "^"
+                           base-target-path
+                           "/"))
+          "")
         ((include js-or-css)))))
 
 (defn clone-repo-if-needed! [gh-repo]
@@ -200,15 +198,16 @@
        (mapcat :deps)
        distinct))
 
-(defn html [{:as spec
-             :keys [items title toc?]}]
+(defn html [{:as   spec
+             :keys [items title toc? favicon]}]
   (let [special-libs (->> items
                           items->deps
                           (concat [:html-default :katex]))
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-              [:link {:rel "icon" :href "data:,"}] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
+              (when favicon
+                [:link {:rel "\"icon\"" :href favicon}])
               #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
               font-links
               [:style (styles/main :table)]
@@ -220,10 +219,10 @@
               [:style (styles/main :main)]
               (when toc?
                 (include-from-a-local-file
-                 "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"
-                 "bootstrap-toc"
-                 :css
-                 spec))
+                  "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"
+                  "bootstrap-toc"
+                  :css
+                  spec))
               (when toc?
                 [:style (styles/main :bootstrap-toc-customization)])
               (include-libs spec [:css] special-libs)
@@ -245,7 +244,7 @@
                [:div.row
                 (when toc?
                   [:div.col-sm-3
-                   [:nav.sticky-top {:id "toc"
+                   [:nav.sticky-top {:id          "toc"
                                      :data-toggle "toc"}]])
                 [:div {:class (if toc?
                                 "col-sm-9"
@@ -265,13 +264,15 @@
                "hljs.highlightAll();"]]]
     (hiccup.page/html5 head body)))
 
-
-
-
-(defn md [{:as spec
-           :keys [items title quarto]}]
+(defn md [{:as   spec
+           :keys [items title favicon quarto]}]
   (str
-   (->> quarto
+   (->> (cond-> quarto
+                ;; Users may provide non-quarto specific configuration (see also html),
+                ;; if so this will be added to the quarto front-matter to make them behave the same way
+                title (assoc-in [:format :html :title] title)
+                favicon (assoc-in [:format :html :include-in-header :text]
+                                  (str "<link rel = \"icon\" href = \"" favicon "\" />")))
         yaml/generate-string
         (format "\n---\n%s\n---\n"))
    ;; " "
