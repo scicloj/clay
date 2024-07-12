@@ -117,32 +117,37 @@
           last
           (#{"index.html"})))
 
+
+(defn quarto-book-chapters-config [{:keys [base-target-path
+                                           full-target-paths]}]
+  (let [index-included? (->> full-target-paths
+                             (some index-target-path?))]
+    (-> full-target-paths
+        (->> (map
+              (fn [path]
+                (-> path
+                    (string/replace
+                     (re-pattern (str "^"
+                                      base-target-path
+                                      "/"))
+                     "")
+                    (string/replace
+                     #"\.html$"
+                     ".qmd")))))
+        (cond->> (not index-included?)
+          (cons "index.qmd")))))
+
 (defn quarto-book-config [{:as spec
                            :keys [book
                                   quarto
                                   base-target-path
                                   full-target-paths]}]
-  (let [index-included? (->> full-target-paths
-                             (some index-target-path?))]
-    (-> quarto
-        (select-keys [:format])
-        (merge/deep-merge
-         {:project {:type "book"}
-          :book (merge {:chapters (-> full-target-paths
-                                      (->> (map
-                                            (fn [path]
-                                              (-> path
-                                                  (string/replace
-                                                   (re-pattern (str "^"
-                                                                    base-target-path
-                                                                    "/"))
-                                                   "")
-                                                  (string/replace
-                                                   #"\.html$"
-                                                   ".qmd")))))
-                                      (cond->> (not index-included?)
-                                        (cons "index.qmd")))}
-                       book)}))))
+  (-> quarto
+      (select-keys [:format])
+      (merge/deep-merge
+       {:project {:type "book"}
+        :book (merge {:chapters (quarto-book-chapters-config spec)}
+                     book)})))
 
 (defn write-quarto-book-config! [quarto-book-config
                                  {:keys [base-target-path]}]
