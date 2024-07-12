@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file. This change
 - teach `start!` to take a port number (#107) - thanks, @olavfosse
 - pass all relevant uptions to Quarto book setup (#114)
 - bugfix: correctly include inline JS - thanks, Jarkko Saltiola
+- fixed server should respond with 404 when file is not found
+- serve /favicon.ico and /Clay.svg.png locally from resources
+- removed the avoid-favicon code, it is not needed, browsers will now find favicon.ico in development.
+- introduced :favicon configuration for adding a favicon in both quarto and html
+- added initial configuration table to index
 
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
