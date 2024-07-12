@@ -10,7 +10,7 @@
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
    [hiccup.core :as hiccup])
-  (:import (java.io FileInputStream FileNotFoundException)
+  (:import (java.io FileInputStream)
            (java.net ServerSocket)))
 
 (set! *warn-on-reflection* true)
@@ -116,11 +116,11 @@
                         (communication-script state)))))
 
 (defn routes [{:keys [:body :request-method :uri]
-               :as   req}]
+               :as req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
-      (httpkit/as-channel req {:on-open    (fn [ch] (swap! *clients conj ch))
-                               :on-close   (fn [ch _reason] (swap! *clients disj ch))
+      (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
+                               :on-close (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
       (case [request-method uri]
         [:get "/"] {:body (-> state
@@ -128,9 +128,9 @@
                               (wrap-html state))
                     :headers {"Content-Type" "text/html"}
                     :status 200}
-        [:get "/counter"] {:body   (-> state
-                                       :counter
-                                       str)
+        [:get "/counter"] {:body (-> state
+                                     :counter
+                                     str)
                            :status 200}
         [:get "/favicon.ico"] {:body   (FileInputStream. (io/file (io/resource "favicon.ico")))
                                :status 200}
