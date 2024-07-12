@@ -400,6 +400,7 @@
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
+;; | `:base-target-path` | the output directory |  `"temp"` |
 
 ;; ## Kinds
 

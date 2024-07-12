@@ -1,15 +1,16 @@
 (ns scicloj.clay.v2.page
   (:require
-   [clj-yaml.core :as yaml]
-   [clojure.java.io :as io]
-   [clojure.string :as string]
-   [hiccup.core :as hiccup]
-   [hiccup.page]
-   [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.styles :as styles]
-   [scicloj.clay.v2.util.portal :as portal]
-   [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]))
+    [clj-yaml.core :as yaml]
+    [clojure.java.io :as io]
+    [clojure.java.shell :as shell]
+    [clojure.string :as string]
+    [hiccup.core :as hiccup]
+    [hiccup.page]
+    [scicloj.clay.v2.prepare :as prepare]
+    [scicloj.clay.v2.styles :as styles]
+    [scicloj.clay.v2.util.portal :as portal]
+    [scicloj.clay.v2.util.resource :as resource]
+    [scicloj.clay.v2.files :as files]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -271,8 +272,8 @@
                 ;; Users may provide non-quarto specific configuration (see also html),
                 ;; if so this will be added to the quarto front-matter to make them behave the same way
                 title (assoc-in [:format :html :title] title)
-                favicon (assoc-in [:format :html :include-in-header :text]
-                                  (str "<link rel = \"icon\" href = \"" favicon "\" />")))
+                favicon (update-in [:format :html :include-in-header :text]
+                                   str "<link rel = \"icon\" href = \"" favicon "\" />"))
         yaml/generate-string
         (format "\n---\n%s\n---\n"))
    ;; " "

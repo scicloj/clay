@@ -10,7 +10,7 @@
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
    [hiccup.core :as hiccup])
-  (:import (java.io FileInputStream)
+  (:import (java.io FileInputStream FileNotFoundException)
            (java.net ServerSocket)))
 
 (set! *warn-on-reflection* true)
@@ -78,7 +78,7 @@
                :width "40px"
                :margin-left "20px"}
        ;; { zoom: 1; vertical-align: top; font-size: 12px;}
-       :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
+       :src "/Clay.svg.png"
        :alt "Clay logo"}]
      #_[:big [:big "(Clay)"]]
      [:div {:style {:display "inline-block"
@@ -106,9 +106,6 @@
 
 (defn wrap-html [html state]
   (-> html
-      (str/replace #"(<\s*head[^>]*>)"
-                   (str "$1"
-                        item/avoid-favicon-html))
       (str/replace #"(<\s*body[^>]*>)"
                    (str "$1"
                         (hiccup/html
@@ -137,25 +134,21 @@
                            :status 200}
         [:get "/favicon.ico"] {:body   (FileInputStream. (io/file (io/resource "favicon.ico")))
                                :status 200}
+        [:get "/Clay.svg.png"] {:body   (FileInputStream. (io/file (io/resource "Clay.svg.png")))
+                               :status 200}
         ;; else
-        (merge {:body (try (if (re-matches #".*\.html$" uri)
-                             (-> uri
-                                 (->> (str (:base-target-path state)))
-                                 slurp
-                                 (wrap-html state))
-                             ;; else
-                             (->> uri
-                                  (str (:base-target-path state))
-                                  (java.io.FileInputStream.)))
-                           (catch java.io.FileNotFoundException e
-                             ;; Ignoring missing source maps.
-                             ;; TODO: Figure this problem out.
-                             (if (.endsWith ^String uri ".map")
-                               nil
-                               (throw e))))
-                :status 200}
-               (when (.endsWith ^String uri ".js")
-                 {:headers {"Content-Type" "text/javascript"}}))))))
+        (let [f (io/file (str (:base-target-path state) uri))]
+          (if (not (.exists f))
+            {:body "not found"
+             :status 404}
+            {:body    (if (re-matches #".*\.html$" uri)
+                        (-> f
+                            slurp
+                            (wrap-html state))
+                        (FileInputStream. f))
+             :headers (when (str/ends-with? uri ".js")
+                        {"Content-Type" "text/javascript"})
+             :status  200}))))))
 
 (defonce *stop-server! (atom nil))
 

@@ -336,12 +336,6 @@
                (charred/write-json-str spec)]]
      :deps [:htmlwidgets-ggplotly]}))
 
-
-(def avoid-favicon-html
-  ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
-  (hiccup/html
-   [:link {:rel "icon" :href "data:,"}]))
-
 (defn highcharts
   "Prepare Highcharts JSON data for plotting."
   [value]
