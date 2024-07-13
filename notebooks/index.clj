@@ -200,7 +200,7 @@
   (clay/make! {:format [:html]
                :source-path "notebooks/index.clj"}))
 
-;; Do the same as above
+;; Do the same as above by default
 ;; (since `:format [:html]` is the default):
 (comment
   (clay/make! {:source-path "notebooks/index.clj"}))
@@ -265,6 +265,9 @@
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
 ;; and show it at the browser:
+;; (note the current browser view of this format
+;; it not so sophisticated and lacks live-reload
+;; on page updates).
 (comment
   (clay/make! {:format [:quarto :html]
                :source-path "notebooks/index.clj"
