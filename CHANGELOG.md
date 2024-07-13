@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-beta12] - 2024-07-13
 - regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
 - teach `start!` to take a port number (#107) - thanks, @olavfosse
-- pass all relevant uptions to Quarto book setup (#114)
+- pass all relevant options to Quarto book setup (#114)
 - bugfix: correctly include inline JS - thanks, Jarkko Saltiola
 - refactoring of config propagation
 - book parts support 
