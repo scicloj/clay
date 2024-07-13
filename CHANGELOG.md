@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. This change
 - pass all relevant options to Quarto book setup (#114)
 - bugfix: correctly include inline JS - thanks, Jarkko Saltiola
 - refactoring of config propagation
-- book parts support 
+- Quarto book parts support 
 
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
