@@ -361,7 +361,7 @@
                :clean-up-target-dir true}))
 
 ;; Create a Quarto book
-;; with book parts:
+;; with [book parts](https://quarto.org/docs/books/book-structure.html#parts-appendices):
 (comment
   (clay/make! {:format [:quarto :html]
                :base-source-path "notebooks"
