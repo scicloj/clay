@@ -20,12 +20,6 @@
             [clojure.pprint :as pp]
             [scicloj.kindly.v4.kind :as kind]))
 
-(defn spec->full-source-path [{:keys [base-source-path source-path]}]
-  (when source-path
-    (or (some-> base-source-path
-                (str "/" source-path))
-        source-path)))
-
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
           path/path->ext))
@@ -36,19 +30,42 @@
         slurp
         read/read-ns-form)))
 
-(defn spec->full-target-path [{:keys [full-source-path
+
+(defn spec->full-source-path [{:as spec
+                               :keys [base-source-path source-path]}]
+  (when source-path
+    (cond
+      ;; no source path
+      (nil? source-path)
+      nil
+      ;; simply a path
+      (string? source-path)
+      (or (some-> base-source-path
+                  (str "/" source-path))
+          source-path)
+      ;; else
+      :else
+      (throw (ex-info "invalid source path"
+                      {:source-path source-path})))))
+
+
+(defn spec->full-target-path [{:as spec
+                               :keys [full-source-path
                                       source-type
                                       base-target-path
                                       format
                                       ns-form
                                       single-form
                                       single-value]}]
-  (if (or single-value
-          single-form
-          (nil? source-type))
+  (cond
+    ;; temporary target
+    (or single-value
+        single-form
+        (nil? source-type))
     (str base-target-path
          "/.clay.html")
-    ;; else
+    ;; simply a path
+    (string? full-source-path)
     (case source-type
       "md" (str base-target-path
                 "/"
@@ -67,7 +84,11 @@
                                                  second
                                                  (= :revealjs))
                                          "-revealjs")
-                                       ".html")))))
+                                       ".html")))
+    ;; else
+    :else
+    (throw (ex-info "invalid full source path"
+                    {:full-source-path full-source-path}))))
 
 (defn spec->ns-config [{:keys [ns-form]}]
   (some-> ns-form
@@ -79,30 +100,73 @@
    spec
    (spec->ns-config spec)))
 
-(defn extract-specs [config spec]
-  (let [{:as base-spec :keys [source-path]}
-        (merge/deep-merge
-         config spec) ; prioritize spec over global config
-        ;;
-        single-ns-specs (->> (if (sequential? source-path)
-                               (->> source-path
-                                    (map (partial assoc base-spec :source-path)))
-                               [base-spec])
-                             (map (fn [single-ns-spec]
-                                    (-> single-ns-spec
-                                        (config/add-field :full-source-path spec->full-source-path)
-                                        (config/add-field :source-type spec->source-type)
-                                        (config/add-field :ns-form spec->ns-form)
-                                        merge-ns-config
-                                        (merge/deep-merge
-                                         (dissoc spec :source-path)) ; prioritize spec over the ns config
-                                        (config/add-field :full-target-path spec->full-target-path)))))]
+(defn ->single-ns-spec [spec
+                        config-and-spec
+                        source-path]
+  (-> config-and-spec
+      (assoc :source-path source-path)
+      (config/add-field :full-source-path spec->full-source-path)
+      (config/add-field :source-type spec->source-type)
+      (config/add-field :ns-form spec->ns-form)
+      merge-ns-config
+      (merge/deep-merge
+       (dissoc spec :source-path)) ; prioritize spec over the ns config
+      (config/add-field :full-target-path spec->full-target-path)))
 
-    {:main-spec (-> base-spec
-                    (assoc :full-target-paths
-                           (->> single-ns-specs
-                                (mapv :full-target-path))))
-     :single-ns-specs single-ns-specs}))
+(defn extract-specs [config spec]
+  (let [{:as config-and-spec :keys [source-path]}
+        (merge/deep-merge config spec) ; prioritize spec over global config
+        ;;
+        source-paths (if (sequential? source-path)
+                       source-path
+                       [source-path])
+        ;; collect specs for single namespaces,
+        ;; keeping the book parts sturcture, if any
+        single-ns-specs-w-book-struct (->> source-paths
+                                           (map (fn [path]
+                                                  (cond
+                                                    ;; just a path or no path
+                                                    (or (string? path)
+                                                        (nil? path))
+                                                    (->single-ns-spec spec
+                                                                      config-and-spec
+                                                                      path)
+                                                    ;; a book part
+                                                    (:part path)
+                                                    (-> path
+                                                        (update :chapters
+                                                                (partial
+                                                                 map
+                                                                 (fn [chapter-path]
+                                                                   (->single-ns-spec spec
+                                                                                     config-and-spec
+                                                                                     chapter-path)))))
+                                                    ;; else
+                                                    :else
+                                                    (throw (ex-info "invalid source path"
+                                                                    {:path path}))))))]
+    {:main-spec (-> config-and-spec
+                    (assoc :full-target-paths-w-book-struct
+                           (->> single-ns-specs-w-book-struct
+                                (map (fn [ns-spec]
+                                       (if (:part ns-spec)
+                                         (-> ns-spec
+                                             (update :chapters
+                                                     (partial map :full-target-path)))
+                                         (:full-target-path ns-spec))))))
+                    (config/add-field :full-target-paths
+                                      (fn [{:keys [full-target-paths-w-book-struct]}]
+                                        (->> full-target-paths-w-book-struct
+                                             (mapcat (fn [path]
+                                                       (if (:part path)
+                                                         (:chapters path)
+                                                         [path])))))))
+     :single-ns-specs (->> single-ns-specs-w-book-struct
+                           ;; flatten book chapters:
+                           (mapcat (fn [ns-spec]
+                                     (if (:part ns-spec)
+                                       (:chapters ns-spec)
+                                       [ns-spec]))))}))
 
 
 (defn index-path? [path]
@@ -117,36 +181,38 @@
           last
           (#{"index.html"})))
 
-
-(defn quarto-book-chapters-config [{:keys [base-target-path
-                                           full-target-paths]}]
+(defn spec->quarto-book-chapters-config [{:keys [base-target-path
+                                                 full-target-paths
+                                                 full-target-paths-w-book-struct
+                                                 book]}]
   (let [index-included? (->> full-target-paths
-                             (some index-target-path?))]
-    (-> full-target-paths
-        (->> (map
-              (fn [path]
-                (-> path
-                    (string/replace
-                     (re-pattern (str "^"
-                                      base-target-path
-                                      "/"))
-                     "")
-                    (string/replace
-                     #"\.html$"
-                     ".qmd")))))
+                             (some index-target-path?))
+        ->chapter-qmd-path (fn [full-target-path]
+                             (-> full-target-path
+                                 (string/replace (re-pattern (str "^"
+                                                                  base-target-path
+                                                                  "/"))
+                                                 "")
+                                 (string/replace #"\.html$"
+                                                 ".qmd")))]
+    (-> (->> full-target-paths-w-book-struct
+             (map (fn [path]
+                    (if (:part path)
+                      (-> path
+                          (update :chapters
+                                  (partial map ->chapter-qmd-path)))
+                      (->chapter-qmd-path path)))))
         (cond->> (not index-included?)
           (cons "index.qmd")))))
 
-(defn quarto-book-config [{:as spec
-                           :keys [book
-                                  quarto
-                                  base-target-path
-                                  full-target-paths]}]
+(defn spec->quarto-book-config [{:as spec
+                                 :keys [book
+                                        quarto]}]
   (-> quarto
       (select-keys [:format])
       (merge/deep-merge
        {:project {:type "book"}
-        :book (merge {:chapters (quarto-book-chapters-config spec)}
+        :book (merge {:chapters (spec->quarto-book-chapters-config spec)}
                      book)})))
 
 (defn write-quarto-book-config! [quarto-book-config
@@ -179,7 +245,7 @@
                           run-quarto
                           show]}]
   [(-> spec
-       quarto-book-config
+       spec->quarto-book-config
        (write-quarto-book-config! spec))
    (-> spec
        quarto-book-index
