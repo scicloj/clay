@@ -10,8 +10,7 @@
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
    [hiccup.core :as hiccup])
-  (:import (java.io FileInputStream)
-           (java.net ServerSocket)))
+  (:import (java.net ServerSocket)))
 
 (set! *warn-on-reflection* true)
 
@@ -132,10 +131,10 @@
                                      :counter
                                      str)
                            :status 200}
-        [:get "/favicon.ico"] {:body   (FileInputStream. (io/file (io/resource "favicon.ico")))
+        [:get "/favicon.ico"] {:body   (io/file (io/resource "favicon.ico"))
                                :status 200}
-        [:get "/Clay.svg.png"] {:body   (FileInputStream. (io/file (io/resource "Clay.svg.png")))
-                               :status 200}
+        [:get "/Clay.svg.png"] {:body   (io/file (io/resource "Clay.svg.png"))
+                                :status 200}
         ;; else
         (let [f (io/file (str (:base-target-path state) uri))]
           (if (not (.exists f))
@@ -145,7 +144,7 @@
                         (-> f
                             slurp
                             (wrap-html state))
-                        (FileInputStream. f))
+                        f)
              :headers (when (str/ends-with? uri ".js")
                         {"Content-Type" "text/javascript"})
              :status  200}))))))
