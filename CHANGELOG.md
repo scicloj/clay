@@ -1,16 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta12-SNAPSHOT]
-- regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
-- teach `start!` to take a port number (#107) - thanks, @olavfosse
-- pass all relevant uptions to Quarto book setup (#114)
-- bugfix: correctly include inline JS - thanks, Jarkko Saltiola
+## [2-beta13-SNAPSHOT]
 - fixed server should respond with 404 when file is not found
 - serve /favicon.ico and /Clay.svg.png locally from resources
 - removed the avoid-favicon code, it is not needed, browsers will now find favicon.ico in development.
 - introduced :favicon configuration for adding a favicon in both quarto and html
 - added initial configuration table to index
+
+## [2-beta12] - 2024-07-13
+- regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
+- teach `start!` to take a port number (#107) - thanks, @olavfosse
+- pass all relevant options to Quarto book setup (#114)
+- bugfix: correctly include inline JS - thanks, Jarkko Saltiola
+- refactoring of config propagation
+- Quarto book parts support 
 
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)

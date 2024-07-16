@@ -203,7 +203,7 @@
   (clay/make! {:format [:html]
                :source-path "notebooks/index.clj"}))
 
-;; Do the same as above
+;; Do the same as above by default
 ;; (since `:format [:html]` is the default):
 (comment
   (clay/make! {:source-path "notebooks/index.clj"}))
@@ -268,6 +268,9 @@
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
 ;; and show it at the browser:
+;; (note the current browser view of this format
+;; it not so sophisticated and lacks live-reload
+;; on page updates).
 (comment
   (clay/make! {:format [:quarto :html]
                :source-path "notebooks/index.clj"
@@ -355,6 +358,21 @@
                :source-path ["index.clj"
                              "chapter.clj"
                              "another_chapter.md"]
+               :base-target-path "book"
+               :book {:title "Book Example"}
+               ;; Empty the target directory first:
+               :clean-up-target-dir true}))
+
+;; Create a Quarto book
+;; with [book parts](https://quarto.org/docs/books/book-structure.html#parts-appendices):
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path [{:part "Part A"
+                              :chapters ["index.clj"
+                                         "chapter.clj"]}
+                             {:part "Part B"
+                              :chapters ["another_chapter.md"]}]
                :base-target-path "book"
                :book {:title "Book Example"}
                ;; Empty the target directory first:
