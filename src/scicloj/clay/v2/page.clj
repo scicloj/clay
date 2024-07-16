@@ -208,7 +208,7 @@
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
               (when favicon
-                [:link {:rel "\"icon\"" :href favicon}])
+                [:link {:rel "icon" :href favicon}])
               #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
               font-links
               [:style (styles/main :table)]
