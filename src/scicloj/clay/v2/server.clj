@@ -12,8 +12,6 @@
    [hiccup.core :as hiccup])
   (:import (java.net ServerSocket)))
 
-(set! *warn-on-reflection* true)
-
 (def default-port 1971)
 
 (defonce *clients (atom #{}))
@@ -131,15 +129,10 @@
                                      :counter
                                      str)
                            :status 200}
-        [:get "/favicon.ico"] {:body   (io/file (io/resource "favicon.ico"))
-                               :status 200}
-        [:get "/Clay.svg.png"] {:body   (io/file (io/resource "Clay.svg.png"))
-                                :status 200}
+
         ;; else
         (let [f (io/file (str (:base-target-path state) uri))]
-          (if (not (.exists f))
-            {:body "not found"
-             :status 404}
+          (if (.exists f)
             {:body    (if (re-matches #".*\.html$" uri)
                         (-> f
                             slurp
@@ -147,7 +140,16 @@
                         f)
              :headers (when (str/ends-with? uri ".js")
                         {"Content-Type" "text/javascript"})
-             :status  200}))))))
+             :status  200}
+            (case [request-method uri]
+              ;; user files have priority, otherwise serve the default from resources
+              [:get "/favicon.ico"] {:body   (io/file (io/resource "favicon.ico"))
+                                     :status 200}
+              ;; this image is for the header above the page during interactive mode
+              [:get "/Clay.svg.png"] {:body   (io/file (io/resource "Clay.svg.png"))
+                                      :status 200}
+              {:body   "not found"
+               :status 404})))))))
 
 (defonce *stop-server! (atom nil))
 

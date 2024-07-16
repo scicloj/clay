@@ -1,10 +1,10 @@
-{:title "Clay documentation"
- :favicon "favicon.ico"
- :format [:quarto :html]
+{:title       "Clay documentation"
+ :favicon     "notebooks/favicon.ico"
  :remote-repo {:git-url "https://github.com/scicloj/clay"
-               :branch "main"}
- :quarto {:format {:html {:theme [:cosmo "notebooks/custom.scss"]}}
-          :include-in-header {:text "<meta property=\"og:image\" content=\"notebooks/images/Clay.svg.png\"/>
+               :branch  "main"}
+ :quarto      {:format            {:html {:theme [:cosmo "notebooks/custom.scss"]}}
+               :include-in-header {:text             "<meta property=\"og:image\" content=\"notebooks/images/Clay.svg.png\"/>
 <meta property=\"og:title\" content=\"Clay documentation\"/>
 <meta property=\"og:description\" content=\"A minimalistic Clojure tool for data visualization and literate programming\"/>
-"}}}
+"}}
+ :base-target-path "temp"}
