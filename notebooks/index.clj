@@ -412,13 +412,21 @@
 ;; | Key | Purpose | Example |
 ;; |-----|---------|---------|
 ;; | `:source-path` | files to render | `["notebooks/index.clj"]` |
-;; | `:title` | sets the HTML title that appears in the tab bar | `"My Title"` |
+;; | `:title` | sets the HTML title that appears in the browser tab bar | `"My Title"` |
 ;; | `:favicon` | sets a page favicon | `"favicon.ico"` |
 ;; | `:show` | starts the HTML server when true (the default) | `false` |
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
 ;; | `:base-target-path` | the output directory |  `"temp"` |
+;; | `:base-source-path` | where to find `:source-path` | `"notebooks"` |
+;; | `:clean-up-target-dir` | deletes files | `true` |
+;; | `:remote-repo` | linking to source | `{:git-url "https://github.com/scicloj/clay" :branch  "main"}` |
+
+;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
+;; For example: `:base-target-path "temp"`.
+;; When publishing a static page, you may wish to target a `docs` directory by setting `:base-target-path "docs"`.
+;; Creating a dev namespace is a good way to invoke a different configuration for publishing.
 
 ;; ## Kinds
 
