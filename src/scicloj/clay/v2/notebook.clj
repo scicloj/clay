@@ -52,7 +52,7 @@
       (string/split #"\n")
       (->> (map #(-> %
                      (string/replace
-                      #"^;+\s*" "")
+                      #"^;+\s?" "")
                      (string/replace
                       #"^#" "\n#")))
            (string/join "\n"))
