@@ -482,3 +482,22 @@
 (add-preparer-from-value-fn!
  :kind/highcharts
  #'item/highcharts)
+
+(defn grid [{:as context :keys [value]}]
+  (let [prepared-parts (->> value
+                            (mapcat (fn [subvalue]
+                                      (-> context
+                                          (dissoc :form)
+                                          (update :kindly/options :dissoc :element/max-height)
+                                          (assoc :value subvalue)
+                                          prepare-or-pprint))))]
+    {:hiccup (->> (map (fn [part]
+                         ;; TODO: width should be an option
+                         [:div.g-col-6 (item->hiccup part context)])
+                       prepared-parts)
+                  (into [:div.grid]))
+     :md     (map item->md prepared-parts)
+     :deps   (->> (mapcat :deps prepared-parts)
+                  (distinct))}))
+
+(add-preparer! :kind/grid #'grid)

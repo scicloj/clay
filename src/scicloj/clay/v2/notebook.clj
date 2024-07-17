@@ -58,11 +58,51 @@
            (string/join "\n"))
       item/md))
 
+(defn code-by-value [{:as note :keys [code]}]
+  (let [source-item (item/source-clojure code)
+        source-hiccup (:hiccup source-item)
+        source-md (:md source-item)
+        value-items (-> note
+                        (select-keys [:value :code :form
+                                      :base-target-path
+                                      :full-target-path
+                                      :kindly/options
+                                      :format])
+                        (update :value deref-if-needed)
+                        prepare/prepare-or-pprint)
+        ;; TODO: should join them if there are more than one.
+        value-item (first value-items)
+        value-hiccup (:hiccup value-item)
+        value-md (:md value-item)]
+    [{:hiccup (when (and value-hiccup source-hiccup)
+                [:div.grid
+                 [:div.g-col-6 source-hiccup]
+                 [:div.g-col-6 value-hiccup]])
+      :md     (when (and value-md source-md)
+                (str (str/join \newline
+                               ["::: {.grid}"
+                                "::: {.g-col-6}"
+                                source-md
+                                ":::"
+                                "::: {.g-col-6}"
+                                value-md
+                                ":::"
+                                ":::"])
+                     \newline))
+      :deps   (:deps value-item)}]))
+
 (defn note-to-items [{:as note
                       :keys [comment? code form value kind]}
                      {:keys [hide-code hide-nils hide-vars]}]
-  (if (and comment? code)
+  (cond
+    (and comment? code)
     [(comment->item code)]
+
+    ;; TODO: should handle multiple examples at a time.
+    (= kind :kind/example)
+    (code-by-value note)
+
+    :else
     (concat
      ;; code
      [(when-not (or hide-code
