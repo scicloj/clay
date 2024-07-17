@@ -90,11 +90,14 @@
 
 ;; See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project) for a concrete example.
 
-;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
+;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations.
+;; This requires some editor setup.
 ;;
-;; To use [Quarto](https://quarto.org/)-related actions, it is necessary to have the Quarto CLI [installed](https://quarto.org/docs/get-started/) in your system.
+;; To use [Quarto](https://quarto.org/)-related actions,
+;; it is necessary to have the Quarto CLI [installed](https://quarto.org/docs/get-started/) in your system.
 ;;
-;; See the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
+;; See the suggested setup for popular editors below.
+;; If your favourite editor is not supported yet, let us talk and make it work.
 
 ;; ### VSCode Calva
 
@@ -108,7 +111,7 @@
 ;; |`Clay make current form as HTML`|will generate an HTML rendering of the current form, in the context of the current namespace.|
 
 ;; ### Emacs CIDER
-;;
+
 ;; See the [clay.el](https://github.com/scicloj/clay.el) package for the relevant interactive functions.
 
 ;; ### IntelliJ Cursive
@@ -406,8 +409,16 @@
 ;;
 ;; Here are some of the parameters worth knowing about:
 ;;
-;; **(to be documented soon)**
-
+;; | Key | Purpose | Example |
+;; |-----|---------|---------|
+;; | `:source-path` | files to render | `["notebooks/index.clj"]` |
+;; | `:title` | sets the HTML title that appears in the tab bar | `"My Title"` |
+;; | `:favicon` | sets a page favicon | `"favicon.ico"` |
+;; | `:show` | starts the HTML server when true (the default) | `false` |
+;; | `:single-form` | render just one form | `(inc 1)` |
+;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
+;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
+;; | `:base-target-path` | the output directory |  `"temp"` |
 
 ;; ## Kinds
 

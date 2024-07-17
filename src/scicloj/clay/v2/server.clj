@@ -2,17 +2,15 @@
   (:require
    [clojure.java.browse :as browse]
    [clojure.java.io :as io]
-   [clojure.java.shell :as shell]
    [clojure.string :as string]
    [hiccup.page]
    [org.httpkit.server :as httpkit]
    [scicloj.clay.v2.server.state :as server.state]
-   [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
-   [scicloj.kindly.v4.api :as kindly]
    [clojure.string :as str]
-   [hiccup.core :as hiccup]))
+   [hiccup.core :as hiccup])
+  (:import (java.net ServerSocket)))
 
 (def default-port 1971)
 
@@ -23,10 +21,10 @@
     (httpkit/send! ch msg)))
 
 (defn get-free-port []
-  (loop [port 1971]
+  (loop [port default-port]
     ;; Check if the port is free:
     ;; (https://codereview.stackexchange.com/a/31591)
-    (or (try (do (.close (java.net.ServerSocket. port))
+    (or (try (do (.close (ServerSocket. port))
                  port)
              (catch Exception e nil))
         (recur (inc port)))))
@@ -67,13 +65,6 @@
           port
           counter))
 
-(defn add-communication-script [page state]
-  (-> page
-      (string/replace #"</body></html>$"
-                      (str "\n"
-                           (communication-script state)
-                           "\n</body></html>"))))
-
 (defn header [state]
   (hiccup.core/html
    [:div
@@ -84,7 +75,7 @@
                :width "40px"
                :margin-left "20px"}
        ;; { zoom: 1; vertical-align: top; font-size: 12px;}
-       :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
+       :src "/Clay.svg.png"
        :alt "Clay logo"}]
      #_[:big [:big "(Clay)"]]
      [:div {:style {:display "inline-block"
@@ -95,8 +86,6 @@
       [:pre {:style {:margin 0}}
        (time/now)]]]
     #_(:hiccup item/separator)]))
-
-
 
 (defn page
   ([]
@@ -114,9 +103,6 @@
 
 (defn wrap-html [html state]
   (-> html
-      (str/replace #"(<\s*head[^>]*>)"
-                   (str "$1"
-                        item/avoid-favicon-html))
       (str/replace #"(<\s*body[^>]*>)"
                    (str "$1"
                         (hiccup/html
@@ -143,25 +129,27 @@
                                      :counter
                                      str)
                            :status 200}
+
         ;; else
-        (merge {:body (try (if (re-matches #".*\.html$" uri)
-                             (-> uri
-                                 (->> (str (:base-target-path state)))
-                                 slurp
-                                 (wrap-html state))
-                             ;; else
-                             (->> uri
-                                  (str (:base-target-path state))
-                                  (java.io.FileInputStream.)))
-                           (catch java.io.FileNotFoundException e
-                             ;; Ignoring missing source maps.
-                             ;; TODO: Figure this problem out.
-                             (if (.endsWith ^String uri ".map")
-                               nil
-                               (throw e))))
-                :status 200}
-               (when (.endsWith ^String uri ".js")
-                 {:headers {"Content-Type" "text/javascript"}}))))))
+        (let [f (io/file (str (:base-target-path state) uri))]
+          (if (.exists f)
+            {:body    (if (re-matches #".*\.html$" uri)
+                        (-> f
+                            slurp
+                            (wrap-html state))
+                        f)
+             :headers (when (str/ends-with? uri ".js")
+                        {"Content-Type" "text/javascript"})
+             :status  200}
+            (case [request-method uri]
+              ;; user files have priority, otherwise serve the default from resources
+              [:get "/favicon.ico"] {:body   (io/file (io/resource "favicon.ico"))
+                                     :status 200}
+              ;; this image is for the header above the page during interactive mode
+              [:get "/Clay.svg.png"] {:body   (io/file (io/resource "Clay.svg.png"))
+                                      :status 200}
+              {:body   "not found"
+               :status 404})))))))
 
 (defonce *stop-server! (atom nil))
 
