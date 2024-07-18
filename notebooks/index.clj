@@ -155,7 +155,7 @@
             [scicloj.metamorph.ml :as ml]
             [scicloj.metamorph.ml.toydata :as toydata]
             [scicloj.noj.v1.stats :as noj.stats]
-            [scicloj.noj.v1.vis.hanami :as hanami]
+            [scicloj.hanamicloth.v1.api :as haclo]
             [aerial.hanami.templates :as ht]
             [scicloj.clay.v2.quarto.themes :as quarto.themes]
             [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
@@ -176,17 +176,16 @@
     tc/dataset
     (tc/set-dataset-name "my dataset"))
 
-;; A plot using [Hanami](https://github.com/jsa-aerial/hanami) and [Noj](https://scicloj.github.io/noj/):
-
+;; A plot using [Hanamicloth](https://github.com/jsa-aerial/hanamicloth):
 (-> (toydata/iris-ds)
-    (hanami/plot ht/rule-chart
-                 {:X "sepal_width"
-                  :X2 "sepal_length"
-                  :Y "petal_width"
-                  :Y2 "petal_length"
-                  :COLOR "species"
-                  :SIZE 3
-                  :OPACITY 0.2}))
+    (haclo/plot ht/rule-chart
+                {:X "sepal_width"
+                 :X2 "sepal_length"
+                 :Y "petal_width"
+                 :Y2 "petal_length"
+                 :COLOR "species"
+                 :SIZE 3
+                 :OPACITY 0.2}))
 
 ;; ## API
 
