@@ -217,6 +217,13 @@
                :show false}))
 
 ;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; and use the favicon at `"notebooks/favicon.ico"`
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :favicon "notebooks/favicon.ico"}))
+
+;; Evaluate and render
 ;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
 ;; as HTML
 ;; and do not show it at the browser:
