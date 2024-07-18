@@ -154,7 +154,6 @@
             [tablecloth.api :as tc]
             [scicloj.metamorph.ml :as ml]
             [scicloj.metamorph.ml.toydata :as toydata]
-            [scicloj.noj.v1.stats :as noj.stats]
             [scicloj.hanamicloth.v1.api :as haclo]
             [aerial.hanami.templates :as ht]
             [scicloj.clay.v2.quarto.themes :as quarto.themes]
@@ -709,15 +708,6 @@ nested-structure-1
 (-> people-as-dataset
     (kind/table {:use-datatables true
                  :datatables {:scrollY 300}}))
-
-;; ### ML models
-
-(-> (toydata/iris-ds)
-    (noj.stats/linear-regression-model :sepal_length
-                                       [:sepal_width
-                                        :petal_width
-                                        :petal_length])
-    ml/thaw-model)
 
 ;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
 
