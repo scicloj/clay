@@ -356,7 +356,7 @@
 
 
 ;; Create a Quarto book
-;; with a specified index page:
+;; with a specified favicon:
 (comment
   (clay/make! {:format [:quarto :html]
                :base-source-path "notebooks"
@@ -364,7 +364,8 @@
                              "chapter.clj"
                              "another_chapter.md"]
                :base-target-path "book"
-               :book {:title "Book Example"}
+               :book {:title "Book Example"
+                      :favicon "notebooks/favicon.ico"}
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
 
