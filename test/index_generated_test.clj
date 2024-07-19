@@ -70,8 +70,7 @@
   [tablecloth.api :as tc]
   [scicloj.metamorph.ml :as ml]
   [scicloj.metamorph.ml.toydata :as toydata]
-  [scicloj.noj.v1.stats :as noj.stats]
-  [scicloj.noj.v1.vis.hanami :as hanami]
+  [scicloj.hanamicloth.v1.api :as haclo]
   [aerial.hanami.templates :as ht]
   [scicloj.clay.v2.quarto.themes :as quarto.themes]
   [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
@@ -108,7 +107,7 @@
  var16
  (->
   (toydata/iris-ds)
-  (hanami/plot
+  (haclo/plot
    ht/rule-chart
    {:X "sepal_width",
     :X2 "sepal_length",
@@ -156,8 +155,8 @@
  var26
  (comment
   (clay/make!
-   {:source-path ["notebooks/slides.clj" "notebooks/index.clj"],
-    :show false})))
+   {:source-path "notebooks/index.clj",
+    :favicon "notebooks/favicon.ico"})))
 
 
 (def var27 nil)
@@ -167,11 +166,8 @@
  var28
  (comment
   (clay/make!
-   {:source-path "notebooks/index.clj",
-    :single-form
-    '(kind/cytoscape
-      cytoscape-example
-      #:element{:style {:width "300px", :height "300px"}})})))
+   {:source-path ["notebooks/slides.clj" "notebooks/index.clj"],
+    :show false})))
 
 
 (def var29 nil)
@@ -181,7 +177,8 @@
  var30
  (comment
   (clay/make!
-   {:single-form
+   {:source-path "notebooks/index.clj",
+    :single-form
     '(kind/cytoscape
       cytoscape-example
       #:element{:style {:width "300px", :height "300px"}})})))
@@ -194,10 +191,10 @@
  var32
  (comment
   (clay/make!
-   {:single-value
-    (kind/cytoscape
-     cytoscape-example
-     #:element{:style {:width "300px", :height "300px"}})})))
+   {:single-form
+    '(kind/cytoscape
+      cytoscape-example
+      #:element{:style {:width "300px", :height "300px"}})})))
 
 
 (def var33 nil)
@@ -207,7 +204,10 @@
  var34
  (comment
   (clay/make!
-   {:format [:quarto :html], :source-path "notebooks/index.clj"})))
+   {:single-value
+    (kind/cytoscape
+     cytoscape-example
+     #:element{:style {:width "300px", :height "300px"}})})))
 
 
 (def var35 nil)
@@ -217,9 +217,7 @@
  var36
  (comment
   (clay/make!
-   {:format [:quarto :html],
-    :source-path "notebooks/index.clj",
-    :run-quarto false})))
+   {:format [:quarto :html], :source-path "notebooks/index.clj"})))
 
 
 (def var37 nil)
@@ -229,7 +227,9 @@
  var38
  (comment
   (clay/make!
-   {:format [:quarto :html], :source-path "notebooks/slides.clj"})))
+   {:format [:quarto :html],
+    :source-path "notebooks/index.clj",
+    :run-quarto false})))
 
 
 (def var39 nil)
@@ -239,7 +239,7 @@
  var40
  (comment
   (clay/make!
-   {:format [:quarto :revealjs], :source-path "notebooks/slides.clj"})))
+   {:format [:quarto :html], :source-path "notebooks/slides.clj"})))
 
 
 (def var41 nil)
@@ -249,10 +249,7 @@
  var42
  (comment
   (clay/make!
-   {:format [:quarto :html],
-    :source-path "notebooks/index.clj",
-    :quarto
-    {:highlight-style :nord, :format {:html {:theme :journal}}}})))
+   {:format [:quarto :revealjs], :source-path "notebooks/slides.clj"})))
 
 
 (def var43 nil)
@@ -260,6 +257,19 @@
 
 (def
  var44
+ (comment
+  (clay/make!
+   {:format [:quarto :html],
+    :source-path "notebooks/index.clj",
+    :quarto
+    {:highlight-style :nord, :format {:html {:theme :journal}}}})))
+
+
+(def var45 nil)
+
+
+(def
+ var46
  (comment
   (require
    '[scicloj.clay.v2.quarto.highlight-styles
@@ -274,21 +284,21 @@
      :format {:html {:theme quarto.themes/journal}}}})))
 
 
-(def var45 nil)
-
-
-(def
- var46
- (comment
-  (clay/make!
-   {:base-source-path "notebooks/", :source-path "index.clj"})))
-
-
 (def var47 nil)
 
 
 (def
  var48
+ (comment
+  (clay/make!
+   {:base-source-path "notebooks/", :source-path "index.clj"})))
+
+
+(def var49 nil)
+
+
+(def
+ var50
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -303,26 +313,26 @@
     :clean-up-target-dir true})))
 
 
-(def var49 nil)
+(def var51 nil)
 
 
 (def
- var50
+ var52
  (comment
   (clay/make!
    {:format [:quarto :html],
     :base-source-path "notebooks",
     :source-path ["index.clj" "chapter.clj" "another_chapter.md"],
     :base-target-path "book",
-    :book {:title "Book Example"},
+    :book {:title "Book Example", :favicon "notebooks/favicon.ico"},
     :clean-up-target-dir true})))
 
 
-(def var51 nil)
+(def var53 nil)
 
 
 (def
- var52
+ var54
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -335,44 +345,33 @@
     :clean-up-target-dir true})))
 
 
-(def var53 nil)
-
-
-(def var54 (comment (clay/browse!)))
-
-
 (def var55 nil)
 
 
-(def
- var56
- (comment (clay/make-hiccup {:source-path "notebooks/index.clj"})))
+(def var56 (comment (clay/browse!)))
 
 
 (def var57 nil)
 
 
-(def var58 (+ 4 5))
+(def
+ var58
+ (comment (clay/make-hiccup {:source-path "notebooks/index.clj"})))
 
 
-(def var59 (str "abcd" "efgh"))
+(def var59 nil)
 
 
-(def var60 nil)
+(def var60 (+ 4 5))
 
 
-(def var61 (kind/hidden 9))
+(def var61 (str "abcd" "efgh"))
 
 
 (def var62 nil)
 
 
-(def
- var63
- (kind/hiccup
-  [:ul
-   [:li [:p "hi"]]
-   [:li [:big [:big [:p {:style {:color "#7F5F3F"}} "hello"]]]]]))
+(def var63 (kind/hidden 9))
 
 
 (def var64 nil)
@@ -380,11 +379,10 @@
 
 (def
  var65
- (kind/reagent
-  ['(fn
-     [numbers]
-     [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))])
-   (vec (range 40))]))
+ (kind/hiccup
+  [:ul
+   [:li [:p "hi"]]
+   [:li [:big [:big [:p {:style {:color "#7F5F3F"}} "hello"]]]]]))
 
 
 (def var66 nil)
@@ -392,6 +390,18 @@
 
 (def
  var67
+ (kind/reagent
+  ['(fn
+     [numbers]
+     [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))])
+   (vec (range 40))]))
+
+
+(def var68 nil)
+
+
+(def
+ var69
  (kind/reagent
   ['(fn
      []
@@ -411,23 +421,23 @@
           :on-click (fn* [] (swap! *click-count inc))}]])))]))
 
 
-(def var68 nil)
+(def var70 nil)
 
 
 (def
- var69
+ var71
  (kind/html
   "<div style='height:40px; width:40px; background:purple'></div> "))
 
 
 (def
- var70
+ var72
  (kind/html
   "\n<svg height=100 width=100>\n<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />\n</svg> "))
 
 
 (def
- var71
+ var73
  (kind/html
   ["<svg height=100 width=100>"
    "<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
@@ -435,7 +445,7 @@
 
 
 (def
- var72
+ var74
  (kind/html
   (list
    "<svg height=100 width=100>"
@@ -443,65 +453,65 @@
    "</svg>")))
 
 
-(def var73 nil)
+(def var75 nil)
 
 
 (def
- var74
+ var76
  (kind/md "This is [markdown](https://www.markdownguide.org/)."))
 
 
 (def
- var75
+ var77
  (kind/md
   ["\n* This is [markdown](https://www.markdownguide.org/).\n  * *Isn't it??*"
    "\n* Here is **some more** markdown."]))
 
 
 (def
- var76
+ var78
  (kind/md
   (list
    "\n* This is [markdown](https://www.markdownguide.org/).\n  * *Isn't it??*"
    "\n* Here is **some more** markdown.")))
 
 
-(def var77 nil)
-
-
-(def var78 (kind/md "Let $x=9$. Then $$x+11=20$$"))
-
-
 (def var79 nil)
 
 
-(def var80 (kind/tex "x^2=\\alpha"))
+(def var80 (kind/md "Let $x=9$. Then $$x+11=20$$"))
 
 
 (def var81 nil)
 
 
-(def var82 (kind/code "(update {:x 9} :x inc)"))
+(def var82 (kind/tex "x^2=\\alpha"))
+
+
+(def var83 nil)
+
+
+(def var84 (kind/code "(update {:x 9} :x inc)"))
 
 
 (def
- var83
+ var85
  (kind/code ["(update {:x 9} :x inc)" "(update {:x 9} :x dec)"]))
 
 
 (def
- var84
+ var86
  (kind/code (list "(update {:x 9} :x inc)" "(update {:x 9} :x dec)")))
 
 
-(def var85 nil)
+(def var87 nil)
 
 
-(def var86 (import javax.imageio.ImageIO java.net.URL))
+(def var88 (import javax.imageio.ImageIO java.net.URL))
 
 
 (def
- var87
+ var89
  (defonce
   clay-image
   (->
@@ -510,14 +520,14 @@
    (ImageIO/read))))
 
 
-(def var88 clay-image)
+(def var90 clay-image)
 
 
-(def var89 nil)
+(def var91 nil)
 
 
 (def
- var90
+ var92
  (def
   people-as-maps
   (->>
@@ -531,26 +541,26 @@
 
 
 (def
- var91
+ var93
  (def
   people-as-vectors
   (->> people-as-maps (mapv (juxt :preferred-language :age)))))
 
 
-(def var92 (take 5 people-as-maps))
+(def var94 (take 5 people-as-maps))
 
 
-(def var93 (take 5 people-as-vectors))
+(def var95 (take 5 people-as-vectors))
 
 
-(def var94 (->> people-as-vectors (take 5) set))
+(def var96 (->> people-as-vectors (take 5) set))
 
 
-(def var95 nil)
+(def var97 nil)
 
 
 (def
- var96
+ var98
  (def
   nested-structure-1
   {:vector-of-numbers [2 9 -1],
@@ -562,42 +572,31 @@
    :dataset (tc/dataset {:x (range 3), :y [:A :B :C]})}))
 
 
-(def var97 nested-structure-1)
-
-
-(def var98 nil)
-
-
-(def var99 (kind/pprint nested-structure-1))
+(def var99 nested-structure-1)
 
 
 (def var100 nil)
 
 
-(def var101 (require '[tablecloth.api :as tc]))
+(def var101 (kind/pprint nested-structure-1))
 
 
-(def var102 (-> {:x (range 6), :y [:A :B :C :A :B :C]} tc/dataset))
+(def var102 nil)
 
 
-(def var103 (-> {:x [1 [2 3] 4], :y [:A :B :C]} tc/dataset))
+(def var103 (require '[tablecloth.api :as tc]))
 
 
-(def var104 (-> [{:x 1, :y 2, :z 3} {:y 4, :z 5}] tc/dataset))
+(def var104 (-> {:x (range 6), :y [:A :B :C :A :B :C]} tc/dataset))
 
 
-(def var105 (-> people-as-maps tc/dataset))
+(def var105 (-> {:x [1 [2 3] 4], :y [:A :B :C]} tc/dataset))
 
 
-(def var106 nil)
+(def var106 (-> [{:x 1, :y 2, :z 3} {:y 4, :z 5}] tc/dataset))
 
 
-(def
- var107
- (->
-  {:x (range 30)}
-  tc/dataset
-  (kind/dataset #:dataset{:print-range 6})))
+(def var107 (-> people-as-maps tc/dataset))
 
 
 (def var108 nil)
@@ -605,63 +604,66 @@
 
 (def
  var109
- (kind/table
-  {:column-names [:preferred-language :age],
-   :row-vectors people-as-vectors}))
+ (->
+  {:x (range 30)}
+  tc/dataset
+  (kind/dataset #:dataset{:print-range 6})))
 
 
 (def var110 nil)
 
 
-(def var111 (kind/table {:row-vectors (take 5 people-as-vectors)}))
+(def
+ var111
+ (kind/table
+  {:column-names [:preferred-language :age],
+   :row-vectors people-as-vectors}))
 
 
 (def var112 nil)
 
 
-(def var113 (kind/table {:row-maps (take 5 people-as-maps)}))
+(def var113 (kind/table {:row-vectors (take 5 people-as-vectors)}))
 
 
 (def var114 nil)
 
 
-(def
- var115
- (kind/table
-  {:column-names [:preferred-language],
-   :row-maps (take 5 people-as-maps)}))
+(def var115 (kind/table {:row-maps (take 5 people-as-maps)}))
 
 
 (def var116 nil)
 
 
-(def var117 (kind/table (take 5 people-as-vectors)))
+(def
+ var117
+ (kind/table
+  {:column-names [:preferred-language],
+   :row-maps (take 5 people-as-maps)}))
 
 
-(def var118 (kind/table (take 5 people-as-maps)))
+(def var118 nil)
 
 
-(def var119 nil)
+(def var119 (kind/table (take 5 people-as-vectors)))
 
 
-(def var120 (kind/table {:x (range 6), :y [:A :B :C :A :B :C]}))
+(def var120 (kind/table (take 5 people-as-maps)))
 
 
 (def var121 nil)
 
 
-(def var122 (def people-as-dataset (tc/dataset people-as-maps)))
+(def var122 (kind/table {:x (range 6), :y [:A :B :C :A :B :C]}))
 
 
-(def var123 (-> people-as-dataset kind/table))
+(def var123 nil)
 
 
-(def var124 nil)
+(def var124 (def people-as-dataset (tc/dataset people-as-maps)))
 
 
-(def
- var125
- (-> people-as-dataset (kind/table #:element{:max-height "300px"})))
+(def var125 (-> people-as-dataset kind/table))
 
 
 (def var126 nil)
@@ -669,27 +671,22 @@
 
 (def
  var127
- (-> people-as-maps tc/dataset (kind/table {:use-datatables true})))
+ (-> people-as-dataset (kind/table #:element{:max-height "300px"})))
+
+
+(def var128 nil)
 
 
 (def
- var128
- (->
-  people-as-dataset
-  (kind/table {:use-datatables true, :datatables {:scrollY 300}})))
-
-
-(def var129 nil)
+ var129
+ (-> people-as-maps tc/dataset (kind/table {:use-datatables true})))
 
 
 (def
  var130
  (->
-  (toydata/iris-ds)
-  (noj.stats/linear-regression-model
-   :sepal_length
-   [:sepal_width :petal_width :petal_length])
-  ml/thaw-model))
+  people-as-dataset
+  (kind/table {:use-datatables true, :datatables {:scrollY 300}})))
 
 
 (def var131 nil)
