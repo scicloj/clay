@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta13-SNAPSHOT]
+## [2-beta13] - 2024-07-19
 - fixed server should respond with 404 when file is not found
 - serve /favicon.ico and /Clay.svg.png locally from resources
 - removed the avoid-favicon code, it is not needed, browsers will now find favicon.ico in development.
