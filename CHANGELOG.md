@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 - removed the avoid-favicon code, it is not needed, browsers will now find favicon.ico in development.
 - introduced :favicon configuration for adding a favicon in both quarto and html
 - added initial configuration table to index
+- bugfix: less agressive leading space cleaning (#123) - thanks, @genmeblog
 
 ## [2-beta12] - 2024-07-13
 - regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
