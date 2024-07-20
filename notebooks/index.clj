@@ -151,16 +151,14 @@
 ;; Here is the namespace definition and a few examples of what such a namespace may contain.
 
 (ns index
-  (:require [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly.v4.api :as kindly]
-            [tablecloth.api :as tc]
-            [scicloj.metamorph.ml :as ml]
-            [scicloj.metamorph.ml.toydata :as toydata]
-            [scicloj.hanamicloth.v1.api :as haclo]
-            [aerial.hanami.templates :as ht]
-            [scicloj.clay.v2.quarto.themes :as quarto.themes]
-            [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
-            [clojure.math :as math]))
+  (:require
+   [scicloj.kindly.v4.api :as kindly]
+   [scicloj.kindly.v4.kind :as kind]
+   [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
+   [scicloj.clay.v2.quarto.themes :as quarto.themes]
+   [scicloj.metamorph.ml.toydata :as toydata]
+   [scicloj.hanamicloth.v1.api :as haclo]
+   [tablecloth.api :as tc]))
 
 ;; A Hiccup spec:
 (kind/hiccup

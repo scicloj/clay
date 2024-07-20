@@ -6,16 +6,10 @@
 ;; specification.
 
 (ns clay-book.examples
-  (:require [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly.v4.api :as kindly]
-            [tablecloth.api :as tc]
-            [scicloj.metamorph.ml :as ml]
-            [scicloj.metamorph.ml.toydata :as toydata]
-            [scicloj.hanamicloth.v1.api :as haclo]
-            [aerial.hanami.templates :as ht]
-            [scicloj.clay.v2.quarto.themes :as quarto.themes]
-            [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
-            [clojure.math :as math]))
+  (:require
+   [clojure.math :as math]
+   [scicloj.kindly.v4.kind :as kind]
+   [tablecloth.api :as tc]))
 
 ;; ## Plain values
 
