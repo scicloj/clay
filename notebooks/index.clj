@@ -430,11 +430,9 @@
 
 ;; ## Kinds
 
-;; The way things should be visualized is determined by the advice of
-;; [Kindly](https://scicloj.github.io/kindly-noted/kindly).
-
-;; In this namespace we demonstrate Kindly's default advice.
-;; User-defined Kindly advices should work as well.
+;; The way things should be visualized is determined by the
+;; [Kindly](https://scicloj.github.io/kindly-noted/kindly)
+;; specification.
 
 ;; Kindly advises tools (like Clay) about the kind of way a given context
 ;; should be displayed, by assigning to it a so-called kind.
@@ -442,9 +440,12 @@
 ;; Please refer to the Kindly documentation for details about specifying
 ;; and using kinds.
 
+;; In this documentation we demonstrate Kindly's default advice.
+;; [User-defined](https://scicloj.github.io/kindly-noted/kindly_advice.html#extending) Kindly [advices](https://scicloj.github.io/kindly-noted/kindly_advice.html) should work as well.
+
 ;; ## Examples
 
-;; See the dedicated [Examples chapter](./clay_book.examples.html) of this book.
+;; See the dedicated 📖 [Examples chapter](./clay_book.examples.html) 📖 of this book.
 
 ;; ## Fragments
 
