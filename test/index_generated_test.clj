@@ -68,16 +68,13 @@
 (ns
  index-generated-test
  (:require
-  [scicloj.kindly.v4.kind :as kind]
   [scicloj.kindly.v4.api :as kindly]
-  [tablecloth.api :as tc]
-  [scicloj.metamorph.ml :as ml]
+  [scicloj.kindly.v4.kind :as kind]
+  [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
+  [scicloj.clay.v2.quarto.themes :as quarto.themes]
   [scicloj.metamorph.ml.toydata :as toydata]
   [scicloj.hanamicloth.v1.api :as haclo]
-  [aerial.hanami.templates :as ht]
-  [scicloj.clay.v2.quarto.themes :as quarto.themes]
-  [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
-  [clojure.math :as math]
+  [tablecloth.api :as tc]
   [clojure.test :refer [deftest is]]))
 
 
@@ -111,14 +108,15 @@
  (->
   (toydata/iris-ds)
   (haclo/plot
-   ht/rule-chart
-   {:X "sepal_width",
-    :X2 "sepal_length",
-    :Y "petal_width",
-    :Y2 "petal_length",
-    :COLOR "species",
-    :SIZE 3,
-    :OPACITY 0.2})))
+   haclo/rule-chart
+   {:=x :sepal_width,
+    :=x2 :sepal_length,
+    :=y :petal_width,
+    :=y2 :petal_length,
+    :=color :species,
+    :=color-type :nominal,
+    :=mark-size 3,
+    :=mark-opacity 0.2})))
 
 
 (def var18 nil)
