@@ -32,3 +32,4 @@
 /.clj-kondo/
 /temp/
 docs/*qmd
+_quarto.yml
