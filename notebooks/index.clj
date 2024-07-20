@@ -179,14 +179,15 @@
 
 ;; A plot using [Hanamicloth](https://github.com/jsa-aerial/hanamicloth):
 (-> (toydata/iris-ds)
-    (haclo/plot ht/rule-chart
-                {:X "sepal_width"
-                 :X2 "sepal_length"
-                 :Y "petal_width"
-                 :Y2 "petal_length"
-                 :COLOR "species"
-                 :SIZE 3
-                 :OPACITY 0.2}))
+    (haclo/plot haclo/rule-chart
+                {:=x :sepal_width
+                 :=x2 :sepal_length
+                 :=y :petal_width
+                 :=y2 :petal_length
+                 :=color :species
+                 :=color-type :nominal
+                 :=mark-size 3
+                 :=mark-opacity 0.2}))
 
 ;; ## API
 
