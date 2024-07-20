@@ -1,5 +1,4 @@
-{:title       "Clay documentation"
- :favicon     "notebooks/favicon.ico"
+{:favicon     "notebooks/favicon.ico"
  :remote-repo {:git-url "https://github.com/scicloj/clay"
                :branch  "main"}
  :quarto      {:format            {:html {:theme [:cosmo "notebooks/custom.scss"]}}
