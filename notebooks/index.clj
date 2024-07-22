@@ -632,13 +632,6 @@ nested-structure-1
     tc/dataset
     (kind/dataset {:dataset/print-range 6}))
 
-;; ### Example and grid
-
-^:kind/example (inc 1)
-
-^:kind/grid
-[1 2 3 4 5 6]
-
 ;; ### Tables
 
 ;; The `:kind/table` kind can be handy for an interactive table view. `:kind/table` understands many structures which can be rendered as a table.
