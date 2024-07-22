@@ -3,6 +3,8 @@
 
 (clay/make! {:format [:quarto :html]
              :base-source-path "notebooks"
-             :source-path "index.clj"
+             :source-path ["index.clj"
+                           "clay_book/examples.clj"]
              :base-target-path "docs"
+             :book {:title "Clay Documentation"}
              :clean-up-target-dir true})

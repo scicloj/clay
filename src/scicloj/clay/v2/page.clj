@@ -2,16 +2,15 @@
   (:require
    [clj-yaml.core :as yaml]
    [clojure.java.io :as io]
+   [clojure.java.shell :as shell]
    [clojure.string :as string]
    [hiccup.core :as hiccup]
    [hiccup.page]
-   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]
-   [clojure.java.shell :as shell]))
+   [scicloj.clay.v2.files :as files]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -201,14 +200,15 @@
        distinct))
 
 (defn html [{:as spec
-             :keys [items title toc?]}]
+             :keys [items title toc? favicon]}]
   (let [special-libs (->> items
                           items->deps
                           (concat [:html-default :katex]))
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-              [:link {:rel "icon" :href "data:,"}] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
+              (when favicon
+                [:link {:rel "icon" :href favicon}])
               #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
               font-links
               [:style (styles/main :table)]
@@ -265,13 +265,15 @@
                "hljs.highlightAll();"]]]
     (hiccup.page/html5 head body)))
 
-
-
-
 (defn md [{:as spec
-           :keys [items title quarto]}]
+           :keys [items title favicon quarto]}]
   (str
-   (->> quarto
+   (->> (cond-> quarto
+                ;; Users may provide non-quarto specific configuration (see also html),
+                ;; if so this will be added to the quarto front-matter to make them behave the same way
+                title (assoc-in [:format :html :title] title)
+                favicon (update-in [:format :html :include-in-header :text]
+                                   str "<link rel = \"icon\" href = \"" favicon "\" />"))
         yaml/generate-string
         (format "\n---\n%s\n---\n"))
    ;; " "

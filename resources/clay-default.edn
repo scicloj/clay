@@ -12,8 +12,7 @@
                               :background-transition :fade
                               :incremental true}}
           :fontsize "0.9em"
-          :code-block-background true
-          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}
+          :code-block-background true}
  :kindly/options {:datatables {:paging false
                                :scrollY 400
                                :sPaginationType "full_numbers"
