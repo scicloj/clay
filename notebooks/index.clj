@@ -427,12 +427,13 @@
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
 ;; | `:base-target-path` | the output directory |  `"temp"` |
 ;; | `:base-source-path` | where to find `:source-path` | `"notebooks"` |
-;; | `:clean-up-target-dir` | deletes files | `true` |
+;; | `:clean-up-target-dir` | delete (!) target directory before repopulating it  | `true` |
 ;; | `:remote-repo` | linking to source | `{:git-url "https://github.com/scicloj/clay" :branch  "main"}` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
-;; For example: `:base-target-path "temp"`.
-;; When publishing a static page, you may wish to target a `docs` directory by setting `:base-target-path "docs"`.
+;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
+;; When publishing a static page, you may wish to target a `docs` directory by setting `:base-target-path "docs"`
+;; in your call to `clay/make!`.
 ;; Creating a dev namespace is a good way to invoke a different configuration for publishing.
 
 ;; ## Kinds
