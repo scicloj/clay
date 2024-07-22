@@ -435,23 +435,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.85412237</td>
+<td style="text-align: right;">0.91167729</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.79923834</td>
+<td style="text-align: right;">0.19718462</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.05114755</td>
+<td style="text-align: right;">0.32035065</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.28536474</td>
+<td style="text-align: right;">0.87566325</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.98832412</td>
+<td style="text-align: right;">0.51716883</td>
 </tr>
 </tbody>
 </table>
@@ -670,7 +670,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td><code>:title</code></td>
-<td>sets the HTML title that appears in the tab bar</td>
+<td>sets the HTML title that appears in the browser tab bar</td>
 <td><code>"My Title"</code></td>
 </tr>
 <tr class="odd">
@@ -703,8 +703,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>the output directory</td>
 <td><code>"temp"</code></td>
 </tr>
+<tr class="odd">
+<td><code>:base-source-path</code></td>
+<td>where to find <code>:source-path</code></td>
+<td><code>"notebooks"</code></td>
+</tr>
+<tr class="even">
+<td><code>:clean-up-target-dir</code></td>
+<td>delete (!) target directory before repopulating it</td>
+<td><code>true</code></td>
+</tr>
+<tr class="odd">
+<td><code>:remote-repo</code></td>
+<td>linking to source</td>
+<td><code>{:git-url "https://github.com/scicloj/clay" :branch  "main"}</code></td>
+</tr>
 </tbody>
 </table>
+<p>When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded. For example: you may set <code>:base-target-path "temp"</code> at your <code>clay.edn</code> file. When publishing a static page, you may wish to target a <code>docs</code> directory by setting <code>:base-target-path "docs"</code> in your call to <code>clay/make!</code>. Creating a dev namespace is a good way to invoke a different configuration for publishing.</p>
 </section>
 <section id="kinds" class="level2" data-number="1.10">
 <h2 data-number="1.10" class="anchored" data-anchor-id="kinds"><span class="header-section-number">1.10</span> Kinds</h2>
@@ -794,15 +810,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.91960700</td>
+<td style="text-align: right;">0.63407472</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.64903929</td>
+<td style="text-align: right;">0.94829748</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.77905557</td>
+<td style="text-align: right;">0.12252824</td>
 </tr>
 </tbody>
 </table>
@@ -825,15 +841,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.71316999</td>
+<td style="text-align: right;">0.76150335</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.10477642</td>
+<td style="text-align: right;">0.35310442</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.27972476</td>
+<td style="text-align: right;">0.68078090</td>
 </tr>
 </tbody>
 </table>
