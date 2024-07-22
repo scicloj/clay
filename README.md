@@ -9,7 +9,7 @@ It also offers a set of tools to integrate Clojure literate programming with the
 ## Getting Started
 Add Clay to your project dependencies:
 
-[Clojars Project](https://clojars.org/org.scicloj/clay/versions/2-beta12)
+[Clojars Project](https://clojars.org/org.scicloj/clay/versions/2-beta12) 
 
 (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add under it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj). If you do not know what this means, just add it under the main `:deps` section of your `deps.edn` file.)
 
