@@ -15,7 +15,7 @@
 ;;
 ;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
 ;;
-;; **Artifact:** [Clojars Project](https://clojars.org/org.scicloj/clay/versions/2-beta12)
+;; **Artifact:** [Clojars Project](https://clojars.org/org.scicloj/clay/versions/2-beta12) - recommended version: 2-beta12
 ;;
 ;; **Status:** The project has moved into Beta stage (March 2024).
 ;;
@@ -31,7 +31,8 @@
 ;; ## Getting started
 
 ;; Add Clay to your project dependencies:
-;; [Clojars Project](https://clojars.org/org.scicloj/clay/versions/2-beta12)
+;; [Clojars Project](https://clojars.org/org.scicloj/clay/versions/2-beta12) - recommended version: 2-beta12
+
 ;;
 ;; (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add under it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj). If you do not know what this means, just add it under the main `:deps` section of your `deps.edn` file.)
 ;;
