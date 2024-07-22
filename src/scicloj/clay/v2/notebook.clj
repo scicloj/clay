@@ -58,80 +58,76 @@
            (string/join "\n"))
       item/md))
 
-(defn code-by-value [{:as note :keys [code]}]
-  (let [source-item (item/source-clojure code)
-        source-hiccup (:hiccup source-item)
-        source-md (:md source-item)
-        value-items (-> note
-                        (select-keys [:value :code :form
-                                      :base-target-path
-                                      :full-target-path
-                                      :kindly/options
-                                      :format])
-                        (update :value deref-if-needed)
-                        prepare/prepare-or-pprint)
-        ;; TODO: should join them if there are more than one.
-        value-item (first value-items)
-        value-hiccup (:hiccup value-item)
-        value-md (:md value-item)]
-    [{:hiccup (when (and value-hiccup source-hiccup)
+(defn hide-code? [{:as note :keys [code form value kind]} {:as opts :keys [hide-code]}]
+  (or hide-code
+      (-> form meta :kindly/hide-code)
+      (-> form meta :kindly/hide-code?) ; legacy convention
+      (-> value meta :kindly/hide-code)
+      (-> value meta :kindly/hide-code?) ; legacy convention
+      (when kind
+        (some-> note
+                :kindly/options
+                :kinds-that-hide-code
+                kind))
+      (nil? code)))
+
+(defn hide-value? [{:as note :keys [form value]} {:as opts :keys [hide-nils hide-vars]}]
+  (or (and (sequential? form)
+           (-> form first hidden-form-starters))
+      (-> note :form meta :kind/hidden)
+      (and hide-nils (nil? value))
+      (and hide-vars (var? value))))
+
+(defn side-by-side-items [code-item value-items]
+  (let [code-hiccup (:hiccup code-item)
+        code-md (:md code-item)]
+    [{:hiccup (when (every? :hiccup value-items)
                 [:div.grid
-                 [:div.g-col-6 source-hiccup]
-                 [:div.g-col-6 value-hiccup]])
-      :md     (when (and value-md source-md)
-                (str (str/join \newline
-                               ["::: {.grid}"
-                                "::: {.g-col-6}"
-                                source-md
-                                ":::"
-                                "::: {.g-col-6}"
-                                value-md
-                                ":::"
-                                ":::"])
+                 [:div.g-col-6 code-hiccup]
+                 (into [:div.g-col-6] (map :hiccup value-items))])
+      :md     (when (every? :md value-items)
+                (str (string/join \newline
+                                  (-> ["::: {.grid}" "::: {.g-col-6}" code-md ":::"]
+                                      (into (mapcat (fn [{:keys [md]}]
+                                                      ["::: {.g-col-6}" md ":::"])
+                                                    value-items))
+                                      (conj ":::")))
                      \newline))
-      :deps   (:deps value-item)}]))
+      :deps   (set (mapcat :deps value-items))}]))
 
-(defn note-to-items [{:as note
-                      :keys [comment? code form value kind]}
-                     {:keys [hide-code hide-nils hide-vars]}]
-  (cond
-    (and comment? code)
+(defn note-to-items [{:as   note
+                      :keys [comment? code]}
+                     {:as   opts
+                      :keys [code-and-value]}]
+  (if (and comment? code)
     [(comment->item code)]
+    (let [code-item (when-not (hide-code? note opts)
+                      (item/source-clojure code))
+          value-items (when-not (hide-value? note opts)
+                        (-> note
+                            (select-keys [:value :code :form
+                                          :base-target-path
+                                          :full-target-path
+                                          :kindly/options
+                                          :format])
+                            (update :value deref-if-needed)
+                            prepare/prepare-or-pprint))]
+      (cond (and (not code-item) (empty? value-items))
+            []
 
-    ;; TODO: should handle multiple examples at a time.
-    (= kind :kind/example)
-    (code-by-value note)
+            (not code-item)
+            value-items
 
-    :else
-    (concat
-     ;; code
-     [(when-not (or hide-code
-                    (-> form meta :kindly/hide-code)
-                    (-> form meta :kindly/hide-code?) ; legacy convention
-                    (-> value meta :kindly/hide-code)
-                    (-> value meta :kindly/hide-code?) ; legacy convention
-                    (when kind
-                      (some-> note
-                              :kindly/options
-                              :kinds-that-hide-code
-                              kind))
-                    (nil? code))
-        (item/source-clojure code))]
-     ;; value
-     (when-not (or
-                (and (sequential? form)
-                     (-> form first hidden-form-starters))
-                (-> note :form meta :kind/hidden)
-                (and hide-nils (nil? value))
-                (and hide-vars (var? value)))
-       (-> note
-           (select-keys [:value :code :form
-                         :base-target-path
-                         :full-target-path
-                         :kindly/options
-                         :format])
-           (update :value deref-if-needed)
-           prepare/prepare-or-pprint)))))
+            (empty? value-items)
+            [code-item]
+
+            (and (= code-and-value :horizontal)
+                 (or (every? :md value-items)
+                     (every? :hiccup value-items)))
+            (side-by-side-items code-item value-items)
+
+            :else
+            (into [code-item] value-items)))))
 
 (defn add-info-line [items {:keys [full-source-path hide-info-line]}]
   (if hide-info-line
