@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta14] - 2024-07-22
-- handling resources inside a jar file (PR #126)
+- proper handling of static resources (PR #126)
 
 ## [2-beta13] - 2024-07-19
 - fixed server should respond with 404 when file is not found
