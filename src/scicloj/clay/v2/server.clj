@@ -143,10 +143,10 @@
              :status  200}
             (case [request-method uri]
               ;; user files have priority, otherwise serve the default from resources
-              [:get "/favicon.ico"] {:body   (io/file (io/resource "favicon.ico"))
+              [:get "/favicon.ico"] {:body   (io/input-stream (io/resource "favicon.ico"))
                                      :status 200}
               ;; this image is for the header above the page during interactive mode
-              [:get "/Clay.svg.png"] {:body   (io/file (io/resource "Clay.svg.png"))
+              [:get "/Clay.svg.png"] {:body   (io/input-stream (io/resource "Clay.svg.png"))
                                       :status 200}
               {:body   "not found"
                :status 404})))))))
