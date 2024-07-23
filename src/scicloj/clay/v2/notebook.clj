@@ -202,14 +202,14 @@
             format]}]
    (let [code (some-> full-source-path
                       slurp)
-         notes (cond
-                 single-value (conj (when code
+         notes  (cond
+                  single-value (conj (when code
+                                       [{:form (read/read-ns-form code)}])
+                                     {:value single-value})
+                  single-form (conj (when code
                                       [{:form (read/read-ns-form code)}])
-                                    {:value single-value})
-                 single-form (conj (when code
-                                     [{:form (read/read-ns-form code)}])
-                                   {:form single-form})
-                 :else (read/->safe-notes code))]
+                                    {:form single-form})
+                  :else (read/->safe-notes code))]
      (-> (->> notes
               (reduce (fn [{:as aggregation :keys [i
                                                    items
