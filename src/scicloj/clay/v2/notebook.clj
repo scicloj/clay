@@ -1,15 +1,15 @@
 (ns scicloj.clay.v2.notebook
   (:require
-   [clojure.string :as string]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.util.path :as path]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.read :as read]
-   [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.kind :as kind]
-   [scicloj.kindly-advice.v1.api :as kindly-advice]))
+    [clojure.string :as string]
+    [scicloj.clay.v2.item :as item]
+    [scicloj.clay.v2.util.path :as path]
+    [scicloj.clay.v2.item :as item]
+    [scicloj.clay.v2.prepare :as prepare]
+    [scicloj.clay.v2.read :as read]
+    [scicloj.clay.v2.config :as config]
+    [scicloj.clay.v2.util.merge :as merge]
+    [scicloj.kindly.v4.kind :as kind]
+    [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -25,45 +25,45 @@
 
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo
-                            absolute-file-path)]
+                             absolute-file-path)]
     (item/info-line {:path relative-file-path
-                     :url (some-> (config/config)
-                                  :remote-repo
-                                  (path/file-git-url relative-file-path))})))
+                     :url  (some-> (config/config)
+                                   :remote-repo
+                                   (path/file-git-url relative-file-path))})))
 
-(defn complete [{:as note
+(defn complete [{:as   note
                  :keys [comment? code form value]}]
   (-> (if (or value comment?)
         note
         (assoc
-         note
-         :value (cond form (-> form
-                               eval
-                               deref-if-needed)
-                      code (-> code
-                               read-string
-                               eval
-                               deref-if-needed))))
+          note
+          :value (cond form (-> form
+                                eval
+                                deref-if-needed)
+                       code (-> code
+                                read-string
+                                eval
+                                deref-if-needed))))
       (cond-> (not comment?)
-        kindly-advice/advise)))
+              kindly-advice/advise)))
 
 (defn comment->item [comment]
   (-> comment
       (string/split #"\n")
       (->> (map #(-> %
                      (string/replace
-                      #"^;+\s?" "")
+                       #"^;+\s?" "")
                      (string/replace
-                      #"^#" "\n#")))
+                       #"^#" "\n#")))
            (string/join "\n"))
       item/md))
 
 (defn hide-code? [{:as note :keys [code form value kind]} {:as opts :keys [hide-code]}]
   (or hide-code
       (-> form meta :kindly/hide-code)
-      (-> form meta :kindly/hide-code?) ; legacy convention
+      (-> form meta :kindly/hide-code?)                     ; legacy convention
       (-> value meta :kindly/hide-code)
-      (-> value meta :kindly/hide-code?) ; legacy convention
+      (-> value meta :kindly/hide-code?)                    ; legacy convention
       (when kind
         (some-> note
                 :kindly/options
@@ -78,21 +78,21 @@
       (and hide-nils (nil? value))
       (and hide-vars (var? value))))
 
-(defn side-by-side-items [code-item value-items]
-  (let [code-hiccup (:hiccup code-item)
-        code-md (:md code-item)]
-    [{:hiccup (when (every? :hiccup value-items)
-                [:div.grid
-                 [:div.g-col-6 code-hiccup]
-                 (into [:div.g-col-6] (map :hiccup value-items))])
-      :md     (when (every? :md value-items)
-                (str (string/join \newline
-                                  (-> ["::: {.grid}" "::: {.g-col-6}" code-md ":::"]
-                                      (into (mapcat (fn [{:keys [md]}]
-                                                      ["::: {.g-col-6}" md ":::"])
-                                                    value-items))
-                                      (conj ":::")))
-                     \newline))
+(defn side-by-side-items [{:as spec :keys [format]} code-item value-items]
+  ;; markdown grids are not structurally nested, but hiccup grids are
+  (if (= :quarto (first format))
+    `[{:md "::: {.grid .clay-side-by-side}"}
+      {:md "::: {.g-col-6}"}
+      ~code-item
+      {:md ":::"}
+      {:md "::: {.g-col-6}"}
+      ~@value-items
+      {:md ":::"}
+      {:md ":::"}]
+    [{:hiccup [:div.grid
+               [:div.g-col-6 (:hiccup code-item)]
+               (->> (map #(prepare/item->hiccup % spec) value-items)
+                    (into [:div.g-col-6]))]
       :deps   (set (mapcat :deps value-items))}]))
 
 (defn note-to-items [{:as   note
@@ -121,10 +121,8 @@
             (empty? value-items)
             [code-item]
 
-            (and (= code-and-value :horizontal)
-                 (or (every? :md value-items)
-                     (every? :hiccup value-items)))
-            (side-by-side-items code-item value-items)
+            (and (= code-and-value :horizontal))
+            (side-by-side-items opts code-item value-items)
 
             :else
             (into [code-item] value-items)))))
@@ -135,9 +133,9 @@
     (let [il (info-line full-source-path)]
       (concat #_[il
                  item/separator]
-              items
-              [item/separator
-               il]))))
+        items
+        [item/separator
+         il]))))
 
 (defn ->var-name [i]
   (symbol (str "var" i)))
@@ -195,7 +193,7 @@
 
 
 (defn items-and-test-forms
-  ([{:as options
+  ([{:as   options
      :keys [full-source-path
             hide-info-line
             hide-code hide-nils hide-vars
@@ -207,14 +205,14 @@
             format]}]
    (let [code (some-> full-source-path
                       slurp)
-         notes  (cond
-                  single-value (conj (when code
-                                       [{:form (read/read-ns-form code)}])
-                                     {:value single-value})
-                  single-form (conj (when code
+         notes (cond
+                 single-value (conj (when code
                                       [{:form (read/read-ns-form code)}])
-                                    {:form single-form})
-                  :else (read/->safe-notes code))]
+                                    {:value single-value})
+                 single-form (conj (when code
+                                     [{:form (read/read-ns-form code)}])
+                                   {:form single-form})
+                 :else (read/->safe-notes code))]
      (-> (->> notes
               (reduce (fn [{:as aggregation :keys [i
                                                    items
@@ -226,11 +224,11 @@
                               new-items (when-not test-note
                                           (-> complete-note
                                               (merge/deep-merge
-                                               (-> options
-                                                   (select-keys [:base-target-path
-                                                                 :full-target-path
-                                                                 :kindly/options
-                                                                 :format])))
+                                                (-> options
+                                                    (select-keys [:base-target-path
+                                                                  :full-target-path
+                                                                  :kindly/options
+                                                                  :format])))
                                               (note-to-items options)))
                               test-form (if test-note
                                           ;; a deftest form
@@ -245,17 +243,17 @@
                                             (def-form
                                               (->var-name i)
                                               form)))]
-                          {:i (inc i)
-                           :items (concat items new-items)
-                           :test-forms (conj test-forms test-form)
+                          {:i              (inc i)
+                           :items          (concat items new-items)
+                           :test-forms     (conj test-forms test-form)
                            :last-nontest-i (if (or (:comment? complete-note)
                                                    test-note)
                                              last-nontest-i
                                              i)}))
                       ;; initial value
-                      {:i 0
-                       :items []
-                       :test-forms []
+                      {:i              0
+                       :items          []
+                       :test-forms     []
                        :last-nontest-i nil}))
          (update :items
                  ;; final processing of items
@@ -279,4 +277,4 @@
 
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
-                       :single-form '(+ 1 2)})))
+                       :single-form      '(+ 1 2)})))

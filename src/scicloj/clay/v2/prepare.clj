@@ -55,7 +55,7 @@
                             script
                             item-class
                             inside-a-table]}
-                    {:as context
+                    {:as spec
                      :keys [format kind]}]
   (-> (or hiccup
           (some->> html
@@ -92,9 +92,8 @@
             (update :hiccup conj script)
             item->md)
         (-> (or md
-                (format "\n```{=html}\n%s\n```\n"
-                        (or html
-                            (some-> hiccup hiccup/html))))))
+                (or html
+                    (some-> hiccup hiccup/html)))))
       (cond-> item-class
         (#(format "::: {.%s}\n%s\n:::\n" item-class %)))))
 
