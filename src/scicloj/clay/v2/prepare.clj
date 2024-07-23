@@ -92,8 +92,9 @@
             (update :hiccup conj script)
             item->md)
         (-> (or md
-                (or html
-                    (some-> hiccup hiccup/html)))))
+                (format "\n```{=html}\n%s\n```\n"
+                        (or html
+                            (some-> hiccup hiccup/html))))))
       (cond-> item-class
         (#(format "::: {.%s}\n%s\n:::\n" item-class %)))))
 

@@ -1,15 +1,15 @@
 (ns scicloj.clay.v2.notebook
   (:require
-    [clojure.string :as string]
-    [scicloj.clay.v2.item :as item]
-    [scicloj.clay.v2.util.path :as path]
-    [scicloj.clay.v2.item :as item]
-    [scicloj.clay.v2.prepare :as prepare]
-    [scicloj.clay.v2.read :as read]
-    [scicloj.clay.v2.config :as config]
-    [scicloj.clay.v2.util.merge :as merge]
-    [scicloj.kindly.v4.kind :as kind]
-    [scicloj.kindly-advice.v1.api :as kindly-advice]))
+   [clojure.string :as string]
+   [scicloj.clay.v2.item :as item]
+   [scicloj.clay.v2.util.path :as path]
+   [scicloj.clay.v2.item :as item]
+   [scicloj.clay.v2.prepare :as prepare]
+   [scicloj.clay.v2.read :as read]
+   [scicloj.clay.v2.config :as config]
+   [scicloj.clay.v2.util.merge :as merge]
+   [scicloj.kindly.v4.kind :as kind]
+   [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -25,36 +25,36 @@
 
 (defn info-line [absolute-file-path]
   (let [relative-file-path (path/path-relative-to-repo
-                             absolute-file-path)]
+                            absolute-file-path)]
     (item/info-line {:path relative-file-path
-                     :url  (some-> (config/config)
-                                   :remote-repo
-                                   (path/file-git-url relative-file-path))})))
+                     :url (some-> (config/config)
+                                  :remote-repo
+                                  (path/file-git-url relative-file-path))})))
 
-(defn complete [{:as   note
+(defn complete [{:as note
                  :keys [comment? code form value]}]
   (-> (if (or value comment?)
         note
         (assoc
-          note
-          :value (cond form (-> form
-                                eval
-                                deref-if-needed)
-                       code (-> code
-                                read-string
-                                eval
-                                deref-if-needed))))
+         note
+         :value (cond form (-> form
+                               eval
+                               deref-if-needed)
+                      code (-> code
+                               read-string
+                               eval
+                               deref-if-needed))))
       (cond-> (not comment?)
-              kindly-advice/advise)))
+        kindly-advice/advise)))
 
 (defn comment->item [comment]
   (-> comment
       (string/split #"\n")
       (->> (map #(-> %
                      (string/replace
-                       #"^;+\s?" "")
+                      #"^;+\s?" "")
                      (string/replace
-                       #"^#" "\n#")))
+                      #"^#" "\n#")))
            (string/join "\n"))
       item/md))
 
@@ -131,11 +131,8 @@
   (if hide-info-line
     items
     (let [il (info-line full-source-path)]
-      (concat #_[il
-                 item/separator]
-        items
-        [item/separator
-         il]))))
+      (concat items
+              [item/separator il]))))
 
 (defn ->var-name [i]
   (symbol (str "var" i)))
@@ -193,7 +190,7 @@
 
 
 (defn items-and-test-forms
-  ([{:as   options
+  ([{:as options
      :keys [full-source-path
             hide-info-line
             hide-code hide-nils hide-vars
@@ -224,11 +221,11 @@
                               new-items (when-not test-note
                                           (-> complete-note
                                               (merge/deep-merge
-                                                (-> options
-                                                    (select-keys [:base-target-path
-                                                                  :full-target-path
-                                                                  :kindly/options
-                                                                  :format])))
+                                               (-> options
+                                                   (select-keys [:base-target-path
+                                                                 :full-target-path
+                                                                 :kindly/options
+                                                                 :format])))
                                               (note-to-items options)))
                               test-form (if test-note
                                           ;; a deftest form
@@ -243,17 +240,17 @@
                                             (def-form
                                               (->var-name i)
                                               form)))]
-                          {:i              (inc i)
-                           :items          (concat items new-items)
-                           :test-forms     (conj test-forms test-form)
+                          {:i (inc i)
+                           :items (concat items new-items)
+                           :test-forms (conj test-forms test-form)
                            :last-nontest-i (if (or (:comment? complete-note)
                                                    test-note)
                                              last-nontest-i
                                              i)}))
                       ;; initial value
-                      {:i              0
-                       :items          []
-                       :test-forms     []
+                      {:i 0
+                       :items []
+                       :test-forms []
                        :last-nontest-i nil}))
          (update :items
                  ;; final processing of items
@@ -277,4 +274,4 @@
 
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
-                       :single-form      '(+ 1 2)})))
+                       :single-form '(+ 1 2)})))
