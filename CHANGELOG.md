@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta15] - unreleased
 - introducing code-and-value and horizontal layout - WIP
+- code cleanup
 
 ## [2-beta14] - 2024-07-22
 - proper handling of static resources (PR #126)
