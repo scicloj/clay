@@ -55,7 +55,7 @@
                             script
                             item-class
                             inside-a-table]}
-                    {:as spec
+                    {:as context
                      :keys [format kind]}]
   (-> (or hiccup
           (some->> html
