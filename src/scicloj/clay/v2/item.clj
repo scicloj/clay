@@ -1,15 +1,12 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
-            [clojure.string :as string]
             [charred.api :as charred]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
             [hiccup.page]
-            [hiccup.core :as hiccup]
-            [clojure.string :as str]
-            [scicloj.kindly.v4.api :as kindly]))
+            [clojure.string :as str]))
 
 (def *id (atom 0))
 
@@ -23,13 +20,12 @@
 
 (defn escape [string]
   (-> string
-      (string/escape
+      (str/escape
        {\< "&lt;"
         \> "&gt;"
         \& "&amp;"
         \" "&quot;"
         \' "&apos;"})))
-
 
 (defn clojure-code-item [{:keys [tag hiccup-element md-class]}]
   (fn [string-or-strings]
@@ -53,7 +49,7 @@
 ```
 :::
 " (name md-class) s)))
-                (string/join "\n"))})))
+                (str/join "\n"))})))
 
 (def source-clojure
   (clojure-code-item {:tag :source-clojure
@@ -64,8 +60,6 @@
   (clojure-code-item {:tag :printed-clojure
                       :hiccup-element :code.sourceCode.language-clojure.printed-clojure
                       :md-class :printedClojure}))
-
-
 
 (defn just-println [value]
   (-> value
@@ -84,7 +78,7 @@
 (defn md [text]
   {:md (->> text
             in-vector
-            (string/join "\n"))})
+            (str/join "\n"))})
 
 (defn katex-hiccup [string]
   [:div
@@ -98,7 +92,7 @@
   {:md (->> text
             in-vector
             (map (partial format "$$%s$$"))
-            (string/join "\n"))
+            (str/join "\n"))
    :hiccup (->> text
                 in-vector
                 (map katex-hiccup)
@@ -118,7 +112,6 @@
 (defn structure-mark [string]
   {:md string
    :hiccup [:p string]})
-
 
 (def next-id
   (let [*counter (atom 0)]
@@ -165,7 +158,6 @@
 };"))]]
    :deps [:cytoscape]})
 
-
 (defn echarts [{:as context
                 :keys [value]}]
   {:hiccup [:div
@@ -181,7 +173,6 @@
 };"))]]
    :deps [:echarts]})
 
-
 (defn plotly [{:as context
                {:keys [data layout config]
                 :or {layout {}
@@ -196,7 +187,6 @@
               (charred/write-json-str layout)
               (charred/write-json-str config))]]
    :deps [:plotly]})
-
 
 (defn portal [value]
   {:hiccup [:div
@@ -226,11 +216,10 @@
            [:a {:href url} path]
            path)]]])]})
 
-
 (defn html [html]
   {:html (->> html
               in-vector
-              (string/join "\n"))})
+              (str/join "\n"))})
 
 (defn image [{:keys [value
                      full-target-path
@@ -245,16 +234,15 @@
                   image
                   ".png")]
     (when-not
-        (util.image/write! image "png" png-path)
+     (util.image/write! image "png" png-path)
       (throw (ex-message "Failed to save image as PNG.")))
     {:hiccup [:img {:src (-> png-path
-                             (string/replace
+                             (str/replace
                               (re-pattern (str "^"
                                                base-target-path
                                                "/"))
                               ""))}]
      :item-class "clay-image"}))
-
 
 (defn vega-embed [{:keys [value
                           full-target-path
@@ -270,7 +258,7 @@
                                             ".csv")]
                               (spit csv-path values)
                               {:url (-> csv-path
-                                        (string/replace
+                                        (str/replace
                                          (re-pattern (str "^"
                                                           base-target-path
                                                           "/"))
@@ -283,7 +271,6 @@
                            charred/write-json-str
                            (->> (format "vegaEmbed(document.currentScript.parentElement, %s);")))]]
      :deps [:vega]}))
-
 
 (defn video [{:keys [youtube-id
                      iframe-width
@@ -309,7 +296,7 @@
 (defn observable [code]
   {:md (->> code
             in-vector
-            (string/join "\n")
+            (str/join "\n")
             (format "
 ```{ojs}
 //| echo: false
