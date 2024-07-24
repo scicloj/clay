@@ -6,9 +6,7 @@
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
             [hiccup.page]
-            [hiccup.core :as hiccup]
-            [clojure.string :as str]
-            [scicloj.kindly.v4.api :as kindly]))
+            [clojure.string :as str]))
 
 (def *id (atom 0))
 
