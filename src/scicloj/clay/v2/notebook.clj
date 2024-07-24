@@ -58,50 +58,81 @@
            (string/join "\n"))
       item/md))
 
-(defn note-to-items [{:as note
-                      :keys [comment? code form value kind]}
-                     {:keys [hide-code hide-nils hide-vars]}]
+(defn hide-code? [{:as note :keys [code form value kind]} {:as opts :keys [hide-code]}]
+  (or hide-code
+      (-> form meta :kindly/hide-code)
+      (-> form meta :kindly/hide-code?)                     ; legacy convention
+      (-> value meta :kindly/hide-code)
+      (-> value meta :kindly/hide-code?)                    ; legacy convention
+      (when kind
+        (some-> note
+                :kindly/options
+                :kinds-that-hide-code
+                kind))
+      (nil? code)))
+
+(defn hide-value? [{:as note :keys [form value]} {:as opts :keys [hide-nils hide-vars]}]
+  (or (and (sequential? form)
+           (-> form first hidden-form-starters))
+      (-> note :form meta :kind/hidden)
+      (and hide-nils (nil? value))
+      (and hide-vars (var? value))))
+
+(defn side-by-side-items [{:as spec :keys [format]} code-item value-items]
+  ;; markdown grids are not structurally nested, but hiccup grids are
+  (if (= :quarto (first format))
+    `[{:md "::: {.grid .clay-side-by-side}"}
+      {:md "::: {.g-col-6}"}
+      ~code-item
+      {:md ":::"}
+      {:md "::: {.g-col-6}"}
+      ~@value-items
+      {:md ":::"}
+      {:md ":::"}]
+    [{:hiccup [:div.grid
+               [:div.g-col-6 (:hiccup code-item)]
+               (->> (map #(prepare/item->hiccup % spec) value-items)
+                    (into [:div.g-col-6]))]
+      :deps   (set (mapcat :deps value-items))}]))
+
+(defn note-to-items [{:as   note
+                      :keys [comment? code]}
+                     {:as   opts
+                      :keys [code-and-value]}]
   (if (and comment? code)
     [(comment->item code)]
-    (concat
-     ;; code
-     [(when-not (or hide-code
-                    (-> form meta :kindly/hide-code)
-                    (-> form meta :kindly/hide-code?) ; legacy convention
-                    (-> value meta :kindly/hide-code)
-                    (-> value meta :kindly/hide-code?) ; legacy convention
-                    (when kind
-                      (some-> note
-                              :kindly/options
-                              :kinds-that-hide-code
-                              kind))
-                    (nil? code))
-        (item/source-clojure code))]
-     ;; value
-     (when-not (or
-                (and (sequential? form)
-                     (-> form first hidden-form-starters))
-                (-> note :form meta :kind/hidden)
-                (and hide-nils (nil? value))
-                (and hide-vars (var? value)))
-       (-> note
-           (select-keys [:value :code :form
-                         :base-target-path
-                         :full-target-path
-                         :kindly/options
-                         :format])
-           (update :value deref-if-needed)
-           prepare/prepare-or-pprint)))))
+    (let [code-item (when-not (hide-code? note opts)
+                      (item/source-clojure code))
+          value-items (when-not (hide-value? note opts)
+                        (-> note
+                            (select-keys [:value :code :form
+                                          :base-target-path
+                                          :full-target-path
+                                          :kindly/options
+                                          :format])
+                            (update :value deref-if-needed)
+                            prepare/prepare-or-pprint))]
+      (cond (and (not code-item) (empty? value-items))
+            []
+
+            (not code-item)
+            value-items
+
+            (empty? value-items)
+            [code-item]
+
+            (and (= code-and-value :horizontal))
+            (side-by-side-items opts code-item value-items)
+
+            :else
+            (into [code-item] value-items)))))
 
 (defn add-info-line [items {:keys [full-source-path hide-info-line]}]
   (if hide-info-line
     items
     (let [il (info-line full-source-path)]
-      (concat #_[il
-                 item/separator]
-              items
-              [item/separator
-               il]))))
+      (concat items
+              [item/separator il]))))
 
 (defn ->var-name [i]
   (symbol (str "var" i)))
