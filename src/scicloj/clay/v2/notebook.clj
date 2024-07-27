@@ -35,15 +35,14 @@
                  :keys [comment? code form value]}]
   (-> (if (or value comment?)
         note
-        (assoc
-         note
-         :value (cond form (-> form
-                               eval
-                               deref-if-needed)
-                      code (-> code
-                               read-string
-                               eval
-                               deref-if-needed))))
+        (assoc note
+          :value (cond code (-> code
+                                read-string
+                                eval
+                                deref-if-needed)
+                       form (-> form
+                                eval
+                                deref-if-needed))))
       (cond-> (not comment?)
         kindly-advice/advise)))
 
@@ -200,72 +199,74 @@
             single-form
             single-value
             format]}]
-   (let [code (some-> full-source-path
-                      slurp)
-         notes  (cond
-                  single-value (conj (when code
+   (binding [*ns* *ns*
+             *warn-on-reflection* *warn-on-reflection*
+             *unchecked-math* *unchecked-math*]
+     (let [code (some-> full-source-path slurp)
+           notes (cond
+                   single-value (conj (when code
+                                        [{:form (read/read-ns-form code)}])
+                                      {:value single-value})
+                   single-form (conj (when code
                                        [{:form (read/read-ns-form code)}])
-                                     {:value single-value})
-                  single-form (conj (when code
-                                      [{:form (read/read-ns-form code)}])
-                                    {:form single-form})
-                  :else (read/->safe-notes code))]
-     (-> (->> notes
-              (reduce (fn [{:as aggregation :keys [i
-                                                   items
-                                                   test-forms
-                                                   last-nontest-i]}
-                           note]
-                        (let [{:as complete-note :keys [form kind]} (complete note)
-                              test-note (test-last? complete-note)
-                              new-items (when-not test-note
-                                          (-> complete-note
-                                              (merge/deep-merge
-                                               (-> options
-                                                   (select-keys [:base-target-path
-                                                                 :full-target-path
-                                                                 :kindly/options
-                                                                 :format])))
-                                              (note-to-items options)))
-                              test-form (if test-note
-                                          ;; a deftest form
-                                          (deftest-form
-                                            (->test-name i)
-                                            (->var-name last-nontest-i)
-                                            form)
-                                          (if (ns-form? form)
-                                            ;; the test ns form
-                                            (test-ns-form form)
-                                            ;; the regular case, just a def
-                                            (def-form
-                                              (->var-name i)
-                                              form)))]
-                          {:i (inc i)
-                           :items (concat items new-items)
-                           :test-forms (conj test-forms test-form)
-                           :last-nontest-i (if (or (:comment? complete-note)
-                                                   test-note)
-                                             last-nontest-i
-                                             i)}))
-                      ;; initial value
-                      {:i 0
-                       :items []
-                       :test-forms []
-                       :last-nontest-i nil}))
-         (update :items
-                 ;; final processing of items
-                 (fn [items]
-                   (-> items
-                       (->> (remove nil?))
-                       (add-info-line options)
-                       doall)))
-         (update :test-forms
-                 ;; Leave the test-form only when
-                 ;; at least one of them is a `deftest`.
-                 (fn [test-forms]
-                   (when (->> test-forms
-                              (some #(-> % first (= 'deftest))))
-                     test-forms)))))))
+                                     {:form single-form})
+                   :else (read/->safe-notes code))]
+       (-> (->> notes
+                (reduce (fn [{:as aggregation :keys [i
+                                                     items
+                                                     test-forms
+                                                     last-nontest-i]}
+                             note]
+                          (let [{:as complete-note :keys [form kind]} (complete note)
+                                test-note (test-last? complete-note)
+                                new-items (when-not test-note
+                                            (-> complete-note
+                                                (merge/deep-merge
+                                                  (-> options
+                                                      (select-keys [:base-target-path
+                                                                    :full-target-path
+                                                                    :kindly/options
+                                                                    :format])))
+                                                (note-to-items options)))
+                                test-form (if test-note
+                                            ;; a deftest form
+                                            (deftest-form
+                                              (->test-name i)
+                                              (->var-name last-nontest-i)
+                                              form)
+                                            (if (ns-form? form)
+                                              ;; the test ns form
+                                              (test-ns-form form)
+                                              ;; the regular case, just a def
+                                              (def-form
+                                                (->var-name i)
+                                                form)))]
+                            {:i              (inc i)
+                             :items          (concat items new-items)
+                             :test-forms     (conj test-forms test-form)
+                             :last-nontest-i (if (or (:comment? complete-note)
+                                                     test-note)
+                                               last-nontest-i
+                                               i)}))
+                        ;; initial value
+                        {:i              0
+                         :items          []
+                         :test-forms     []
+                         :last-nontest-i nil}))
+           (update :items
+                   ;; final processing of items
+                   (fn [items]
+                     (-> items
+                         (->> (remove nil?))
+                         (add-info-line options)
+                         doall)))
+           (update :test-forms
+                   ;; Leave the test-form only when
+                   ;; at least one of them is a `deftest`.
+                   (fn [test-forms]
+                     (when (->> test-forms
+                                (some #(-> % first (= 'deftest))))
+                       test-forms))))))))
 
 
 (comment
