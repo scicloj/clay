@@ -238,29 +238,20 @@
 ;; and show it at the browser:
 (comment
   (clay/make! {:source-path "notebooks/index.clj"
-               :single-form '(kind/cytoscape
-                              cytoscape-example
-                              {:element/style {:width "300px"
-                                               :height "300px"}})}))
+               :single-form '(+ 1 2)}))
 
 ;; Evaluate and render a single form
 ;; in the context of the current namespace (`*ns*`)
 ;; as HTML
 ;; and show it at the browser:
 (comment
-  (clay/make! {:single-form '(kind/cytoscape
-                              cytoscape-example
-                              {:element/style {:width "300px"
-                                               :height "300px"}})}))
+  (clay/make! {:single-form '(+ 1 2)}))
 
 ;; Render a single value
 ;; as HTML
 ;; and show it at the browser:
 (comment
-  (clay/make! {:single-value (kind/cytoscape
-                              cytoscape-example
-                              {:element/style {:width "300px"
-                                               :height "300px"}})}))
+  (clay/make! {:single-value 3}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
