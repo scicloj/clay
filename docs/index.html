@@ -227,6 +227,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 <style>.clay-limit-image-width .clay-image {max-width: 100%}
+.clay-side-by-side .sourceCode {margin: 0}
+.clay-side-by-side {margin: 1em 0}
 </style>
 <script src="index_files/md-default1.js" type="text/javascript"></script>
 <script src="index_files/md-default2.js" type="text/javascript"></script>
@@ -435,23 +437,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.43708737</td>
+<td style="text-align: right;">0.56871770</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.97376624</td>
+<td style="text-align: right;">0.39124398</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.85963333</td>
+<td style="text-align: right;">0.04558251</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.67850567</td>
+<td style="text-align: right;">0.06220701</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.39835792</td>
+<td style="text-align: right;">0.65578672</td>
 </tr>
 </tbody>
 </table>
@@ -511,26 +513,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceClojure">
 <div class="sourceCode" id="cb14"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">comment</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  (clay/make! {<span class="at">:source-path</span> <span class="st">"notebooks/index.clj"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">:single-form</span> '(kind/cytoscape</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                              cytoscape-example</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                              {<span class="at">:element/style</span> {<span class="at">:width</span> <span class="st">"300px"</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">:height</span> <span class="st">"300px"</span>}})}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">:single-form</span> '(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span>)}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Evaluate and render a single form in the context of the current namespace (<code>*ns*</code>) as HTML and show it at the browser:</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb15"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">comment</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  (clay/make! {<span class="at">:single-form</span> '(kind/cytoscape</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                              cytoscape-example</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                              {<span class="at">:element/style</span> {<span class="at">:width</span> <span class="st">"300px"</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">:height</span> <span class="st">"300px"</span>}})}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  (clay/make! {<span class="at">:single-form</span> '(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span>)}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Render a single value as HTML and show it at the browser:</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb16"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">comment</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  (clay/make! {<span class="at">:single-value</span> (kind/cytoscape</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                              cytoscape-example</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                              {<span class="at">:element/style</span> {<span class="at">:width</span> <span class="st">"300px"</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">:height</span> <span class="st">"300px"</span>}})}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  (clay/make! {<span class="at">:single-value</span> <span class="dv">3</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Evaluate and render the namespace in <code>"notebooks/index.clj"</code> as a Quarto qmd file then, using Quarto, render that file as HTML and show it at the browser:</p>
 <div class="sourceClojure">
@@ -810,15 +803,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.30103443</td>
+<td style="text-align: right;">0.23242735</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.04917767</td>
+<td style="text-align: right;">0.89402674</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.33611156</td>
+<td style="text-align: right;">0.92340893</td>
 </tr>
 </tbody>
 </table>
@@ -841,15 +834,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.55549544</td>
+<td style="text-align: right;">0.08354776</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.61657510</td>
+<td style="text-align: right;">0.47180531</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.46215476</td>
+<td style="text-align: right;">0.80169476</td>
 </tr>
 </tbody>
 </table>

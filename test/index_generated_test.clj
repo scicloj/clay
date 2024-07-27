@@ -178,37 +178,19 @@
  var31
  (comment
   (clay/make!
-   {:source-path "notebooks/index.clj",
-    :single-form
-    '(kind/cytoscape
-      cytoscape-example
-      #:element{:style {:width "300px", :height "300px"}})})))
+   {:source-path "notebooks/index.clj", :single-form '(+ 1 2)})))
 
 
 (def var32 nil)
 
 
-(def
- var33
- (comment
-  (clay/make!
-   {:single-form
-    '(kind/cytoscape
-      cytoscape-example
-      #:element{:style {:width "300px", :height "300px"}})})))
+(def var33 (comment (clay/make! {:single-form '(+ 1 2)})))
 
 
 (def var34 nil)
 
 
-(def
- var35
- (comment
-  (clay/make!
-   {:single-value
-    (kind/cytoscape
-     cytoscape-example
-     #:element{:style {:width "300px", :height "300px"}})})))
+(def var35 (comment (clay/make! {:single-value 3})))
 
 
 (def var36 nil)
