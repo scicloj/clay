@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. This change
 ## [2-beta15] - unreleased
 - introducing code-and-value and horizontal layout - WIP (PR #127)
 - code cleanup (PR #131)
+- fix backquote readinging in wrong namespace affecting macros (#132)
+- fix switching to the namespace (#92)
 
 ## [2-beta14] - 2024-07-22
 - proper handling of static resources (PR #126)
