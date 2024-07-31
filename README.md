@@ -42,7 +42,9 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 Please reach out to add your project to this list.
 
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
+- [Fastmath 3 documentation (WIP)](https://github.com/generateme/fastmath/tree/3.x)
 - [ClojisR documentation](https://scicloj.github.io/clojisr/)
+- [Wolframite documentation](https://scicloj.github.io/wolframite)
 - [Clay documentation](https://scicloj.github.io/clay/)
 - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
 - [Noj documentation](https://scicloj.github.io/noj/) - WIP
