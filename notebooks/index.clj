@@ -469,17 +469,24 @@
 ;; ## Functions
 
 ;; `kind/fn` is a special kind. It is displayed by first evaluating
-;; the given function and arguments, then proceeding recursively
+;; a given function and arguments, then proceeding recursively
 ;; with the resulting value.
+
+;; If the value is a vector, the function is the first element, and the arguments are the rest.
 
 (kind/fn
   [+ 1 2])
+
+;; If the value is a map, the function is held at the key `:kindly/f`, and the argument is the map.
 
 (kind/fn
   {:kindly/f (fn [{:keys [x y]}]
                (+ x y))
    :x 1
    :y 2})
+
+;; The kind of the value returned by the function is respected.
+;; For example, here are examples with a function returning `kind/dataset`.
 
 (kind/fn
   [tc/dataset
