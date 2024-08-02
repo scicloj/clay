@@ -130,7 +130,7 @@
                    (-> context
                        :kindly/options
                        :html/deps)
-                   ;; depracated:
+                   ;; deprecated:
                    (-> context
                        :kindly/options
                        :reagent/deps))}))
