@@ -47,11 +47,9 @@
 
 (defn merge-attrs [hiccup x]
   (if x
-    (doto
-      (if (-> hiccup second map?)
-        (update-in hiccup [1] merge/deep-merge x)
-        (into [(first hiccup) x] (rest hiccup)))
-      (prn "UPDATED" x))
+    (if (-> hiccup second map?)
+      (update-in hiccup [1] merge/deep-merge x)
+      (into [(first hiccup) x] (rest hiccup)))
     hiccup))
 
 (defn vector-that-starts-with? [v x]
