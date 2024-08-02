@@ -1,0 +1,472 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Clay Documentation",
+    "section": "",
+    "text": "1 Clay",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#about",
+    "href": "index.html#about",
+    "title": "Clay Documentation",
+    "section": "1.1 About",
+    "text": "1.1 About\nClay is a minimalistic Clojure tool for data visualization and literate programming, compatible with the Kindly convention. It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from source code and comments.\nSource: \nArtifact: \nStatus: The project has moved into Beta stage (March 2024).\nClay is developed by Timothy Pratley & Daniel Slutsky in parallel and in coordination with Claykind, a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#goals",
+    "href": "index.html#goals",
+    "title": "Clay Documentation",
+    "section": "1.2 Goals",
+    "text": "1.2 Goals\n\nEasily explore & share data visualizations and notebooks for others to easily pick & use.\nEncourage writing Kindly-compatible notes for future compatiblity with other tools.\nFlow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "Clay Documentation",
+    "section": "1.3 Getting started",
+    "text": "1.3 Getting started\nAdd Clay to your project dependencies: \n(If you like to use aliases, you may add under it to the extra dependencies under an alias. See, for example, the deps.edn file of Noj. If you do not know what this means, just add it under the main :deps section of your deps.edn file.)\nTo render a given Clojure namespace, say \"notebooks/index.clj\", you may run the following in the REPL:\n\n(require '[scicloj.clay.v2.api :as clay])\n(clay/make! {:source-path \"notebooks/index.clj\"})\n\nThis will render an HTML page and serve it in Clay’s browser view. Note that Clay does not need to be mentioned in the namespace we wish to render.\nSee the API and Configuration subsections for more options and variations.\nSee the Setup section and recent Videos for details about integrating Clay with your editor so you do not need to call make! yourself.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#projects-using-clay",
+    "href": "index.html#projects-using-clay",
+    "title": "Clay Documentation",
+    "section": "1.4 Projects using Clay",
+    "text": "1.4 Projects using Clay\n\nTablecloth documentation\nFastmath 3 documentation (WIP)\nClojisR documentation\nWolframite documentation\nClay documentation\nKindly-noted - documenting the ecosystem around Kindly - WIP\nNoj documentation - WIP\nClojure Tidy Tuesdays data-science explorations\nClojure Data Scrapbook\nLLMs tutorial (in spanish) by Kyle Passarelli",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#videos",
+    "href": "index.html#videos",
+    "title": "Clay Documentation",
+    "section": "1.5 Videos",
+    "text": "1.5 Videos\n\n\n\n\n\n\n\n\nDec. 17th 2023\nCursive integration, API, configuration - blogging demo\n\n\n\n\nDec. 17th 2023\nCIDER integration - image processing demo\n\n\n\n\nDec. 16th 2023\nCalva integration - datavis demo\n\n\n\n\nDec. 12th 2023\nDemo & Clay overview - London Clojurians - see Tim's part\n\n\n\n\nDec. 1st 2023\nKindly & Clay overview - visual-tools group - see Daniel's & Tim's parts\n\n\n\n\nJune 10th 2023\nAn early overview - babashka-conf",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#setup",
+    "href": "index.html#setup",
+    "title": "Clay Documentation",
+    "section": "1.6 Setup",
+    "text": "1.6 Setup\nSee the example project for a concrete example.\nTo enjoy Clay’s dynamic interaction, you also need to inform it about code evaluations. This requires some editor setup.\nTo use Quarto-related actions, it is necessary to have the Quarto CLI installed in your system.\nSee the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.\n\n1.6.1 VSCode Calva\nIf you now run a REPL with Clay version in your classpath, then Calva will have the relevant custom REPL commands, as defined here.\n\n\n\n\n\n\n\nname\nfunction\n\n\n\n\nClay make Namespace as HTML\nwill genenrate an HTML rendering of the current namespace.\n\n\nClay make Namespace as Quarto, then HTML\nwill generate a Quarto .qmd rendering of the current namespace, then render it as HTML through Quarto.\n\n\nClay make Namespace as Quarto, then reveal.js\nwill generate a Quarto .qmd rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.\n\n\nClay make current form as HTML\nwill generate an HTML rendering of the current form, in the context of the current namespace.\n\n\n\n\n\n1.6.2 Emacs CIDER\nSee the clay.el package for the relevant interactive functions.\n\n\n1.6.3 IntelliJ Cursive\nUnder preferences, search for “REPL Commands” (or use the menu IntelliJ -&gt; Preferences -&gt; Languages and Frameworks -&gt; Clojure -&gt; REPL Commands)\nAdd a global command, and edit it with these settings:\nName: Send form to Clay\nExecution: Command\n\n(do (require '[scicloj.clay.v2.api :as clay])\n    (clay/make! {:single-form '~form-before-caret\n                 :source-path [\"~file-path\"]}))\n\nYou might also like to create a command to compile the namespace:\n\n(do (require '[scicloj.clay.v2.api :as clay])\n    (clay/make! {:source-path [\"~file-path\"]}))\n\nOr a top-level-form (replace form-before-caret with top-level-form).\nYou can then add keybindings under Preferences -&gt; Keymap for the new commands.\nFor more information about commands, see the Cursive documentation on REPL commands and substitutions.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#example-notebook-namespace",
+    "href": "index.html#example-notebook-namespace",
+    "title": "Clay Documentation",
+    "section": "1.7 Example notebook namespace",
+    "text": "1.7 Example notebook namespace\nThis notebook is created by a Clojure namespace. Here is the namespace definition and a few examples of what such a namespace may contain.\n\n(ns index\n  (:require\n   [scicloj.kindly.v4.api :as kindly]\n   [scicloj.kindly.v4.kind :as kind]\n   [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]\n   [scicloj.clay.v2.quarto.themes :as quarto.themes]\n   [scicloj.metamorph.ml.toydata :as toydata]\n   [scicloj.hanamicloth.v1.api :as haclo]\n   [tablecloth.api :as tc]))\n\nA Hiccup spec:\n\n(kind/hiccup\n [:div {:style {:background \"#efe9e6\"\n                :border-style :solid}}\n  [:ul\n   [:li \"one\"]\n   [:li \"two\"]\n   [:li \"three\"]]])\n\nonetwothree\nA dataset using Tablecloth:\n\n(-&gt; {:x (range 5)\n     :y (repeatedly 5 rand)}\n    tc/dataset\n    (tc/set-dataset-name \"my dataset\"))\n\n\nmy dataset [5 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n0.06764471\n\n\n1\n0.91833082\n\n\n2\n0.85450365\n\n\n3\n0.87747464\n\n\n4\n0.83788697\n\n\n\n\nA plot using Hanamicloth:\n\n(-&gt; (toydata/iris-ds)\n    (haclo/plot haclo/rule-chart\n                {:=x :sepal_width\n                 :=x2 :sepal_length\n                 :=y :petal_width\n                 :=y2 :petal_length\n                 :=color :species\n                 :=color-type :nominal\n                 :=mark-size 3\n                 :=mark-opacity 0.2}))",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#api",
+    "href": "index.html#api",
+    "title": "Clay Documentation",
+    "section": "1.8 API",
+    "text": "1.8 API\n\n(require '[scicloj.clay.v2.api :as clay])\n\nThe entry point of the Clay API is the scicloj.clay.v2.api/make! function. Here are some usage examples.\nEvaluate and render the namespace in \"notebooks/index.clj\" as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:format [:html]\n               :source-path \"notebooks/index.clj\"}))\n\nDo the same as above by default (since :format [:html] is the default):\n\n(comment\n  (clay/make! {:source-path \"notebooks/index.clj\"}))\n\nEvaluate and render the namespace in \"notebooks/index.clj\" as HTML and do not show it at the browser:\n\n(comment\n  (clay/make! {:source-path \"notebooks/index.clj\"\n               :show false}))\n\nEvaluate and render the namespace in \"notebooks/index.clj\" and use the favicon at \"notebooks/favicon.ico\"\n\n(comment\n  (clay/make! {:source-path \"notebooks/index.clj\"\n               :favicon \"notebooks/favicon.ico\"}))\n\nEvaluate and render the namespaces in \"notebooks/slides.clj\" \"notebooks/index.clj\" as HTML and do not show it at the browser:\n\n(comment\n  (clay/make! {:source-path [\"notebooks/slides.clj\"\n                             \"notebooks/index.clj\"]\n               :show false}))\n\nEvaluate and render a single form in the context of the namespace in \"notebooks/index.clj\" as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:source-path \"notebooks/index.clj\"\n               :single-form '(+ 1 2)}))\n\nEvaluate and render a single form in the context of the current namespace (*ns*) as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:single-form '(+ 1 2)}))\n\nRender a single value as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:single-value 3}))\n\nEvaluate and render the namespace in \"notebooks/index.clj\" as a Quarto qmd file then, using Quarto, render that file as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :source-path \"notebooks/index.clj\"}))\n\nEvaluate and render the namespace in \"notebooks/index.clj\" as a Quarto qmd file and show it at the browser: (note the current browser view of this format it not so sophisticated and lacks live-reload on page updates).\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :source-path \"notebooks/index.clj\"\n               :run-quarto false}))\n\nEvaluate and render the namespace in \"notebooks/slides.clj\" as a Quarto qmd file (using its namespace-specific config from the ns metadata) then, using Quarto, render that file as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :source-path \"notebooks/slides.clj\"}))\n\nEvaluate and render the namespace in \"notebooks/slides.clj\" as a Quarto qmd file (using its namespace-specific config from the ns metadata) then, using Quarto, render that file as a reveal.js slideshow and show it at the browser:\n\n(comment\n  (clay/make! {:format [:quarto :revealjs]\n               :source-path \"notebooks/slides.clj\"}))\n\nEvaluate and render the namespace in \"notebooks/index.clj\" as a Quarto qmd file with a custom Quarto config then, using Quarto, render that file as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :source-path \"notebooks/index.clj\"\n               :quarto {:highlight-style :nord\n                        :format {:html {:theme :journal}}}}))\n\nEvaluate and render the namespace in \"notebooks/index.clj\" as a Quarto qmd file with a custom Quarto config where the higlight style is fetched from the scicloj.clay.v2.quarto.highlight-styles namespace, and the theme is fetched from the scicloj.clay.v2.quarto.themes namespace, then, using Quarto, render that file as HTML and show it at the browser:\n\n(comment\n  (require '[scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]\n           '[scicloj.clay.v2.quarto.themes :as quarto.themes])\n  (clay/make! {:format [:quarto :html]\n               :source-path \"notebooks/index.clj\"\n               :quarto {:highlight-style quarto.highlight-styles/nord\n                        :format {:html {:theme quarto.themes/journal}}}}))\n\nEvaluate and render the namespace in \"index.clj\" under the \"notebooks\" directory as HTML and show it at the browser:\n\n(comment\n  (clay/make! {:base-source-path \"notebooks/\"\n               :source-path \"index.clj\"}))\n\nCreate a Quarto book with a default generated index page:\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :base-source-path \"notebooks\"\n               :source-path [\"chapter.clj\"\n                             \"another_chapter.md\"\n                             \"a_chapter_with_R_code.Rmd\"\n                             \"test.ipynb\"]\n               :base-target-path \"book\"\n               :book {:title \"Book Example\"}\n               ;; Empty the target directory first:\n               :clean-up-target-dir true}))\n\nCreate a Quarto book with a specified favicon:\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :base-source-path \"notebooks\"\n               :source-path [\"index.clj\"\n                             \"chapter.clj\"\n                             \"another_chapter.md\"]\n               :base-target-path \"book\"\n               :book {:title \"Book Example\"\n                      :favicon \"notebooks/favicon.ico\"}\n               ;; Empty the target directory first:\n               :clean-up-target-dir true}))\n\nCreate a Quarto book with book parts:\n\n(comment\n  (clay/make! {:format [:quarto :html]\n               :base-source-path \"notebooks\"\n               :source-path [{:part \"Part A\"\n                              :chapters [\"index.clj\"\n                                         \"chapter.clj\"]}\n                             {:part \"Part B\"\n                              :chapters [\"another_chapter.md\"]}]\n               :base-target-path \"book\"\n               :book {:title \"Book Example\"}\n               ;; Empty the target directory first:\n               :clean-up-target-dir true}))\n\nReopen the Clay view in the browser (in case you closed the browser tab previously opened):\n\n(comment\n  (clay/browse!))\n\n\n1.8.1 Hiccup output\n(experimental 🛠)\nRender a notebook in Hiccup format and return the resulting Hiccup structure:\n\n(comment\n  (clay/make-hiccup {:source-path \"notebooks/index.clj\"}))",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#configuration",
+    "href": "index.html#configuration",
+    "title": "Clay Documentation",
+    "section": "1.9 Configuration",
+    "text": "1.9 Configuration\nCalls to the make! function are affected by various parameters which collected as one nested map. This map is the result of deep-merging four sources:\n\nthe default configuration: clay-default.edn under Clay’s resources\nthe user configuration: clay.edn at the top\nthe namespace configuration: the :clay member of the namespace metadata\nthe call configuration: the argument to make!\n\nHere are some of the parameters worth knowing about:\n\n\n\n\n\n\n\n\nKey\nPurpose\nExample\n\n\n\n\n:source-path\nfiles to render\n[\"notebooks/index.clj\"]\n\n\n:title\nsets the HTML title that appears in the browser tab bar\n\"My Title\"\n\n\n:favicon\nsets a page favicon\n\"favicon.ico\"\n\n\n:show\nstarts the HTML server when true (the default)\nfalse\n\n\n:single-form\nrender just one form\n(inc 1)\n\n\n:format\noutput quarto markdown and/or html\n[:quarto :html]\n\n\n:quarto\nadds configuration for Quarto\n{:highlight-style :solarized}\n\n\n:base-target-path\nthe output directory\n\"temp\"\n\n\n:base-source-path\nwhere to find :source-path\n\"notebooks\"\n\n\n:clean-up-target-dir\ndelete (!) target directory before repopulating it\ntrue\n\n\n:remote-repo\nlinking to source\n{:git-url \"https://github.com/scicloj/clay\" :branch  \"main\"}\n\n\n\nWhen working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded. For example: you may set :base-target-path \"temp\" at your clay.edn file. When publishing a static page, you may wish to target a docs directory by setting :base-target-path \"docs\" in your call to clay/make!. Creating a dev namespace is a good way to invoke a different configuration for publishing.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#kinds",
+    "href": "index.html#kinds",
+    "title": "Clay Documentation",
+    "section": "1.10 Kinds",
+    "text": "1.10 Kinds\nThe way things should be visualized is determined by the Kindly specification.\nKindly advises tools (like Clay) about the kind of way a given context should be displayed, by assigning to it a so-called kind.\nPlease refer to the Kindly documentation for details about specifying and using kinds.\nIn this documentation we demonstrate Kindly’s default advice. User-defined Kindly advices should work as well.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#examples",
+    "href": "index.html#examples",
+    "title": "Clay Documentation",
+    "section": "1.11 Examples",
+    "text": "1.11 Examples\nSee the dedicated 📖 Examples chapter 📖 of this book.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#fragments",
+    "href": "index.html#fragments",
+    "title": "Clay Documentation",
+    "section": "1.12 Fragments",
+    "text": "1.12 Fragments\nkind/fragment is a special kind. It expects a sequential value and generates multiple items, of potentially multiple kinds, from its elements.\n\n(-&gt;&gt; [\"purple\" \"darkgreen\" \"brown\"]\n     (mapcat (fn [color]\n               [(kind/md (str \"### subsection: \" color))\n                (kind/hiccup [:div {:style {:background-color color\n                                            :color \"lightgrey\"}}\n                              [:big [:p color]]])]))\n     kind/fragment)\n\n\n1.12.1 subsection: purple\npurple\n\n\n1.12.2 subsection: darkgreen\ndarkgreen\n\n\n1.12.3 subsection: brown\nbrown\n\n(-&gt;&gt; (range 3)\n     kind/fragment)\n\n\n0\n\n\n1\n\n\n2\n\nImportantly, markdown subsections affect the Quarto table of contents.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#functions",
+    "href": "index.html#functions",
+    "title": "Clay Documentation",
+    "section": "1.13 Functions",
+    "text": "1.13 Functions\nkind/fn is a special kind. It is displayed by first evaluating a given function and arguments, then proceeding recursively with the resulting value.\nIf the value is a vector, the function is the first element, and the arguments are the rest.\n\n(kind/fn\n  [+ 1 2])\n\n\n3\n\nIf the value is a map, the function is held at the key :kindly/f, and the argument is the map.\n\n(kind/fn\n  {:kindly/f (fn [{:keys [x y]}]\n               (+ x y))\n   :x 1\n   :y 2})\n\n\n3\n\nThe kind of the value returned by the function is respected. For example, here are examples with a function returning kind/dataset.\n\n(kind/fn\n  [tc/dataset\n   {:x (range 3)\n    :y (repeatedly 3 rand)}])\n\n\n_unnamed [3 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n0.61111565\n\n\n1\n0.72603352\n\n\n2\n0.55099480\n\n\n\n\n\n(kind/fn\n  {:kindly/f tc/dataset\n   :x (range 3)\n   :y (repeatedly 3 rand)})\n\n\n_unnamed [3 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n0.64221707\n\n\n1\n0.24485349\n\n\n2\n0.35126508",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#delays",
+    "href": "index.html#delays",
+    "title": "Clay Documentation",
+    "section": "1.14 Delays",
+    "text": "1.14 Delays\nClojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.\nClay makes sure to dererence Delays when passing values for visualization.\nThis is handy for slow example snippets and explorations, that one would typically not like to slow down the evaluation of the whole namespace, but would like to visualize them on demand and also include in them in the final document.\n\n(delay\n  (Thread/sleep 500)\n  (+ 1 2))\n\n\n3",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#referring-to-files",
+    "href": "index.html#referring-to-files",
+    "title": "Clay Documentation",
+    "section": "1.15 Referring to files",
+    "text": "1.15 Referring to files\nIn data visualizations, one can directly refrer to files places under \"notebooks/\" or \"src/\". By default, all files except of these directories, except for Clojure files, are copied alongside the HTML target.\nThis default can be overridden using the :subdirs-to-sync config option. E.g., :subdirs-to-sync [\"notebooks\" \"data\"] will copy files from the \"notebooks\" and \"data\" directories, but not from \"src\".\n\n(kind/hiccup\n [:img {:src \"notebooks/images/Clay.svg.png\"}])\n\n\n\n(kind/vega-lite\n {:data {:url \"notebooks/datasets/iris.csv\"},\n  :mark \"rule\",\n  :encoding {:opacity {:value 0.2}\n             :size {:value 3}\n             :x {:field \"sepal_width\", :type \"quantitative\"},\n             :x2 {:field \"sepal_length\", :type \"quantitative\"},\n             :y {:field \"petal_width\", :type \"quantitative\"},\n             :y2 {:field \"petal_length\", :type \"quantitative\"},\n             :color {:field \"species\", :type \"nominal\"}}\n  :background \"floralwhite\"})",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#hiding-code",
+    "href": "index.html#hiding-code",
+    "title": "Clay Documentation",
+    "section": "1.16 Hiding code",
+    "text": "1.16 Hiding code\nBy default, a Clay notebook shows both the code and the result of an evaluated form. Here are a few ways one may hide the code:\n\nAdd the metadata :kindly/hide-code true to the form (e.g., by preceding it with ^:kindly/hide-code).\nAdd the metadata :kindly/hide-code true to the value.\nGlobally define certain kinds (e.g., :kind/md, :kind/hiccup) to always hide code (on project level or namespace level) by adding theme as a set to the project config or namespace config, e.g., :kindly/options {:kinds-that-hide-code #{:kind/md :kind/hiccup}}.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#test-generation",
+    "href": "index.html#test-generation",
+    "title": "Clay Documentation",
+    "section": "1.17 Test generation",
+    "text": "1.17 Test generation\n(experimental 🛠)\n\n(+ 1 2)\n\n\n3\n\nWe generate tests checking whether this last value is greater than 2.9. We can do it in a few ways.\nWe include the test annotations in the markdown text, since the annotations themselves are invisible.\n\n(kind/test-last [&gt; 2.9])\n\n^kind/test-last\n[&gt; 2.9]\n\n(kindly/check &gt; 2.9)\n\nSee the generated test/index_generated_test.clj.\nFor a detailed example using this mechanism, see the source of the ClojisR tutorial.\n\nsource: notebooks/index.clj",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Clay</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html",
+    "href": "clay_book.examples.html",
+    "title": "2  Examples",
+    "section": "",
+    "text": "2.1 Plain values\nBy default, when there is no kind information provided by Kindly, values are simply pretty-printed.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#plain-values",
+    "href": "clay_book.examples.html#plain-values",
+    "title": "2  Examples",
+    "section": "",
+    "text": "(+ 4 5)\n\n\n9\n\n\n(str \"abcd\" \"efgh\")\n\n\n\"abcdefgh\"",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#hidden",
+    "href": "clay_book.examples.html#hidden",
+    "title": "2  Examples",
+    "section": "2.2 Hidden",
+    "text": "2.2 Hidden\nValues of :kind/hidden are not shown.\n\n(kind/hidden 9)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#hiccup",
+    "href": "clay_book.examples.html#hiccup",
+    "title": "2  Examples",
+    "section": "2.3 Hiccup",
+    "text": "2.3 Hiccup\nHiccup, a popular Clojure way to represent HTML, can be specified by kind:\n\n(kind/hiccup\n [:ul\n  [:li [:p \"hi\"]]\n  [:li [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F\n                        {:color \"#7F5F3F\"}}\n                    \"hello\"]]]]])\n\nhihello\nAs we can see, this kind is displayed by converting Hiccup to HTML.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#reagent",
+    "href": "clay_book.examples.html#reagent",
+    "title": "2  Examples",
+    "section": "2.4 Reagent",
+    "text": "2.4 Reagent\n\n(kind/reagent\n ['(fn [numbers]\n     [:p {:style {:background \"#d4ebe9\"}}\n      (pr-str (map inc numbers))])\n  (vec (range 40))])\n\n\nFrom the reagent tutorial:\n\n(kind/reagent\n ['(fn []\n     (let [*click-count (reagent.core/atom 0)]\n       (fn []\n         [:div\n          \"The atom \" [:code \"*click-count\"] \" has value: \"\n          @*click-count \". \"\n          [:input {:type \"button\" :value \"Click me!\"\n                   :on-click #(swap! *click-count inc)}]])))])",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#html",
+    "href": "clay_book.examples.html#html",
+    "title": "2  Examples",
+    "section": "2.5 HTML",
+    "text": "2.5 HTML\nRaw html can be represented as a kind too:\n\n(kind/html \"&lt;div style='height:40px; width:40px; background:purple'&gt;&lt;/div&gt; \")\n\n \n\n(kind/html\n \"\n&lt;svg height=100 width=100&gt;\n&lt;circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' /&gt;\n&lt;/svg&gt; \")\n\n\n\n\n \n\n(kind/html\n [\"&lt;svg height=100 width=100&gt;\"\n  \"&lt;circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' /&gt;\"\n  \"&lt;/svg&gt;\"])\n\n\n\n\n\n(kind/html\n (list\n  \"&lt;svg height=100 width=100&gt;\"\n  \"&lt;circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' /&gt;\"\n  \"&lt;/svg&gt;\"))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#markdown",
+    "href": "clay_book.examples.html#markdown",
+    "title": "2  Examples",
+    "section": "2.6 Markdown",
+    "text": "2.6 Markdown\nMarkdown text (a string or a vector of strings) can be handled using a kind too.\n\n(kind/md\n \"This is [markdown](https://www.markdownguide.org/).\")\n\nThis is markdown.\n\n(kind/md\n [\"\n* This is [markdown](https://www.markdownguide.org/).\n  * *Isn't it??*\"\n  \"\n* Here is **some more** markdown.\"])\n\n\nThis is markdown.\n\nIsn’t it??\n\nHere is some more markdown.\n\n\n(kind/md\n (list\n  \"\n* This is [markdown](https://www.markdownguide.org/).\n  * *Isn't it??*\"\n  \"\n* Here is **some more** markdown.\"))\n\n\nThis is markdown.\n\nIsn’t it??\n\nHere is some more markdown.\n\nLaTeX formulae are supported as well.\n\n(kind/md\n \"Let $x=9$. Then $$x+11=20$$\")\n\nLet \\(x=9\\). Then \\[x+11=20\\]",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#tex",
+    "href": "clay_book.examples.html#tex",
+    "title": "2  Examples",
+    "section": "2.7 TeX",
+    "text": "2.7 TeX\n\n(kind/tex \"x^2=\\\\alpha\")\n\n\\[x^2=\\alpha\\]",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#code",
+    "href": "clay_book.examples.html#code",
+    "title": "2  Examples",
+    "section": "2.8 Code",
+    "text": "2.8 Code\nClojure code can be annotated with kind/code.\n\n(kind/code \"(update {:x 9} :x inc)\")\n\n\n(update {:x 9} :x inc)\n\n\n(kind/code\n [\"(update {:x 9} :x inc)\"\n  \"(update {:x 9} :x dec)\"])\n\n\n(update {:x 9} :x inc)\n\n\n(update {:x 9} :x dec)\n\n\n(kind/code\n (list\n  \"(update {:x 9} :x inc)\"\n  \"(update {:x 9} :x dec)\"))\n\n\n(update {:x 9} :x inc)\n\n\n(update {:x 9} :x dec)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#images",
+    "href": "clay_book.examples.html#images",
+    "title": "2  Examples",
+    "section": "2.9 Images",
+    "text": "2.9 Images\nJava BufferedImage objects are displayed as images.\n\n(import javax.imageio.ImageIO\n        java.net.URL)\n\n\njava.net.URL\n\n\n(defonce clay-image\n  (-&gt;  \"https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg\"\n       (URL.)\n       (ImageIO/read)))\n\n\nclay-image",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#plain-data-structures",
+    "href": "clay_book.examples.html#plain-data-structures",
+    "title": "2  Examples",
+    "section": "2.10 Plain data structures",
+    "text": "2.10 Plain data structures\nPlain data structures (lists and sequnces, vectors, sets, maps) are pretty printed if there isn’t any value inside which needs to be displayed in special kind of way.\n\n(def people-as-maps\n  (-&gt;&gt; (range 29)\n       (mapv (fn [i]\n               {:preferred-language ([\"clojure\" \"clojurescript\" \"babashka\"]\n                                     (rand-int 3))\n                :age (rand-int 100)}))))\n\n\n(def people-as-vectors\n  (-&gt;&gt; people-as-maps\n       (mapv (juxt :preferred-language :age))))\n\n\n(take 5 people-as-maps)\n\n\n({:preferred-language \"clojurescript\", :age 75}\n {:preferred-language \"babashka\", :age 89}\n {:preferred-language \"clojure\", :age 85}\n {:preferred-language \"clojurescript\", :age 97}\n {:preferred-language \"clojure\", :age 23})\n\n\n(take 5 people-as-vectors)\n\n\n([\"clojurescript\" 75]\n [\"babashka\" 89]\n [\"clojure\" 85]\n [\"clojurescript\" 97]\n [\"clojure\" 23])\n\n\n(-&gt;&gt; people-as-vectors\n     (take 5)\n     set)\n\n\n#{[\"clojurescript\" 97]\n  [\"babashka\" 89]\n  [\"clojure\" 23]\n  [\"clojure\" 85]\n  [\"clojurescript\" 75]}\n\nWhen something inside needs to be displayed in a special kind of way, the data structures are printed in a way that makes that clear.\n\n(def nested-structure-1\n  {:vector-of-numbers [2 9 -1]\n   :vector-of-different-things [\"hi\"\n                                (kind/hiccup\n                                 [:big [:big \"hello\"]])]\n   :map-of-different-things {:markdown (kind/md [\"*hi*, **hi**\"])\n                             :number 9999}\n   :hiccup (kind/hiccup\n            [:big [:big \"bye\"]])\n   :dataset (tc/dataset {:x (range 3)\n                         :y [:A :B :C]})})\n\n\nnested-structure-1\n\n{:vector-of-numbers [2 9 -1]\n\n\n\n\n\n\n\n\n:vector-of-different-things\n\n\n\n[\n\n\n\"hi\"\n\nhello\n\n]\n\n\n\n\n\n\n\n\n\n\n\n\n\n:map-of-different-things\n\n\n\n{\n\n\n\n\n\n\n\n\n\n:markdown\n\n\n\nhi, hi\n\n\n\n\n\n\n:number 9999\n\n\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n:hiccup\n\n\nbye\n\n\n\n\n\n\n\n\n\n\n\n\n:dataset\n\n\n\n_unnamed [3 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n:A\n\n\n1\n:B\n\n\n2\n:C\n\n\n\n\n\n\n\n\n}",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#pretty-printing",
+    "href": "clay_book.examples.html#pretty-printing",
+    "title": "2  Examples",
+    "section": "2.11 Pretty printing",
+    "text": "2.11 Pretty printing\nThe :kind/pprint kind makes sure to simply pretty-print values:\n\n(kind/pprint nested-structure-1)\n\n\n{:vector-of-numbers [2 9 -1],\n :vector-of-different-things [\"hi\" [:big [:big \"hello\"]]],\n :map-of-different-things {:markdown [\"*hi*, **hi**\"], :number 9999},\n :hiccup [:big [:big \"bye\"]],\n :dataset _unnamed [3 2]:\n\n| :x | :y |\n|---:|----|\n|  0 | :A |\n|  1 | :B |\n|  2 | :C |\n}",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#datasets",
+    "href": "clay_book.examples.html#datasets",
+    "title": "2  Examples",
+    "section": "2.12 Datasets",
+    "text": "2.12 Datasets\ntech.ml.dataset datasets currently use the default printing of the library,\nLet us create such a dataset using Tablecloth.\n\n(require '[tablecloth.api :as tc])\n\n\n(-&gt; {:x (range 6)\n     :y [:A :B :C :A :B :C]}\n    tc/dataset)\n\n\n_unnamed [6 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n:A\n\n\n1\n:B\n\n\n2\n:C\n\n\n3\n:A\n\n\n4\n:B\n\n\n5\n:C\n\n\n\n\n\n(-&gt; {:x [1 [2 3] 4]\n     :y [:A :B :C]}\n    tc/dataset)\n\n\n_unnamed [3 2]:\n\n\n\n:x\n:y\n\n\n\n\n1\n:A\n\n\n[2 3]\n:B\n\n\n4\n:C\n\n\n\n\n\n(-&gt; [{:x 1 :y 2 :z 3}\n     {:y 4 :z 5}]\n    tc/dataset)\n\n\n_unnamed [2 3]:\n\n\n\n:x\n:y\n:z\n\n\n\n\n1\n2\n3\n\n\n\n4\n5\n\n\n\n\n\n(-&gt; people-as-maps\n    tc/dataset)\n\n\n_unnamed [29 2]:\n\n\n\n:preferred-language\n:age\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\nbabashka\n80\n\n\nclojure\n7\n\n\nclojurescript\n80\n\n\nclojure\n49\n\n\nbabashka\n97\n\n\n…\n…\n\n\nbabashka\n27\n\n\nbabashka\n98\n\n\nclojure\n11\n\n\nclojure\n83\n\n\nclojurescript\n64\n\n\nclojurescript\n41\n\n\nbabashka\n80\n\n\nclojurescript\n39\n\n\nclojure\n96\n\n\nclojurescript\n36\n\n\nclojurescript\n91\n\n\n\n\nSome kind options of kind/dataset control the way a dataset is printed.\n\n(-&gt; {:x (range 30)}\n    tc/dataset\n    (kind/dataset {:dataset/print-range 6}))\n\n\n_unnamed [30 1]:\n\n\n\n:x\n\n\n\n\n0\n\n\n1\n\n\n2\n\n\n…\n\n\n26\n\n\n27\n\n\n28\n\n\n29",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#tables",
+    "href": "clay_book.examples.html#tables",
+    "title": "2  Examples",
+    "section": "2.13 Tables",
+    "text": "2.13 Tables\nThe :kind/table kind can be handy for an interactive table view. :kind/table understands many structures which can be rendered as a table.\nA map containing either :row-vectors (sequence of sequences) or row-maps (sequence of maps) keys with optional :column-names.\n\n(kind/table\n {:column-names [:preferred-language :age]\n  :row-vectors people-as-vectors})\n\n\n\n\n\n\npreferred-language\nage\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\nbabashka\n80\n\n\nclojure\n7\n\n\nclojurescript\n80\n\n\nclojure\n49\n\n\nbabashka\n97\n\n\nclojure\n21\n\n\nclojurescript\n22\n\n\nbabashka\n19\n\n\nclojurescript\n25\n\n\nclojure\n54\n\n\nbabashka\n51\n\n\nclojure\n76\n\n\nclojure\n31\n\n\nbabashka\n27\n\n\nbabashka\n98\n\n\nclojure\n11\n\n\nclojure\n83\n\n\nclojurescript\n64\n\n\nclojurescript\n41\n\n\nbabashka\n80\n\n\nclojurescript\n39\n\n\nclojure\n96\n\n\nclojurescript\n36\n\n\nclojurescript\n91\n\n\n\n\n\nLack of column names produces table without a header.\n\n(kind/table\n {:row-vectors (take 5 people-as-vectors)})\n\n\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\n\n\n\nColumn names are inferred from a sequence of maps\n\n(kind/table\n {:row-maps (take 5 people-as-maps)})\n\n\n\n\n\n\npreferred-language\nage\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\n\n\n\nWe can limit displayed columns for sequence of maps case.\n\n(kind/table\n {:column-names [:preferred-language]\n  :row-maps (take 5 people-as-maps)})\n\n\n\n\n\n\npreferred-language\n\n\n\n\nclojurescript\n\n\nbabashka\n\n\nclojure\n\n\nclojurescript\n\n\nclojure\n\n\n\n\n\nSequence of sequences and sequence of maps also work\n\n(kind/table (take 5 people-as-vectors))\n\n\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\n\n\n\n\n(kind/table (take 5 people-as-maps))\n\n\n\n\n\n\npreferred-language\nage\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\n\n\n\nAdditionally map of sequences is supported (unless it contains :row-vectors or :row-maps key, see such case above).\n\n(kind/table {:x (range 6)\n             :y [:A :B :C :A :B :C]})\n\n\n\n\n\n\nx\ny\n\n\n\n\n0\nA\n\n\n1\nB\n\n\n2\nC\n\n\n3\nA\n\n\n4\nB\n\n\n5\nC\n\n\n\n\n\nA dataset can be also treated as a table input.\n\n(def people-as-dataset\n  (tc/dataset people-as-maps))\n\n\n(-&gt; people-as-dataset\n    kind/table)\n\n\n\n\n\n\npreferred-language\nage\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\nbabashka\n80\n\n\nclojure\n7\n\n\nclojurescript\n80\n\n\nclojure\n49\n\n\nbabashka\n97\n\n\nclojure\n21\n\n\nclojurescript\n22\n\n\nbabashka\n19\n\n\nclojurescript\n25\n\n\nclojure\n54\n\n\nbabashka\n51\n\n\nclojure\n76\n\n\nclojure\n31\n\n\nbabashka\n27\n\n\nbabashka\n98\n\n\nclojure\n11\n\n\nclojure\n83\n\n\nclojurescript\n64\n\n\nclojurescript\n41\n\n\nbabashka\n80\n\n\nclojurescript\n39\n\n\nclojure\n96\n\n\nclojurescript\n36\n\n\nclojurescript\n91\n\n\n\n\n\nAdditional options may hint at way the table should be rendered.\n\n(-&gt; people-as-dataset\n    (kind/table {:element/max-height \"300px\"}))\n\n\n\n\n\n\n\npreferred-language\nage\n\n\n\n\nclojurescript\n75\n\n\nbabashka\n89\n\n\nclojure\n85\n\n\nclojurescript\n97\n\n\nclojure\n23\n\n\nbabashka\n80\n\n\nclojure\n7\n\n\nclojurescript\n80\n\n\nclojure\n49\n\n\nbabashka\n97\n\n\nclojure\n21\n\n\nclojurescript\n22\n\n\nbabashka\n19\n\n\nclojurescript\n25\n\n\nclojure\n54\n\n\nbabashka\n51\n\n\nclojure\n76\n\n\nclojure\n31\n\n\nbabashka\n27\n\n\nbabashka\n98\n\n\nclojure\n11\n\n\nclojure\n83\n\n\nclojurescript\n64\n\n\nclojurescript\n41\n\n\nbabashka\n80\n\n\nclojurescript\n39\n\n\nclojure\n96\n\n\nclojurescript\n36\n\n\nclojurescript\n91\n\n\n\n\n\n\nIt is possible to use datatables to reneder kind/table, and in this case the user may specify datatables options (see the full list).\n\n(-&gt; people-as-maps\n    tc/dataset\n    (kind/table {:use-datatables true}))\n\n\n\npreferred-languageageclojurescript75babashka89clojure85clojurescript97clojure23babashka80clojure7clojurescript80clojure49babashka97clojure21clojurescript22babashka19clojurescript25clojure54babashka51clojure76clojure31babashka27babashka98clojure11clojure83clojurescript64clojurescript41babashka80clojurescript39clojure96clojurescript36clojurescript91\n\n\n\n(-&gt; people-as-dataset\n    (kind/table {:use-datatables true\n                 :datatables {:scrollY 300}}))\n\n\n\npreferred-languageageclojurescript75babashka89clojure85clojurescript97clojure23babashka80clojure7clojurescript80clojure49babashka97clojure21clojurescript22babashka19clojurescript25clojure54babashka51clojure76clojure31babashka27babashka98clojure11clojure83clojurescript64clojurescript41babashka80clojurescript39clojure96clojurescript36clojurescript91",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#vega-and-vega-lite",
+    "href": "clay_book.examples.html#vega-and-vega-lite",
+    "title": "2  Examples",
+    "section": "2.14 Vega and Vega-Lite",
+    "text": "2.14 Vega and Vega-Lite\n\n(defn vega-lite-point-plot [data]\n  (-&gt; {:data {:values data},\n       :mark \"point\"\n       :encoding\n       {:size {:field \"w\" :type \"quantitative\"}\n        :x {:field \"x\", :type \"quantitative\"},\n        :y {:field \"y\", :type \"quantitative\"},\n        :fill {:field \"z\", :type \"nominal\"}}}\n      kind/vega-lite))\n\n\n(defn random-data [n]\n  (-&gt;&gt; (repeatedly n #(- (rand) 0.5))\n       (reductions +)\n       (map-indexed (fn [x y]\n                      {:w (rand-int 9)\n                       :z (rand-int 9)\n                       :x x\n                       :y y}))))\n\n\n(defn random-vega-lite-plot [n]\n  (-&gt; n\n      random-data\n      vega-lite-point-plot))\n\n\n(random-vega-lite-plot 9)\n\n\nWhen the vega/vega-lite data is given in CSV format, Clay will serve it in a separate CSV file alongside the generated HTML.\n\n(-&gt; {:data {:values \"x,y\n1,1\n2,4\n3,9\n-1,1\n-2,4\n-3,9\"\n            :format {:type :csv}},\n     :mark \"point\"\n     :encoding\n     {:x {:field \"x\", :type \"quantitative\"}\n      :y {:field \"y\", :type \"quantitative\"}}}\n    kind/vega-lite)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#cytoscape",
+    "href": "clay_book.examples.html#cytoscape",
+    "title": "2  Examples",
+    "section": "2.15 Cytoscape",
+    "text": "2.15 Cytoscape\nSee the Cytoscape docs.\n\n(def cytoscape-example\n  {:elements {:nodes [{:data {:id \"a\" :parent \"b\"} :position {:x 215 :y 85}}\n                      {:data {:id \"b\"}}\n                      {:data {:id \"c\" :parent \"b\"} :position {:x 300 :y 85}}\n                      {:data {:id \"d\"} :position {:x 215 :y 175}}\n                      {:data {:id \"e\"}}\n                      {:data {:id \"f\" :parent \"e\"} :position {:x 300 :y 175}}]\n              :edges [{:data {:id \"ad\" :source \"a\" :target \"d\"}}\n                      {:data {:id \"eb\" :source \"e\" :target \"b\"}}]}\n   :style [{:selector \"node\"\n            :css {:content \"data(id)\"\n                  :text-valign \"center\"\n                  :text-halign \"center\"}}\n           {:selector \"parent\"\n            :css {:text-valign \"top\"\n                  :text-halign \"center\"}}\n           {:selector \"edge\"\n            :css {:curve-style \"bezier\"\n                  :target-arrow-shape \"triangle\"}}]\n   :layout {:name \"preset\"\n            :padding 5}})\n\n\n(kind/cytoscape\n cytoscape-example)\n\n\n\n(-&gt; cytoscape-example\n    (kind/cytoscape {:element/style\n                     {:width \"100px\"\n                      :height \"100px\"}}))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#echarts",
+    "href": "clay_book.examples.html#echarts",
+    "title": "2  Examples",
+    "section": "2.16 ECharts",
+    "text": "2.16 ECharts\nThis example is taken from Apache ECharts’ Getting Started.\n\n(def echarts-example\n  {:title {:text \"Echarts Example\"}\n   :tooltip {}\n   :legend {:data [\"sales\"]}\n   :xAxis {:data [\"Shirts\", \"Cardigans\", \"Chiffons\",\n                  \"Pants\", \"Heels\", \"Socks\"]}\n   :yAxis {}\n   :series [{:name \"sales\"\n             :type \"bar\"\n             :data [5 20 36\n                    10 10 20]}]})\n\n\n(kind/echarts\n echarts-example)\n\n\n\n(-&gt; echarts-example\n    (kind/echarts {:element/style\n                   {:width \"500px\"\n                    :height \"200px\"}}))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#plotly",
+    "href": "clay_book.examples.html#plotly",
+    "title": "2  Examples",
+    "section": "2.17 Plotly",
+    "text": "2.17 Plotly\nSee the plotly.js docs.\n\n(def plotly-example\n  {:data [{:x [0 1 3 2]\n           :y [0 6 4 5]\n           :z [0 8 9 7]\n           :type :scatter3d\n           :mode :lines+markers\n           :opacity 0.5\n           :line {:width 5}\n           :marker {:size 4\n                    :colorscale :Viridis}}]\n   :layout {:title \"Plotly example\"}})\n\n\n(kind/plotly\n plotly-example)\n\n\n\n(-&gt; plotly-example\n    (kind/plotly {:element/style\n                  {:width \"300px\"\n                   :height \"300px\"}}))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#highcharts",
+    "href": "clay_book.examples.html#highcharts",
+    "title": "2  Examples",
+    "section": "2.18 Highcharts",
+    "text": "2.18 Highcharts\n\n(kind/highcharts\n {:title {:text \"Line chart\"}\n  :subtitle {:text \"By Job Category\"}\n  :yAxis {:title {:text \"Number of Employees\"}}\n  :series [{:name \"Installation & Developers\"\n            :data [43934, 48656, 65165, 81827, 112143, 142383,\n                   171533, 165174, 155157, 161454, 154610]}\n\n           {:name \"Manufacturing\",\n            :data [24916, 37941, 29742, 29851, 32490, 30282,\n                   38121, 36885, 33726, 34243, 31050]}\n\n           {:name \"Sales & Distribution\",\n            :data [11744, 30000, 16005, 19771, 20185, 24377,\n                   32147, 30912, 29243, 29213, 25663]}\n\n           {:name \"Operations & Maintenance\",\n            :data [nil, nil, nil, nil, nil, nil, nil,\n                   nil, 11164, 11218, 10077]}\n\n           {:name \"Other\",\n            :data [21908, 5548, 8105, 11248, 8989, 11816, 18274,\n                   17300, 13053, 11906, 10073]}]\n\n  :xAxis {:accessibility {:rangeDescription \"Range: 2010 to 2020\"}}\n\n  :legend {:layout \"vertical\",\n           :align \"right\",\n           :verticalAlign \"middle\"}\n\n  :plotOptions {:series {:label {:connectorAllowed false},\n                         :pointStart 2010}}\n\n  :responsive {:rules [{:condition {:maxWidth 500},\n                        :chartOptions {:legend {:layout \"horizontal\",\n                                                :align \"center\",\n                                                :verticalAlign \"bottom\"}}}]}})",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#observable",
+    "href": "clay_book.examples.html#observable",
+    "title": "2  Examples",
+    "section": "2.19 Observable",
+    "text": "2.19 Observable\nObservable visualizations are supported when rendering through Quarto.\nThe following is adapted from the Penguins example in Quarto’s documentation.\nNote that you can save your Clojure data as a csv file and refer to it from within your Observable code. See Referring to files for more information. In this case, we are using the local file, \"notebooks/datasets/palmer-penguins.csv\", which is transparently copied by Clay alongside the target HTML.\n\n(kind/observable\n \"\n//| panel: input\nviewof bill_length_min = Inputs.range(\n                                      [32, 50],\n                                      {value: 35, step: 1, label: 'Bill length (min):'}\n                                      )\nviewof islands = Inputs.checkbox(\n                                 ['Torgersen', 'Biscoe', 'Dream'],\n                                 { value: ['Torgersen', 'Biscoe'],\n                                  label: 'Islands:'\n                                  }\n                                 )\n\nPlot.rectY(filtered,\n            Plot.binX(\n                      {y: 'count'},\n                      {x: 'body_mass_g', fill: 'species', thresholds: 20}\n                      ))\n .plot({\n        facet: {\n                data: filtered,\n                x: 'sex',\n                y: 'species',\n                marginRight: 80\n                },\n        marks: [\n                Plot.frame(),\n                ]\n        }\n       )\nInputs.table(filtered)\npenguins = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })\nfiltered = penguins.filter(function(penguin) {\n                                           return bill_length_min &lt; penguin.bill_length_mm &&\n                                           islands.includes(penguin.island);\n                                           })\n\")\n\n\nviewof bill_length_min = Inputs.range(\n                                      [32, 50],\n                                      {value: 35, step: 1, label: 'Bill length (min):'}\n                                      )\nviewof islands = Inputs.checkbox(\n                                 ['Torgersen', 'Biscoe', 'Dream'],\n                                 { value: ['Torgersen', 'Biscoe'],\n                                  label: 'Islands:'\n                                  }\n                                 )\n\nPlot.rectY(filtered,\n            Plot.binX(\n                      {y: 'count'},\n                      {x: 'body_mass_g', fill: 'species', thresholds: 20}\n                      ))\n .plot({\n        facet: {\n                data: filtered,\n                x: 'sex',\n                y: 'species',\n                marginRight: 80\n                },\n        marks: [\n                Plot.frame(),\n                ]\n        }\n       )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nInputs.table(filtered)\n\n\n\n\n\n\n\npenguins = FileAttachment('notebooks/datasets/palmer-penguins.csv').csv({ typed: true })\nfiltered = penguins.filter(function(penguin) {\n                                           return bill_length_min &lt; penguin.bill_length_mm &&\n                                           islands.includes(penguin.island);\n                                           })\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMore examples from Quarto’s Observable documentation:\n\n(kind/observable\n \"athletes = FileAttachment('notebooks/datasets/athletes.csv').csv({typed: true})\")\n\n\nathletes = FileAttachment('notebooks/datasets/athletes.csv').csv({typed: true})\n\n\n\n\n\n\n\n(kind/observable\n \"athletes\")\n\n\nathletes\n\n\n\n\n\n\n\n(kind/observable\n \"Inputs.table(athletes)\")\n\n\nInputs.table(athletes)\n\n\n\n\n\n\n\n(kind/observable\n \"\nPlot.plot({\n  grid: true,\n  facet: {\n    data: athletes,\n    y: 'sex'\n  },\n  marks: [\n    Plot.rectY(\n      athletes,\n      Plot.binX({y: 'count'}, {x: 'weight', fill: 'sex'})\n    ),\n    Plot.ruleY([0])\n  ]\n})\n\")\n\n\nPlot.plot({\n  grid: true,\n  facet: {\n    data: athletes,\n    y: 'sex'\n  },\n  marks: [\n    Plot.rectY(\n      athletes,\n      Plot.binX({y: 'count'}, {x: 'weight', fill: 'sex'})\n    ),\n    Plot.ruleY([0])\n  ]\n})\n\n\n\n\n\n\n\n(kind/observable\n \"population = FileAttachment('notebooks/datasets/population.json').json()\")\n\n\npopulation = FileAttachment('notebooks/datasets/population.json').json()\n\n\n\n\n\n\n\n(kind/observable\n \"population\")\n\n\npopulation\n\n\n\n\n\n\n\n(kind/observable\n \" import { chart } with { population as data } from '@d3/zoomable-sunburst'\n chart\")\n\n\nimport { chart } with { population as data } from '@d3/zoomable-sunburst'\n chart",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#leaflet",
+    "href": "clay_book.examples.html#leaflet",
+    "title": "2  Examples",
+    "section": "2.20 Leaflet",
+    "text": "2.20 Leaflet\nThis example was adapted from the Leaflet website. Note we are defining a tile layer using leaflet-providers.\n\n(kind/reagent\n ['(fn []\n     [:div {:style {:height \"200px\"}\n            :ref (fn [el]\n                   (let [m (-&gt; js/L\n                               (.map el)\n                               (.setView (clj-&gt;js [51.505 -0.09])\n                                         13))]\n                     (-&gt; js/L\n                         .-tileLayer\n                         (.provider \"OpenStreetMap.Mapnik\")\n                         (.addTo m))\n                     (-&gt; js/L\n                         (.marker (clj-&gt;js [51.5 -0.09]))\n                         (.addTo m)\n                         (.bindPopup \"A pretty CSS popup.&lt;br&gt; Easily customizable.\")\n                         (.openPopup))))}])]\n ;; Note we need to mention the dependency:\n {:html/deps [:leaflet]})",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#d3",
+    "href": "clay_book.examples.html#d3",
+    "title": "2  Examples",
+    "section": "2.21 D3",
+    "text": "2.21 D3\nThe following example is adapted from hiccup-d3. The code is a bit different, e.g. (.scaleOrdinal js/d3 (.-schemeCategory10 js/d3)) instead of (d3/scaleOrdinal d3/schemeCategory10). We still need to figure out how to make hiccup-d3’s examples work as they are.\n\n(let [letter-frequencies [{:letter \"A\", :frequency 0.08167}\n                          {:letter \"B\", :frequency 0.01492}\n                          {:letter \"C\", :frequency 0.02782}\n                          {:letter \"D\", :frequency 0.04253}\n                          {:letter \"E\", :frequency 0.12702}\n                          {:letter \"F\", :frequency 0.02288}\n                          {:letter \"G\", :frequency 0.02015}\n                          {:letter \"H\", :frequency 0.06094}\n                          {:letter \"I\", :frequency 0.06966}\n                          {:letter \"J\", :frequency 0.00153}\n                          {:letter \"K\", :frequency 0.00772}\n                          {:letter \"L\", :frequency 0.04025}\n                          {:letter \"M\", :frequency 0.02406}\n                          {:letter \"N\", :frequency 0.06749}\n                          {:letter \"O\", :frequency 0.07507}\n                          {:letter \"P\", :frequency 0.01929}\n                          {:letter \"Q\", :frequency 0.00095}\n                          {:letter \"R\", :frequency 0.05987}\n                          {:letter \"S\", :frequency 0.06327}\n                          {:letter \"T\", :frequency 0.09056}\n                          {:letter \"U\", :frequency 0.02758}\n                          {:letter \"V\", :frequency 0.00978}\n                          {:letter \"W\", :frequency 0.0236}\n                          {:letter \"X\", :frequency 0.0015}\n                          {:letter \"Y\", :frequency 0.01974}\n                          {:letter \"Z\", :frequency 0.00074}]]\n  (kind/reagent\n   ['(fn [data]\n       (let [size 400\n             x (-&gt; js/d3\n                   .scaleLinear\n                   (.range (into-array [0 size]))\n                   (.domain (into-array [0 (apply max (map :frequency data))])))\n             y (-&gt; js/d3\n                   .scaleBand\n                   (.domain (into-array (map :letter data)))\n                   (.range (into-array [0 size])))\n             color (.scaleOrdinal js/d3 (.-schemeCategory10 js/d3))]\n         [:svg\n          {:viewBox (str \"0 0 \" size \" \" size)}\n          (map\n           (fn\n             [{:keys [letter frequency]}]\n             [:g\n              {:key letter, :transform (str \"translate(\" 0 \",\" (y letter) \")\")}\n              [:rect\n               {:x (x 0),\n                :height (.bandwidth y),\n                :fill (color letter),\n                :width (x frequency)}]])\n           data)]))\n    letter-frequencies]\n   {:html/deps [:d3]}))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#ggplotly",
+    "href": "clay_book.examples.html#ggplotly",
+    "title": "2  Examples",
+    "section": "2.22 ggplotly",
+    "text": "2.22 ggplotly\n(WIP)\nClay supports rendering plots through the JS client side of ggplotly - an R package offering a Plotly fronted for ggplot2’s grammar of graphics implementation. This package is part of the htmlwidgets ecosystem, and we represent that in the kind’s name.\nThe following is a work-in-progress attempt to generate JSON specs of the kind consumed by ggplotly’s client side.\nThe following spec function was generaged by mimicking R’s ggplotly(ggplot(mtcars, aes(wt, mpg)) + geom_point()). Therefore, some parts are hard-coded and require generalization. Other parts are missing (e.g., specifying colours).\n\n(defn -&gt;ggplotly-spec [{:keys [layers labels]}]\n  (kind/htmlwidgets-ggplotly\n   (let [;; assuming a single layer for now:\n         {:keys [data xmin xmax ymin ymax]} (first layers)\n         ;; an auxiliary function to compute tick values:\n         -&gt;tickvals (fn [l r]\n                      (let [jump (-&gt; (- r l)\n                                     (/ 6)\n                                     math/floor\n                                     int\n                                     (max 1))]\n                        (-&gt; l\n                            math/ceil\n                            (range r jump))))]\n     {:x\n      {:config\n       {:doubleClick \"reset\",\n        :modeBarButtonsToAdd [\"hoverclosest\" \"hovercompare\"],\n        :showSendToCloud false},\n       :layout\n       {:plot_bgcolor \"rgba(235,235,235,1)\",\n        :paper_bgcolor \"rgba(255,255,255,1)\",\n        :legend\n        {:bgcolor \"rgba(255,255,255,1)\",\n         :bordercolor \"transparent\",\n         :borderwidth 1.88976377952756,\n         :font {:color \"rgba(0,0,0,1)\", :family \"\", :size 11.689497716895}},\n        :xaxis (let [tickvals (-&gt;tickvals xmin xmax)\n                     ticktext (mapv str tickvals)\n                     range-len (- xmax xmin)\n                     range-expansion (* 0.1 range-len)\n                     expanded-range [(- xmin range-expansion)\n                                     (+ xmax range-expansion)]]\n                 {:linewidth 0,\n                  :nticks nil,\n                  :linecolor nil,\n                  :ticklen 3.65296803652968,\n                  :tickcolor \"rgba(51,51,51,1)\",\n                  :tickmode \"array\",\n                  :gridcolor \"rgba(255,255,255,1)\",\n                  :automargin true,\n                  :type \"linear\",\n                  :tickvals tickvals\n                  :zeroline false,\n                  :title\n                  {:text (:x labels),\n                   :font {:color \"rgba(0,0,0,1)\", :family \"\", :size 14.6118721461187}},\n                  :tickfont {:color \"rgba(77,77,77,1)\", :family \"\", :size 11.689497716895},\n                  :autorange false,\n                  :showticklabels true,\n                  :showline false,\n                  :showgrid true,\n                  :ticktext ticktext\n                  :ticks \"outside\",\n                  :gridwidth 0.66417600664176,\n                  :anchor \"y\",\n                  :domain [0 1],\n                  :hoverformat \".2f\",\n                  :tickangle 0,\n                  :tickwidth 0.66417600664176,\n                  :categoryarray ticktext,\n                  :categoryorder \"array\",\n                  :range expanded-range},)\n        :font {:color \"rgba(0,0,0,1)\", :family \"\", :size 14.6118721461187},\n        :showlegend false,\n        :barmode \"relative\",\n        :yaxis (let [tickvals (-&gt;tickvals ymin ymax)\n                     ticktext (mapv str tickvals)\n                     range-len (- ymax ymin)\n                     range-expansion (* 0.1 range-len)\n                     expanded-range [(- ymin range-expansion)\n                                     (+ ymax range-expansion)]]\n                 {:linewidth 0,\n                  :nticks nil,\n                  :linecolor nil,\n                  :ticklen 3.65296803652968,\n                  :tickcolor \"rgba(51,51,51,1)\",\n                  :tickmode \"array\",\n                  :gridcolor \"rgba(255,255,255,1)\",\n                  :automargin true,\n                  :type \"linear\",\n                  :tickvals tickvals,\n                  :zeroline false,\n                  :title\n                  {:text (:y labels),\n                   :font {:color \"rgba(0,0,0,1)\", :family \"\", :size 14.6118721461187}},\n                  :tickfont {:color \"rgba(77,77,77,1)\", :family \"\", :size 11.689497716895},\n                  :autorange false,\n                  :showticklabels true,\n                  :showline false,\n                  :showgrid true,\n                  :ticktext ticktext,\n                  :ticks \"outside\",\n                  :gridwidth 0.66417600664176,\n                  :anchor \"x\",\n                  :domain [0 1],\n                  :hoverformat \".2f\",\n                  :tickangle 0,\n                  :tickwidth 0.66417600664176,\n                  :categoryarray ticktext,\n                  :categoryorder \"array\",\n                  :range expanded-range},)\n        :hovermode \"closest\",\n        :margin\n        {:t 25.7412480974125,\n         :r 7.30593607305936,\n         :b 39.6955859969559,\n         :l 37.2602739726027},\n        :shapes\n        [{:yref \"paper\",\n          :fillcolor nil,\n          :xref \"paper\",\n          :y1 1,\n          :type \"rect\",\n          :line {:color nil, :width 0, :linetype []},\n          :y0 0,\n          :x1 1,\n          :x0 0}]},\n       :highlight\n       {:on \"plotly_click\",\n        :persistent false,\n        :dynamic false,\n        :selectize false,\n        :opacityDim 0.2,\n        :selected {:opacity 1},\n        :debounce 0},\n       :base_url \"https://plot.ly\",\n       :cur_data \"1f2fea5b54d146\",\n       :source \"A\",\n       :shinyEvents\n       [\"plotly_hover\"\n        \"plotly_click\"\n        \"plotly_selected\"\n        \"plotly_relayout\"\n        \"plotly_brushed\"\n        \"plotly_brushing\"\n        \"plotly_clickannotation\"\n        \"plotly_doubleclick\"\n        \"plotly_deselect\"\n        \"plotly_afterplot\"\n        \"plotly_sunburstclick\"],\n       :attrs {:1f2fea5b54d146 {:x {}, :y {}, :type \"scatter\"}},\n       :data\n       [{:y (:y data)\n         :hoveron \"points\",\n         :frame nil,\n         :hoverinfo \"text\",\n         :marker\n         {:autocolorscale false,\n          :color \"rgba(0,0,0,1)\",\n          :opacity 1,\n          :size 5.66929133858268,\n          :symbol \"circle\",\n          :line {:width 1.88976377952756, :color \"rgba(0,0,0,1)\"}},\n         :mode \"markers\"\n         :type \"scatter\",\n         :xaxis \"x\",\n         :showlegend false,\n         :yaxis \"y\",\n         :x (:x data)\n         :text (-&gt; data\n                   (tc/select-columns [:x :y])\n                   (tc/rows :as-maps)\n                   (-&gt;&gt; (mapv pr-str)))}]},\n      :evals [],\n      :jsHooks []})))\n\n\n(require '[tech.v3.datatype.functional :as fun])\n\nA random walk example:\n\n(let [n 100\n      xs (range n)\n      ys (reductions + (repeatedly n #(- (rand) 0.5)))\n      xmin (fun/reduce-min xs)\n      xmax (fun/reduce-max xs)\n      ymin (fun/reduce-min ys)\n      ymax (fun/reduce-max ys)\n      data (tc/dataset {:x xs\n                        :y ys})]\n  (-&gt;ggplotly-spec\n   {:layers [{:data data\n              :xmin xmin :xmax xmax\n              :ymin ymin :ymax ymax}]\n    :labels {:x \"wt\"\n             :y \"mpg\"}}))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#dmol.js",
+    "href": "clay_book.examples.html#dmol.js",
+    "title": "2  Examples",
+    "section": "2.23 3DMol.js",
+    "text": "2.23 3DMol.js\nEmbedding a 3Dmol Viewer (original example):\n\n(kind/reagent\n ['(fn [{:keys [data-pdb]}]\n     [:div {:style {:height \"400px\"\n                    :width \"400px\"\n                    :position :relative}\n            :class \"viewer_3Dmoljs\"\n            :data-pdb data-pdb\n            :data-backgroundcolor \"0xffffff\"\n            :data-style \"stick\"\n            :data-ui true}])\n  {:data-pdb \"2POR\"}]\n ;; Note we need to mention the dependency:\n {:html/deps [:three-d-mol]})\n\n\nUsing 3Dmol within your code (inspired by these examples):\n\n(defonce pdb-2POR\n(slurp \"https://files.rcsb.org/download/2POR.pdb\"))\n\n\n(kind/reagent\n['(fn [{:keys [pdb-data]}]\n    [:div\n     {:style {:width \"100%\"\n              :height \"500px\"\n              :position \"relative\"}\n      :ref (fn [el]\n             (let [config (clj-&gt;js\n                           {:backgroundColor \"0xffffff\"})\n                   viewer (.createViewer js/$3Dmol el)]\n               (.setViewStyle viewer (clj-&gt;js\n                                      {:style \"outline\"}))\n               (.addModelsAsFrames viewer pdb-data \"pdb\")\n               (.addSphere viewer (clj-&gt;js\n                                   {:center {:x 0\n                                             :y 0\n                                             :z 0}\n                                    :radius 5\n                                    :color \"green\"\n                                    :alpha 0.2}))\n               (.zoomTo viewer)\n               (.render viewer)\n               (.zoom viewer 0.8 2000)))}])\n {:pdb-data pdb-2POR}]\n;; Note we need to mention the dependency:\n{:html/deps [:three-d-mol]})",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#video",
+    "href": "clay_book.examples.html#video",
+    "title": "2  Examples",
+    "section": "2.24 Video",
+    "text": "2.24 Video\n\n(kind/video {:youtube-id \"DAQnvAgBma8\"})\n\n\n\n(kind/video {:youtube-id \"DAQnvAgBma8\"\n             :allowfullscreen false})\n\n\n\n(kind/video {:youtube-id \"DAQnvAgBma8\"\n             :iframe-width 480\n             :iframe-height 270})\n\n\n\n(kind/video {:youtube-id \"DAQnvAgBma8\"\n             :embed-options {:mute 1\n                             :controls 0}})\n\n\nSee, e.g., HTML Youtube Videos on w3schools.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#embedded-portal",
+    "href": "clay_book.examples.html#embedded-portal",
+    "title": "2  Examples",
+    "section": "2.25 Embedded Portal",
+    "text": "2.25 Embedded Portal\nWe may embed Portal’s data-navigating viewers using kind/portal.\n\n(kind/portal {:x (range 3)})\n\n\nNote that kind/portal applies the kind-portal adapter to nested kinds.\n\n(kind/portal\n[(kind/hiccup [:img {:height 50 :width 50\n                     :src \"https://clojure.org/images/clojure-logo-120b.png\"}])\n (kind/hiccup [:img {:height 50 :width 50\n                     :src \"https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg\"}])])\n\n\n\n(kind/portal\n[(kind/hiccup [:big [:big \"a plot\"]])\n (random-vega-lite-plot 9)])",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#nesting-kinds-in-hiccup",
+    "href": "clay_book.examples.html#nesting-kinds-in-hiccup",
+    "title": "2  Examples",
+    "section": "2.26 Nesting kinds in Hiccup",
+    "text": "2.26 Nesting kinds in Hiccup\nKinds are treated recursively inside Hiccup:\n\n(kind/hiccup\n [:div {:style {:background \"#f5f3ff\"\n                :border \"solid\"}}\n\n  [:hr]\n  [:pre [:code \"kind/md\"]]\n  (kind/md \"*some text* **some more text**\")\n\n  [:hr]\n  [:pre [:code \"kind/code\"]]\n  (kind/code \"{:x (1 2 [3 4])}\")\n\n  [:hr]\n  [:pre [:code \"kind/dataset\"]]\n  (tc/dataset {:x (range 33)\n               :y (map inc (range 33))})\n\n  [:hr]\n  [:pre [:code \"kind/table\"]]\n  (kind/table\n   (tc/dataset {:x (range 33)\n                :y (map inc (range 33))}))\n\n  [:hr]\n  [:pre [:code \"kind/vega-lite\"]]\n  (random-vega-lite-plot 9)\n\n  [:hr]\n  [:pre [:code \"kind/vega-lite\"]]\n  (-&gt; {:data {:values \"x,y\n1,1\n2,4\n3,9\n-1,1\n-2,4\n-3,9\"\n              :format {:type :csv}},\n       :mark \"point\"\n       :encoding\n       {:x {:field \"x\", :type \"quantitative\"}\n        :y {:field \"y\", :type \"quantitative\"}}}\n      kind/vega-lite)\n\n  [:hr]\n  [:pre [:code \"kind/reagent\"]]\n  (kind/reagent\n   ['(fn [numbers]\n       [:p {:style {:background \"#d4ebe9\"}}\n        (pr-str (map inc numbers))])\n    (vec (range 40))])])\n\nkind/mdsome text some more textkind/code{:x (1 2 [3 4])}kind/dataset_unnamed [33 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n1\n\n\n1\n2\n\n\n2\n3\n\n\n3\n4\n\n\n4\n5\n\n\n5\n6\n\n\n6\n7\n\n\n7\n8\n\n\n8\n9\n\n\n9\n10\n\n\n...\n...\n\n\n22\n23\n\n\n23\n24\n\n\n24\n25\n\n\n25\n26\n\n\n26\n27\n\n\n27\n28\n\n\n28\n29\n\n\n29\n30\n\n\n30\n31\n\n\n31\n32\n\n\n32\n33\n\n\n\nkind/table\n\n\n\n\nx\ny\n\n\n\n\n0\n1\n\n\n1\n2\n\n\n2\n3\n\n\n3\n4\n\n\n4\n5\n\n\n5\n6\n\n\n6\n7\n\n\n7\n8\n\n\n8\n9\n\n\n9\n10\n\n\n10\n11\n\n\n11\n12\n\n\n12\n13\n\n\n13\n14\n\n\n14\n15\n\n\n15\n16\n\n\n16\n17\n\n\n17\n18\n\n\n18\n19\n\n\n19\n20\n\n\n20\n21\n\n\n21\n22\n\n\n22\n23\n\n\n23\n24\n\n\n24\n25\n\n\n25\n26\n\n\n26\n27\n\n\n27\n28\n\n\n28\n29\n\n\n29\n30\n\n\n30\n31\n\n\n31\n32\n\n\n32\n33\n\n\n\n\nkind/vega-litekind/vega-litekind/reagent",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#nesting-kinds-in-tables",
+    "href": "clay_book.examples.html#nesting-kinds-in-tables",
+    "title": "2  Examples",
+    "section": "2.27 Nesting kinds in Tables",
+    "text": "2.27 Nesting kinds in Tables\nKinds are treated recursively inside Tables:\n\n(kind/table\n{:column-names [(kind/hiccup\n                 [:div {:style {:background-color \"#ccaabb\"}} [:big \":x\"]])\n                (kind/hiccup\n                 [:div {:style {:background-color \"#aabbcc\"}} [:big \":y\"]])]\n :row-vectors [[(kind/md \"*some text* **some more text**\")\n                (kind/code \"{:x (1 2 [3 4])}\")]\n               [(tc/dataset {:x (range 3)\n                             :y (map inc (range 3))})\n                (random-vega-lite-plot 9)]\n               [(kind/hiccup [:div.clay-limit-image-width\n                              clay-image])\n                (kind/md \"$x^2$\")]]})\n\n\n\n\n\n\n\n\n\n\n\n:x\n\n\n:y\n\n\n\n\n\nsome text some more text\n\n{:x (1 2 [3 4])}\n\n\n\n_unnamed [3 2]:\n:x:y\n01\n12\n23\n\n\n\n\n\n\n\n\n\\(x^2\\)\n\n\n\n\n\n\n(kind/table\n{:column-names [\"size\" \"square\"]\n :row-vectors (for [i (range 20)]\n                (let [size (* i 10)\n                      px (str size \"px\")]\n                  [size\n                   (kind/hiccup\n                    [:div {:style {:height px\n                                   :width px\n                                   :background-color \"purple\"}}])]))}\n{:use-datatables true})\n\n\n\nsizesquare0102030405060708090100110120130140150160170180190",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  },
+  {
+    "objectID": "clay_book.examples.html#more-nesting-examples",
+    "href": "clay_book.examples.html#more-nesting-examples",
+    "title": "2  Examples",
+    "section": "2.28 More nesting examples",
+    "text": "2.28 More nesting examples\n\n{:plot (random-vega-lite-plot 9)\n :dataset (tc/dataset {:x (range 3)\n                       :y (repeatedly 3 rand)})}\n\n{\n\n\n\n\n\n\n\n\n:plot\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n:dataset\n\n\n\n_unnamed [3 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n0.26086234\n\n\n1\n0.46828710\n\n\n2\n0.05192387\n\n\n\n\n\n\n\n\n}\n\n[(random-vega-lite-plot 9)\n (tc/dataset {:x (range 3)\n              :y (repeatedly 3 rand)})]\n\n[_unnamed [3 2]:\n\n\n\n:x\n:y\n\n\n\n\n0\n0.03629525\n\n\n1\n0.42507083\n\n\n2\n0.09278058\n\n\n\n]\n\nsource: notebooks/clay_book/examples.clj",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Examples</span>"
+    ]
+  }
+]
