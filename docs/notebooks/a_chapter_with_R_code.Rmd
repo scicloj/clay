@@ -1,0 +1,59 @@
+# A chapter with R code
+
+## Section 1
+
+```{r}
+1+2
+```
+
+## Section 2
+
+```{r}
+hist(rnorm(99))
+```
+
+## Section 3
+
+Trying `rmarkdown-clojure`:
+
+```{r setup, include=FALSE}
+find_nrepl_port_up <- function() {
+    wd <- getwd()
+    while(wd != dirname(wd)) {
+        f <- paste0(wd,"/.nrepl-port")
+        if(file.exists(f)) return(paste0("@",f))
+        wd <- dirname(wd)
+        f <- NULL
+    }
+}
+port_file <- find_nrepl_port_up()
+if(is.null(port_file)) stop("nREPL port not found")
+library(knitr)
+knitr_one_string <- knitr:::one_string
+nrepl_cmd  <- "rep"
+opts_chunk$set(comment=NA, highlight=TRUE)
+knit_engines$set(clojure = function(options) {
+    rep_params <- if((options$results == "asis") || isTRUE(options$stdout_only)) {
+                      "--print 'out,1,%{out}' --print 'value,1,' -p"
+                  } else {
+                      "-p"
+                  }
+    code <- paste(rep_params, port_file, shQuote(knitr_one_string(options$code)))
+    out <- if (options$eval) {
+               if (options$message) message('running: ', nrepl_cmd, ' ', code)
+               tryCatch(
+                   system2(nrepl_cmd, code, stdout = TRUE, stderr = TRUE, env = options$engine.env),
+                   error = function(e) {
+                       if (!options$error) stop(e)
+                       paste('Error in running command', nrepl_cmd)
+                   }
+               )
+           } else ''
+    if (!options$error && !is.null(attr(out, 'status'))) stop(knitr_one_string(out))
+    engine_output(options, options$code, out)})
+```
+
+
+```{clojure}
+(+ 1 2)
+```

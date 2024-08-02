@@ -439,23 +439,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.06764471</td>
+<td style="text-align: right;">0.11840268</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.91833082</td>
+<td style="text-align: right;">0.55892107</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.85450365</td>
+<td style="text-align: right;">0.64407336</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.87747464</td>
+<td style="text-align: right;">0.20162682</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.83788697</td>
+<td style="text-align: right;">0.94426194</td>
 </tr>
 </tbody>
 </table>
@@ -808,15 +808,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.61111565</td>
+<td style="text-align: right;">0.95547445</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.72603352</td>
+<td style="text-align: right;">0.04014935</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.55099480</td>
+<td style="text-align: right;">0.13901782</td>
 </tr>
 </tbody>
 </table>
@@ -839,15 +839,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.64221707</td>
+<td style="text-align: right;">0.54223772</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.24485349</td>
+<td style="text-align: right;">0.50408273</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.35126508</td>
+<td style="text-align: right;">0.82484302</td>
 </tr>
 </tbody>
 </table>
@@ -870,7 +870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="referring-to-files" class="level2" data-number="1.15">
 <h2 data-number="1.15" class="anchored" data-anchor-id="referring-to-files"><span class="header-section-number">1.15</span> Referring to files</h2>
 <p>In data visualizations, one can directly refrer to files places under <code>"notebooks/"</code> or <code>"src/"</code>. By default, all files except of these directories, except for Clojure files, are copied alongside the HTML target.</p>
-<p>This default can be overridden using the <code>:subdirs-to-sync</code> config option. E.g., <code>:subdirs-to-sync ["notebooks" "data"]</code> will copy files from the <code>"notebooks"</code> and <code>"data"</code> directories, but not from <code>"src"</code>.</p>
+<p>This default can be overridden using the <code>:subdirs-to-sync</code> config option. E.g., <code>:subdirs-to-sync ["notebooks" "data"]</code> will copy files from the <code>"notebooks"</code> and <code>"data"</code> directories, but not from <code>"src"</code>. Clojure source files (<code>.clj</code>, etc.) are not synched.</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>(kind/hiccup</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a> [<span class="at">:img</span> {<span class="at">:src</span> <span class="st">"notebooks/images/Clay.svg.png"</span>}])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

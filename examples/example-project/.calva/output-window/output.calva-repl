@@ -1,0 +1,39 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+o o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Jacking in...
+; Connecting using "deps.edn" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: pushd /home/daslu/projects/scicloj/clay/examples/example-project ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; Using host:port localhost:37375 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+nil
+clj꞉user꞉>  ; Use `alt+enter` to evaluate
+clj꞉user꞉> 
+; Jack-in done.
+clj꞉user꞉> 
+clj꞉example1꞉> 
+(do (require (quote [scicloj.clay.v2.api])) (scicloj.clay.v2.api/make! {:source-path "/home/daslu/projects/scicloj/clay/examples/example-project/notebooks/example1.clj"}))
+
+clj꞉example1꞉> 
+(do (require (quote [scicloj.clay.v2.api])) (scicloj.clay.v2.api/make! {:source-path "/home/daslu/projects/scicloj/clay/examples/example-project/notebooks/example1.clj"}))
+[[[:wrote "docs/example1.html"]] [:ok]]
+clj꞉example1꞉> 
+(do (require (quote [scicloj.clay.v2.api])) (scicloj.clay.v2.api/make! {:source-path "/home/daslu/projects/scicloj/clay/examples/example-project/notebooks/example1.clj"}))
+[[[:wrote "docs/example1.html"]] [:ok]]
+clj꞉example1꞉> 
