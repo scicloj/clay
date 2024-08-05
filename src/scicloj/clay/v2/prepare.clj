@@ -41,17 +41,23 @@
 (defn add-class-to-hiccup [hiccup cls]
   (if cls
     (if (-> hiccup second map?)
-      (update-in hiccup [1 :class] #(add-class-to-class-str % cls))
-      (vec (concat [(first hiccup)
-                    {:class cls}]
-                   (rest hiccup))))
+      (update-in hiccup [1 :class] add-class-to-class-str cls)
+      (into [(first hiccup) {:class cls}] (rest hiccup)))
+    hiccup))
+
+(defn merge-attrs [hiccup x]
+  (if x
+    (if (-> hiccup second map?)
+      (update-in hiccup [1] merge/deep-merge x)
+      (into [(first hiccup) x] (rest hiccup)))
     hiccup))
 
 (defn vector-that-starts-with? [v x]
   (and (vector? v)
        (-> v first (= x))))
 
-(defn item->hiccup [{:keys [hiccup html md
+(defn item->hiccup [{:as note
+                     :keys [hiccup html md
                             script
                             item-class
                             inside-a-table]}
@@ -79,6 +85,7 @@
                                               item/katex-hiccup)
                                           form)))))))
       (add-class-to-hiccup item-class)
+      (merge-attrs (some-> (:kindly/options note) (select-keys [:style :class])))
       (cond-> script
         (conj script))))
 
@@ -159,7 +166,8 @@
         [(-> complete-context
              preparer
              (update :hiccup limit-hiccup-height complete-context)
-             (update :md limit-md-height complete-context))]))))
+             (update :md limit-md-height complete-context)
+             (assoc :kindly/options (:kindly/options complete-context)))]))))
 
 
 

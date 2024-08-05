@@ -572,3 +572,36 @@
 ;; See the generated [test/index_generated_test.clj](https://github.com/scicloj/clay/blob/main/test/index_generated_test.clj).
 
 ;; For a detailed example using this mechanism, see [the source](https://github.com/scicloj/clojisr/blob/master/notebooks/clojisr/v1/tutorials/main.clj) of the [ClojisR tutorial](https://scicloj.github.io/clojisr/clojisr.v1.tutorials.main.html).
+
+;; ## CSS classes and styles
+;; ### Styling HTML visualizations
+
+;; Clay will transfer CSS classes and styles present in `:kindly/options` metadata to the visualization.
+;; The recommended way to prepare `:kindly/options` metadata is through the `kind` api:
+
+(kind/table {:column-names ["A" "B" "C"]
+             :row-vectors  [[1 2 3] [4 5 6]]}
+            {:class "table-responsive"
+             :style {:background "#f8fff8"}})
+
+;; See also the Kindly documentation on [passing options](https://scicloj.github.io/kindly-noted/kindly#passing-options).
+;; Optional class and style attributes will only be applied to hiccup elements (not markdown content).
+
+;; ### Styling Markdown content
+
+;; Quarto uses pandoc attributes (see https://quarto.org/docs/authoring/markdown-basics.html#sec-divs-and-spans) to attach classes.
+;; ```
+;; ::: {.alert .alert-primary}
+;; Example alert
+;; :::
+;; ```
+;; ::: {.alert .alert-primary}
+;; Example alert
+;; :::
+;; | A | B | C |
+;; |---|---|---|
+;; | 1 | 2 | 3 |
+;; | 4 | 5 | 6 |
+;; : This table is responsive {.responsive}
+
+;; Markdown styling is not currently handled when rendering direct to HTML.

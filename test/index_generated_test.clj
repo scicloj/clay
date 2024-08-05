@@ -444,3 +444,13 @@
 
 
 (def var82 nil)
+
+
+(def
+ var83
+ (kind/table
+  {:column-names ["A" "B" "C"], :row-vectors [[1 2 3] [4 5 6]]}
+  {:class "table-responsive", :style {:background "#f8fff8"}}))
+
+
+(def var84 nil)

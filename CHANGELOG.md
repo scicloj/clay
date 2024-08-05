@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta16] - Pending
+- Class or style from kindly/options (#139)
+
 ## [2-beta15] - 2024-07-27
 - introducing code-and-value and horizontal layout - WIP (PR #127)
 - code cleanup (PR #131)
