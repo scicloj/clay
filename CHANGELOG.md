@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta16] - Pending
 - Class or style from kindly/options (#139)
+- updated Kindly version
 
 ## [2-beta15] - 2024-07-27
 - introducing code-and-value and horizontal layout - WIP (PR #127)
