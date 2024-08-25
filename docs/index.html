@@ -173,7 +173,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#vscode-calva" id="toc-vscode-calva" class="nav-link" data-scroll-target="#vscode-calva"><span class="header-section-number">1.6.1</span> VSCode Calva</a></li>
   <li><a href="#emacs-cider" id="toc-emacs-cider" class="nav-link" data-scroll-target="#emacs-cider"><span class="header-section-number">1.6.2</span> Emacs CIDER</a></li>
-  <li><a href="#intellij-cursive" id="toc-intellij-cursive" class="nav-link" data-scroll-target="#intellij-cursive"><span class="header-section-number">1.6.3</span> IntelliJ Cursive</a></li>
+  <li><a href="#neovim-conjure" id="toc-neovim-conjure" class="nav-link" data-scroll-target="#neovim-conjure"><span class="header-section-number">1.6.3</span> Neovim Conjure</a></li>
+  <li><a href="#intellij-cursive" id="toc-intellij-cursive" class="nav-link" data-scroll-target="#intellij-cursive"><span class="header-section-number">1.6.4</span> IntelliJ Cursive</a></li>
   </ul></li>
   <li><a href="#example-notebook-namespace" id="toc-example-notebook-namespace" class="nav-link" data-scroll-target="#example-notebook-namespace"><span class="header-section-number">1.7</span> Example notebook namespace</a></li>
   <li><a href="#api" id="toc-api" class="nav-link" data-scroll-target="#api"><span class="header-section-number">1.8</span> API</a>
@@ -194,6 +195,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#referring-to-files" id="toc-referring-to-files" class="nav-link" data-scroll-target="#referring-to-files"><span class="header-section-number">1.15</span> Referring to files</a></li>
   <li><a href="#hiding-code" id="toc-hiding-code" class="nav-link" data-scroll-target="#hiding-code"><span class="header-section-number">1.16</span> Hiding code</a></li>
   <li><a href="#test-generation" id="toc-test-generation" class="nav-link" data-scroll-target="#test-generation"><span class="header-section-number">1.17</span> Test generation</a></li>
+  <li><a href="#css-classes-and-styles" id="toc-css-classes-and-styles" class="nav-link" data-scroll-target="#css-classes-and-styles"><span class="header-section-number">1.18</span> CSS classes and styles</a>
+  <ul class="collapse">
+  <li><a href="#styling-html-visualizations" id="toc-styling-html-visualizations" class="nav-link" data-scroll-target="#styling-html-visualizations"><span class="header-section-number">1.18.1</span> Styling HTML visualizations</a></li>
+  <li><a href="#styling-markdown-content" id="toc-styling-markdown-content" class="nav-link" data-scroll-target="#styling-markdown-content"><span class="header-section-number">1.18.2</span> Styling Markdown content</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -374,8 +380,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="1.6.2" class="anchored" data-anchor-id="emacs-cider"><span class="header-section-number">1.6.2</span> Emacs CIDER</h3>
 <p>See the <a href="https://github.com/scicloj/clay.el">clay.el</a> package for the relevant interactive functions.</p>
 </section>
-<section id="intellij-cursive" class="level3" data-number="1.6.3">
-<h3 data-number="1.6.3" class="anchored" data-anchor-id="intellij-cursive"><span class="header-section-number">1.6.3</span> IntelliJ Cursive</h3>
+<section id="neovim-conjure" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="neovim-conjure"><span class="header-section-number">1.6.3</span> Neovim Conjure</h3>
+<p>See <a href="https://github.com/Olical/conjure/wiki/Integrating-with-Clay-and-data-visualisation-tools">Integrating with Clay and data visualisation tools</a> at the Conjure Wiki.</p>
+</section>
+<section id="intellij-cursive" class="level3" data-number="1.6.4">
+<h3 data-number="1.6.4" class="anchored" data-anchor-id="intellij-cursive"><span class="header-section-number">1.6.4</span> IntelliJ Cursive</h3>
 <p>Under preferences, search for “REPL Commands” (or use the menu IntelliJ -&gt; Preferences -&gt; Languages and Frameworks -&gt; Clojure -&gt; REPL Commands)</p>
 <p>Add a global command, and edit it with these settings:</p>
 <p><strong>Name:</strong> Send form to Clay<br>
@@ -439,23 +449,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.11840268</td>
+<td style="text-align: right;">0.11704896</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.55892107</td>
+<td style="text-align: right;">0.45866459</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.64407336</td>
+<td style="text-align: right;">0.10077033</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.20162682</td>
+<td style="text-align: right;">0.93763234</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.94426194</td>
+<td style="text-align: right;">0.77890212</td>
 </tr>
 </tbody>
 </table>
@@ -808,15 +818,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.95547445</td>
+<td style="text-align: right;">0.38488350</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.04014935</td>
+<td style="text-align: right;">0.33885700</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.13901782</td>
+<td style="text-align: right;">0.48093349</td>
 </tr>
 </tbody>
 </table>
@@ -839,15 +849,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.54223772</td>
+<td style="text-align: right;">0.00848069</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.50408273</td>
+<td style="text-align: right;">0.79012174</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.82484302</td>
+<td style="text-align: right;">0.21893065</td>
 </tr>
 </tbody>
 </table>
@@ -921,10 +931,84 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>See the generated <a href="https://github.com/scicloj/clay/blob/main/test/index_generated_test.clj">test/index_generated_test.clj</a>.</p>
 <p>For a detailed example using this mechanism, see <a href="https://github.com/scicloj/clojisr/blob/master/notebooks/clojisr/v1/tutorials/main.clj">the source</a> of the <a href="https://scicloj.github.io/clojisr/clojisr.v1.tutorials.main.html">ClojisR tutorial</a>.</p>
+</section>
+<section id="css-classes-and-styles" class="level2" data-number="1.18">
+<h2 data-number="1.18" class="anchored" data-anchor-id="css-classes-and-styles"><span class="header-section-number">1.18</span> CSS classes and styles</h2>
+<section id="styling-html-visualizations" class="level3" data-number="1.18.1">
+<h3 data-number="1.18.1" class="anchored" data-anchor-id="styling-html-visualizations"><span class="header-section-number">1.18.1</span> Styling HTML visualizations</h3>
+<p>Clay will transfer CSS classes and styles present in <code>:kindly/options</code> metadata to the visualization. The recommended way to prepare <code>:kindly/options</code> metadata is through the <code>kind</code> api:</p>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb47"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>(kind/table {<span class="at">:column-names</span> [<span class="st">"A"</span> <span class="st">"B"</span> <span class="st">"C"</span>]</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">:row-vectors</span>  [[<span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>] [<span class="dv">4</span> <span class="dv">5</span> <span class="dv">6</span>]]}</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>            {<span class="at">:class</span> <span class="st">"table-responsive"</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">:style</span> {<span class="at">:background</span> <span class="st">"#f8fff8"</span>}})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="clay-table">
+<div class="table-responsive">
+<table class="table table-hover" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">A</th>
+<th data-quarto-table-cell-role="th">B</th>
+<th data-quarto-table-cell-role="th">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>See also the Kindly documentation on <a href="https://scicloj.github.io/kindly-noted/kindly#passing-options">passing options</a>. Optional class and style attributes will only be applied to hiccup elements (not markdown content).</p>
+</section>
+<section id="styling-markdown-content" class="level3" data-number="1.18.2">
+<h3 data-number="1.18.2" class="anchored" data-anchor-id="styling-markdown-content"><span class="header-section-number">1.18.2</span> Styling Markdown content</h3>
+<p>Quarto uses pandoc attributes (see https://quarto.org/docs/authoring/markdown-basics.html#sec-divs-and-spans) to attach classes.</p>
+<pre><code>::: {.alert .alert-primary}
+Example alert
+:::</code></pre>
+<div class="alert alert-primary">
+<p>Example alert</p>
+</div>
+<div class="table-responsive">
+<table class="table">
+<caption>This table is responsive</caption>
+<thead>
+<tr class="header">
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Markdown styling is not currently handled when rendering direct to HTML.</p>
 <div style="background-color:grey;height:2px;width:100%;"></div>
 <div><pre><small><small>source: <a href="https://github.com/scicloj/clay/blob/main/notebooks/index.clj">notebooks/index.clj</a></small></small></pre></div>
 
 
+</section>
 </section>
 </section>
 
