@@ -119,6 +119,10 @@
 
 ;; See the [clay.el](https://github.com/scicloj/clay.el) package for the relevant interactive functions.
 
+;; ### Neovim Conjure
+
+;; See [Integrating with Clay and data visualisation tools](https://github.com/Olical/conjure/wiki/Integrating-with-Clay-and-data-visualisation-tools) at the Conjure Wiki.
+
 ;; ### IntelliJ Cursive
 ;;
 ;; Under preferences, search for "REPL Commands"
