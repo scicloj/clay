@@ -65,7 +65,7 @@
       (-> value meta :kindly/hide-code?)                    ; legacy convention
       (when kind
         (some-> note
-                :kindly/options
+                :options
                 :kinds-that-hide-code
                 kind))
       (nil? code)))
@@ -107,7 +107,7 @@
                             (select-keys [:value :code :form
                                           :base-target-path
                                           :full-target-path
-                                          :kindly/options
+                                          :options
                                           :format])
                             (update :value deref-if-needed)
                             prepare/prepare-or-pprint))]
@@ -225,7 +225,7 @@
                                                   (-> options
                                                       (select-keys [:base-target-path
                                                                     :full-target-path
-                                                                    :kindly/options
+                                                                    :options
                                                                     :format])))
                                                 (note-to-items options)))
                                 test-form (if test-note

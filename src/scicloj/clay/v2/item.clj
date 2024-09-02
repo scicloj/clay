@@ -128,16 +128,16 @@
                       (list 'js/document.getElementById id)))]]
      :deps (concat [:reagent]
                    (-> context
-                       :kindly/options
+                       :options
                        :html/deps)
                    ;; deprecated:
                    (-> context
-                       :kindly/options
+                       :options
                        :reagent/deps))}))
 
 (defn extract-style [context]
   (-> context
-      :kindly/options
+      :options
       :element/style
       (or {:height "400px"
            :width "100%"})))
@@ -334,7 +334,7 @@
    :deps [:highcharts]})
 
 (defn dataset [{:as context
-                :keys [value kindly/options]}]
+                :keys [value options]}]
   (let [{:keys [dataset/print-range]} options]
     (-> value
         (cond-> print-range

@@ -85,7 +85,7 @@
                                               item/katex-hiccup)
                                           form)))))))
       (add-class-to-hiccup item-class)
-      (merge-attrs (some-> (:kindly/options note) (select-keys [:style :class])))
+      (merge-attrs (some-> (:options note) (select-keys [:style :class])))
       (cond-> script
         (conj script))))
 
@@ -108,7 +108,7 @@
 (defn limit-hiccup-height [hiccup context]
   (when hiccup
     (if-let [max-element-height (-> context
-                                    :kindly/options
+                                    :options
                                     :element/max-height)]
       [:div {:style {:max-height max-element-height
                      :overflow-y :auto}}
@@ -118,7 +118,7 @@
 (defn limit-md-height [md context]
   (when md
     (if-let [max-element-height (-> context
-                                    :kindly/options
+                                    :options
                                     :element/max-height)]
       (hiccup/html
        [:div {:style {:max-height max-element-height
@@ -134,13 +134,7 @@
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
-  (let [complete-context (-> context
-                             (update :kindly/options
-                                     merge/deep-merge
-                                     (-> value meta :kindly/options)))
-        kind (-> complete-context
-                 advise-if-needed
-                 :kind)]
+  (let [kind (-> context advise-if-needed :kind)]
     (case kind
       :kind/fragment (->> value
                           ;; splice the fragment
@@ -163,13 +157,10 @@
       (when-let [preparer (-> kind
                               (@*kind->preparer)
                               (or fallback-preparer))]
-        [(-> complete-context
+        [(-> context
              preparer
-             (update :hiccup limit-hiccup-height complete-context)
-             (update :md limit-md-height complete-context)
-             (assoc :kindly/options (:kindly/options complete-context)))]))))
-
-
+             (update :hiccup limit-hiccup-height context)
+             (update :md limit-md-height context))]))))
 
 (defn prepare-or-pprint [context]
   (prepare context {:fallback-preparer
@@ -210,9 +201,7 @@
  :kind/table
  (fn [{:as context
        :keys [value]}]
-   (let [use-datatables (->> context
-                             :kindly/options
-                             :use-datatables)
+   (let [use-datatables (->> context :options :use-datatables)
          pre-hiccup (table/->table-hiccup value)
          *deps (atom []) ; TODO: implement without mutable state
          hiccup (->> pre-hiccup
@@ -223,7 +212,7 @@
                           ;; a table cell - handle it
                           [(first elem) (if-let [items (-> context
                                                            (dissoc :form)
-                                                           (update :kindly/options dissoc :element/max-height)
+                                                           (update :options dissoc :element/max-height)
                                                            (assoc :value (second elem))
                                                            (prepare {}))]
                                           (do (swap! *deps concat (mapcat :deps items))
@@ -245,7 +234,7 @@
       (if use-datatables
         {:script [:script
                   (->> context
-                       :kindly/options
+                       :options
                        :datatables
                        charred/write-json-str
                        (format "new DataTable(document.currentScript.parentElement, %s);"))]
@@ -283,7 +272,7 @@
        :keys [value]}]
    (-> context
        (dissoc :form)
-       (update :kindly/options :dissoc :element/max-height)
+       (update :options :dissoc :element/max-height)
        (assoc :value (-> value
                          meta
                          :test
@@ -306,7 +295,7 @@
                                                (mapcat (fn [v]
                                                          (let [items (-> context
                                                                          (dissoc :form)
-                                                                         (update :kindly/options :dissoc :element/max-height)
+                                                                         (update :options :dissoc :element/max-height)
                                                                          (assoc :value v)
                                                                          prepare-or-pprint)]
                                                            (swap! *deps concat (mapcat :deps items))
@@ -355,7 +344,7 @@
                               (mapcat (fn [subvalue]
                                         (-> context
                                             (dissoc :form)
-                                            (update :kindly/options :dissoc :element/max-height)
+                                            (update :options :dissoc :element/max-height)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
       (if (->> prepared-parts
@@ -417,14 +406,14 @@
        :keys [value]}]
    (let [*deps (atom
                 (-> context
-                    :kindly/options
+                    :options
                     :html/deps)) ; TODO: implement without mutable state
          hiccup (->> value
                      (claywalk/prewalk
                       (fn [subform]
                         (let [subcontext (-> context
                                              (dissoc :form)
-                                             (update :kindly/options dissoc :element/max-height)
+                                             (update :options dissoc :element/max-height)
                                              (assoc :value subform))]
                           (if (some-> subcontext
                                       kindly-advice/advise
