@@ -8,6 +8,7 @@
    [scicloj.clay.v2.read :as read]
    [scicloj.clay.v2.config :as config]
    [scicloj.clay.v2.util.merge :as merge]
+   [scicloj.kindly.v4.api :as kindly]
    [scicloj.kindly.v4.kind :as kind]
    [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
@@ -201,7 +202,8 @@
             format]}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
-             *unchecked-math* *unchecked-math*]
+             *unchecked-math* *unchecked-math*
+             kindly/*options* kindly/*options*]
      (let [code (some-> full-source-path slurp)
            notes (cond
                    single-value (conj (when code
