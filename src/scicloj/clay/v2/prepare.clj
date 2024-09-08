@@ -6,6 +6,7 @@
    [scicloj.clay.v2.util.walk :as claywalk]
    [scicloj.kindly-advice.v1.api :as kindly-advice]
    [nextjournal.markdown :as md]
+   [nextjournal.markdown.transform :as mdt]
    [clojure.walk]
    [hiccup.core :as hiccup]
    [charred.api :as charred]
@@ -56,6 +57,18 @@
   (and (vector? v)
        (-> v first (= x))))
 
+(def mdctx
+  "NextJournal Markdown produces fragments (called :plain) which are rendered as :<>
+  These are better represented as a sequence, which hiccup will treat as a fragment."
+  (assoc mdt/default-hiccup-renderers
+    :plain (fn [ctx {:keys [text content]}]
+             (or text (map #(mdt/->hiccup ctx %) content)))))
+
+(defn md->hiccup
+  "Converts markdown to hiccup, producing sequences instead of fragments, which hiccup prefers."
+  [md]
+  (md/->hiccup mdctx md))
+
 (defn item->hiccup [{:as note
                      :keys [hiccup html md
                             script
@@ -72,9 +85,7 @@
                       format
                       :quarto))
               [:span {:data-qmd md}]
-              (->> md
-                   md/->hiccup
-                   (clojure.walk/postwalk-replace {:<> :p})
+              (->> (md->hiccup md)
                    (clojure.walk/postwalk-replace {:table :table.table})
                    (claywalk/postwalk (fn [form]
                                         (if (vector-that-starts-with?
