@@ -145,11 +145,7 @@
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
-  (let [complete-context (-> context
-                             (update :kindly/options
-                                     merge/deep-merge
-                                     (-> value meta :kindly/options)))
-        kind (-> complete-context
+  (let [kind (-> context
                  advise-if-needed
                  :kind)]
     (case kind
@@ -174,11 +170,13 @@
       (when-let [preparer (-> kind
                               (@*kind->preparer)
                               (or fallback-preparer))]
-        [(-> complete-context
+        [(-> context
              preparer
-             (update :hiccup limit-hiccup-height complete-context)
-             (update :md limit-md-height complete-context)
-             (assoc :kindly/options (:kindly/options complete-context)))]))))
+             ;; returns an item
+             (update :hiccup limit-hiccup-height context)
+             (update :md limit-md-height context)
+             ;; items need the options from the context
+             (assoc :kindly/options (:kindly/options context)))]))))
 
 
 
