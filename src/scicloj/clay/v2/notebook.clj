@@ -1,15 +1,16 @@
 (ns scicloj.clay.v2.notebook
   (:require
-   [clojure.string :as string]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.util.path :as path]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.read :as read]
-   [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.kind :as kind]
-   [scicloj.kindly-advice.v1.api :as kindly-advice]))
+    [clojure.string :as string]
+    [scicloj.clay.v2.item :as item]
+    [scicloj.clay.v2.util.path :as path]
+    [scicloj.clay.v2.item :as item]
+    [scicloj.clay.v2.prepare :as prepare]
+    [scicloj.clay.v2.read :as read]
+    [scicloj.clay.v2.config :as config]
+    [scicloj.clay.v2.util.merge :as merge]
+    [scicloj.kindly.v4.api :as kindly]
+    [scicloj.kindly.v4.kind :as kind]
+    [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -201,7 +202,8 @@
             format]}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
-             *unchecked-math* *unchecked-math*]
+             *unchecked-math* *unchecked-math*
+             kindly/*options* kindly/*options*]
      (let [code (some-> full-source-path slurp)
            notes (cond
                    single-value (conj (when code
