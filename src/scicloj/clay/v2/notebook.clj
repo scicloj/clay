@@ -98,7 +98,7 @@
 (defn note-to-items [{:as   note
                       :keys [comment? code]}
                      {:as   opts
-                      :keys [code-and-value]}]
+                      :keys [kindly/options]}]
   (if (and comment? code)
     [(comment->item code)]
     (let [code-item (when-not (hide-code? note opts)
@@ -121,7 +121,7 @@
             (empty? value-items)
             [code-item]
 
-            (and (= code-and-value :horizontal))
+            (= :horizontal (or (:code-and-value opts) (:code-and-value options)))
             (side-by-side-items opts code-item value-items)
 
             :else
