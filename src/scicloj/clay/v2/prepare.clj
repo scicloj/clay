@@ -292,7 +292,7 @@
        :keys [value]}]
    (-> context
        (dissoc :form)
-       (update :kindly/options :dissoc :element/max-height)
+       (update :kindly/options dissoc :element/max-height)
        (assoc :value (-> value
                          meta
                          :test
@@ -315,7 +315,7 @@
                                                (mapcat (fn [v]
                                                          (let [items (-> context
                                                                          (dissoc :form)
-                                                                         (update :kindly/options :dissoc :element/max-height)
+                                                                         (update :kindly/options dissoc :element/max-height)
                                                                          (assoc :value v)
                                                                          prepare-or-pprint)]
                                                            (swap! *deps concat (mapcat :deps items))
@@ -364,7 +364,7 @@
                               (mapcat (fn [subvalue]
                                         (-> context
                                             (dissoc :form)
-                                            (update :kindly/options :dissoc :element/max-height)
+                                            (update :kindly/options dissoc :element/max-height)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
       (if (->> prepared-parts

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - Class or style from kindly/options (#139)
 - updated Kindly version
 - rely on kindly/*options* and kindly-advice for options (PR #148)
+- bugfix in handling `:kindly/options` at item preparation
 
 ## [2-beta15] - 2024-07-27
 - introducing code-and-value and horizontal layout - WIP (PR #127)
