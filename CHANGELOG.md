@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix in handling `:kindly/options` at item preparation
 - check for horizontal in clay and kindly options (PR #149)
 - bugfix in handling options in notebook generation
+- bugfix: handling the edge case of string hiccup carefully
 
 ## [2-beta15] - 2024-07-27
 - introducing code-and-value and horizontal layout - WIP (PR #127)

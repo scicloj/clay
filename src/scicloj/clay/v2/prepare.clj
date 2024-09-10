@@ -47,7 +47,7 @@
     hiccup))
 
 (defn merge-attrs [hiccup x]
-  (if x
+  (if (and x (vector? hiccup))
     (if (-> hiccup second map?)
       (update-in hiccup [1] merge/deep-merge x)
       (into [(first hiccup) x] (rest hiccup)))
@@ -68,6 +68,8 @@
   "Converts markdown to hiccup, producing sequences instead of fragments, which hiccup prefers."
   [md]
   (md/->hiccup mdctx md))
+
+
 
 (defn item->hiccup [{:as note
                      :keys [hiccup html md
