@@ -10,7 +10,8 @@
    [clojure.walk]
    [hiccup.core :as hiccup]
    [charred.api :as charred]
-   [scicloj.clay.v2.util.merge :as merge]))
+   [scicloj.clay.v2.util.merge :as merge]
+   [scicloj.kindly.v4.kind :as kind]))
 
 (def *kind->preparer
   (atom {}))
@@ -70,13 +71,19 @@
   (md/->hiccup mdctx md))
 
 
+(defn complete-hiccup [hiccup {:as item
+                               :keys [item-class script]}]
+  (-> hiccup
+      (add-class-to-hiccup item-class)
+      (merge-attrs (some-> (:kindly/options item)
+                           (select-keys [:style :class])))
+      (cond-> script
+        (conj script))))
 
-(defn item->hiccup [{:as note
+(defn item->hiccup [{:as item
                      :keys [hiccup html md
-                            script
-                            item-class
                             inside-a-table]}
-                    {:as context
+                    {:as clay-options
                      :keys [format kind]}]
   (-> (or hiccup
           (some->> html
@@ -97,24 +104,23 @@
                                               second
                                               item/katex-hiccup)
                                           form)))))))
-      (add-class-to-hiccup item-class)
-      (merge-attrs (some-> (:kindly/options note) (select-keys [:style :class])))
-      (cond-> script
-        (conj script))))
+      (complete-hiccup item)))
 
-(defn item->md [{:as context
+(defn item->md [{:as item
                  :keys [hiccup html md
                         script
                         item-class]}]
   (-> (if script
-        (-> context
+        (-> item
             (dissoc :script)
             (update :hiccup conj script)
             item->md)
         (-> (or md
                 (format "\n```{=html}\n%s\n```\n"
                         (or html
-                            (some-> hiccup hiccup/html))))))
+                            (some-> hiccup
+                                    (complete-hiccup item)
+                                    hiccup/html))))))
       (cond-> item-class
         (#(format "::: {.%s}\n%s\n:::\n" item-class %)))))
 
