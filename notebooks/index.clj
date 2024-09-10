@@ -609,3 +609,25 @@
 ;; : This table is responsive {.responsive}
 
 ;; Markdown styling is not currently handled when rendering direct to HTML.
+
+;; ### Varying kindly options
+
+;; (experimental)
+
+(kindly/hide-code
+ (kindly/merge-options!
+  {:code-and-value :horizontal})
+ false)
+
+(+ 1 2)
+
+(+ 3 4)
+
+(kindly/hide-code
+ (kindly/merge-options!
+  {:code-and-value :vertical})
+ false)
+
+(+ 1 2)
+
+(+ 3 4)
