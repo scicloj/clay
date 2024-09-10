@@ -96,9 +96,9 @@
       :deps   (set (mapcat :deps value-items))}]))
 
 (defn note-to-items [{:as   note
-                      :keys [comment? code]}
-                     {:as   opts
-                      :keys [kindly/options]}]
+                      :keys [comment? code
+                             kindly/options]}
+                     {:as   opts}]
   (if (and comment? code)
     [(comment->item code)]
     (let [code-item (when-not (hide-code? note opts)
