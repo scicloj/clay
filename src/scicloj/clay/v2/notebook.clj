@@ -71,10 +71,11 @@
                 kind))
       (nil? code)))
 
-(defn hide-value? [{:as note :keys [form value]} {:as opts :keys [hide-nils hide-vars]}]
+(defn hide-value? [{:as complete-note :keys [form value kind]}
+                   {:as opts :keys [hide-nils hide-vars]}]
   (or (and (sequential? form)
            (-> form first hidden-form-starters))
-      (-> note :form meta :kind/hidden)
+      (= kind :kind/hidden)
       (and hide-nils (nil? value))
       (and hide-vars (var? value))))
 
