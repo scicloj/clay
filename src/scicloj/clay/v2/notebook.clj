@@ -202,8 +202,7 @@
             format]}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
-             *unchecked-math* *unchecked-math*
-             kindly/*options* kindly/*options*]
+             *unchecked-math* *unchecked-math*]
      (let [code (some-> full-source-path slurp)
            notes (cond
                    single-value (conj (when code
@@ -224,11 +223,11 @@
                                 new-items (when-not test-note
                                             (-> complete-note
                                                 (merge/deep-merge
-                                                  (-> options
-                                                      (select-keys [:base-target-path
-                                                                    :full-target-path
-                                                                    :kindly/options
-                                                                    :format])))
+                                                 (-> options
+                                                     (select-keys [:base-target-path
+                                                                   :full-target-path
+                                                                   :kindly/options
+                                                                   :format])))
                                                 (note-to-items options)))
                                 test-form (if test-note
                                             ;; a deftest form
