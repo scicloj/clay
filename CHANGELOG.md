@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-beta16] - Pending
 - Class or style from kindly/options (#139)
 - updated Kindly and Kindly-advice versions
-- rely on kindly/*options* and kindly-advice for options (PR #148)
+- rely on `*ns*` `:kindly/options` and kindly-advice for options (PR #148)
 - bugfix in handling `:kindly/options` at item preparation
 - check for horizontal in clay and kindly options (PR #149)
 - bugfix in handling options in notebook generation
