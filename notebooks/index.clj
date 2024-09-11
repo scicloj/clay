@@ -638,6 +638,12 @@
  [:div
   [:p "hello"]])
 
+(tc/dataset {:x (range 3)})
+
+(kind/hiccup
+ [:div
+  (tc/dataset {:x (range 3)})])
+
 (kindly/hide-code
  (kindly/merge-options! {:style {:background-color nil}})
  false)
@@ -645,3 +651,9 @@
 (kind/hiccup
  [:div
   [:p "hello"]])
+
+(tc/dataset {:x (range 3)})
+
+(kind/hiccup
+ [:div
+  (tc/dataset {:x (range 3)})])
