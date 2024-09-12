@@ -266,30 +266,33 @@
     (hiccup.page/html5 head body)))
 
 (defn md [{:as spec
-           :keys [items title favicon quarto]}]
-  (str
-   (->> (cond-> quarto
-                ;; Users may provide non-quarto specific configuration (see also html),
-                ;; if so this will be added to the quarto front-matter to make them behave the same way
-                title (assoc-in [:format :html :title] title)
-                favicon (update-in [:format :html :include-in-header :text]
-                                   str "<link rel = \"icon\" href = \"" favicon "\" />"))
-        yaml/generate-string
-        (format "\n---\n%s\n---\n"))
-   ;; " "
-   (hiccup/html
-    [:style (styles/main :table)]
-    [:style (styles/main :md-main)]
-    [:style (styles/main :main)])
-   (->> items
-        items->deps
-        (cons :md-default)
-        (include-libs spec [:js :css]))
-   (->> items
-        (map-indexed
-         (fn [i item]
-           (prepare/item->md item)))
-        (string/join "\n\n"))))
+           :keys [items title favicon quarto format]}]
+  (let [quarto-target (if (=  format [:quarto :revealjs])
+                        :revealjs
+                        :html)]
+    (str
+     "\n---\n"
+     (yaml/generate-string
+      (cond-> quarto
+        ;; Users may provide non-quarto specific configuration (see also html),
+        ;; if so this will be added to the quarto front-matter to make them behave the same way
+        title (assoc-in [:format :html :title] title)
+        favicon (update-in [:format quarto-target :include-in-header :text]
+                           str "<link rel = \"icon\" href = \"" favicon "\" />")))
+     "\n---\n"
+     (hiccup/html
+         [:style (styles/main :table)]
+       [:style (styles/main :md-main)]
+       [:style (styles/main :main)])
+     (->> items
+          items->deps
+          (cons :md-default)
+          (include-libs spec [:js :css]))
+     (->> items
+          (map-indexed
+           (fn [i item]
+             (prepare/item->md item)))
+          (string/join "\n\n")))))
 
 
 (defn hiccup [{:as spec

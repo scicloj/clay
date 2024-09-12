@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: handling the edge case of string hiccup carefully
 - bugfix: handling `:kind/hidden` correctly in notebook generation
 - applying `:kindly/options` in all hiccup-based pathways
+- bugfix: using the appropriate Quarto target format in Markdown generation
 
 ## [2-beta15] - 2024-07-27
 - introducing code-and-value and horizontal layout - WIP (PR #127)
