@@ -11,7 +11,6 @@
                               :transition :slide
                               :background-transition :fade
                               :incremental true}}
-          :fontsize "0.9em"
           :code-block-background true}
  :kindly/options {:datatables {:paging false
                                :scrollY 400
