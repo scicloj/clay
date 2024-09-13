@@ -3,8 +3,8 @@
 (defonce *state
   (atom {:port nil
          :counter 0
-         :full-target-path nil
-         :base-target-path nil}))
+         :base-target-path nil
+         :last-rendered-spec nil}))
 
 (defn swap-state! [f & args]
   (-> *state
@@ -20,8 +20,8 @@
          (update :counter inc)
          (#(apply f % args))))))
 
-(defn reset-full-target-path! [path]
-  (swap-state-and-increment! assoc :full-target-path path))
+(defn reset-last-rendered-spec! [spec]
+  (swap-state-and-increment! assoc :last-rendered-spec spec))
 
 (defn set-port! [port]
   (swap-state! assoc :port port))

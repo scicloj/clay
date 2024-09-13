@@ -9,7 +9,8 @@
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
-   [hiccup.core :as hiccup])
+   [hiccup.core :as hiccup]
+   [tablecloth.api :as tc])
   (:import (java.net ServerSocket)))
 
 (def default-port 1971)
@@ -28,7 +29,6 @@
                  port)
              (catch Exception e nil))
         (recur (inc port)))))
-
 
 (defn communication-script [{:keys [port counter]}]
   (format "
@@ -67,49 +67,48 @@
 
 (defn header [state]
   (hiccup.core/html
-   [:div
-    [:div
-     [:img
-      {:style {:display "inline-block"
-               :zoom 1
-               :width "40px"
-               :margin-left "20px"}
-       ;; { zoom: 1; vertical-align: top; font-size: 12px;}
-       :src "/Clay.svg.png"
-       :alt "Clay logo"}]
-     #_[:big [:big "(Clay)"]]
-     [:div {:style {:display "inline-block"
-                    :margin "20px"}}
-      [:pre {:style {:margin 0}}
-       (some->> state
-                :full-target-path)]
-      [:pre {:style {:margin 0}}
-       (time/now)]]]
-    #_(:hiccup item/separator)]))
+      [:div
+       [:div
+        [:img
+         {:style {:display "inline-block"
+                  :zoom 1
+                  :width "40px"
+                  :margin-left "20px"}
+          ;; { zoom: 1; vertical-align: top; font-size: 12px;}
+          :src "/Clay.svg.png"
+          :alt "Clay logo"}]
+        #_[:big [:big "(Clay)"]]
+        [:div {:style {:display "inline-block"
+                       :margin "20px"}}
+         [:pre {:style {:margin 0}}
+          (some->> state
+                   :last-rendered-spec
+                   :full-target-path)]
+         [:pre {:style {:margin 0}}
+          (time/now)]]]
+       #_(:hiccup item/separator)]))
 
 (defn page
   ([]
    (page @server.state/*state))
   ([state]
-   (let [relative-path (some-> state
-                               :full-target-path
-                               (string/replace (re-pattern (str "^"
-                                                                (:base-target-path state)
-                                                                "/"))
-                                               ""))]
-     (some-> state
-             :full-target-path
-             slurp))))
+   (some-> state
+           :last-rendered-spec
+           :full-target-path
+           slurp)))
 
 (defn wrap-html [html state]
   (-> html
       (str/replace #"(<\s*body[^>]*>)"
                    (str "$1"
-                        (hiccup/html
-                         #_[:style "* {margin: 0; padding: 0; top: 0;}"]
-                         [:div {:style {:height "70px"
-                                        :background-color "#eee"}}
-                          (header state)])
+                        (when-not (-> state
+                                      :last-rendered-spec
+                                      :hide-ui-header)
+                          (hiccup/html
+                              #_[:style "* {margin: 0; padding: 0; top: 0;}"]
+                              [:div {:style {:height "70px"
+                                             :background-color "#eee"}}
+                               (header state)]))
                         (communication-script state)))))
 
 (defn routes [{:keys [:body :request-method :uri]
@@ -182,7 +181,8 @@
        (println "serving Clay at" (port->url port))
        (browse!)))))
 
-(defn update-page! [{:keys [show
+(defn update-page! [{:as spec
+                     :keys [show
                             base-target-path
                             page
                             full-target-path]
@@ -195,7 +195,9 @@
   (io/make-parents full-target-path)
   (when page
     (spit full-target-path page))
-  (server.state/reset-full-target-path! full-target-path)
+  (-> spec
+      (assoc :full-target-path full-target-path)
+      (server.state/reset-last-rendered-spec!))
   (when show
     (broadcast! "refresh"))
   [:ok])
