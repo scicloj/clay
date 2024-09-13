@@ -303,72 +303,73 @@
                                           run-quarto
                                           book
                                           post-process]}]
-  ((single-form
-    single-value)
-   (try
-     (files/init-target! full-target-path)
-     (let [{:keys [items test-forms]} (notebook/items-and-test-forms
-                                       spec)
-           spec-with-items      (-> spec
-                                    (assoc :items items))
-           ]
-       [(case (first format)
-          :hiccup (let [qmd-path (-> full-target-path
-                                     (string/replace #"\.html$" ".edn"))]
-                    (page/hiccup spec-with-items))
-          :html (do (-> spec-with-items
-                        (config/add-field :page (if post-process
-                                                  (comp post-process page/html)
-                                                  page/html))
-                        server/update-page!)
-                    [:wrote full-target-path])
-          :quarto (let [qmd-path (-> full-target-path
-                                     (string/replace #"\.html$" ".qmd"))
-                        output-file (-> full-target-path
-                                        (string/split #"/")
-                                        last)]
-                    (-> spec-with-items
-                        (update-in [:quarto :format]
-                                   select-keys [(second format)])
-                        (update-in [:quarto :format (second format)]
-                                   assoc :output-file output-file)
-                        (cond-> book
-                          (update :quarto dissoc :title))
-                        page/md
-                        (->> (spit qmd-path)))
-                    (println [:wrote qmd-path (time/now)])
-                    (when-not book
-                      (if run-quarto
-                        (do (->> (shell/sh "quarto" "render" qmd-path)
-                                 ((juxt :err :out))
-                                 (mapv println))
-                            (println [:created full-target-path (time/now)])
-                            (when post-process
-                              (->> full-target-path
-                                   slurp
-                                   post-process
-                                   (spit full-target-path)))
-                            (-> spec
-                                (assoc :full-target-path full-target-path)
-                                server/update-page!))
-                        ;; else, just show the qmd file
-                        (-> spec
-                            (assoc :full-target-path qmd-path)
-                            server/update-page!)))
-                    (vec
-                     (concat [:wrote qmd-path]
-                             (when run-quarto
-                               [full-target-path])))))
-        (when test-forms
-          (write-test-forms-as-ns test-forms))])
-     (catch Exception e
-       (-> spec
-           (assoc :page (-> spec
-                            (assoc :items [(item/pprint e)])
-                            page/html))
-           server/update-page!)
-       (throw e))
-     (finally (files/init-target! full-target-path)))))
+  (when (or (= source-type "clj")
+            single-form
+            single-value)
+    (try
+      (files/init-target! full-target-path)
+      (let [{:keys [items test-forms]} (notebook/items-and-test-forms
+                                        spec)
+            spec-with-items      (-> spec
+                                     (assoc :items items))
+            ]
+        [(case (first format)
+           :hiccup (let [qmd-path (-> full-target-path
+                                      (string/replace #"\.html$" ".edn"))]
+                     (page/hiccup spec-with-items))
+           :html (do (-> spec-with-items
+                         (config/add-field :page (if post-process
+                                                   (comp post-process page/html)
+                                                   page/html))
+                         server/update-page!)
+                     [:wrote full-target-path])
+           :quarto (let [qmd-path (-> full-target-path
+                                      (string/replace #"\.html$" ".qmd"))
+                         output-file (-> full-target-path
+                                         (string/split #"/")
+                                         last)]
+                     (-> spec-with-items
+                         (update-in [:quarto :format]
+                                    select-keys [(second format)])
+                         (update-in [:quarto :format (second format)]
+                                    assoc :output-file output-file)
+                         (cond-> book
+                           (update :quarto dissoc :title))
+                         page/md
+                         (->> (spit qmd-path)))
+                     (println [:wrote qmd-path (time/now)])
+                     (when-not book
+                       (if run-quarto
+                         (do (->> (shell/sh "quarto" "render" qmd-path)
+                                  ((juxt :err :out))
+                                  (mapv println))
+                             (println [:created full-target-path (time/now)])
+                             (when post-process
+                               (->> full-target-path
+                                    slurp
+                                    post-process
+                                    (spit full-target-path)))
+                             (-> spec
+                                 (assoc :full-target-path full-target-path)
+                                 server/update-page!))
+                         ;; else, just show the qmd file
+                         (-> spec
+                             (assoc :full-target-path qmd-path)
+                             server/update-page!)))
+                     (vec
+                      (concat [:wrote qmd-path]
+                              (when run-quarto
+                                [full-target-path])))))
+         (when test-forms
+           (write-test-forms-as-ns test-forms))])
+      (catch Exception e
+        (-> spec
+            (assoc :page (-> spec
+                             (assoc :items [(item/pprint e)])
+                             page/html))
+            server/update-page!)
+        (throw e))
+      (finally (files/init-target! full-target-path)))))
 
 
 (defn sync-resources! [{:keys [base-target-path
