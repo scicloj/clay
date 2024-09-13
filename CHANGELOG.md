@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: using the appropriate Quarto target format in Markdown generation
 - removed the `:fontsize` setting in the default config (as it interferred with revealjs slides)
 - added support for hiding the ui header; server refactoring
+- added support for HTML post-processing (experimental)
+
 
 ## [2-beta15] - 2024-07-27
 - introducing code-and-value and horizontal layout - WIP (PR #127)
