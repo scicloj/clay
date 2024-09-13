@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta16] - Pending
+## [2-beta16-SNAPSHOT] 
 - Class or style from kindly/options (#139)
 - updated Kindly and Kindly-advice versions
 - rely on `*ns*` `:kindly/options` and kindly-advice for options (PR #148)
