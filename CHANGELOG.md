@@ -11,11 +11,12 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: handling the edge case of string hiccup carefully
 - bugfix: handling `:kind/hidden` correctly in notebook generation
 - applying `:kindly/options` in all hiccup-based pathways
-- bugfix: using the appropriate Quarto target format in Markdown generation
-- removed the `:fontsize` setting in the default config (as it interferred with revealjs slides)
-- added support for hiding the ui header; server refactoring
+- bugfix: using the appropriate Quarto target format in Markdown generation (fixes #137, #147)
+- removed the `:fontsize` setting in the default config (as it interferred with revealjs slides) (fixes #155)
+- added support for hiding the info line; server refactoring (fixes #156)
+- added support for hiding the ui header; server refactoring (fixes #154)
 - added support for HTML post-processing (`:post-process` option)
-- bugfix: fixed the `:inline-js-and-css` support at the experimental `make-hiccup` funciton
+- bugfix: fixed the `:inline-js-and-css` support at the experimental `make-hiccup` funciton (fixes #144)
 
 
 ## [2-beta15] - 2024-07-27
