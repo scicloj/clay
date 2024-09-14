@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file. This change
 - bugfix: using the appropriate Quarto target format in Markdown generation
 - removed the `:fontsize` setting in the default config (as it interferred with revealjs slides)
 - added support for hiding the ui header; server refactoring
-- added support for HTML post-processing (experimental)
+- added support for HTML post-processing (`:post-process` option)
 - bugfix: fixed the `:inline-js-and-css` support at the experimental `make-hiccup` funciton
 
 
