@@ -270,6 +270,20 @@
                                (-> html
                                    (str/replace #"3333" "4444")))}))
 
+;; Render a namespace
+;; as HTML
+;; and hide the UI banner in the browser view.
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :hide-ui-header true}))
+
+;; Render a namespace
+;; as HTML
+;; and hide the information line at the bottom of the page.
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :hide-info-line true}))
+
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
