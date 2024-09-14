@@ -165,7 +165,8 @@
    [scicloj.clay.v2.quarto.themes :as quarto.themes]
    [scicloj.metamorph.ml.toydata :as toydata]
    [scicloj.hanamicloth.v1.api :as haclo]
-   [tablecloth.api :as tc]))
+   [tablecloth.api :as tc]
+   [clojure.string :as str]))
 
 ;; A Hiccup spec:
 (kind/hiccup
@@ -258,6 +259,16 @@
 ;; and show it at the browser:
 (comment
   (clay/make! {:single-value 3}))
+
+;; Render a single value
+;; as HTML
+;; and process the resulting HTML
+;; using a custom function.
+(comment
+  (clay/make! {:single-value 3333
+               :post-process (fn [html]
+                               (-> html
+                                   (str/replace #"3333" "4444")))}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
