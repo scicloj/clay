@@ -160,7 +160,7 @@
                                    (->> (concat from-the-web
                                                 from-local-copy
                                                 from-local-copy-of-repo)
-                                        (mapcat (include-inline js-or-css)))
+                                        (map (include-inline js-or-css)))
                                    ;; else
                                    (concat
                                     (some->> from-the-web

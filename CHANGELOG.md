@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. This change
 - removed the `:fontsize` setting in the default config (as it interferred with revealjs slides)
 - added support for hiding the ui header; server refactoring
 - added support for HTML post-processing (experimental)
+- bugfix: fixed the `:inline-js-and-css` support at the experimental `make-hiccup` funciton
 
 
 ## [2-beta15] - 2024-07-27
