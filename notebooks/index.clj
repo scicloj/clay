@@ -642,6 +642,11 @@
 
 ;; (experimental)
 
+;; `kindly/merge-options!` varies the options to affect the notes coming below.
+;; Let us use it to present code and value horizontally.
+;; By default, calls to `kindly/merge-options!` are hidden.
+;; In this document, we use `#(kindly/hide-code % false)` to make them visible.`
+
 (kindly/hide-code
  (kindly/merge-options! {:code-and-value :horizontal})
  false)
@@ -649,6 +654,8 @@
 (+ 1 2)
 
 (+ 3 4)
+
+;; Let us change it back.
 
 (kindly/hide-code
  (kindly/merge-options! {:code-and-value :vertical})
@@ -658,6 +665,8 @@
 
 (+ 3 4)
 
+;; Let us now change the background color.
+
 (kindly/hide-code
  (kindly/merge-options! {:style {:background-color "#ccddee"}})
  false)
@@ -666,11 +675,18 @@
  [:div
   [:p "hello"]])
 
+;; In Quarto-based rendering, datasets are rendered as plain Markdown,
+;; and HTML options are not applied at the moment.
+
 (tc/dataset {:x (range 3)})
+
+;; To make sure the background color is applied, we wrap it with Hiccup.
 
 (kind/hiccup
  [:div
   (tc/dataset {:x (range 3)})])
+
+;; Let us cancel the setting of the background color.
 
 (kindly/hide-code
  (kindly/merge-options! {:style {:background-color nil}})
@@ -679,9 +695,3 @@
 (kind/hiccup
  [:div
   [:p "hello"]])
-
-(tc/dataset {:x (range 3)})
-
-(kind/hiccup
- [:div
-  (tc/dataset {:x (range 3)})])
