@@ -454,6 +454,7 @@
 ;; | `:remote-repo` | linking to source | `{:git-url "https://github.com/scicloj/clay" :branch  "main"}` |
 ;; | `:hide-info-line` | hiding the source reference at the bottom | `{:hide-info-line true}` |
 ;; | `:hide-ui-header` | hiding the ui info at the top | `{:hide-ui-header true}` |
+;; | `:post-process` | post-processing the resulting HTML | `{:post-process #(str/replace "#3" "4")}` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
