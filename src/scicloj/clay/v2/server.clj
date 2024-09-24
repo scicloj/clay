@@ -9,8 +9,7 @@
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
-   [hiccup.core :as hiccup]
-   [tablecloth.api :as tc])
+   [hiccup.core :as hiccup])
   (:import (java.net ServerSocket)))
 
 (def default-port 1971)
