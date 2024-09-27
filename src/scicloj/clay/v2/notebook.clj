@@ -135,11 +135,13 @@
       (concat items
               [item/separator il]))))
 
-(defn ->var-name [i]
-  (symbol (str "var" i)))
+(defn ->var-name [i line-number]
+  (symbol (str "var" i
+               "_line" line-number)))
 
-(defn ->test-name [i]
-  (symbol (str "test" i)))
+(defn ->test-name [i line-number]
+  (symbol (str "test" i
+               "_line" line-number)))
 
 (defn test-last? [complete-note]
   (and (-> complete-note
@@ -217,9 +219,9 @@
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
                                                      test-forms
-                                                     last-nontest-i]}
+                                                     last-nontest-varname]}
                              note]
-                          (let [{:as complete-note :keys [form kind]} (complete note)
+                          (let [{:as complete-note :keys [form kind region]} (complete note)
                                 test-note (test-last? complete-note)
                                 new-items (when-not test-note
                                             (-> complete-note
@@ -230,26 +232,28 @@
                                                                    :kindly/options
                                                                    :format])))
                                                 (note-to-items options)))
+                                line-number (first region)
+                                varname (->var-name i line-number)
                                 test-form (if test-note
                                             ;; a deftest form
                                             (deftest-form
-                                              (->test-name i)
-                                              (->var-name last-nontest-i)
+                                              (->test-name i line-number)
+                                              last-nontest-varname
                                               form)
                                             (if (ns-form? form)
                                               ;; the test ns form
                                               (test-ns-form form)
                                               ;; the regular case, just a def
                                               (def-form
-                                                (->var-name i)
+                                                varname
                                                 form)))]
                             {:i              (inc i)
                              :items          (concat items new-items)
                              :test-forms     (conj test-forms test-form)
-                             :last-nontest-i (if (or (:comment? complete-note)
-                                                     test-note)
-                                               last-nontest-i
-                                               i)}))
+                             :last-nontest-varname (if (or (:comment? complete-note)
+                                                           test-note)
+                                                     last-nontest-varname
+                                                     varname)}))
                         ;; initial value
                         {:i              0
                          :items          []
