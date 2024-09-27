@@ -4,7 +4,7 @@
         carocad/parcera {:mvn/version "0.11.6"}
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
         http-kit/http-kit {:mvn/version "2.8.0-RC1"}
-        io.github.nextjournal/markdown {:mvn/version "0.5.148"}
+        io.github.nextjournal/markdown {:mvn/version "0.6.157"}
         hiccup/hiccup {:mvn/version "2.0.0-RC3"}
         clj-commons/clj-yaml {:mvn/version "1.0.27"}
         org.scicloj/kindly {:mvn/version "4-beta12"}

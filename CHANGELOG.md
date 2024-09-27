@@ -1,9 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta16] - 2024-09-14
+## [2-beta17] - unreleased
 - removed unused require (PR #162) - thanks, @schneiderlin
-- 
+- updated `nextjournal/mardkown` version, which brings Java 22 support
 
 ## [2-beta16] - 2024-09-14
 - Class or style from kindly/options (#139)
