@@ -2,7 +2,6 @@
   (:require [clojure.tools.reader]
             [clojure.tools.reader.reader-types]
             [parcera.core :as parcera]
-            [clojure.string :as string]
             [clojure.string :as str]))
 
 (def *generation (atom 0))
