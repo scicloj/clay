@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - removed unused require (PR #162) - thanks, @schneiderlin
 - updated `nextjournal/mardkown` version, which brings Java 22 support
 - add original line-number to generated test vars names (#163) - thanks, @behrica
+- cleaning "\r\n" to avoid a tools.reader bug - thanks, @schneiderlin
 
 ## [2-beta16] - 2024-09-14
 - Class or style from kindly/options (#139)

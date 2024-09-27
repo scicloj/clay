@@ -26,21 +26,24 @@
        first))
 
 (defn read-by-tools-reader [code]
-  (->> code
-       read-forms
-       (map (fn [form]
-              (let [{:keys [line column
-                            end-line end-column
-                            code]}
-                    (meta form)]
-                (when line ; skip forms with no location info
-                  {:method :tools-reader
-                   :region [line column
-                            end-line end-column]
-                   :code (-> form meta :source)
-                   :meta (meta form)
-                   :form form}))))
-       (filter some?)))
+  (-> code
+      ;; avoiding a tools.reader bug -- see:
+      ;; https://github.com/scicloj/clay/issues/151#issuecomment-2373488031
+      (str/replace #"\r\n" "\n")
+      (->> read-forms
+           (map (fn [form]
+                  (let [{:keys [line column
+                                end-line end-column
+                                code]}
+                        (meta form)]
+                    (when line ; skip forms with no location info
+                      {:method :tools-reader
+                       :region [line column
+                                end-line end-column]
+                       :code (-> form meta :source)
+                       :meta (meta form)
+                       :form form}))))
+           (filter some?))))
 
 (defn read-by-parcera [code]
   (->> code
