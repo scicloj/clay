@@ -183,7 +183,7 @@
     tc/dataset
     (tc/set-dataset-name "my dataset"))
 
-;; A plot using [Hanamicloth](https://github.com/jsa-aerial/hanamicloth):
+;; A plot using [Hanamicloth](https://github.com/scicloj/hanamicloth):
 (-> (toydata/iris-ds)
     (haclo/plot haclo/rule-chart
                 {:=x :sepal_width
