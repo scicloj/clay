@@ -18,7 +18,8 @@
             [scicloj.clay.v2.util.merge :as merge]
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
-            [scicloj.kindly.v4.kind :as kind]))
+            [scicloj.kindly.v4.kind :as kind]
+            [hawk.core :as hawk]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
@@ -382,6 +383,41 @@
         (io/make-parents target)
         (util.fs/copy-tree-no-clj subdir target)))))
 
+(defonce *dir-watchers (atom {}))
+(defonce *file-specs (atom {}))
+
+(defn stop-watchers
+  "Stop all directory watchers."
+  []
+  (map #(hawk/stop! %2) @*dir-watchers)
+  (reset! *dir-watchers {})
+  (reset! *file-specs {}))
+
+(declare make!)
+
+(defn- watch-dir
+  "Watch directory changes if necessary."
+  [spec]
+  (when (:source-path spec)
+    ;; watch dir for notebook changes
+    (let [dir (.getParent (io/file (:source-path spec)))]
+      (when-not (contains? @*dir-watchers dir)
+        (swap! *dir-watchers
+               #(assoc %
+                       dir
+                       (hawk/watch! [{:paths
+                                      [dir]
+                                      :handler
+                                      (fn [_ctx e]
+                                        (let [abs-path (.getAbsolutePath (:file e))]
+                                          (when (and (identical? :modify (:kind e))
+                                                     (contains? @*file-specs abs-path))
+                                            (make! (get @*file-specs abs-path)))))}])))))
+    ;; save the spec
+    (swap! *file-specs #(assoc %
+                               (.getAbsolutePath (io/file (:source-path spec)))
+                               spec))))
+
 (defn make! [spec]
   (let [{:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs (config/config)
@@ -397,7 +433,8 @@
                            first
                            (assoc :items [item/loader])
                            page/html))
-          server/update-page!))
+          server/update-page!)
+      (watch-dir spec))
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))
      (-> main-spec
