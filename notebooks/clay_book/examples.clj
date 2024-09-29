@@ -146,6 +146,11 @@ clay-image
 (kind/image
  {:src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"})
 
+;; Other image representations are currently not supported.
+
+(kind/image
+ "AN IMAGE")
+
 ;; ## Plain data structures
 
 ;; Plain data structures (lists and sequnces, vectors, sets, maps)
