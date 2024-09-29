@@ -551,7 +551,8 @@
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
 
-(kind/image "notebooks/images/Clay.svg.png")
+(kind/image
+ {:src "notebooks/images/Clay.svg.png"})
 
 (kind/vega-lite
  {:data {:url "notebooks/datasets/iris.csv"},
