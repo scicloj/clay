@@ -504,6 +504,12 @@
 ;; a given function and arguments, then proceeding recursively
 ;; with the resulting value.
 
+;; The function can be specified through Kindly options.
+(kind/fn {:x 1
+          :y 2}
+  {:kindly/f (fn [{:keys [x y]}]
+               (+ x y))})
+
 ;; If the value is a vector, the function is the first element, and the arguments are the rest.
 
 (kind/fn
@@ -519,6 +525,11 @@
 
 ;; The kind of the value returned by the function is respected.
 ;; For example, here are examples with a function returning `kind/dataset`.
+
+(kind/fn
+  {:x (range 3)
+   :y (repeatedly 3 rand)}
+  {:kindly/f tc/dataset})
 
 (kind/fn
   [tc/dataset
