@@ -225,24 +225,35 @@
                      full-target-path
                      base-target-path]
               :as context}]
-  (let [image (if (sequential? value)
-                (first value)
-                value)
-        png-path (files/next-file!
-                  full-target-path
-                  ""
-                  image
-                  ".png")]
-    (when-not
-     (util.image/write! image "png" png-path)
-      (throw (ex-message "Failed to save image as PNG.")))
-    {:hiccup [:img {:src (-> png-path
-                             (str/replace
-                              (re-pattern (str "^"
-                                               base-target-path
-                                               "/"))
-                              ""))}]
-     :item-class "clay-image"}))
+  (if (sequential? value)
+    ;; If value is sequential, just handle the first element.
+    (-> context
+        (update :value first))
+    ;; Figure out what kind of image representation we have.
+    (merge
+     {:item-class "clay-image"}
+     (cond
+       ;; a BufferedImage object
+       (util.image/buffered-image? value)
+       (let [png-path (files/next-file!
+                       full-target-path
+                       ""
+                       value
+                       ".png")]
+         (when-not
+             (util.image/write! value "png" png-path)
+           (throw (ex-message "Failed to save image as PNG.")))
+         {:hiccup [:img {:src (-> png-path
+                                  (str/replace
+                                   (re-pattern (str "^"
+                                                    base-target-path
+                                                    "/"))
+                                   ""))}]})
+       ;; a path
+       (string? value)
+       (do
+         (prn [:DBG value])
+         {:hiccup [:img {:src value}]})))))
 
 (defn vega-embed [{:keys [value
                           full-target-path

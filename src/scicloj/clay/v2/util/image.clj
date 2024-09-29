@@ -5,6 +5,9 @@
            java.io.InputStream
            javax.imageio.ImageIO))
 
+(defn buffered-image? [image]
+  (instance? BufferedImage image))
+
 (defn write! [^BufferedImage image
               format
               target-jpg-path]
