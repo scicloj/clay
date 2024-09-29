@@ -1,14 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta17] - unreleased
-- removed unused require (PR #162) - thanks, @schneiderlin
+## [2-beta17] - 2024-09-30
+- removed unused require (PR #162) - thanks, @schneiderlin, @mchughs
 - updated `nextjournal/mardkown` version, which brings Java 22 support
 - add original line-number to generated test vars names (#163) - thanks, @behrica
 - cleaning "\r\n" to avoid a tools.reader bug - thanks, @schneiderlin
-- added support for image urls in `:kind/image`
-- added support for video urls in `:kind/video`
-- added support for `:kindly/options` in `:kind/fn`
+- added support for image urls in `:kind/image` - thanks, @lightmatters
+- added support for video urls in `:kind/video` - thanks, @holyjak
+- added support for `:kindly/options` in `:kind/fn` - thanks, @holyjak
 
 ## [2-beta16] - 2024-09-14
 - Class or style from kindly/options (#139)
