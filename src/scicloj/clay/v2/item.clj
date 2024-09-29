@@ -290,20 +290,26 @@
                      allowfullscreen
                      embed-options]
               :or {allowfullscreen true}}]
-  {:hiccup [:iframe
-            (merge
-             (when iframe-height
-               {:height iframe-height})
-             (when iframe-width
-               {:width iframe-width})
-             {:src (str "https://www.youtube.com/embed/"
-                        youtube-id
-                        (some->> embed-options
-                                 (map (fn [[k v]]
-                                        (format "%s=%s" (name k) v)))
-                                 (str/join "&")
-                                 (str "?")))
-              :allowfullscreen allowfullscreen})]})
+  (cond
+    ;; A vidoe file
+
+
+    ;; A youtube video
+    youtube-id
+    {:hiccup [:iframe
+              (merge
+               (when iframe-height
+                 {:height iframe-height})
+               (when iframe-width
+                 {:width iframe-width})
+               {:src (str "https://www.youtube.com/embed/"
+                          youtube-id
+                          (some->> embed-options
+                                   (map (fn [[k v]]
+                                          (format "%s=%s" (name k) v)))
+                                   (str/join "&")
+                                   (str "?")))
+                :allowfullscreen allowfullscreen})]}))
 
 (defn observable [code]
   {:md (->> code
