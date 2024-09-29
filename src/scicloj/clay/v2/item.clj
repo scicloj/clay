@@ -233,26 +233,27 @@
     ;; Figure out what kind of image representation we have.
     (merge
      {:item-class "clay-image"}
-     (cond
-       ;; a BufferedImage object
-       (util.image/buffered-image? value)
-       (let [png-path (files/next-file!
-                       full-target-path
-                       ""
-                       value
-                       ".png")]
-         (when-not
-             (util.image/write! value "png" png-path)
-           (throw (ex-message "Failed to save image as PNG.")))
-         {:hiccup [:img {:src (-> png-path
-                                  (str/replace
-                                   (re-pattern (str "^"
-                                                    base-target-path
-                                                    "/"))
-                                   ""))}]})
-       ;; a path
-       (string? value)
-       {:hiccup [:img {:src value}]}))))
+     (or
+      ;; An image url:
+      (when (:src value)
+        {:hiccup [:img value]})
+      ;; A BufferedImage object:
+      (when (util.image/buffered-image? value)
+        (let [png-path (files/next-file!
+                        full-target-path
+                        ""
+                        value
+                        ".png")]
+          (when-not
+              (util.image/write! value "png" png-path)
+            (throw (ex-message "Failed to save image as PNG.")))
+          {:hiccup [:img {:src (-> png-path
+                                   (str/replace
+                                    (re-pattern (str "^"
+                                                     base-target-path
+                                                     "/"))
+                                    ""))}]}))
+      {:hiccup [:p "unsupported image format"]}))))
 
 (defn vega-embed [{:keys [value
                           full-target-path
