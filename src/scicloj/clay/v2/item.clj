@@ -228,7 +228,8 @@
   (if (sequential? value)
     ;; If value is sequential, just handle the first element.
     (-> context
-        (update :value first))
+        (update :value first)
+        image)
     ;; Figure out what kind of image representation we have.
     (merge
      {:item-class "clay-image"}
@@ -251,9 +252,7 @@
                                    ""))}]})
        ;; a path
        (string? value)
-       (do
-         (prn [:DBG value])
-         {:hiccup [:img {:src value}]})))))
+       {:hiccup [:img {:src value}]}))))
 
 (defn vega-embed [{:keys [value
                           full-target-path
