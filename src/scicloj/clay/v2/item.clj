@@ -284,32 +284,33 @@
                            (->> (format "vegaEmbed(document.currentScript.parentElement, %s);")))]]
      :deps [:vega]}))
 
-(defn video [{:keys [youtube-id
+(defn video [{:keys [src
+                     youtube-id
                      iframe-width
                      iframe-height
                      allowfullscreen
                      embed-options]
               :or {allowfullscreen true}}]
   (cond
-    ;; A vidoe file
-
-
+    ;; A video file
+    src {:hiccup [:video {:controls ""}
+                  [:source {:src src
+                            :type "video/mp4"}]]}
     ;; A youtube video
-    youtube-id
-    {:hiccup [:iframe
-              (merge
-               (when iframe-height
-                 {:height iframe-height})
-               (when iframe-width
-                 {:width iframe-width})
-               {:src (str "https://www.youtube.com/embed/"
-                          youtube-id
-                          (some->> embed-options
-                                   (map (fn [[k v]]
-                                          (format "%s=%s" (name k) v)))
-                                   (str/join "&")
-                                   (str "?")))
-                :allowfullscreen allowfullscreen})]}))
+    youtube-id {:hiccup [:iframe
+                         (merge
+                          (when iframe-height
+                            {:height iframe-height})
+                          (when iframe-width
+                            {:width iframe-width})
+                          {:src (str "https://www.youtube.com/embed/"
+                                     youtube-id
+                                     (some->> embed-options
+                                              (map (fn [[k v]]
+                                                     (format "%s=%s" (name k) v)))
+                                              (str/join "&")
+                                              (str "?")))
+                           :allowfullscreen allowfullscreen})]}))
 
 (defn observable [code]
   {:md (->> code
