@@ -233,27 +233,28 @@
     ;; Figure out what kind of image representation we have.
     (merge
      {:item-class "clay-image"}
-     (or
-      ;; An image url:
-      (when (:src value)
-        {:hiccup [:img value]})
-      ;; A BufferedImage object:
-      (when (util.image/buffered-image? value)
-        (let [png-path (files/next-file!
-                        full-target-path
-                        ""
-                        value
-                        ".png")]
-          (when-not
-              (util.image/write! value "png" png-path)
-            (throw (ex-message "Failed to save image as PNG.")))
-          {:hiccup [:img {:src (-> png-path
-                                   (str/replace
-                                    (re-pattern (str "^"
-                                                     base-target-path
-                                                     "/"))
-                                    ""))}]}))
-      {:hiccup [:p "unsupported image format"]}))))
+     (cond
+       ;; An image url:
+       (:src value)
+       {:hiccup [:img value]}
+       ;; A BufferedImage object:
+       (util.image/buffered-image? value)
+       (let [png-path (files/next-file!
+                       full-target-path
+                       ""
+                       value
+                       ".png")]
+         (when-not
+             (util.image/write! value "png" png-path)
+           (throw (ex-message "Failed to save image as PNG.")))
+         {:hiccup [:img {:src (-> png-path
+                                  (str/replace
+                                   (re-pattern (str "^"
+                                                    base-target-path
+                                                    "/"))
+                                   ""))}]})
+       :else
+       {:hiccup [:p "unsupported image format"]}))))
 
 (defn vega-embed [{:keys [value
                           full-target-path
@@ -283,26 +284,33 @@
                            (->> (format "vegaEmbed(document.currentScript.parentElement, %s);")))]]
      :deps [:vega]}))
 
-(defn video [{:keys [youtube-id
+(defn video [{:keys [src
+                     youtube-id
                      iframe-width
                      iframe-height
                      allowfullscreen
                      embed-options]
               :or {allowfullscreen true}}]
-  {:hiccup [:iframe
-            (merge
-             (when iframe-height
-               {:height iframe-height})
-             (when iframe-width
-               {:width iframe-width})
-             {:src (str "https://www.youtube.com/embed/"
-                        youtube-id
-                        (some->> embed-options
-                                 (map (fn [[k v]]
-                                        (format "%s=%s" (name k) v)))
-                                 (str/join "&")
-                                 (str "?")))
-              :allowfullscreen allowfullscreen})]})
+  (cond
+    ;; A video file
+    src {:hiccup [:video {:controls ""}
+                  [:source {:src src
+                            :type "video/mp4"}]]}
+    ;; A youtube video
+    youtube-id {:hiccup [:iframe
+                         (merge
+                          (when iframe-height
+                            {:height iframe-height})
+                          (when iframe-width
+                            {:width iframe-width})
+                          {:src (str "https://www.youtube.com/embed/"
+                                     youtube-id
+                                     (some->> embed-options
+                                              (map (fn [[k v]]
+                                                     (format "%s=%s" (name k) v)))
+                                              (str/join "&")
+                                              (str "?")))
+                           :allowfullscreen allowfullscreen})]}))
 
 (defn observable [code]
   {:md (->> code

@@ -146,6 +146,11 @@ clay-image
 (kind/image
  {:src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"})
 
+;; Other image representations are currently not supported.
+
+(kind/image
+ "AN IMAGE")
+
 ;; ## Plain data structures
 
 ;; Plain data structures (lists and sequnces, vectors, sets, maps)
@@ -857,33 +862,40 @@ Plot.plot({
 (slurp "https://files.rcsb.org/download/2POR.pdb"))
 
 (kind/reagent
-['(fn [{:keys [pdb-data]}]
-    [:div
-     {:style {:width "100%"
-              :height "500px"
-              :position "relative"}
-      :ref (fn [el]
-             (let [config (clj->js
-                           {:backgroundColor "0xffffff"})
-                   viewer (.createViewer js/$3Dmol el)]
-               (.setViewStyle viewer (clj->js
-                                      {:style "outline"}))
-               (.addModelsAsFrames viewer pdb-data "pdb")
-               (.addSphere viewer (clj->js
-                                   {:center {:x 0
-                                             :y 0
-                                             :z 0}
-                                    :radius 5
-                                    :color "green"
-                                    :alpha 0.2}))
-               (.zoomTo viewer)
-               (.render viewer)
-               (.zoom viewer 0.8 2000)))}])
- {:pdb-data pdb-2POR}]
-;; Note we need to mention the dependency:
-{:html/deps [:three-d-mol]})
+ ['(fn [{:keys [pdb-data]}]
+     [:div
+      {:style {:width "100%"
+               :height "500px"
+               :position "relative"}
+       :ref (fn [el]
+              (let [config (clj->js
+                            {:backgroundColor "0xffffff"})
+                    viewer (.createViewer js/$3Dmol el)]
+                (.setViewStyle viewer (clj->js
+                                       {:style "outline"}))
+                (.addModelsAsFrames viewer pdb-data "pdb")
+                (.addSphere viewer (clj->js
+                                    {:center {:x 0
+                                              :y 0
+                                              :z 0}
+                                     :radius 5
+                                     :color "green"
+                                     :alpha 0.2}))
+                (.zoomTo viewer)
+                (.render viewer)
+                (.zoom viewer 0.8 2000)))}])
+  {:pdb-data pdb-2POR}]
+ ;; Note we need to mention the dependency:
+ {:html/deps [:three-d-mol]})
 
 ;; ## Video
+
+;; Videos can be specified as urls (possibly to local files):
+(kind/video {:src "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"})
+
+;; Videos can also be specified as youtube videos:
+;; See, e.g.,  [HTML Youtube Videos](https://www.w3schools.com/html/html_youtube.asp) on w3schools.
+
 (kind/video {:youtube-id "DAQnvAgBma8"})
 
 (kind/video {:youtube-id "DAQnvAgBma8"
@@ -897,7 +909,6 @@ Plot.plot({
              :embed-options {:mute 1
                              :controls 0}})
 
-;; See, e.g.,  [HTML Youtube Videos](https://www.w3schools.com/html/html_youtube.asp) on w3schools.
 
 ;; ## Embedded Portal
 
