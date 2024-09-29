@@ -163,12 +163,15 @@
                                     (-> context
                                         (assoc :value subvalue)
                                         (prepare {:fallback-preparer fallback-preparer})))))
-      :kind/fn (let [new-value (cond (vector? value) (let [[f & args] value]
-                                                       (apply f args))
-                                     (map? value) (let [{:keys [kindly/f]} value]
-                                                    (-> value
-                                                        (dissoc :kindly/f)
-                                                        f)))]
+      :kind/fn (let [new-value (or (when-let [f (-> context :kindly/options :kindly/f)]
+                                     (f value))
+                                   (when (vector? value) (let [[f & args] value]
+                                                           (apply f args)))
+                                   (when (map? value) (let [{:keys [kindly/f]} value]
+                                                        (-> value
+                                                            (dissoc :kindly/f)
+                                                            f)))
+                                   (throw (ex-message "missing function for :kind/fn")))]
                  (-> context
                      (assoc :value new-value)
                      (dissoc :form)
