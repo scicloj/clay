@@ -504,11 +504,16 @@
 ;; a given function and arguments, then proceeding recursively
 ;; with the resulting value.
 
-;; The function can be specified through Kindly options.
+;; The function can be specified through the Kindly options.
 (kind/fn {:x 1
           :y 2}
   {:kindly/f (fn [{:keys [x y]}]
                (+ x y))})
+
+(kind/fn {:my-video-src "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
+  {:kindly/f (fn [{:keys [my-video-src]}]
+               (kind/video
+                {:src my-video-src}))})
 
 ;; If the value is a vector, the function is the first element, and the arguments are the rest.
 
