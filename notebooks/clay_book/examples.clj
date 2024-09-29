@@ -144,7 +144,7 @@ clay-image
 ;; Urls to images can be annotated as images as well.
 
 (kind/image
- "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg")
+ {:src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"})
 
 ;; ## Plain data structures
 
