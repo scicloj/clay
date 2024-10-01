@@ -19,7 +19,7 @@
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly.v4.kind :as kind]
-            [hawk.core :as hawk]))
+            [nextjournal.beholder :as beholder]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
@@ -389,7 +389,7 @@
 (defn stop-watchers
   "Stop all directory watchers."
   []
-  (map #(hawk/stop! %2) @*dir-watchers)
+  (map #(beholder/stop %2) @*dir-watchers)
   (reset! *dir-watchers {})
   (reset! *file-specs {}))
 
@@ -405,14 +405,12 @@
         (swap! *dir-watchers
                #(assoc %
                        dir
-                       (hawk/watch! [{:paths
-                                      [dir]
-                                      :handler
-                                      (fn [_ctx e]
-                                        (let [abs-path (.getAbsolutePath (:file e))]
-                                          (when (and (identical? :modify (:kind e))
-                                                     (contains? @*file-specs abs-path))
-                                            (make! (get @*file-specs abs-path)))))}])))))
+                       (beholder/watch (fn [e]
+                                         (let [abs-path (str (.toAbsolutePath (:path e)))]
+                                           (when (and (identical? :modify (:type e))
+                                                      (contains? @*file-specs abs-path))
+                                             (make! (get @*file-specs abs-path)))))
+                                       dir)))))
     ;; save the spec
     (swap! *file-specs #(assoc %
                                (.getAbsolutePath (io/file (:source-path spec)))
