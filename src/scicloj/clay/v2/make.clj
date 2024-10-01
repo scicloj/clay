@@ -397,8 +397,9 @@
 
 (defn- watch-dir
   "Watch directory changes if necessary."
-  [spec]
-  (when (:source-path spec)
+  [spec config]
+  (when (and (:live-reload config)
+             (:source-path spec))
     ;; watch dir for notebook changes
     (let [dir (.getParent (io/file (:source-path spec)))]
       (when-not (contains? @*dir-watchers dir)
@@ -417,8 +418,9 @@
                                spec))))
 
 (defn make! [spec]
-  (let [{:keys [single-form single-value]} spec
-        {:keys [main-spec single-ns-specs]} (extract-specs (config/config)
+  (let [config (config/config)
+        {:keys [single-form single-value]} spec
+        {:keys [main-spec single-ns-specs]} (extract-specs config
                                                            spec)
         {:keys [show book base-target-path clean-up-target-dir]} main-spec]
     (when (and clean-up-target-dir
@@ -432,7 +434,7 @@
                            (assoc :items [item/loader])
                            page/html))
           server/update-page!)
-      (watch-dir spec))
+      (watch-dir spec config))
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))
      (-> main-spec
