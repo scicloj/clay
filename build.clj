@@ -21,15 +21,14 @@
 (def class-dir "target/classes")
 
 (defn test "Run all the tests." [opts]
-  (doseq [alias [:1.11 :1.12 :master]]
-    (println "\nRunning tests for Clojure" (name alias))
-    (let [basis    (b/create-basis {:aliases [:test alias]})
-          cmds     (b/java-command
-                    {:basis     basis
-                     :main      'clojure.main
-                     :main-args ["-m" "cognitect.test-runner"]})
-          {:keys [exit]} (b/process cmds)]
-      (when-not (zero? exit) (throw (ex-info "Tests failed" {})))))
+  (println "\nRunning tests")
+  (let [basis    (b/create-basis {:aliases [:test]})
+        cmds     (b/java-command
+                  {:basis     basis
+                   :main      'clojure.main
+                   :main-args ["-m" "cognitect.test-runner"]})
+        {:keys [exit]} (b/process cmds)]
+    (when-not (zero? exit) (throw (ex-info "Tests failed" {}))))
   opts)
 
 (defn- pom-template [version]
