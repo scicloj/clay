@@ -29,14 +29,17 @@
              (catch Exception e nil))
         (recur (inc port)))))
 
-(defn communication-script [{:keys [port counter]}]
+
+(defn communication-script
+  "The communication JS script to init a WebSocket to the server."
+  [{:keys [port counter]}]
   (format "
 <script type=\"text/javascript\">
   {
     clay_port = %d;
     clay_server_counter = '%d';
 
-    clay_refresh = function() {location.assign('http://localhost:'+clay_port);}
+    clay_refresh = function() {location.reload();}
 
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
 
@@ -110,8 +113,10 @@
                                (header state)]))
                         (communication-script state)))))
 
-(defn routes [{:keys [:body :request-method :uri]
-               :as req}]
+(defn routes
+  "Web server routes."
+  [{:keys [:body :request-method :uri]
+    :as req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
       (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
