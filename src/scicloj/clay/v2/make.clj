@@ -383,39 +383,65 @@
         (io/make-parents target)
         (util.fs/copy-tree-no-clj subdir target)))))
 
-(defonce *dir-watchers (atom {}))
-(defonce *file-specs (atom {}))
+(defonce dir-watchers-initial {:watchers []
+                               :file-specs {}})
+
+(defonce *dir-watchers (atom dir-watchers-initial))
 
 (defn stop-watchers
   "Stop all directory watchers."
   []
-  (map #(beholder/stop %2) @*dir-watchers)
-  (reset! *dir-watchers {})
-  (reset! *file-specs {}))
+  (doseq [w (:watchers @*dir-watchers)]
+    (beholder/stop w))
+  (reset! *dir-watchers dir-watchers-initial))
 
 (declare make!)
+
+(defn- beholder-callback
+  "Callback function for beholder."
+  [event]
+  (let [abs-path (str (.toAbsolutePath (:path event)))]
+    (when (and (identical? :modify (:type event))
+               (contains? (:file-specs @*dir-watchers) abs-path))
+      (make! (get (:file-specs @*dir-watchers) abs-path)))))
 
 (defn- watch-dir
   "Watch directory changes if necessary."
   [spec config]
   (when (and (:live-reload config)
              (:source-path spec))
-    ;; watch dir for notebook changes
-    (let [dir (.getParent (io/file (:source-path spec)))]
-      (when-not (contains? @*dir-watchers dir)
+    (let [->abs-path (fn [file] (.getAbsolutePath (io/file file)))
+          watched-files (->> @*dir-watchers
+                             :file-specs
+                             keys
+                             set)
+          new-files (->> (:source-path spec)
+                         (#(if (vector? %) % [%]))
+                         (filter #(not (contains? watched-files (->abs-path %))))
+                         set)
+          new-dirs (->> new-files
+                          (map #(.getParent (io/file %)))
+                          set)]
+      ;; watch dir for notebook changes
+      (when-not (empty? new-dirs)
         (swap! *dir-watchers
                #(assoc %
-                       dir
-                       (beholder/watch (fn [e]
-                                         (let [abs-path (str (.toAbsolutePath (:path e)))]
-                                           (when (and (identical? :modify (:type e))
-                                                      (contains? @*file-specs abs-path))
-                                             (make! (get @*file-specs abs-path)))))
-                                       dir)))))
-    ;; save the spec
-    (swap! *file-specs #(assoc %
-                               (.getAbsolutePath (io/file (:source-path spec)))
-                               spec))))
+                       :watchers
+                       (conj (:watchers %)
+                             (apply beholder/watch
+                                    beholder-callback
+                                    new-dirs)))))
+      ;; save the spec for every file
+      (when-not (empty? new-files)
+        (swap! *dir-watchers #(assoc %
+                                     :file-specs
+                                     (->> new-files
+                                          (reduce (fn [pre-result file]
+                                                    (assoc pre-result
+                                                           (->abs-path file)
+                                                           spec))
+                                                  {})
+                                          (merge (:file-specs @*dir-watchers)))))))))
 
 (defn make! [spec]
   (let [config (config/config)
