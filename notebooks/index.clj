@@ -51,7 +51,7 @@
 ;; ## Projects using Clay
 
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
-;; - [Fastmath 3 documentation (WIP)](https://github.com/generateme/fastmath/tree/3.x)
+;; - [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
 ;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
 ;; - [Wolframite documentation](https://scicloj.github.io/wolframite)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
