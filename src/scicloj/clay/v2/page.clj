@@ -48,16 +48,25 @@
    :reagent {:js {:from-local-copy
                   ["https://unpkg.com/react@18/umd/react.production.min.js"
                    "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
-                   "https://scicloj.github.io/scittle/js/scittle.js"
-                   "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                   "https://scicloj.github.io/scittle/js/scittle.reagent.js"
+                   "https://daslu.github.io/scittle/js/scittle.js"
+                   "https://daslu.github.io/scittle/js/scittle.cljs-ajax.js"
+                   "https://daslu.github.io/scittle/js/scittle.reagent.js"
                    "https://cdn.jsdelivr.net/npm/d3-require@1"]}}
-   :tmdjs {:js {:from-local-copy
-                ["https://scicloj.github.io/scittle/js/scittle.tmdjs.js"]}}
+   ;; :tmdjs {:js {:from-local-copy
+   ;;              ["https://daslu.github.io/scittle/js/scittle.tmdjs.js"]}}
    :emmy {:js {:from-local-copy
-               ["https://scicloj.github.io/scittle/js/scittle.emmy.js"]}}
-   :mathbox {:js {:from-local-copy
-                  ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}
+               ["https://daslu.github.io/scittle/js/scittle.emmy.js"]}}
+   :emmy-viewers {:js {:from-local-copy
+                       ["https://daslu.github.io/scittle/js/scittle.emmy.js"
+                        "https://daslu.github.io/scittle/js/scittle.emmy-viewers.js"]}
+                  :css {:from-local-copy
+                        ["https://unpkg.com/mafs@0.18.8/core.css"
+                         "https://unpkg.com/mafs@0.18.8/font.css"
+                         "https://unpkg.com/mathbox@2.3.1/build/mathbox.css"
+                         "https://unpkg.com/mathlive@0.85.1/dist/mathlive-static.css"
+                         "https://unpkg.com/mathlive@0.85.1/dist/mathlive-fonts.css"]}}
+   ;; :mathbox {:js {:from-local-copy
+   ;;                ["https://daslu.github.io/scittle/js/scittle.mathbox.js"]}}
    :portal {:js {:from-local-copy [portal/url]}}
    :d3 {:js {:from-local-copy
              ["https://cdn.jsdelivr.net/npm/d3@7"]}}
