@@ -1031,15 +1031,9 @@ Plot.plot({
 (kind/reagent
  ['(defn ->f [body]
      (eval (list 'fn [] body)))
-  '(require '[emmy.env :as e
-              :refer [D cube tanh cos]]
+  '(require '[emmy.env :as e :refer [D cube tanh cos]]
             '[emmy.viewer :as ev]
-            '[emmy.mafs :as mafs]
-            '[mathbox.core :as mathbox]
-            '[mathbox.primitives :as mb]
-            '[emmy.mathbox.plot :as plot]
-            '[reagent.core :as r]
-            '[reagent.dom :as rdom])]
+            '[emmy.mafs :as mafs])]
  {:html/deps [:emmy-viewers]})
 
 (kind/reagent
