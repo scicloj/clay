@@ -58,6 +58,7 @@
           [:input {:type "button" :value "Click me!"
                    :on-click #(swap! *click-count inc)}]])))])
 
+
 ;; ## HTML
 
 ;; Raw html can be represented as a kind too:
@@ -72,7 +73,8 @@
 
 (kind/html
  ["<svg height=100 width=100>"
-  "<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
+  "<circle c
+x=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
   "</svg>"])
 
 (kind/html
@@ -1021,3 +1023,37 @@ Plot.plot({
 [(random-vega-lite-plot 9)
  (tc/dataset {:x (range 3)
               :y (repeatedly 3 rand)})]
+
+
+;; ## Emmy Viewers
+
+(kind/reagent
+ ['(defn ->f [body]
+     (eval (list 'fn [] body)))
+  '(require '[emmy.env :as e
+              :refer [D cube tanh cos]]
+            '[emmy.viewer :as ev]
+            '[emmy.mafs :as mafs]
+            '[mathbox.core :as mathbox]
+            '[mathbox.primitives :as mb]
+            '[emmy.mathbox.plot :as plot]
+            '[reagent.core :as r]
+            '[reagent.dom :as rdom])]
+ {:html/deps [:emmy-viewers]})
+
+(kind/reagent
+ ['(fn []
+     [->f
+      (ev/with-let [!phase [0 0]]
+        (let [shifted (ev/with-params {:atom !phase :params [0]}
+                        (fn [shift]
+                          (fn [x]
+                            (((cube D) tanh) (e/- x shift)))))]
+          (mafs/mafs
+           {:height 400}
+           (mafs/cartesian)
+           (mafs/of-x shifted)
+           (mafs/movable-point
+            {:atom !phase :constrain "horizontal"})
+           (mafs/inequality
+            {:y {:<= shifted :> cos} :color :blue}))))])])
