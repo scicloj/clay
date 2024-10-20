@@ -1026,7 +1026,7 @@ Plot.plot({
 
 
 ;; ## Emmy Viewers
-;; (WIP, the in upcoming release)
+;; (experimental)
 
 (kind/reagent
  ['(defn ->f [body]
