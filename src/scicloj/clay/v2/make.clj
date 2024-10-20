@@ -442,7 +442,8 @@
                                                            (->abs-path file)
                                                            spec))
                                                   {})
-                                          (merge (:file-specs @*dir-watchers)))))))))
+                                          (merge (:file-specs @*dir-watchers))))))
+      [:watching-new-files new-files])))
 
 (defn make! [spec]
   (let [config (config/config)
@@ -460,9 +461,10 @@
                            first
                            (assoc :items [item/loader])
                            page/html))
-          server/update-page!)
-      (run! watch-dir single-ns-specs))
+          server/update-page!))
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))
      (-> main-spec
-         handle-main-spec!)]))
+         handle-main-spec!)
+     (->> single-ns-specs
+          (mapv watch-dir))]))
