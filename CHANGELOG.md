@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta18] - unreleased
-- live-reload support - thanks, @whatacold
-- Emmy-Viewers support - WIP
+- live-reload support - experimental - thanks, @whatacold
+- Emmy-Viewers support - experimental
 
 ## [2-beta17] - 2024-09-30
 - removed unused require (PR #162) - thanks, @schneiderlin, @mchughs
