@@ -179,7 +179,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#example-notebook-namespace" id="toc-example-notebook-namespace" class="nav-link" data-scroll-target="#example-notebook-namespace"><span class="header-section-number">1.7</span> Example notebook namespace</a></li>
   <li><a href="#api" id="toc-api" class="nav-link" data-scroll-target="#api"><span class="header-section-number">1.8</span> API</a>
   <ul class="collapse">
-  <li><a href="#hiccup-output" id="toc-hiccup-output" class="nav-link" data-scroll-target="#hiccup-output"><span class="header-section-number">1.8.1</span> Hiccup output</a></li>
+  <li><a href="#live-reload" id="toc-live-reload" class="nav-link" data-scroll-target="#live-reload"><span class="header-section-number">1.8.1</span> Live reload</a></li>
+  <li><a href="#hiccup-output" id="toc-hiccup-output" class="nav-link" data-scroll-target="#hiccup-output"><span class="header-section-number">1.8.2</span> Hiccup output</a></li>
   </ul></li>
   <li><a href="#configuration" id="toc-configuration" class="nav-link" data-scroll-target="#configuration"><span class="header-section-number">1.9</span> Configuration</a></li>
   <li><a href="#kinds" id="toc-kinds" class="nav-link" data-scroll-target="#kinds"><span class="header-section-number">1.10</span> Kinds</a></li>
@@ -451,23 +452,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.74310789</td>
+<td style="text-align: right;">0.23454234</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.39520839</td>
+<td style="text-align: right;">0.17814104</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.20835413</td>
+<td style="text-align: right;">0.33009769</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.38018980</td>
+<td style="text-align: right;">0.56223373</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.86798378</td>
+<td style="text-align: right;">0.16889425</td>
 </tr>
 </tbody>
 </table>
@@ -523,7 +524,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"notebooks/index.clj"</span>]</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">:show</span> <span class="va">false</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Evaluate and render the namespaces in <code>"notebooks/slides.clj"</code> <code>"notebooks/index.clj"</code> as HTML and start watching these files for live reload:</p>
+<p>Evaluate and render the namespaces in <code>"notebooks/slides.clj"</code> <code>"notebooks/index.clj"</code> as HTML and start watching these files for live reload: (experimental)</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb14"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">comment</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  (clay/make! {<span class="at">:source-path</span> [<span class="st">"notebooks/slides.clj"</span></span>
@@ -663,8 +664,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb31"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">comment</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  (clay/browse!))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="hiccup-output" class="level3" data-number="1.8.1">
-<h3 data-number="1.8.1" class="anchored" data-anchor-id="hiccup-output"><span class="header-section-number">1.8.1</span> Hiccup output</h3>
+<section id="live-reload" class="level3" data-number="1.8.1">
+<h3 data-number="1.8.1" class="anchored" data-anchor-id="live-reload"><span class="header-section-number">1.8.1</span> Live reload</h3>
+<p>(experimental)</p>
+<p>Clay can listen to file changes (using <a href="https://github.com/nextjournal/beholder">nextjournal/beholder</a>) and respond with remaking the page.</p>
+<p>See the example above with <code>:live-reload true</code>.</p>
+</section>
+<section id="hiccup-output" class="level3" data-number="1.8.2">
+<h3 data-number="1.8.2" class="anchored" data-anchor-id="hiccup-output"><span class="header-section-number">1.8.2</span> Hiccup output</h3>
 <p>(experimental 🛠)</p>
 <p>Render a notebook in Hiccup format and return the resulting Hiccup structure:</p>
 <div class="sourceClojure">
@@ -884,15 +891,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.36847196</td>
+<td style="text-align: right;">0.33040445</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.61536130</td>
+<td style="text-align: right;">0.01800959</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.45151403</td>
+<td style="text-align: right;">0.70976270</td>
 </tr>
 </tbody>
 </table>
@@ -915,15 +922,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.27158939</td>
+<td style="text-align: right;">0.05122623</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.43693061</td>
+<td style="text-align: right;">0.94521801</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.25086673</td>
+<td style="text-align: right;">0.24248796</td>
 </tr>
 </tbody>
 </table>
@@ -946,15 +953,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.50927985</td>
+<td style="text-align: right;">0.53069887</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.21521332</td>
+<td style="text-align: right;">0.40616836</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.77446548</td>
+<td style="text-align: right;">0.91351697</td>
 </tr>
 </tbody>
 </table>
