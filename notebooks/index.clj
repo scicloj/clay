@@ -243,6 +243,7 @@
 ;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
 ;; as HTML
 ;; and start watching these files for live reload:
+;; (experimental)
 (comment
   (clay/make! {:source-path ["notebooks/slides.clj"
                              "notebooks/index.clj"]
@@ -423,6 +424,14 @@
 
 (comment
   (clay/browse!))
+
+;; ### Live reload
+;; (experimental)
+
+;; Clay can listen to file changes (using [nextjournal/beholder](https://github.com/nextjournal/beholder))
+;; and respond with remaking the page.
+
+;; See the example above with `:live-reload true`.
 
 ;; ### Hiccup output
 
