@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta18] - 2024-10-20
 - `:live-reload` support - experimental - thanks, @whatacold
-- Emmy-Viewers support - experimental
+- emmy-viewers support - experimental - thanks, @reedho
 
 ## [2-beta17] - 2024-09-30
 - removed unused require (PR #162) - thanks, @schneiderlin, @mchughs
