@@ -1025,8 +1025,8 @@ Plot.plot({
               :y (repeatedly 3 rand)})]
 
 
-;; ## Emmy Viewers
-;; (experimental)
+;; ## emmy-viewers
+;; (experimental support for [emmy-viewers](https://github.com/mentat-collective/emmy-viewers))
 
 (kind/reagent
  ['(defn ->f [body]
