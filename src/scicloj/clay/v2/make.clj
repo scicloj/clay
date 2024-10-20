@@ -443,7 +443,7 @@
                                                            spec))
                                                   {})
                                           (merge (:file-specs @*dir-watchers))))))
-      [:watching-new-files new-files])))
+      new-files)))
 
 (defn make! [spec]
   (let [config (config/config)
@@ -467,4 +467,6 @@
      (-> main-spec
          handle-main-spec!)
      (->> single-ns-specs
-          (mapv watch-dir))]))
+          (map watch-dir)
+          (reduce into #{})
+          (vector :watching-new-files))]))
