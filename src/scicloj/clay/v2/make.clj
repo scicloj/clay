@@ -407,21 +407,22 @@
 
 (defn- watch-dir
   "Watch directory changes if necessary."
-  [spec config]
-  (when (and (:live-reload config)
-             (:source-path spec))
+  [{:as spec
+    :keys [live-reload source-path]}]
+  (when (and live-reload
+             source-path)
     (let [->abs-path (fn [file] (.getAbsolutePath (io/file file)))
           watched-files (->> @*dir-watchers
                              :file-specs
                              keys
                              set)
-          new-files (->> (:source-path spec)
+          new-files (->> source-path
                          (#(if (vector? %) % [%]))
                          (filter #(not (contains? watched-files (->abs-path %))))
                          set)
           new-dirs (->> new-files
-                          (map #(.getParent (io/file %)))
-                          set)]
+                        (map #(.getParent (io/file %)))
+                        set)]
       ;; watch dir for notebook changes
       (when-not (empty? new-dirs)
         (swap! *dir-watchers
@@ -460,7 +461,7 @@
                            (assoc :items [item/loader])
                            page/html))
           server/update-page!)
-      (watch-dir spec config))
+      (run! watch-dir single-ns-specs))
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))
      (-> main-spec
