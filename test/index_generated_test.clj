@@ -73,7 +73,7 @@
   [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
   [scicloj.clay.v2.quarto.themes :as quarto.themes]
   [scicloj.metamorph.ml.toydata :as toydata]
-  [scicloj.hanamicloth.v1.api :as haclo]
+  [scicloj.tableplot.v1.hanami :as hanami]
   [tablecloth.api :as tc]
   [clojure.string :as str]
   [clojure.test :refer [deftest is]]))
@@ -108,8 +108,8 @@
  var17_line187
  (->
   (toydata/iris-ds)
-  (haclo/plot
-   haclo/rule-chart
+  (hanami/plot
+   hanami/rule-chart
    {:=x :sepal_width,
     :=x2 :sepal_length,
     :=y :petal_width,
