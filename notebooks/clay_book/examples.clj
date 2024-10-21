@@ -73,8 +73,7 @@
 
 (kind/html
  ["<svg height=100 width=100>"
-  "<circle c
-x=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
+  "<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
   "</svg>"])
 
 (kind/html
