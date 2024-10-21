@@ -1042,27 +1042,22 @@ Plot.plot({
 ;; ## emmy-viewers
 ;; (experimental support for [emmy-viewers](https://github.com/mentat-collective/emmy-viewers))
 
-(kind/reagent
- ['(defn ->f [body]
-     (eval (list 'fn [] body)))
-  '(require '[emmy.env :as e :refer [D cube tanh cos]]
-            '[emmy.viewer :as ev]
-            '[emmy.mafs :as mafs])]
- {:html/deps [:emmy-viewers]})
+(require '[emmy.env :as e :refer [D cube tanh cos]]
+         '[emmy.viewer :as ev]
+         '[emmy.mafs :as mafs])
 
 (kind/reagent
- ['(fn []
-     [->f
-      (ev/with-let [!phase [0 0]]
-        (let [shifted (ev/with-params {:atom !phase :params [0]}
-                        (fn [shift]
-                          (fn [x]
-                            (((cube D) tanh) (e/- x shift)))))]
-          (mafs/mafs
-           {:height 400}
-           (mafs/cartesian)
-           (mafs/of-x shifted)
-           (mafs/movable-point
-            {:atom !phase :constrain "horizontal"})
-           (mafs/inequality
-            {:y {:<= shifted :> cos} :color :blue}))))])])
+ (ev/with-let [!phase [0 0]]
+   (let [shifted (ev/with-params {:atom !phase :params [0]}
+                   (fn [shift]
+                     (fn [x]
+                       (((cube D) tanh) (e/- x shift)))))]
+     (mafs/mafs
+      {:height 400}
+      (mafs/cartesian)
+      (mafs/of-x shifted)
+      (mafs/movable-point
+       {:atom !phase :constrain "horizontal"})
+      (mafs/inequality
+       {:y {:<= shifted :> cos} :color :blue}))))
+ {:html/deps [:emmy-viewers]})
