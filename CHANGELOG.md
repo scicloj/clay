@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta19] - unreleased
 - a minor cleanup of the data structure being read from code
+- bugfix: made the special kinds `:kind/fn` and `:kind/fragment` nest inside others
 
 ## [2-beta18] - 2024-10-20
 - `:live-reload` support - experimental - thanks, @whatacold
