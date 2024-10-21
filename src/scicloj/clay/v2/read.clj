@@ -42,7 +42,6 @@
                        :region [line column
                                 end-line end-column]
                        :code (-> form meta :source)
-                       :meta (meta form)
                        :form form}))))
            (filter some?))))
 

@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta19] - unreleased
+- a minor cleanup of the data structure being read from code
+
 ## [2-beta18] - 2024-10-20
 - `:live-reload` support - experimental - thanks, @whatacold
 - emmy-viewers support - experimental - thanks, @reedho
