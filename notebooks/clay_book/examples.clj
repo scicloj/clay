@@ -366,7 +366,7 @@ nested-structure-1
  cytoscape-example)
 
 (-> cytoscape-example
-    (kind/cytoscape {:element/style
+    (kind/cytoscape {:style
                      {:width "100px"
                       :height "100px"}}))
 
@@ -390,7 +390,7 @@ nested-structure-1
  echarts-example)
 
 (-> echarts-example
-    (kind/echarts {:element/style
+    (kind/echarts {:style
                    {:width "500px"
                     :height "200px"}}))
 
@@ -414,7 +414,7 @@ nested-structure-1
  plotly-example)
 
 (-> plotly-example
-    (kind/plotly {:element/style
+    (kind/plotly {:style
                   {:width "300px"
                    :height "300px"}}))
 
