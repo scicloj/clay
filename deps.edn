@@ -16,7 +16,11 @@
         babashka/fs {:mvn/version "0.4.19"}}
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {scicloj/tablecloth {:mvn/version "7.029.2"}
-                              org.scicloj/tableplot {:mvn/version "1-alpha10"}}}
+                              org.scicloj/tableplot {:mvn/version "1-alpha10"}
+                              org.babashka/sci {:mvn/version "0.8.40"}
+                              org.mentat/emmy {:mvn/version "0.31.0"
+                                               :exclusions [org.babashka/sci]}
+                              org.mentat/emmy-viewers {:mvn/version "0.3.2"}}}
            :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
                           slipset/deps-deploy {:mvn/version "0.2.1"}}
                    :ns-default build}
@@ -25,4 +29,8 @@
                                io.github.cognitect-labs/test-runner
                                {:git/tag "v0.5.0" :git/sha "48c3c67"}
                                scicloj/tablecloth {:mvn/version "7.029.2"}
-                               org.scicloj/tableplot {:mvn/version "1-alpha10"}}}}}
+                               org.scicloj/tableplot {:mvn/version "1-alpha10"}
+                               org.babashka/sci {:mvn/version "0.8.40"}
+                               org.mentat/emmy {:mvn/version "0.31.0"
+                                                :exclusions [org.babashka/sci]}
+                               org.mentat/emmy-viewers {:mvn/version "0.3.2"}}}}}
