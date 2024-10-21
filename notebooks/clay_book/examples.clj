@@ -9,7 +9,9 @@
   (:require
    [clojure.math :as math]
    [scicloj.kindly.v4.kind :as kind]
-   [tablecloth.api :as tc]))
+   [tablecloth.api :as tc]
+   [scicloj.metamorph.ml.toydata :as toydata]
+   [scicloj.tableplot.v1.hanami :as hanami]))
 
 ;; ## Plain values
 
@@ -1024,7 +1026,17 @@ Plot.plot({
  (tc/dataset {:x (range 3)
               :y (repeatedly 3 rand)})
  (kind/fragment [(+ 1 2)
-                 (+ 3 4)])]
+                 (+ 3 4)])
+ (-> (toydata/iris-ds)
+     (hanami/plot hanami/rule-chart
+                  {:=x :sepal_width
+                   :=x2 :sepal_length
+                   :=y :petal_width
+                   :=y2 :petal_length
+                   :=color :species
+                   :=color-type :nominal
+                   :=mark-size 3
+                   :=mark-opacity 0.2}))]
 
 
 ;; ## emmy-viewers

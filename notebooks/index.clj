@@ -164,7 +164,7 @@
    [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
    [scicloj.clay.v2.quarto.themes :as quarto.themes]
    [scicloj.metamorph.ml.toydata :as toydata]
-   [scicloj.hanamicloth.v1.api :as haclo]
+   [scicloj.tableplot.v1.hanami :as hanami]
    [tablecloth.api :as tc]
    [clojure.string :as str]))
 
@@ -183,17 +183,17 @@
     tc/dataset
     (tc/set-dataset-name "my dataset"))
 
-;; A plot using [Hanamicloth](https://github.com/scicloj/hanamicloth):
+;; A plot using [Tableplot](https://github.com/scicloj/tableplot):
 (-> (toydata/iris-ds)
-    (haclo/plot haclo/rule-chart
-                {:=x :sepal_width
-                 :=x2 :sepal_length
-                 :=y :petal_width
-                 :=y2 :petal_length
-                 :=color :species
-                 :=color-type :nominal
-                 :=mark-size 3
-                 :=mark-opacity 0.2}))
+    (hanami/plot hanami/rule-chart
+                 {:=x :sepal_width
+                  :=x2 :sepal_length
+                  :=y :petal_width
+                  :=y2 :petal_length
+                  :=color :species
+                  :=color-type :nominal
+                  :=mark-size 3
+                  :=mark-opacity 0.2}))
 
 ;; ## API
 
