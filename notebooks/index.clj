@@ -20,8 +20,6 @@
 ;; **Status:** The project has moved into Beta stage (March 2024).
 ;;
 ;;
-;; Clay is developed by [Timothy Pratley](https://github.com/timothypratley/) & [Daniel Slutsky](https://github.com/daslu) in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
-
 ;; ## Goals
 
 ;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
