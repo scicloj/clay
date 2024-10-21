@@ -1017,11 +1017,14 @@ Plot.plot({
 
 {:plot (random-vega-lite-plot 9)
  :dataset (tc/dataset {:x (range 3)
-                       :y (repeatedly 3 rand)})}
+                       :y (repeatedly 3 rand)})
+ :arithmetic (kind/fn [+ 1 2])}
 
 [(random-vega-lite-plot 9)
  (tc/dataset {:x (range 3)
-              :y (repeatedly 3 rand)})]
+              :y (repeatedly 3 rand)})
+ (kind/fragment [(+ 1 2)
+                 (+ 3 4)])]
 
 
 ;; ## emmy-viewers
