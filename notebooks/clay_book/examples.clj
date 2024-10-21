@@ -860,7 +860,7 @@ Plot.plot({
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
 
 (defonce pdb-2POR
-(slurp "https://files.rcsb.org/download/2POR.pdb"))
+  (slurp "https://files.rcsb.org/download/2POR.pdb"))
 
 (kind/reagent
  ['(fn [{:keys [pdb-data]}]
@@ -918,14 +918,14 @@ Plot.plot({
 
 ;; Note that `kind/portal` applies the [kind-portal](https://github.com/scicloj/kind-portal) adapter to nested kinds.
 (kind/portal
-[(kind/hiccup [:img {:height 50 :width 50
-                     :src "https://clojure.org/images/clojure-logo-120b.png"}])
- (kind/hiccup [:img {:height 50 :width 50
-                     :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
+ [(kind/hiccup [:img {:height 50 :width 50
+                      :src "https://clojure.org/images/clojure-logo-120b.png"}])
+  (kind/hiccup [:img {:height 50 :width 50
+                      :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
 
 (kind/portal
-[(kind/hiccup [:big [:big "a plot"]])
- (random-vega-lite-plot 9)])
+ [(kind/hiccup [:big [:big "a plot"]])
+  (random-vega-lite-plot 9)])
 
 ;; ## Nesting kinds in Hiccup
 
@@ -988,30 +988,30 @@ Plot.plot({
 ;; Kinds are treated recursively inside Tables:
 
 (kind/table
-{:column-names [(kind/hiccup
-                 [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
-                (kind/hiccup
-                 [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
- :row-vectors [[(kind/md "*some text* **some more text**")
-                (kind/code "{:x (1 2 [3 4])}")]
-               [(tc/dataset {:x (range 3)
-                             :y (map inc (range 3))})
-                (random-vega-lite-plot 9)]
-               [(kind/hiccup [:div.clay-limit-image-width
-                              clay-image])
-                (kind/md "$x^2$")]]})
+ {:column-names [(kind/hiccup
+                  [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
+                 (kind/hiccup
+                  [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
+  :row-vectors [[(kind/md "*some text* **some more text**")
+                 (kind/code "{:x (1 2 [3 4])}")]
+                [(tc/dataset {:x (range 3)
+                              :y (map inc (range 3))})
+                 (random-vega-lite-plot 9)]
+                [(kind/hiccup [:div.clay-limit-image-width
+                               clay-image])
+                 (kind/md "$x^2$")]]})
 
 (kind/table
-{:column-names ["size" "square"]
- :row-vectors (for [i (range 20)]
-                (let [size (* i 10)
-                      px (str size "px")]
-                  [size
-                   (kind/hiccup
-                    [:div {:style {:height px
-                                   :width px
-                                   :background-color "purple"}}])]))}
-{:use-datatables true})
+ {:column-names ["size" "square"]
+  :row-vectors (for [i (range 20)]
+                 (let [size (* i 10)
+                       px (str size "px")]
+                   [size
+                    (kind/hiccup
+                     [:div {:style {:height px
+                                    :width px
+                                    :background-color "purple"}}])]))}
+ {:use-datatables true})
 
 ;; ## More nesting examples
 
