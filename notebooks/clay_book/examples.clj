@@ -1042,11 +1042,35 @@ Plot.plot({
 ;; ## emmy-viewers
 ;; (experimental support for [emmy-viewers](https://github.com/mentat-collective/emmy-viewers))
 
-(require '[emmy.env :as e :refer [D cube tanh cos]]
+(require '[emmy.env :as e :refer [D cube tanh cos sin]]
          '[emmy.viewer :as ev]
-         '[emmy.mafs :as mafs])
+         '[emmy.mafs :as mafs]
+         '[emmy.mathbox.plot :as plot]
+         '[emmy.leva :as leva])
 
 (kind/reagent
+ [`(fn []
+     ~(ev/with-let [!phase [0 0]]
+        (let [shifted (ev/with-params {:atom !phase :params [0]}
+                        (fn [shift]
+                          (fn [x]
+                            (((cube D) tanh) (e/- x shift)))))]
+          (mafs/mafs
+           {:height 400}
+           (mafs/cartesian)
+           (mafs/of-x shifted)
+           (mafs/movable-point
+            {:atom !phase :constrain "horizontal"})
+           (mafs/inequality
+            {:y {:<= shifted :> cos} :color :blue})))))]
+ {:html/deps [:emmy-viewers]})
+
+;; In the example above, we used Emmy
+;; to generate a Clojurescript expression
+;; that can be interpreted as a Reagent component.
+;; Here is the actual expression:
+
+(kind/pprint
  (ev/with-let [!phase [0 0]]
    (let [shifted (ev/with-params {:atom !phase :params [0]}
                    (fn [shift]
@@ -1059,5 +1083,4 @@ Plot.plot({
       (mafs/movable-point
        {:atom !phase :constrain "horizontal"})
       (mafs/inequality
-       {:y {:<= shifted :> cos} :color :blue}))))
- {:html/deps [:emmy-viewers]})
+       {:y {:<= shifted :> cos} :color :blue})))))
