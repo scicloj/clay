@@ -1048,24 +1048,23 @@ Plot.plot({
          '[emmy.mathbox.plot :as plot]
          '[emmy.leva :as leva])
 
-(kind/reagent
- [`(fn []
-     ~(ev/with-let [!phase [0 0]]
-        (let [shifted (ev/with-params {:atom !phase :params [0]}
-                        (fn [shift]
-                          (fn [x]
-                            (((cube D) tanh) (e/- x shift)))))]
-          (mafs/mafs
-           {:height 400}
-           (mafs/cartesian)
-           (mafs/of-x shifted)
-           (mafs/movable-point
-            {:atom !phase :constrain "horizontal"})
-           (mafs/inequality
-            {:y {:<= shifted :> cos} :color :blue})))))]
- {:html/deps [:emmy-viewers]})
+;; Try moving the pink mark.
 
-;; In the example above, we used Emmy
+(ev/with-let [!phase [0 0]]
+  (let [shifted (ev/with-params {:atom !phase :params [0]}
+                  (fn [shift]
+                    (fn [x]
+                      (((cube D) tanh) (e/- x shift)))))]
+    (mafs/mafs
+     {:height 400}
+     (mafs/cartesian)
+     (mafs/of-x shifted)
+     (mafs/movable-point
+      {:atom !phase :constrain "horizontal"})
+     (mafs/inequality
+      {:y {:<= shifted :> cos} :color :blue}))))
+
+;; In the example above, we used emmy-viewers
 ;; to generate a Clojurescript expression
 ;; that can be interpreted as a Reagent component.
 ;; Here is the actual expression:
@@ -1084,3 +1083,25 @@ Plot.plot({
        {:atom !phase :constrain "horizontal"})
       (mafs/inequality
        {:y {:<= shifted :> cos} :color :blue})))))
+
+;; By default, it is inferred to be of `:kind/emmy-viewers`,
+;; and is handle accordingly.
+
+;; Equivalently, we could also handle it more explicitly with `:kind/reagent`:
+
+(kind/reagent
+ [`(fn []
+     ~(ev/with-let [!phase [0 0]]
+        (let [shifted (ev/with-params {:atom !phase :params [0]}
+                        (fn [shift]
+                          (fn [x]
+                            (((cube D) tanh) (e/- x shift)))))]
+          (mafs/mafs
+           {:height 400}
+           (mafs/cartesian)
+           (mafs/of-x shifted)
+           (mafs/movable-point
+            {:atom !phase :constrain "horizontal"})
+           (mafs/inequality
+            {:y {:<= shifted :> cos} :color :blue})))))]
+ {:html/deps [:emmy-viewers]})
