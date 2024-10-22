@@ -135,6 +135,24 @@
                        :kindly/options
                        :reagent/deps))}))
 
+(defn emmy-viewers [{:as context
+                     :keys [value]}]
+  (let [id (next-id)]
+    {:hiccup [:div {:id id}
+              [:script {:type "application/x-scittle"}
+               (pr-str
+                (list 'reagent.dom/render
+                      [(list 'fn [] value)]
+                      (list 'js/document.getElementById id)))]]
+     :deps (concat [:reagent :emmy-viewers]
+                   (-> context
+                       :kindly/options
+                       :html/deps)
+                   ;; deprecated:
+                   (-> context
+                       :kindly/options
+                       :reagent/deps))}))
+
 (defn extract-style [context]
   (-> context
       :kindly/options

@@ -426,6 +426,10 @@
  :kind/reagent
  #'item/reagent)
 
+(add-preparer!
+ :kind/emmy-viewers
+ #'item/emmy-viewers)
+
 (def non-hiccup-kind?
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
                 :kind/hiccup}))

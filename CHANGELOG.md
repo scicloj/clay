@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta20] - 2024-10-22
 - updated deps: kindly, kindly-advice
+- added support for `:kind/emmy-viewers`
 
 ## [2-beta19] - 2024-10-22
 - a minor cleanup of the data structure being read from code
