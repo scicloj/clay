@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta20] - 2024-10-22
+- updated deps: kindly, kindly-advice
+
 ## [2-beta19] - 2024-10-22
 - a minor cleanup of the data structure being read from code
 - bugfix: made the special kinds `:kind/fn` and `:kind/fragment` nest inside others
