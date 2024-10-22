@@ -1048,7 +1048,6 @@ Plot.plot({
          '[emmy.mathbox.plot :as plot]
          '[emmy.leva :as leva])
 
-;; Try moving the pink mark.
 
 (ev/with-let [!phase [0 0]]
   (let [shifted (ev/with-params {:atom !phase :params [0]}
@@ -1063,6 +1062,10 @@ Plot.plot({
       {:atom !phase :constrain "horizontal"})
      (mafs/inequality
       {:y {:<= shifted :> cos} :color :blue}))))
+
+;;
+;; Try moving the pink mark. 👆
+;;
 
 ;; In the example above, we used emmy-viewers
 ;; to generate a Clojurescript expression
