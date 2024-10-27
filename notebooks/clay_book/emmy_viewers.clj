@@ -12,6 +12,7 @@
    [emmy.mathbox.plot :as plot]
    [emmy.leva :as leva]))
 
+;; ## Usage
 
 (ev/with-let [!phase [0 0]]
   (let [shifted (ev/with-params {:atom !phase :params [0]}
@@ -30,6 +31,8 @@
 ;;
 ;; Try moving the pink mark. 👆
 ;;
+
+;; ## A few detials behind the scenes
 
 ;; In the example above, we used emmy-viewers
 ;; to generate a Clojurescript expression
