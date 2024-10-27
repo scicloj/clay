@@ -135,6 +135,16 @@
                        :kindly/options
                        :reagent/deps))}))
 
+(defn emmy-viewers-expand
+  "If `v` has a `fn?` (say, `f`) registered as Clerk viewer metadata, recurses
+  with the expanded value `(f v)`. Else, returns `v` unchanged.
+  Mimicking the original `emmy.viewer/expand` function."
+  [v]
+  (let [xform (-> v meta :nextjournal.clerk/viewer)]
+    (if (fn? xform)
+      (emmy-viewers-expand (xform v))
+      v)))
+
 (defn emmy-viewers [{:as context
                      :keys [value]}]
   (let [id (next-id)]
@@ -142,7 +152,8 @@
               [:script {:type "application/x-scittle"}
                (pr-str
                 (list 'reagent.dom/render
-                      [(list 'fn [] value)]
+                      [(list 'fn [] (emmy-viewers-expand
+                                     value))]
                       (list 'js/document.getElementById id)))]]
      :deps (concat [:reagent :emmy-viewers]
                    (-> context
