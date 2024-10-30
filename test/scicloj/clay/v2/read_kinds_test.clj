@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.read-kinds-test
   (:require [scicloj.clay.v2.read-kinds :as sut]
+            [clojure.java.io :as io]
             [clojure.test :as t]))
 
 ;; FIXME: Cider evals ns form strings starting with newline
@@ -8,6 +9,10 @@
   "(ns my-namespace
   (:require [clojure.core]))
 ")
+
+(def simple-ns
+  (io/resource "resource/simple_ns.clj")
+  )
 
 (t/deftest read-ns-form-test
   (t/is (= (sut/read-ns-form

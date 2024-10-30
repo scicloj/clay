@@ -1,12 +1,10 @@
 (ns scicloj.clay.v2.read-test
   (:require [scicloj.clay.v2.read :as read]
-            [clojure.test :refer [deftest is]]))
+            [clojure.test :refer [deftest is]]
+            [clojure.java.io :as io]))
 
 (def read-ns-form-code-example
-  "
-(ns my-namespace
-  (:require [clojure.core]))
-")
+  (slurp (io/resource "resources/my_namespace.clj")))
 
 (deftest read-ns-form-test
   (is (= (scicloj.clay.v2.read/read-ns-form
@@ -15,15 +13,7 @@
             (:require [clojure.core])))))
 
 (def simple-ns-example
-  "
-(ns my-namespace
-  (:require [clojure.core]))
-
-;; A function that adds 9 to numbers:
-
-(defn abcd [x]
-  (+ x 9))
-")
+  (slurp (io/resource "resources/simple_ns.clj")))
 
 (deftest safe-notes-simple-test
   (is
@@ -32,8 +22,8 @@
          scicloj.clay.v2.read/->safe-notes
          (map #(dissoc % :gen)))
     '[{:region [2 1 3 29]
-       :code "(ns my-namespace\n  (:require [clojure.core]))"
-       :form (ns my-namespace (:require [clojure.core]))}
+       :code "(ns simple-ns\n  (:require [clojure.core]))"
+       :form (ns simple-ns (:require [clojure.core]))}
       {:region [5 1 5 38]
        :code ";; A function that adds 9 to numbers:"
        :comment? true}
@@ -42,45 +32,7 @@
        :form (defn abcd [x] (+ x 9))}])))
 
 (def detailed-ns-example
-  "
-
-;; # A notebook
-
-(ns my-namespace
-  (:require [clojure.core]))
-
-;; ## Intro
-
-;; Let us write a function that adds 9 to numbers.
-;; We will call it `abcd`.
-
-(defn abcd [x]
-  (+ x
-     9))
-
-(abcd 9)
-
-;; ## More examples
-
-;; Form metadata
-
-^:kind/hiccup
-[:div
-  [:p \"hello\"]]
-
-;; A symbol
-
-a-symbol
-
-;; Comments using #_ should be ignored:
-
-#_(+ 1 2)
-
-#_#_ (+ 1 2) (+ 3 4)
-
-
-")
-
+  (slurp (io/resource "resources/detailed_ns.clj")))
 
 (deftest safe-notes-detailed-test
   (is
@@ -89,8 +41,8 @@ a-symbol
            (map #(dissoc % :gen)))
       '[{:region [3 1 3 16], :code ";; # A notebook", :comment? true}
         {:region [5 1 6 29],
-         :code "(ns my-namespace\n  (:require [clojure.core]))",
-         :form (ns my-namespace (:require [clojure.core]))}
+         :code "(ns detailed-ns\n  (:require [clojure.core]))",
+         :form (ns detailed-ns (:require [clojure.core]))}
         {:region [8 1 11 27],
          :code
          ";; ## Intro\n\n;; Let us write a function that adds 9 to numbers.\n;; We will call it `abcd`.",
