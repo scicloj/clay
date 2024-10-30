@@ -58,7 +58,7 @@
          :code "^:kind/hiccup\n[:div\n  [:p \"hello\"]]",
          :form [:div [:p "hello"]]}
         {:region [27 1 27 12], :code ";; A symbol", :comment? true}
-        {:region [29 1 29 9], :code "a-symbol", :form a-symbol}
+        {:region [29 1 29 10], :code ":a-symbol"}
         {:region [31 1 31 40],
          :code ";; Comments using #_ should be ignored:",
          :comment? true}])))

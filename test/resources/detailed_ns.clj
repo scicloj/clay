@@ -26,7 +26,7 @@
 
 ;; A symbol
 
-a-symbol
+:a-symbol
 
 ;; Comments using #_ should be ignored:
 
