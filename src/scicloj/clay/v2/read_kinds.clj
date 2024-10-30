@@ -30,7 +30,7 @@
 ;; FIXME: Add more test cases to verify that it works as intended.
 (defn read-ns-form [code]
   (let [form (->> code
-                  parser/parse-string
+                  parser/parse-string-all
                   node/sexpr)]
     (when (= 'ns (first form))
       form)))

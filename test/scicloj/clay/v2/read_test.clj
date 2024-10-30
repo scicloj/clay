@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.read-test
   (:require [scicloj.clay.v2.read :as read]
-            [clojure.test :refer [deftest is]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.test :refer [deftest is]]))
 
 (def read-ns-form-code-example
   (slurp (io/resource "resources/my_namespace.clj")))

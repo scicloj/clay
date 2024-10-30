@@ -3,59 +3,46 @@
             [clojure.java.io :as io]
             [clojure.test :as t]))
 
-;; FIXME: Cider evals ns form strings starting with newline
-;; in 'user namespace
 (def read-ns-form-code-example
-  "(ns my-namespace
-  (:require [clojure.core]))
-")
-
-(def simple-ns
-  (io/resource "resource/simple_ns.clj")
-  )
+  (slurp (io/resource "resources/my_namespace.clj")))
 
 (t/deftest read-ns-form-test
   (t/is (= (sut/read-ns-form
-          read-ns-form-code-example)
-         '(ns my-namespace
-            (:require [clojure.core])))))
+            read-ns-form-code-example)
+           '(ns my-namespace
+              (:require [clojure.core])))))
 
-(def simple-ns-example "(ns my-namespace
-  (:require [clojure.core]))
-
-;; A function that adds 9 to numbers:
-
-(defn abcd [x]
-  (+ x 9))
-")
+(def simple-ns-example
+  (slurp (io/resource "resources/simple_ns.clj")))
 
 (t/deftest read-string-all-test
   (t/is
    (=
     (sut/read-string-all simple-ns-example {})
-    [{:region [1 1 2 29],
-      :code "(ns my-namespace\n  (:require [clojure.core]))",
+    [{:code "\n", :kind :kind/whitespace}
+     {:region [2 1 3 29],
+      :code "(ns simple-ns\n  (:require [clojure.core]))",
       :meta
-      {:source "(ns my-namespace\n  (:require [clojure.core]))",
-       :line 1,
+      {:source "(ns simple-ns\n  (:require [clojure.core]))",
+       :line 2,
        :column 1,
-       :end-line 2,
+       :end-line 3,
        :end-column 29},
-      :form '(ns my-namespace (:require [clojure.core])),
+      :form '(ns simple-ns (:require [clojure.core])),
       :value nil}
      {:code "\n\n", :kind :kind/whitespace}
      {:code ";; A function that adds 9 to numbers:\n",
       :kind :kind/comment,
       :value "A function that adds 9 to numbers:\n"}
      {:code "\n", :kind :kind/whitespace}
-     {:region [6 1 7 11],
+     {:region [7 1 8 11],
       :code "(defn abcd [x]\n  (+ x 9))",
       :meta
       {:source "(defn abcd [x]\n  (+ x 9))",
-       :line 6,
+       :line 7,
        :column 1,
-       :end-line 7,
+       :end-line 8,
        :end-column 11},
       :form '(defn abcd [x] (+ x 9)),
-      :value #'my-namespace/abcd}
+      :value #'simple-ns/abcd}
      {:code "\n", :kind :kind/whitespace}])))
