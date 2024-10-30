@@ -20,8 +20,6 @@
 ;; **Status:** The project has moved into Beta stage (March 2024).
 ;;
 ;;
-;; Clay is developed by [Timothy Pratley](https://github.com/timothypratley/) & [Daniel Slutsky](https://github.com/daslu) in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
-
 ;; ## Goals
 
 ;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
@@ -51,7 +49,7 @@
 ;; ## Projects using Clay
 
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
-;; - [Fastmath 3 documentation (WIP)](https://github.com/generateme/fastmath/tree/3.x)
+;; - [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
 ;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
 ;; - [Wolframite documentation](https://scicloj.github.io/wolframite)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
@@ -164,7 +162,7 @@
    [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
    [scicloj.clay.v2.quarto.themes :as quarto.themes]
    [scicloj.metamorph.ml.toydata :as toydata]
-   [scicloj.hanamicloth.v1.api :as haclo]
+   [scicloj.tableplot.v1.hanami :as hanami]
    [tablecloth.api :as tc]
    [clojure.string :as str]))
 
@@ -183,17 +181,17 @@
     tc/dataset
     (tc/set-dataset-name "my dataset"))
 
-;; A plot using [Hanamicloth](https://github.com/scicloj/hanamicloth):
+;; A plot using [Tableplot](https://github.com/scicloj/tableplot):
 (-> (toydata/iris-ds)
-    (haclo/plot haclo/rule-chart
-                {:=x :sepal_width
-                 :=x2 :sepal_length
-                 :=y :petal_width
-                 :=y2 :petal_length
-                 :=color :species
-                 :=color-type :nominal
-                 :=mark-size 3
-                 :=mark-opacity 0.2}))
+    (hanami/plot hanami/rule-chart
+                 {:=x :sepal_width
+                  :=x2 :sepal_length
+                  :=y :petal_width
+                  :=y2 :petal_length
+                  :=color :species
+                  :=color-type :nominal
+                  :=mark-size 3
+                  :=mark-opacity 0.2}))
 
 ;; ## API
 
@@ -238,6 +236,17 @@
   (clay/make! {:source-path ["notebooks/slides.clj"
                              "notebooks/index.clj"]
                :show false}))
+
+;; Evaluate and render
+;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
+;; as HTML
+;; and start watching these files for live reload:
+;; (experimental)
+(comment
+  (clay/make! {:source-path ["notebooks/slides.clj"
+                             "notebooks/index.clj"]
+               :live-reload true}))
+
 
 ;; Evaluate and render a single form
 ;; in the context of the namespace in `"notebooks/index.clj"`
@@ -414,6 +423,14 @@
 (comment
   (clay/browse!))
 
+;; ### Live reload
+;; (experimental)
+
+;; Clay can listen to file changes (using [nextjournal/beholder](https://github.com/nextjournal/beholder))
+;; and respond with remaking the page.
+
+;; See the example above with `:live-reload true`.
+
 ;; ### Hiccup output
 
 ;; (experimental 🛠)
@@ -452,9 +469,10 @@
 ;; | `:base-source-path` | where to find `:source-path` | `"notebooks"` |
 ;; | `:clean-up-target-dir` | delete (!) target directory before repopulating it  | `true` |
 ;; | `:remote-repo` | linking to source | `{:git-url "https://github.com/scicloj/clay" :branch  "main"}` |
-;; | `:hide-info-line` | hiding the source reference at the bottom | `{:hide-info-line true}` |
-;; | `:hide-ui-header` | hiding the ui info at the top | `{:hide-ui-header true}` |
-;; | `:post-process` | post-processing the resulting HTML | `{:post-process #(str/replace "#3" "4")}` |
+;; | `:hide-info-line` | hiding the source reference at the bottom | `true` |
+;; | `:hide-ui-header` | hiding the ui info at the top | `true` |
+;; | `:post-process` | post-processing the resulting HTML | `#(str/replace "#3" "4")` |
+;; | `:live-reload` | whether to make and live reload the HTML automatically after its source file is changed | `true` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.

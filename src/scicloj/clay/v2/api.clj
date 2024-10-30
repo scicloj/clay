@@ -10,6 +10,7 @@
 
 (defn stop! []
   (server/close!)
+  (make/stop-watchers)
   [:ok])
 
 (defn welcome! []
@@ -41,6 +42,7 @@
 
 (defn browse! []
   (server/browse!))
+
 (defn port []
   (server/port))
 

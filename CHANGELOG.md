@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta21] - 2024-10-27
+- updated deps: kindly-advice
+- added for expansion (`emmy.viewer/expand`) for `:kind/emmy-viewers`
+
+## [2-beta20] - 2024-10-22
+- updated deps: kindly, kindly-advice
+- added partial support for `:kind/emmy-viewers`
+
+## [2-beta19] - 2024-10-22
+- a minor cleanup of the data structure being read from code
+- bugfix: made the special kinds `:kind/fn` and `:kind/fragment` nest inside others
+
+## [2-beta18] - 2024-10-20
+- `:live-reload` support - experimental - thanks, @whatacold
+- emmy-viewers support - experimental - thanks, @reedho
+
 ## [2-beta17] - 2024-09-30
 - removed unused require (PR #162) - thanks, @schneiderlin, @mchughs
 - updated `nextjournal/mardkown` version, which brings Java 22 support

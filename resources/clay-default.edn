@@ -2,6 +2,7 @@
  :subdirs-to-sync ["src" "notebooks"]
  :format [:html]
  :show true
+ :live-reload false
  :run-quarto true
  :quarto {:format {:html {:toc true
                           :toc-depth 4

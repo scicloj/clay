@@ -9,7 +9,9 @@
   (:require
    [clojure.math :as math]
    [scicloj.kindly.v4.kind :as kind]
-   [tablecloth.api :as tc]))
+   [tablecloth.api :as tc]
+   [scicloj.metamorph.ml.toydata :as toydata]
+   [scicloj.tableplot.v1.hanami :as hanami]))
 
 ;; ## Plain values
 
@@ -57,6 +59,7 @@
           @*click-count ". "
           [:input {:type "button" :value "Click me!"
                    :on-click #(swap! *click-count inc)}]])))])
+
 
 ;; ## HTML
 
@@ -365,7 +368,7 @@ nested-structure-1
  cytoscape-example)
 
 (-> cytoscape-example
-    (kind/cytoscape {:element/style
+    (kind/cytoscape {:style
                      {:width "100px"
                       :height "100px"}}))
 
@@ -389,7 +392,7 @@ nested-structure-1
  echarts-example)
 
 (-> echarts-example
-    (kind/echarts {:element/style
+    (kind/echarts {:style
                    {:width "500px"
                     :height "200px"}}))
 
@@ -413,7 +416,7 @@ nested-structure-1
  plotly-example)
 
 (-> plotly-example
-    (kind/plotly {:element/style
+    (kind/plotly {:style
                   {:width "300px"
                    :height "300px"}}))
 
@@ -859,7 +862,7 @@ Plot.plot({
 ;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
 
 (defonce pdb-2POR
-(slurp "https://files.rcsb.org/download/2POR.pdb"))
+  (slurp "https://files.rcsb.org/download/2POR.pdb"))
 
 (kind/reagent
  ['(fn [{:keys [pdb-data]}]
@@ -917,14 +920,14 @@ Plot.plot({
 
 ;; Note that `kind/portal` applies the [kind-portal](https://github.com/scicloj/kind-portal) adapter to nested kinds.
 (kind/portal
-[(kind/hiccup [:img {:height 50 :width 50
-                     :src "https://clojure.org/images/clojure-logo-120b.png"}])
- (kind/hiccup [:img {:height 50 :width 50
-                     :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
+ [(kind/hiccup [:img {:height 50 :width 50
+                      :src "https://clojure.org/images/clojure-logo-120b.png"}])
+  (kind/hiccup [:img {:height 50 :width 50
+                      :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
 
 (kind/portal
-[(kind/hiccup [:big [:big "a plot"]])
- (random-vega-lite-plot 9)])
+ [(kind/hiccup [:big [:big "a plot"]])
+  (random-vega-lite-plot 9)])
 
 ;; ## Nesting kinds in Hiccup
 
@@ -987,37 +990,54 @@ Plot.plot({
 ;; Kinds are treated recursively inside Tables:
 
 (kind/table
-{:column-names [(kind/hiccup
-                 [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
-                (kind/hiccup
-                 [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
- :row-vectors [[(kind/md "*some text* **some more text**")
-                (kind/code "{:x (1 2 [3 4])}")]
-               [(tc/dataset {:x (range 3)
-                             :y (map inc (range 3))})
-                (random-vega-lite-plot 9)]
-               [(kind/hiccup [:div.clay-limit-image-width
-                              clay-image])
-                (kind/md "$x^2$")]]})
+ {:column-names [(kind/hiccup
+                  [:div {:style {:background-color "#ccaabb"}} [:big ":x"]])
+                 (kind/hiccup
+                  [:div {:style {:background-color "#aabbcc"}} [:big ":y"]])]
+  :row-vectors [[(kind/md "*some text* **some more text**")
+                 (kind/code "{:x (1 2 [3 4])}")]
+                [(tc/dataset {:x (range 3)
+                              :y (map inc (range 3))})
+                 (random-vega-lite-plot 9)]
+                [(kind/hiccup [:div.clay-limit-image-width
+                               clay-image])
+                 (kind/md "$x^2$")]]})
 
 (kind/table
-{:column-names ["size" "square"]
- :row-vectors (for [i (range 20)]
-                (let [size (* i 10)
-                      px (str size "px")]
-                  [size
-                   (kind/hiccup
-                    [:div {:style {:height px
-                                   :width px
-                                   :background-color "purple"}}])]))}
-{:use-datatables true})
+ {:column-names ["size" "square"]
+  :row-vectors (for [i (range 20)]
+                 (let [size (* i 10)
+                       px (str size "px")]
+                   [size
+                    (kind/hiccup
+                     [:div {:style {:height px
+                                    :width px
+                                    :background-color "purple"}}])]))}
+ {:use-datatables true})
 
 ;; ## More nesting examples
 
 {:plot (random-vega-lite-plot 9)
  :dataset (tc/dataset {:x (range 3)
-                       :y (repeatedly 3 rand)})}
+                       :y (repeatedly 3 rand)})
+ :arithmetic (kind/fn [+ 1 2])}
 
 [(random-vega-lite-plot 9)
  (tc/dataset {:x (range 3)
-              :y (repeatedly 3 rand)})]
+              :y (repeatedly 3 rand)})
+ (kind/fragment [(+ 1 2)
+                 (+ 3 4)])
+ (-> (toydata/iris-ds)
+     (hanami/plot hanami/rule-chart
+                  {:=x :sepal_width
+                   :=x2 :sepal_length
+                   :=y :petal_width
+                   :=y2 :petal_length
+                   :=color :species
+                   :=color-type :nominal
+                   :=mark-size 3
+                   :=mark-opacity 0.2}))]
+
+;; ## emmy-viewers
+;; The support for [Emmy-viewers](https://github.com/mentat-collective/emmy-viewers)
+;; is documented at the 📖 [Emmy-viewers chapter](./clay_book.emmy_viewers.html)📖 of this book.

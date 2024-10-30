@@ -18,7 +18,8 @@
             [scicloj.clay.v2.util.merge :as merge]
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
-            [scicloj.kindly.v4.kind :as kind]))
+            [scicloj.kindly.v4.kind :as kind]
+            [nextjournal.beholder :as beholder]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
@@ -382,9 +383,72 @@
         (io/make-parents target)
         (util.fs/copy-tree-no-clj subdir target)))))
 
+(defonce dir-watchers-initial {:watchers []
+                               :file-specs {}})
+
+(defonce *dir-watchers (atom dir-watchers-initial))
+
+(defn stop-watchers
+  "Stop all directory watchers."
+  []
+  (doseq [w (:watchers @*dir-watchers)]
+    (beholder/stop w))
+  (reset! *dir-watchers dir-watchers-initial))
+
+(declare make!)
+
+(defn- beholder-callback
+  "Callback function for beholder."
+  [event]
+  (let [abs-path (str (.toAbsolutePath (:path event)))]
+    (when (and (identical? :modify (:type event))
+               (contains? (:file-specs @*dir-watchers) abs-path))
+      (make! (get (:file-specs @*dir-watchers) abs-path)))))
+
+(defn- watch-dir
+  "Watch directory changes if necessary."
+  [{:as spec
+    :keys [live-reload source-path]}]
+  (when (and live-reload
+             source-path)
+    (let [->abs-path (fn [file] (.getAbsolutePath (io/file file)))
+          watched-files (->> @*dir-watchers
+                             :file-specs
+                             keys
+                             set)
+          new-files (->> source-path
+                         (#(if (vector? %) % [%]))
+                         (filter #(not (contains? watched-files (->abs-path %))))
+                         set)
+          new-dirs (->> new-files
+                        (map #(.getParent (io/file %)))
+                        set)]
+      ;; watch dir for notebook changes
+      (when-not (empty? new-dirs)
+        (swap! *dir-watchers
+               #(assoc %
+                       :watchers
+                       (conj (:watchers %)
+                             (apply beholder/watch
+                                    beholder-callback
+                                    new-dirs)))))
+      ;; save the spec for every file
+      (when-not (empty? new-files)
+        (swap! *dir-watchers #(assoc %
+                                     :file-specs
+                                     (->> new-files
+                                          (reduce (fn [pre-result file]
+                                                    (assoc pre-result
+                                                           (->abs-path file)
+                                                           spec))
+                                                  {})
+                                          (merge (:file-specs @*dir-watchers))))))
+      new-files)))
+
 (defn make! [spec]
-  (let [{:keys [single-form single-value]} spec
-        {:keys [main-spec single-ns-specs]} (extract-specs (config/config)
+  (let [config (config/config)
+        {:keys [single-form single-value]} spec
+        {:keys [main-spec single-ns-specs]} (extract-specs config
                                                            spec)
         {:keys [show book base-target-path clean-up-target-dir]} main-spec]
     (when (and clean-up-target-dir
@@ -401,4 +465,8 @@
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))
      (-> main-spec
-         handle-main-spec!)]))
+         handle-main-spec!)
+     (->> single-ns-specs
+          (map watch-dir)
+          (reduce into #{})
+          (vector :watching-new-files))]))

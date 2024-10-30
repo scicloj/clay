@@ -150,20 +150,26 @@
     context
     (kindly-advice/advise context)))
 
+(defn has-preparable-kind? [value]
+  (when-let [kind (value->kind value)]
+    (or (@*kind->preparer kind)
+        (#{:kind/fragment :kind/fn} kind))))
+
 (defn prepare [{:as context
                 :keys [value]}
                {:keys [fallback-preparer]}]
-  (let [kind (-> context
-                 advise-if-needed
-                 :kind)]
+  (let [{:as context-with-advice :keys [kind]} (advise-if-needed context)]
     (case kind
       :kind/fragment (->> value
                           ;; splice the fragment
                           (mapcat (fn [subvalue]
                                     (-> context
+                                        (dissoc :form :kind :advice)
                                         (assoc :value subvalue)
                                         (prepare {:fallback-preparer fallback-preparer})))))
-      :kind/fn (let [new-value (or (when-let [f (-> context :kindly/options :kindly/f)]
+      :kind/fn (let [new-value (or (when-let [f (-> context-with-advice
+                                                    :kindly/options
+                                                    :kindly/f)]
                                      (f value))
                                    (when (vector? value) (let [[f & args] value]
                                                            (apply f args)))
@@ -174,21 +180,20 @@
                                    (throw (ex-message "missing function for :kind/fn")))]
                  (-> context
                      (assoc :value new-value)
-                     (dissoc :form)
-                     (dissoc :kind)
-                     (prepare {:fallback-preparer fallback-preparer})))
+                     (dissoc :form :kind :advice)
+                     (prepare {:fallback-preparer fallback-preparer})
+                     (->> (map #(assoc % :prepared-by-fn true)))))
       ;; else - a regular kind
       (when-let [preparer (-> kind
                               (@*kind->preparer)
                               (or fallback-preparer))]
-        [(-> context
+        [(-> context-with-advice
              preparer
              ;; returns an item
              (update :hiccup limit-hiccup-height context)
              (update :md limit-md-height context)
              ;; items need the options from the context
              (assoc :kindly/options (:kindly/options context)))]))))
-
 
 
 (defn prepare-or-pprint [context]
@@ -200,11 +205,6 @@
                     (preparer-from-value-fn #'item/md)}))
 
 
-
-(defn has-kind-with-preparer? [value]
-  (some-> value
-          value->kind
-          (@*kind->preparer)))
 
 (add-preparer-from-value-fn!
  :kind/println
@@ -242,7 +242,7 @@
                                  (-> elem first (#{:th :td})))
                           ;; a table cell - handle it
                           [(first elem) (if-let [items (-> context
-                                                           (dissoc :form)
+                                                           (dissoc :form :kind :advice)
                                                            (update :kindly/options dissoc :element/max-height)
                                                            (assoc :value (second elem))
                                                            (prepare {}))]
@@ -310,13 +310,20 @@
                          (#(%))))
        prepare-or-pprint)))
 
+(defn not-all-plain-values? [items]
+  (->> items
+       (every? (fn [item]
+                 (and (:printed-clojure item)
+                      (not (:prepared-by-fn item)))))
+       not))
+
 (add-preparer!
  :kind/map
  (fn [{:as context
        :keys [value]}]
    (if (->> value
             (apply concat)
-            (some has-kind-with-preparer?))
+            (some has-preparable-kind?))
      (let [*deps (atom []) ; TODO: implement without mutable state
            prepared-kv-pairs (->> value
                                   (map (fn [kv]
@@ -325,7 +332,7 @@
                                           (->> kv
                                                (mapcat (fn [v]
                                                          (let [items (-> context
-                                                                         (dissoc :form)
+                                                                         (dissoc :form :kind :advice)
                                                                          (update :kindly/options dissoc :element/max-height)
                                                                          (assoc :value v)
                                                                          prepare-or-pprint)]
@@ -333,14 +340,14 @@
                                                            items))))})))]
        (if (->> prepared-kv-pairs
                 (mapcat :prepared-kv)
-                (some (complement :printed-clojure)))
-         ;; some parts are not just printed values - handle recursively
+                not-all-plain-values?)
+         ;; some parts are not just plain Clojure values - handle recursively
          {:hiccup [:div
                    (structure-mark-hiccup "{")
                    (->> prepared-kv-pairs
                         (map (fn [{:keys [kv prepared-kv]}]
                                (if (->> prepared-kv
-                                        (some (complement :printed-clojure)))
+                                        not-all-plain-values?)
                                  (let [[pk pv] prepared-kv]
                                    [:table
                                     [:tr
@@ -369,18 +376,18 @@
                           :keys [value]}
                          open-mark close-mark]
   (if (->> value
-           (some has-kind-with-preparer?))
+           (some has-preparable-kind?))
     (let [*deps (atom []) ; TODO: implement without mutable state
           prepared-parts (->> value
                               (mapcat (fn [subvalue]
                                         (-> context
-                                            (dissoc :form)
+                                            (dissoc :form :kind :advice)
                                             (update :kindly/options dissoc :element/max-height)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
       (if (->> prepared-parts
-               (some (complement :printed-clojure)))
-        ;; some parts are not just printed values - handle recursively
+               not-all-plain-values?)
+        ;; some parts are not just plain Clojure values - handle recursively
         {:hiccup [:div
                   (structure-mark-hiccup open-mark)
                   (->> prepared-parts
@@ -395,7 +402,6 @@
         (item/pprint value)))
     ;; else -- just print the whole value
     (item/pprint value)))
-
 
 (add-preparer!
  :kind/vector
@@ -420,6 +426,10 @@
  :kind/reagent
  #'item/reagent)
 
+(add-preparer!
+ :kind/emmy-viewers
+ #'item/emmy-viewers)
+
 (def non-hiccup-kind?
   (complement #{:kind/vector :kind/map :kind/seq :kind/set
                 :kind/hiccup}))
@@ -443,7 +453,7 @@
                      (claywalk/prewalk
                       (fn [subform]
                         (let [subcontext (-> context
-                                             (dissoc :form)
+                                             (dissoc :form :kind :advice)
                                              (update :kindly/options dissoc :element/max-height)
                                              (assoc :value subform))]
                           (if (some-> subcontext
