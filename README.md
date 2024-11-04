@@ -2,7 +2,7 @@
 
 ![Clay logo](resources/Clay.svg)
 
-Clay is a small Clojure tool for a dynamic workflow of data visualization and literate programming.
+Clay is a REPL-friendly Clojure tool for a dynamic workflow of data visualization and literate programming.
 
 It also offers a set of tools to integrate Clojure literate programming with the [Quarto](https://quarto.org/) publishing system.
 
