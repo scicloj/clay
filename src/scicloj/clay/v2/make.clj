@@ -400,10 +400,10 @@
 (defn- beholder-callback
   "Callback function for beholder."
   [event]
-  (let [abs-path (str (.toAbsolutePath (:path event)))]
+  (let [canonical-path (str (-> event :path .toFile .getCanonicalPath))]
     (when (and (identical? :modify (:type event))
-               (contains? (:file-specs @*dir-watchers) abs-path))
-      (make! (get (:file-specs @*dir-watchers) abs-path)))))
+               (contains? (:file-specs @*dir-watchers) canonical-path))
+      (make! (get (:file-specs @*dir-watchers) canonical-path)))))
 
 (defn- watch-dir
   "Watch directory changes if necessary."
@@ -411,17 +411,20 @@
     :keys [live-reload source-path]}]
   (when (and live-reload
              source-path)
-    (let [->abs-path (fn [file] (.getAbsolutePath (io/file file)))
+    (let [->canonical-path (fn [file] (.getCanonicalPath (io/file file)))
           watched-files (->> @*dir-watchers
                              :file-specs
                              keys
                              set)
           new-files (->> source-path
                          (#(if (vector? %) % [%]))
-                         (filter #(not (contains? watched-files (->abs-path %))))
+                         ;; make sure all paths are canonical,
+                         ;; so that their containing directories can be properly watched by beholder
+                         (map ->canonical-path)
+                         (filter #(not (contains? watched-files %)))
                          set)
           new-dirs (->> new-files
-                        (map #(.getParent (io/file %)))
+                        (map #(-> % io/file .getParent))
                         set)]
       ;; watch dir for notebook changes
       (when-not (empty? new-dirs)
@@ -439,7 +442,7 @@
                                      (->> new-files
                                           (reduce (fn [pre-result file]
                                                     (assoc pre-result
-                                                           (->abs-path file)
+                                                           file
                                                            spec))
                                                   {})
                                           (merge (:file-specs @*dir-watchers))))))
