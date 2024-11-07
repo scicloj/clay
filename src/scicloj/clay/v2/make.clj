@@ -400,10 +400,10 @@
 (defn- beholder-callback
   "Callback function for beholder."
   [event]
-  (let [abs-path (str (.toAbsolutePath (:path event)))]
+  (let [canonical-path (str (-> event :path .toFile .getCanonicalPath))]
     (when (and (identical? :modify (:type event))
-               (contains? (:file-specs @*dir-watchers) abs-path))
-      (make! (get (:file-specs @*dir-watchers) abs-path)))))
+               (contains? (:file-specs @*dir-watchers) canonical-path))
+      (make! (get (:file-specs @*dir-watchers) canonical-path)))))
 
 (defn- watch-dir
   "Watch directory changes if necessary."
