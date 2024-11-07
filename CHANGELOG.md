@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta22] - 2024-11-07
+- fix #176 live reload problem when there's no deps.edn (PR #177) by @whatacold
+
 ## [2-beta21] - 2024-10-27
 - updated deps: kindly-advice
 - added for expansion (`emmy.viewer/expand`) for `:kind/emmy-viewers`
