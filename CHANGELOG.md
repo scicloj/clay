@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta22] - 2024-11-07
 - fix #176 live reload problem when there's no deps.edn (PR #177) by @whatacold
+- updated deps (kindly-advice)
 
 ## [2-beta21] - 2024-10-27
 - updated deps: kindly-advice
