@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta23] - 2024-11-08
+- bugfix: refreshing page appropriately to keep the main URL - by @whatacold
+
 ## [2-beta22] - 2024-11-07
 - fix #176 live reload problem when there's no deps.edn (PR #177) by @whatacold
 - updated deps (kindly-advice)
