@@ -394,6 +394,7 @@
         (util.fs/copy-tree-no-clj subdir target)))))
 
 (defonce dir-watchers-initial {:watchers []
+                               :watched-dirs #{}
                                :file-specs {}})
 
 (defonce *dir-watchers (atom dir-watchers-initial))
@@ -435,11 +436,16 @@
                          set)
           new-dirs (->> new-files
                         (map #(-> % io/file .getParent))
+                        (filter #(not (some (fn [watched-dir]
+                                              (.startsWith % watched-dir))
+                                            (:watched-dirs @*dir-watchers))))
                         set)]
       ;; watch dir for notebook changes
       (when-not (empty? new-dirs)
         (swap! *dir-watchers
                #(assoc %
+                       :watched-dirs
+                       (into (:watched-dirs %) new-dirs)
                        :watchers
                        (conj (:watchers %)
                              (apply beholder/watch
