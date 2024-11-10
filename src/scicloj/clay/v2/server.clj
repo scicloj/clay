@@ -9,6 +9,7 @@
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
+   [cognitect.transit :as transit]
    [hiccup.core :as hiccup])
   (:import (java.net ServerSocket)))
 
@@ -40,7 +41,6 @@
     clay_server_counter = '%d';
 
     clay_refresh = function() {location.assign('http://localhost:'+clay_port);}
-
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
 
     clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
@@ -113,6 +113,10 @@
                                (header state)]))
                         (communication-script state)))))
 
+(defn abcd [x]
+  (+ x 9))
+
+
 (defn routes
   "Web server routes."
   [{:keys [:body :request-method :uri]
@@ -122,37 +126,47 @@
       (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
                                :on-close (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
-      (case [request-method uri]
-        [:get "/"] {:body (-> state
-                              page
-                              (wrap-html state))
-                    :headers {"Content-Type" "text/html"}
-                    :status 200}
-        [:get "/counter"] {:body (-> state
-                                     :counter
-                                     str)
-                           :status 200}
+          (case [request-method uri]
+          [:get "/"] {:body (-> state
+                                page
+                                (wrap-html state))
+                      :headers {"Content-Type" "text/html"}
+                      :status 200}
+          [:get "/counter"] {:body (-> state
+                                       :counter
+                                       str)
+                             :status 200}
+
+          [:post "/compute"] (let [input (-> body
+                                             (transit/reader :json)
+                                             transit/read
+                                             read-string)
+                                   _ (prn [:input input])
+                                   output (abcd input)]
+                               (prn [:output output])
+                               {:body (pr-str output)
+                                :status 200})
 
         ;; else
-        (let [f (io/file (str (:base-target-path state) uri))]
-          (if (.exists f)
-            {:body    (if (re-matches #".*\.html$" uri)
-                        (-> f
-                            slurp
-                            (wrap-html state))
-                        f)
-             :headers (when (str/ends-with? uri ".js")
-                        {"Content-Type" "text/javascript"})
-             :status  200}
-            (case [request-method uri]
+          (let [f (io/file (str (:base-target-path state) uri))]
+            (if (.exists f)
+              {:body    (if (re-matches #".*\.html$" uri)
+                          (-> f
+                              slurp
+                              (wrap-html state))
+                          f)
+               :headers (when (str/ends-with? uri ".js")
+                          {"Content-Type" "text/javascript"})
+               :status  200}
+              (case [request-method uri]
               ;; user files have priority, otherwise serve the default from resources
-              [:get "/favicon.ico"] {:body   (io/input-stream (io/resource "favicon.ico"))
-                                     :status 200}
+                [:get "/favicon.ico"] {:body   (io/input-stream (io/resource "favicon.ico"))
+                                       :status 200}
               ;; this image is for the header above the page during interactive mode
-              [:get "/Clay.svg.png"] {:body   (io/input-stream (io/resource "Clay.svg.png"))
-                                      :status 200}
-              {:body   "not found"
-               :status 404})))))))
+                [:get "/Clay.svg.png"] {:body   (io/input-stream (io/resource "Clay.svg.png"))
+                                        :status 200}
+                {:body   "not found"
+                 :status 404})))))))
 
 (defonce *stop-server! (atom nil))
 
@@ -210,3 +224,5 @@
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
+
+
