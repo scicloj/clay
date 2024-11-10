@@ -1,20 +1,18 @@
 ^{:clay {:quarto {:monofont "Fira Code Medium"}}}
 (ns slides
-  (:require [scicloj.kindly.v4.kind :as kind]
-            [scicloj.clay.v2.api :as clay]
-            [clojure.java.io :as io]
-            [clojure.java.shell :as shell]
-            [tablecloth.api :as tc]))
+  (:require [scicloj.kindly.v4.kind :as kind]))
+
+;; # Slide 1
 
 (kind/hiccup
- [:img {:src "notebooks/images/Clay.svg.png"}])
+ [:img {:src "https://scicloj.github.io/clay/notebooks/images/Clay.svg.png"}])
 
-;; # Slides
-
-;; ## A1
+;; ## Point 1
 
 (+ 1 2)
 
-;; ## A2
+;; ## Point 2
+
+(str "hello" ", world")
 
 ;; # More Slides
