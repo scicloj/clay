@@ -5,7 +5,7 @@
 ;; # Slide 1
 
 (kind/hiccup
- [:img {:src "https://scicloj.github.io/clay/notebooks/images/Clay.svg.png"}])
+ [:img {:src "notebooks/images/Clay.svg.png"}])
 
 ;; ## Point 1
 
