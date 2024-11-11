@@ -29,17 +29,25 @@
 ;; ## Getting started
 
 ;; Try it out by starting a Clojure command line
-;; `clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"`.
+;; ```bash
+;; clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"
+;; ```
 ;; The `:mvn/version` may be changing frequently, copy the up-to-date version from
 ;; [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay).
 
 ;; Wait for a while, it will drop you at a prompt reading `user=> `,
-;; now let's require the clay namespace by typing `(require '[scicloj.clay.v2.api :as clay])`,
-;; and then type: `(clay/make! {:single-form '(+ 1 2 3)})`.
+;; now let's require the clay namespace by typing
+;; ```clj
+;; (require '[scicloj.clay.v2.api :as clay])
+;; ```
+;; and then type:
+;; ```clj
+;; (clay/make! {:single-form '(+ 1 2 3)})
+;; ```
 ;;
 ;; The terminal now looks something like below:
-;; ```
-;; $ clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"
+;; ```clj
+;; $ clj -Sdeps '{:deps {org.scicloj/clay {:mvn/version "2-beta23"}}}'
 ;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.pom from clojars
 ;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.jar from clojars
 ;; Clojure 1.10.3
@@ -50,11 +58,16 @@
 ;; [[[[:wrote "docs/.clay.html"] nil]] nil [:watching-new-files #{}]]
 ;; ```
 
-;; It will open http://localhost:1971/ in your web browser, and congratulations,
-;; you've just made your first Clay document!
+;; It will open `http://localhost:1971/` in your web browser
+;; (or use another port of 1971 is taken),
+;; and congratulations, you've just made your first Clay document!
 
 ;; Now you can keep updating the document by tring different forms,
-;; like `(clay/make! {:single-form '(str "hello" "world")})` or whatever that's interesting to you.
+;; like 
+;; ```clj
+;; (clay/make! {:single-form '(str "hello" "world")})
+;; ```
+;; or whatever is interesting to you.
 ;; Along the way, the web page will get updated automatically for you!
 
 ;; At some point, you might find that you'd better write code in a .clj file.
@@ -62,7 +75,9 @@
 ;; Here, we take [notebooks/slides.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/slides.clj) as an example.
 ;; Save the file to your computer as, say `/tmp/slides.clj`.
 ;; To render this Clojure namespace (or file if you prefer), you may run the following in the REPL:
-;; `(clay/make! {:source-path "/tmp/slides.clj"})`
+;; ```clj
+;; (clay/make! {:source-path "/tmp/slides.clj"})
+;; ```
 
 ;;
 ;; As your docs evolves, you may want to add more Clojure files, and manage them as a project.
@@ -71,6 +86,7 @@
 ;; to get a sense.
 ;;
 ;; You can also:
+
 ;; - See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
 ;; - See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 ;;
