@@ -286,15 +286,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>user=&gt; (clay/make! {<span class="at">:single-form</span> '(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>)})</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>serving Clay at http<span class="at">://localhost:1971/</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>[[[[<span class="at">:wrote</span> <span class="st">"docs/.clay.html"</span>] <span class="va">nil</span>]] <span class="va">nil</span> [<span class="at">:watching-new-files</span> #{}]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>It will open <code>http://localhost:1971/</code> in your web browser (or use another port of 1971 is taken), and congratulations, you’ve just made your first Clay document!</p>
-<p>Now you can keep updating the document by tring different forms, like</p>
+<p>It will open <code>http://localhost:1971/</code> in your web browser (or use another port if 1971 is taken), and congratulations, you’ve just made your first Clay document!</p>
+<p>Now you can keep updating the document by trying different forms, like</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:single-form</span> '(<span class="kw">str</span> <span class="st">"hello"</span> <span class="st">"world"</span>)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>or whatever is interesting to you. Along the way, the web page will get updated automatically for you!</p>
 <p>At some point, you might find that you’d better write code in a .clj file. No problem, Clay can also render a document from a Clojure file. Here, we take <a href="https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/slides.clj">notebooks/slides.clj</a> as an example. Save the file to your computer as, say <code>/tmp/slides.clj</code>. To render this Clojure namespace (or file if you prefer), you may run the following in the REPL:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:source-path</span> <span class="st">"/tmp/slides.clj"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>As your docs evolves, you may want to add more Clojure files, and manage them as a project. You can organize them as a normal Clojure project with a <code>deps.edn</code>, you can browse Clay’s own <a href="https://github.com/scicloj/clay/tree/main/notebooks">notebooks/</a> to get a sense.</p>
+<p>As your docs evolve, you may want to add more Clojure files, and manage them as a project. You can organize them as a normal Clojure project with a <code>deps.edn</code>, you can browse Clay’s own <a href="https://github.com/scicloj/clay/tree/main/notebooks">notebooks/</a> to get a sense.</p>
 <p>You can also:</p>
 <ul>
+<li>Head over to <a href="clay_book.examples.html">Examples</a> to see what features it provides and corresponding examples.</li>
 <li>See the <a href="index.html#api">API</a> and <a href="index.html#configuration">Configuration</a> subsections for more options and variations.</li>
 <li>See the <a href="index.html#setup">Setup</a> section and recent <a href="index.html#videos">Videos</a> for details about integrating Clay with your editor so you do not need to call <code>make!</code> yourself.</li>
 </ul>
@@ -457,7 +458,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>   [<span class="at">:li</span> <span class="st">"two"</span>]</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>   [<span class="at">:li</span> <span class="st">"three"</span>]]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background:#efe9e6;background-color:;border-style:solid;"><ul><li>one</li><li>two</li><li>three</li></ul></div>
+<div style="background:#efe9e6;border-style:solid;"><ul><li>one</li><li>two</li><li>three</li></ul></div>
 <p>A dataset using <a href="https://scicloj.github.io/tablecloth/">Tablecloth</a>:</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> {<span class="at">:x</span> (<span class="kw">range</span> <span class="dv">5</span>)</span>
@@ -477,23 +478,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.85803471</td>
+<td style="text-align: right;">0.14733028</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.47112787</td>
+<td style="text-align: right;">0.97616110</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.08886063</td>
+<td style="text-align: right;">0.00610378</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.51822404</td>
+<td style="text-align: right;">0.27146525</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.69831059</td>
+<td style="text-align: right;">0.98996190</td>
 </tr>
 </tbody>
 </table>
@@ -511,7 +512,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                  :=mark-size <span class="dv">3</span></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                  :=mark-opacity <span class="fl">0.2</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background-color:;"><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"color":{"field":"species","type":"nominal"},"x":{"field":"sepal_width","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"rule","size":3,"opacity":0.2,"tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"color":{"field":"species","type":"nominal"},"x":{"field":"sepal_width","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"rule","size":3,"opacity":0.2,"tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
 </section>
 <section id="api" class="level2" data-number="1.8">
 <h2 data-number="1.8" class="anchored" data-anchor-id="api"><span class="header-section-number">1.8</span> API</h2>
@@ -834,15 +835,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="subsection-purple" class="level3" data-number="1.12.1">
 <h3 data-number="1.12.1" class="anchored" data-anchor-id="subsection-purple"><span class="header-section-number">1.12.1</span> subsection: purple</h3>
-<div style="background-color:;color:lightgrey;"><big><p>purple</p></big></div>
+<div style="background-color:purple;color:lightgrey;"><big><p>purple</p></big></div>
 </section>
 <section id="subsection-darkgreen" class="level3" data-number="1.12.2">
 <h3 data-number="1.12.2" class="anchored" data-anchor-id="subsection-darkgreen"><span class="header-section-number">1.12.2</span> subsection: darkgreen</h3>
-<div style="background-color:;color:lightgrey;"><big><p>darkgreen</p></big></div>
+<div style="background-color:darkgreen;color:lightgrey;"><big><p>darkgreen</p></big></div>
 </section>
 <section id="subsection-brown" class="level3" data-number="1.12.3">
 <h3 data-number="1.12.3" class="anchored" data-anchor-id="subsection-brown"><span class="header-section-number">1.12.3</span> subsection: brown</h3>
-<div style="background-color:;color:lightgrey;"><big><p>brown</p></big></div>
+<div style="background-color:brown;color:lightgrey;"><big><p>brown</p></big></div>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">3</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>     kind/fragment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -878,7 +879,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>               (kind/video</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                {<span class="at">:src</span> my-video-src}))})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<video controls="" style="background-color:;"><source src="https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4" type="video/mp4"></video>
+<video controls=""><source src="https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4" type="video/mp4"></video>
 <p>If the value is a vector, the function is the first element, and the arguments are the rest.</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb46"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>(kind/fn</span>
@@ -917,15 +918,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.13474203</td>
+<td style="text-align: right;">0.76993771</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.39239035</td>
+<td style="text-align: right;">0.60039018</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.91591435</td>
+<td style="text-align: right;">0.96624550</td>
 </tr>
 </tbody>
 </table>
@@ -948,15 +949,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.71631302</td>
+<td style="text-align: right;">0.50409665</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.71087717</td>
+<td style="text-align: right;">0.64612889</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.53650718</td>
+<td style="text-align: right;">0.18269069</td>
 </tr>
 </tbody>
 </table>
@@ -979,15 +980,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.21948788</td>
+<td style="text-align: right;">0.75504564</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.27588738</td>
+<td style="text-align: right;">0.70378130</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.25175324</td>
+<td style="text-align: right;">0.94338542</td>
 </tr>
 </tbody>
 </table>
@@ -1015,13 +1016,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb55"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>(kind/hiccup</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a> [<span class="at">:img</span> {<span class="at">:src</span> <span class="st">"notebooks/images/Clay.svg.png"</span>}])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<img src="notebooks/images/Clay.svg.png" style="background-color:;">
+<img src="notebooks/images/Clay.svg.png">
 <div class="sourceClojure">
 <div class="sourceCode" id="cb56"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(kind/image</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:src</span> <span class="st">"notebooks/images/Clay.svg.png"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="clay-image">
-<img class="clay-image" src="notebooks/images/Clay.svg.png" style="background-color:;">
+<img class="clay-image" src="notebooks/images/Clay.svg.png">
 </div>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb57"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>(kind/vega-lite</span>
@@ -1036,7 +1037,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">:color</span> {<span class="at">:field</span> <span class="st">"species"</span>, <span class="at">:type</span> <span class="st">"nominal"</span>}}</span>
 <span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:background</span> <span class="st">"floralwhite"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background-color:;"><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"notebooks\/datasets\/iris.csv"},"mark":"rule","encoding":{"opacity":{"value":0.2},"size":{"value":3},"x":{"field":"sepal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"},"color":{"field":"species","type":"nominal"}},"background":"floralwhite"});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"notebooks\/datasets\/iris.csv"},"mark":"rule","encoding":{"opacity":{"value":0.2},"size":{"value":3},"x":{"field":"sepal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"},"color":{"field":"species","type":"nominal"}},"background":"floralwhite"});</script></div>
 </section>
 <section id="hiding-code" class="level2" data-number="1.16">
 <h2 data-number="1.16" class="anchored" data-anchor-id="hiding-code"><span class="header-section-number">1.16</span> Hiding code</h2>
