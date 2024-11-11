@@ -254,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <img alt="Clay logo" src="https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png" style="width:100px;">
 <section id="about" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="about"><span class="header-section-number">1.1</span> About</h2>
-<p><a href="https://github.com/scicloj/clay">Clay</a> is a minimalistic Clojure tool for data visualization and literate programming, compatible with the <a href="https://scicloj.github.io/kindly-noted/kindly">Kindly</a> convention. It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from source code and comments.</p>
+<p><a href="https://github.com/scicloj/clay">Clay</a> is a minimalistic Clojure tool for data visualization and literate programming, compatible with the <a href="https://scicloj.github.io/kindly-noted/kindly">Kindly</a> convention. It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from Clojure source code and comments.</p>
 <p><strong>Source:</strong> <a href="https://github.com/scicloj/clay"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white" class="img-fluid" alt="(GitHub repo)"></a></p>
 <p><strong>Artifact:</strong> <a href="https://clojars.org/org.scicloj/clay"><img src="https://img.shields.io/clojars/v/org.scicloj/clay.svg" class="img-fluid" alt="Clojars Project"></a></p>
 <p><strong>Status:</strong> The project has moved into Beta stage (March 2024).</p>
@@ -269,16 +269,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="getting-started" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">1.3</span> Getting started</h2>
-<p>Add Clay to your project dependencies: <a href="https://clojars.org/org.scicloj/clay"><img src="https://img.shields.io/clojars/v/org.scicloj/clay.svg" class="img-fluid" alt="Clojars Project"></a></p>
-<p>(If you like to use <a href="https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/">aliases</a>, you may add under it to the extra dependencies under an alias. See, for example, the <a href="https://github.com/scicloj/noj/blob/main/deps.edn">deps.edn</a> file of <a href="https://github.com/scicloj/noj">Noj</a>. If you do not know what this means, just add it under the main <code>:deps</code> section of your <code>deps.edn</code> file.)</p>
-<p>To render a given Clojure namespace, say <code>"notebooks/index.clj"</code>, you may run the following in the REPL:</p>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb1"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">require</span> '[scicloj.clay.v2.api <span class="at">:as</span> clay])</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:source-path</span> <span class="st">"notebooks/index.clj"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This will render an HTML page and serve it in Clay’s browser view. Note that Clay does not need to be mentioned in the namespace we wish to render.</p>
-<p>See the <a href="index.html#api">API</a> and <a href="index.html#configuration">Configuration</a> subsections for more options and variations.</p>
-<p>See the <a href="index.html#setup">Setup</a> section and recent <a href="index.html#videos">Videos</a> for details about integrating Clay with your editor so you do not need to call <code>make!</code> yourself.</p>
+<p>Try it out by starting a Clojure command line <code>clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"</code>. The <code>:mvn/version</code> may be changing frequently, copy the up-to-date version from <a href="https://clojars.org/org.scicloj/clay"><img src="https://img.shields.io/clojars/v/org.scicloj/clay.svg" class="img-fluid" alt="Clojars Project"></a>.</p>
+<p>Wait for a while, it will drop you at a prompt reading <code>user=&gt;</code>, now let’s require the clay namespace by typing <code>(require '[scicloj.clay.v2.api :as clay])</code>, and then type: <code>(clay/make! {:single-form '(+ 1 2 3)})</code>.</p>
+<p>The terminal now looks something like below:</p>
+<pre><code>$ clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"
+Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.pom from clojars
+Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.jar from clojars
+Clojure 1.10.3
+user=&gt; (require '[scicloj.clay.v2.api :as clay])
+nil
+user=&gt; (clay/make! {:single-form '(+ 1 2 3)})
+serving Clay at http://localhost:1971/
+[[[[:wrote "docs/.clay.html"] nil]] nil [:watching-new-files #{}]]</code></pre>
+<p>It will open http://localhost:1971/ in your web browser, and congratulations, you’ve just made your first Clay document!</p>
+<p>Now you can keep updating the document by tring different forms, like <code>(clay/make! {:single-form '(str "hello" "world")})</code> or whatever that’s interesting to you. Along the way, the web page will get updated automatically for you!</p>
+<p>At some point, you might find that you’d better write code in a .clj file. No problem, Clay can also render a document from a Clojure file. Here, we take <a href="https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/slides.clj">notebooks/slides.clj</a> as an example. Save the file to your computer as, say <code>/tmp/slides.clj</code>. To render this Clojure namespace (or file if you prefer), you may run the following in the REPL: <code>(clay/make! {:source-path "/tmp/slides.clj"})</code></p>
+<p>As your docs evolves, you may want to add more Clojure files, and manage them as a project. You can organize them as a normal Clojure project with a <code>deps.edn</code>, you can browse Clay’s own <a href="https://github.com/scicloj/clay/tree/main/notebooks">notebooks/</a> to get a sense.</p>
+<p>You can also: - See the <a href="index.html#api">API</a> and <a href="index.html#configuration">Configuration</a> subsections for more options and variations. - See the <a href="index.html#setup">Setup</a> section and recent <a href="index.html#videos">Videos</a> for details about integrating Clay with your editor so you do not need to call <code>make!</code> yourself.</p>
 </section>
 <section id="projects-using-clay" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="projects-using-clay"><span class="header-section-number">1.4</span> Projects using Clay</h2>
@@ -458,23 +465,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.56695033</td>
+<td style="text-align: right;">0.67187460</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.83354480</td>
+<td style="text-align: right;">0.33399923</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.72773228</td>
+<td style="text-align: right;">0.17696964</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.54035466</td>
+<td style="text-align: right;">0.89569503</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.99498313</td>
+<td style="text-align: right;">0.26079842</td>
 </tr>
 </tbody>
 </table>
@@ -675,6 +682,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(experimental)</p>
 <p>Clay can listen to file changes (using <a href="https://github.com/nextjournal/beholder">nextjournal/beholder</a>) and respond with remaking the page.</p>
 <p>See the example above with <code>:live-reload true</code>.</p>
+<p>One caveat: You may not want to use this if the containing directory of this file has a lot of files and/or sub-directories, as it may take quite a long time (e.g.&nbsp;~1 minute) for beholder to watch the containing directory for file changes.</p>
 </section>
 <section id="hiccup-output" class="level3" data-number="1.8.2">
 <h3 data-number="1.8.2" class="anchored" data-anchor-id="hiccup-output"><span class="header-section-number">1.8.2</span> Hiccup output</h3>
@@ -897,15 +905,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.36934812</td>
+<td style="text-align: right;">0.17586962</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.47065716</td>
+<td style="text-align: right;">0.53007361</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.74349758</td>
+<td style="text-align: right;">0.59852377</td>
 </tr>
 </tbody>
 </table>
@@ -928,15 +936,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.17053104</td>
+<td style="text-align: right;">0.14182199</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.44608525</td>
+<td style="text-align: right;">0.63959488</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.77282527</td>
+<td style="text-align: right;">0.14761956</td>
 </tr>
 </tbody>
 </table>
@@ -959,15 +967,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.98421449</td>
+<td style="text-align: right;">0.68004928</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.52250829</td>
+<td style="text-align: right;">0.99815036</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.94014335</td>
+<td style="text-align: right;">0.09100536</td>
 </tr>
 </tbody>
 </table>
