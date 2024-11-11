@@ -433,6 +433,10 @@
 
 ;; See the example above with `:live-reload true`.
 
+;; One caveat: You may not want to use this if the containing directory of this file
+;; has a lot of files and/or sub-directories, as it may take quite a long time (e.g. ~1 minute)
+;; for beholder to watch the containing directory for file changes.
+
 ;; ### Hiccup output
 
 ;; (experimental 🛠)
