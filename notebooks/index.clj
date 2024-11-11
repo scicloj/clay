@@ -59,10 +59,10 @@
 ;; ```
 
 ;; It will open `http://localhost:1971/` in your web browser
-;; (or use another port of 1971 is taken),
+;; (or use another port if 1971 is taken),
 ;; and congratulations, you've just made your first Clay document!
 
-;; Now you can keep updating the document by tring different forms,
+;; Now you can keep updating the document by trying different forms,
 ;; like 
 ;; ```clj
 ;; (clay/make! {:single-form '(str "hello" "world")})
@@ -80,13 +80,14 @@
 ;; ```
 
 ;;
-;; As your docs evolves, you may want to add more Clojure files, and manage them as a project.
+;; As your docs evolve, you may want to add more Clojure files, and manage them as a project.
 ;; You can organize them as a normal Clojure project with a `deps.edn`,
 ;; you can browse Clay's own [notebooks/](https://github.com/scicloj/clay/tree/main/notebooks)
 ;; to get a sense.
 ;;
 ;; You can also:
 
+;; - Head over to [Examples](clay_book.examples.html) to see what features it provides and corresponding examples.
 ;; - See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
 ;; - See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 ;;
