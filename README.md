@@ -1,3 +1,4 @@
+[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 # Clay
 
 ![Clay logo](resources/Clay.svg)
