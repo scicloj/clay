@@ -72,11 +72,11 @@
 
 ;; At some point, you might find that you'd better write code in a .clj file.
 ;; No problem, Clay can also render a document from a Clojure file.
-;; Here, we take [notebooks/slides.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/slides.clj) as an example.
-;; Save the file to your computer as, say `/tmp/slides.clj`.
-;; To render this Clojure namespace (or file if you prefer), you may run the following in the REPL:
+;; Here, we take [notebooks/demo.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj) as an example.
+;; Click the link and save the file to your computer as, say, `/tmp/demo.clj`,
+;; then you can render this Clojure namespace (or file if you prefer) by typing the following in the REPL:
 ;; ```clj
-;; (clay/make! {:source-path "/tmp/slides.clj"})
+;; (clay/make! {:source-path "/tmp/demo.clj"})
 ;; ```
 
 ;;
