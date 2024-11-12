@@ -62,9 +62,9 @@
 ;;
 ;; Try moving the pink mark. 👆
 
-(defn my-fn [x]
+#_(defn my-fn [x]
   (+ -1
      (square (sin x))
      (square (cos (* 2 x)))))
 
-(plot/of-x {:z my-fn :samples 256})
+#_(plot/of-x {:z my-fn :samples 256})
