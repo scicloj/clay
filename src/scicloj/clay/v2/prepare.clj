@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.prepare
   (:require
    [clojure.string :as string]
+    [clojure.test :as test]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.table :as table]
    [scicloj.clay.v2.util.walk :as claywalk]
@@ -297,18 +298,27 @@
        str
        item/printed-clojure)))
 
+(defn render-test-results [results]
+  (into [:pre]
+        (for [{:keys [type actual]} results]
+          [:code {:style {:background-color (if (= type :pass)
+                                              "#92C648"
+                                              "#F7918E")}}
+           (str (string/upper-case (name type)) (when actual (str ": " actual)))])))
+
 (add-preparer!
  :kind/test
  (fn [{:as context
        :keys [value]}]
-   (-> context
-       (dissoc :form)
-       (update :kindly/options dissoc :element/max-height)
-       (assoc :value (-> value
-                         meta
-                         :test
-                         (#(%))))
-       prepare-or-pprint)))
+   (let [*results (atom [])]
+     (binding [test/report (fn capture-test-results [m]
+                             (swap! *results conj m))]
+       (test value))
+     (-> context
+         (dissoc :form)
+         (update :kindly/options dissoc :element/max-height)
+         (assoc :value @*results)
+         (assoc :hiccup (render-test-results @*results))))))
 
 (defn not-all-plain-values? [items]
   (->> items
