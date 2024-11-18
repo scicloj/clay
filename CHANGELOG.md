@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta24] - TBD
+- tests defined with `deftest` will run and show results
+
 ## [2-beta23] - 2024-11-08
 - bugfix: refreshing page appropriately to keep the main URL - by @whatacold
 
