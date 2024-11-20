@@ -25,6 +25,8 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 [kindly-advice](https://scicloj.github.io/kindly-noted/kindly_advice) is a library that helps tools such as Clay to be Kindly-compatible.
 
+[kindly-render](https://scicloj.github.io/kindly-noted/kindly_advice) is a library for rendering kinds to different taget formats. In the near future (as of Nov. 2024), Clay should rely on it.
+
 [read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
 ## Projects using Clay
