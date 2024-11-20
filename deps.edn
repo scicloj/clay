@@ -13,7 +13,10 @@
         org.scicloj/kind-portal {:mvn/version "1-beta1"}
         org.clojure/tools.reader {:mvn/version "1.3.7"}
         com.nextjournal/beholder {:mvn/version "1.0.2"}
-        babashka/fs {:mvn/version "0.4.19"}}
+        babashka/fs {:mvn/version "0.4.19"}
+        org.scicloj/kindly-render {:local/root "../kindly-render"}
+        #_{:git/sha "bdf95a5986479a8a8f7f56b092013d2b5e37036e"
+           :git/url "https://github.com/scicloj/kindly-render.git"}}
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {scicloj/tablecloth {:mvn/version "7.029.2"}
                               org.scicloj/tableplot {:mvn/version "1-alpha10"}
