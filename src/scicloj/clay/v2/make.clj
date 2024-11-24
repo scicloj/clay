@@ -415,7 +415,7 @@
      (-> main-spec
          handle-main-spec!)
      (->> single-ns-specs
-          (map live-reload/watch-dir)
+          (map #(live-reload/start! make! %))
           (reduce into #{})
           (vector :watching-new-files))]))
 

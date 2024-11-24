@@ -11,7 +11,7 @@
 
 (defn stop! []
   (server/close!)
-  (live-reload/stop-watchers)
+  (live-reload/stop!)
   [:ok])
 
 (defn welcome! []

@@ -1,37 +1,91 @@
 (ns scicloj.clay.v2.live-reload
-  (:require [clojure.java.io :as io]
-            [scicloj.clay.v2.make :as make]
+  (:require [clojure.set :as set]
+            [babashka.fs :as fs]
             [nextjournal.beholder :as beholder]))
 
-(defonce dir-watchers-initial {:watchers []
-                               :watched-dirs #{}
-                               :file-specs {}})
+(defn- subdir-paths
+  "Return subdir paths of `paths1` who is a sub-directory of any `paths2`."
+  [paths1 paths2]
+  (let [set1 (set paths1)
+        set2 (set paths2)]
+    (reduce (fn [result dir1]
+              (if (some #(and (not= dir1 %)
+                              (fs/starts-with? dir1 %))
+                        set2)
+                (conj result dir1)
+                result))
+            #{}
+            set1)))
 
-(defonce *dir-watchers (atom dir-watchers-initial))
+(defn- exclude-subdirs
+  "Exclude dirs who are any sub-directories of `dirs` themselves."
+  [dirs]
+  (let [origin-dirs (set dirs)
+        to-remove (subdir-paths origin-dirs origin-dirs)]
+    (set/difference origin-dirs to-remove)))
 
-(defn stop-watchers
-  "Stop all directory watchers."
-  []
-  (doseq [w (:watchers @*dir-watchers)]
-    (beholder/stop w))
-  (reset! *dir-watchers dir-watchers-initial))
+(defn- dirs-to-watch
+  "Find out directories of files in `file-paths` to watch."
+  [watched-dirs file-paths]
+  (->> file-paths
+       (map fs/parent)
+       (filter #(not (some (fn [watched-dir]
+                             (fs/starts-with? % watched-dir))
+                           watched-dirs)))
+       exclude-subdirs))
 
-(defn- beholder-callback
-  "Callback function for beholder."
-  [event]
-  (let [canonical-path (str (-> event :path .toFile .getCanonicalPath))]
-    (when (and (identical? :modify (:type event))
-               (contains? (:file-specs @*dir-watchers) canonical-path))
-      (make/make! (get (:file-specs @*dir-watchers) canonical-path)))))
+(defn- strs->paths
+  "Convert strings to paths."
+  [strs]
+  (map fs/canonicalize strs))
 
-(defn watch-dir
-  "Watch directory changes if necessary."
-  [{:as spec
-    :keys [live-reload source-path]}]
+(defn- paths->strs
+  "Convert paths to strings."
+  [paths]
+  (map str paths))
+
+(def ^:private dir-watchers-initial {:watchers {}
+                                     :file-specs {}})
+
+(def ^:private *dir-watchers (atom dir-watchers-initial))
+
+(defn- beholder-callback!
+  "Return a callback function for beholder."
+  [make-fn]
+  (fn [event]
+    (let [canonical-path (-> event :path fs/canonicalize str)]
+      (when (and (identical? :modify (:type event))
+                 (contains? (:file-specs @*dir-watchers) canonical-path))
+        (make-fn (get (:file-specs @*dir-watchers) canonical-path))))))
+
+(defn- start-watching-dirs!
+  "Start watching file changes in all `dirs`, with callback `cb`."
+  [dirs cb]
+  (doseq [dir dirs]
+    (swap! *dir-watchers
+           #(assoc %
+                   :watchers
+                   (assoc (:watchers %)
+                          dir
+                          (beholder/watch cb dir))))))
+
+(defn- stop-watching-dirs!
+  "Stop watching file changes in all `dirs`."
+  [dirs]
+  (doseq [dir dirs]
+    (beholder/stop (-> @*dir-watchers :watchers (get dir)))
+    (swap! *dir-watchers
+           #(assoc %
+                   :watchers
+                   (dissoc (:watchers %) dir)))))
+
+(defn start!
+  "Watch directory changes for `source-path`."
+  [make-fn {:as spec
+            :keys [live-reload source-path]}]
   (when (and live-reload
              source-path)
-    (let [->canonical-path (fn [file] (.getCanonicalPath (io/file file)))
-          watched-files (->> @*dir-watchers
+    (let [watched-files (->> @*dir-watchers
                              :file-specs
                              keys
                              set)
@@ -39,35 +93,47 @@
                          (#(if (vector? %) % [%]))
                          ;; make sure all paths are canonical,
                          ;; so that their containing directories can be properly watched by beholder
-                         (map ->canonical-path)
+                         (map fs/canonicalize)
                          (filter #(not (contains? watched-files %)))
                          set)
-          new-dirs (->> new-files
-                        (map #(-> % io/file .getParent))
-                        (filter #(not (some (fn [watched-dir]
-                                              (.startsWith % watched-dir))
-                                            (:watched-dirs @*dir-watchers))))
-                        set)]
-      ;; watch dir for notebook changes
+          new-dirs (dirs-to-watch (strs->paths (keys (:watchers @*dir-watchers)))
+                                  new-files)]
+      ;; stop watching dirs now having been subdirs.
+      (when-let [dirs-to-stop (subdir-paths (strs->paths (keys (:watchers @*dir-watchers)))
+                                       new-dirs)]
+        (stop-watching-dirs! (paths->strs dirs-to-stop)))
+      ;; watch new dirs for notebook changes
       (when-not (empty? new-dirs)
-        (swap! *dir-watchers
-               #(assoc %
-                       :watched-dirs
-                       (into (:watched-dirs %) new-dirs)
-                       :watchers
-                       (conj (:watchers %)
-                             (apply beholder/watch
-                                    beholder-callback
-                                    new-dirs)))))
+        (start-watching-dirs! (paths->strs new-dirs) (beholder-callback! make-fn)))
       ;; save the spec for every file
       (when-not (empty? new-files)
         (swap! *dir-watchers #(assoc %
                                      :file-specs
                                      (->> new-files
-                                          (reduce (fn [pre-result file]
-                                                    (assoc pre-result
-                                                           file
-                                                           spec))
+                                          (reduce (fn [result file]
+                                                    (assoc result (str file) spec))
                                                   {})
                                           (merge (:file-specs @*dir-watchers))))))
       new-files)))
+
+(defn stop!
+  "Stop all directory watchers."
+  []
+  (stop-watching-dirs! (-> @*dir-watchers :watchers keys))
+  (reset! *dir-watchers dir-watchers-initial))
+
+(comment
+  (strs->paths ["/tmp/a/" "/tmp/b/"])
+  (paths->strs (strs->paths ["/tmp/a/" "/tmp/b/"]))
+  (subdir-paths (map fs/canonicalize '("/tmp/foo/a/" "/tmp/foo/a/b/" "/tmp/bar/a/" "/tmp/baz/a/"))
+                (map fs/canonicalize '("/tmp/foo/" "/tmp/bar/")))
+  (exclude-subdirs (map fs/canonicalize ["/tmp/a/" "/tmp/b/" "/tmp/a/foo/" "/tmp/a/bar/"]))
+  (dirs-to-watch (map fs/canonicalize ["/tmp/foo/" "/tmp/bar/"])
+                 (map fs/canonicalize ["/tmp/foo/a.clj" "/tmp/bar/b.clj"
+                                       "/tmp/c.clj" "/tmp/d/d.clj"]))
+  @*dir-watchers
+  (:watchers @*dir-watchers)
+  (keys (:file-specs @*dir-watchers))
+  (start-watching-dirs! ["/tmp/a/" "/tmp/b/"] prn)
+  (stop-watching-dirs! ["/tmp/a/" "/tmp/b/"])
+  )
