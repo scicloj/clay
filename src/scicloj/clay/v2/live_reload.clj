@@ -32,17 +32,6 @@
                            watched-dir-paths)))
        exclude-subdir-paths))
 
-(comment
-  (defn strs->paths
-    "Convert strings to paths."
-    [strs]
-    (map fs/canonicalize strs))
-
-  (defn paths->strs
-    "Convert paths to strings."
-    [paths]
-    (map str paths)))
-
 (def ^:private dir-watchers-initial {:watchers {}
                                      :file-specs {}})
 
