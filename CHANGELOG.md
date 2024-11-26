@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. This change
 ## [2-beta24] - TBD
 - tests defined with `deftest` will run and show results
 - updated deps (http-kit, clj-yaml, kindly, kind-portal, babashka/fs)
+- Watch a dir only if all of its ancestor dirs not being watched. (PR #179) by @whatacold
+- refactoring of the live-reload support by @whatacold 
 
 ## [2-beta23] - 2024-11-08
 - bugfix: refreshing page appropriately to keep the main URL - by @whatacold
