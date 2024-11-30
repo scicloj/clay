@@ -12,6 +12,17 @@
    [scicloj.clay.v2.util.resource :as resource]
    [scicloj.clay.v2.files :as files]))
 
+
+
+
+
+
+
+
+
+
+
+
 (def special-lib-resources
   {:vega {:js {:from-local-copy
                ["https://cdn.jsdelivr.net/npm/vega@5.25.0"
@@ -92,19 +103,23 @@
                                           "plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css"]}]}}
    :highcharts {:js {:from-the-web ["https://code.highcharts.com/highcharts.js"]}}})
 
+
 (def include
   {:js hiccup.page/include-js
    :css hiccup.page/include-css})
 
 (defn include-inline [js-or-css]
   (fn [url]
+    (prn [:url url])
     (->> url
          ((include js-or-css))
          (map (fn [script-tag]
-                (let [{:keys [src]} (second script-tag)]
-                  (-> script-tag
-                      (conj (slurp src))
-                      (update 1 dissoc :src))))))))
+                (let [{:keys [src href]} (second script-tag)]
+                  (case js-or-css
+                    :js [:div #_{:type "text/javascript"}
+                         #_(slurp src)]
+                    :css [:div
+                          #_(slurp href)])))))))
 
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]
@@ -147,10 +162,11 @@
       (babashka.fs/copy-tree (str repo-path "/" relative-path)
                              target-copy-path))
     (->> paths
-         (map (fn [path]
-                (->> path
-                     (str target-repo-path "/")
-                     ((include js-or-css))))))))
+         (mapv (fn [path]
+                 (->> path
+                      (str target-repo-path "/")
+                      ((include js-or-css))))))))
+
 
 (defn include-libs-hiccup [{:as spec :keys [inline-js-and-css]}
                            deps-types libs]
@@ -169,7 +185,7 @@
                                    (->> (concat from-the-web
                                                 from-local-copy
                                                 from-local-copy-of-repo)
-                                        (map (include-inline js-or-css)))
+                                        (mapv (include-inline js-or-css)))
                                    ;; else
                                    (concat
                                     (some->> from-the-web
@@ -188,8 +204,13 @@
                                                      details
                                                      lib
                                                      js-or-css
-                                                     spec))))))))))))))
-       (apply concat)))
+                                                     spec))))))))
+                              doall)))
+                      doall)))
+       (apply concat)
+       doall))
+
+(defn f [x] (+ x 9))
 
 (defn include-libs [spec deps-types libs]
   (->> libs

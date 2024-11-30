@@ -5,6 +5,8 @@
 ;; by the [Kindly](https://scicloj.github.io/kindly-noted/)
 ;; specification.
 
+
+^{:clay {:inline-js-and-css true}}
 (ns clay-book.examples
   (:require
    [clojure.math :as math]
