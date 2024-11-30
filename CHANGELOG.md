@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta24] - TBD
+## [2-beta24] - 2024-11-30
 - tests defined with `deftest` will run and show results
 - updated deps (http-kit, clj-yaml, kindly, kind-portal, babashka/fs)
 - Watch a dir only if all of its ancestor dirs not being watched. (PR #179) by @whatacold
