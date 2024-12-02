@@ -110,7 +110,6 @@
 
 (defn include-inline [js-or-css]
   (fn [url]
-    (prn [:url url])
     (->> url
          ((include js-or-css))
          (map (fn [script-tag]
