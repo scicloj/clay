@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta25] - 2024-12-02
+- disabled the experimental use of kindly-render
+
 ## [2-beta24] - 2024-11-30
 - tests defined with `deftest` will run and show results
 - updated deps (http-kit, clj-yaml, kindly, kind-portal, babashka/fs)
