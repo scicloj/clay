@@ -405,7 +405,7 @@
 
 (def
  var70_line578
- (kind/fn {:x 1, :y 2} #:kindly{:f (fn [{:keys [x y]}] (+ x y))}))
+ (kind/fn {:x 1, :y 2} {:kindly/f (fn [{:keys [x y]}] (+ x y))}))
 
 
 (def
@@ -413,10 +413,8 @@
  (kind/fn
   {:my-video-src
    "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
-  #:kindly{:f
-           (fn
-            [{:keys [my-video-src]}]
-            (kind/video {:src my-video-src}))}))
+  {:kindly/f
+   (fn [{:keys [my-video-src]}] (kind/video {:src my-video-src}))}))
 
 
 (def var72_line588 nil)
@@ -440,7 +438,7 @@
  var77_line604
  (kind/fn
   {:x (range 3), :y (repeatedly 3 rand)}
-  #:kindly{:f tc/dataset}))
+  {:kindly/f tc/dataset}))
 
 
 (def
