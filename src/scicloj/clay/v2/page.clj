@@ -111,10 +111,10 @@
          (map (fn [script-tag]
                 (let [{:keys [src href]} (second script-tag)]
                   (case js-or-css
-                    :js [:div #_{:type "text/javascript"}
-                         #_(slurp src)]
-                    :css [:div
-                          #_(slurp href)])))))))
+                    :js [:script {:type "text/javascript"}
+                         (slurp src)]
+                    :css [:link {:rel "stylesheet"}
+                          (slurp href)])))))))
 
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]
