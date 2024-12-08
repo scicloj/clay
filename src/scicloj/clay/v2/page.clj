@@ -76,20 +76,16 @@
    :md-default {:js {:from-local-copy
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
                       "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
-   :htmlwidgets-ggplotly {:js {:from-local-copy-of-repo
-                               [{:gh-repo "scicloj/ggplotly-deps"
-                                 :relative-path "lib"
-                                 :paths ["htmlwidgets-1.6.2/htmlwidgets.js"
-                                         "plotly-binding-4.10.4.9000/plotly.js"
-                                         "typedarray-0.1/typedarray.min.js"
-                                         "jquery-3.5.1/jquery.min.js"
-                                         "crosstalk-1.2.1/js/crosstalk.min.js"
-                                         "plotly-main-2.11.1/plotly-latest.min.js"]}]}
-                          :css {:from-local-copy-of-repo
-                                [{:gh-repo "scicloj/ggplotly-deps"
-                                  :relative-path "lib"
-                                  :paths ["crosstalk-1.2.1/css/crosstalk.min.css"
-                                          "plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css"]}]}}
+   :htmlwidgets-ggplotly {:js {:from-local-copy
+                               ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/htmlwidgets-1.6.2/htmlwidgets.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-binding-4.10.4.9000/plotly.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/typedarray-0.1/typedarray.min.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/jquery-3.5.1/jquery.min.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/js/crosstalk.min.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-main-2.11.1/plotly-latest.min.js"]}
+                          :css {:from-local-copy
+                                ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/css/crosstalk.min.css"
+                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css"]}}
    :highcharts {:js {:from-the-web ["https://code.highcharts.com/highcharts.js"]}}})
 
 (def include

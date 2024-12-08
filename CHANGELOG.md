@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta25] - 2024-12-02
+- disabled the experimental use of kindly-render
+- avoiding the unnecessary use of git clone for ggplotly deps
+
+## [2-beta24] - 2024-11-30
+- tests defined with `deftest` will run and show results
+- updated deps (http-kit, clj-yaml, kindly, kind-portal, babashka/fs)
+- Watch a dir only if all of its ancestor dirs not being watched. (PR #179) by @whatacold
+- refactoring of the live-reload support by @whatacold 
+
 ## [2-beta23] - 2024-11-08
 - bugfix: refreshing page appropriately to keep the main URL - by @whatacold
 

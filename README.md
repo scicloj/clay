@@ -1,3 +1,4 @@
+[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
 # Clay
 
 ![Clay logo](resources/Clay.svg)
@@ -7,19 +8,8 @@ Clay is a REPL-friendly Clojure tool for a dynamic workflow of data visualizatio
 It also offers a set of tools to integrate Clojure literate programming with the [Quarto](https://quarto.org/) publishing system.
 
 ## Getting Started
-Add Clay to your project dependencies:
 
-[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
-
-(If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add under it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj). If you do not know what this means, just add it under the main `:deps` section of your `deps.edn` file.)
-
-To render a given Clojure namespace, say `"notebooks/index.clj"`, you may run the following in the REPL:
-```clj
-(require '[scicloj.clay.v2.api :as clay])
-(clay/make! {:source-path "notebooks/index.clj"})
-```
-This will render an HTML page and serve it in Clay's browser view.
-Note that Clay does not need to be mentioned in the namespace we are rendering.
+Check out [Get Started](https://scicloj.github.io/clay/#getting-started) to get started!
 
 ## Docs
 
@@ -35,6 +25,8 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 [kindly-advice](https://scicloj.github.io/kindly-noted/kindly_advice) is a library that helps tools such as Clay to be Kindly-compatible.
 
+[kindly-render](https://scicloj.github.io/kindly-noted/kindly_advice) is a library for rendering kinds to different taget formats. In the near future (as of Nov. 2024), Clay should rely on it.
+
 [read-kinds](https://github.com/scicloj/read-kinds) is used internally by Claykind (and soon by Clay as well) to generate Kindly advice from notebooks expressed as Clojure namespaces.
 
 ## Projects using Clay
@@ -49,6 +41,7 @@ Please reach out to add your project to this list.
 - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
 - [Noj documentation](https://scicloj.github.io/noj/) - WIP
 - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
+- [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 

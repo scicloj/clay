@@ -10,7 +10,7 @@
 ;; ## About
 
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly-noted/kindly) convention.
-;; It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from source code and comments.
+;; It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from Clojure source code and comments.
 ;;
 ;;
 ;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
@@ -28,24 +28,69 @@
 
 ;; ## Getting started
 
-;; Add Clay to your project dependencies:
-;; [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
+;; Try it out by starting a Clojure command line
+;; ```bash
+;; clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"
+;; ```
+;; The `:mvn/version` may be changing frequently, copy the up-to-date version from
+;; [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay).
+
+;; Wait for a while, it will drop you at a prompt reading `user=> `,
+;; now let's require the clay namespace by typing
+;; ```clj
+;; (require '[scicloj.clay.v2.api :as clay])
+;; ```
+;; and then type:
+;; ```clj
+;; (clay/make! {:single-form '(+ 1 2 3)})
+;; ```
+;;
+;; The terminal now looks something like below:
+;; ```clj
+;; $ clj -Sdeps '{:deps {org.scicloj/clay {:mvn/version "2-beta23"}}}'
+;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.pom from clojars
+;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.jar from clojars
+;; Clojure 1.10.3
+;; user=> (require '[scicloj.clay.v2.api :as clay])
+;; nil
+;; user=> (clay/make! {:single-form '(+ 1 2 3)})
+;; serving Clay at http://localhost:1971/
+;; [[[[:wrote "docs/.clay.html"] nil]] nil [:watching-new-files #{}]]
+;; ```
+
+;; It will open `http://localhost:1971/` in your web browser
+;; (or use another port if 1971 is taken),
+;; and congratulations, you've just made your first Clay document!
+
+;; Now you can keep updating the document by trying different forms,
+;; like 
+;; ```clj
+;; (clay/make! {:single-form '(str "hello" "world")})
+;; ```
+;; or whatever is interesting to you.
+;; Along the way, the web page will get updated automatically for you!
+
+;; At some point, you might find that you'd better write code in a .clj file.
+;; No problem, Clay can also render a document from a Clojure file.
+;; Here, we take [notebooks/demo.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj) as an example.
+;; Click the link and save the file to your computer as, say, `/tmp/demo.clj`,
+;; then you can render this Clojure namespace (or file if you prefer) by typing the following in the REPL:
+;; ```clj
+;; (clay/make! {:source-path "/tmp/demo.clj"})
+;; ```
 
 ;;
-;; (If you like to use [aliases](https://practical.li/blog-staging/posts/clojure-cli-tools-understanding-aliases/), you may add under it to the extra dependencies under an alias. See, for example, the [deps.edn](https://github.com/scicloj/noj/blob/main/deps.edn) file of [Noj](https://github.com/scicloj/noj). If you do not know what this means, just add it under the main `:deps` section of your `deps.edn` file.)
+;; As your docs evolve, you may want to add more Clojure files, and manage them as a project.
+;; You can organize them as a normal Clojure project with a `deps.edn`,
+;; you can browse Clay's own [notebooks/](https://github.com/scicloj/clay/tree/main/notebooks)
+;; to get a sense.
 ;;
-;; To render a given Clojure namespace, say `"notebooks/index.clj"`, you may run the following in the REPL:
-^{:kindly/hide-code true
-  :kindly/kind :kind/code}
-["(require '[scicloj.clay.v2.api :as clay])
-(clay/make! {:source-path \"notebooks/index.clj\"})"]
-;; This will render an HTML page and serve it in Clay's browser view.
-;; Note that Clay does not need to be mentioned in the namespace we wish to render.
-;;
-;; See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
-;;
-;; See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+;; You can also:
 
+;; - Head over to [Examples](clay_book.examples.html) to see what features it provides and corresponding examples.
+;; - See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
+;; - See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+;;
 ;; ## Projects using Clay
 
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
@@ -56,6 +101,7 @@
 ;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
 ;; - [Noj documentation](https://scicloj.github.io/noj/) - WIP
 ;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
+;; - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 ;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 ;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 
@@ -432,6 +478,10 @@
 ;; and respond with remaking the page.
 
 ;; See the example above with `:live-reload true`.
+
+;; One caveat: You may not want to use this if the containing directory of this file
+;; has a lot of files and/or sub-directories, as it may take quite a long time (e.g. ~1 minute)
+;; for beholder to watch the containing directory for file changes.
 
 ;; ### Hiccup output
 

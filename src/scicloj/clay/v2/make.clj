@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.make
   (:require [scicloj.clay.v2.config :as config]
+            [scicloj.clay.v2.live-reload :as live-reload]
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.read :as read]
             [scicloj.clay.v2.item :as item]
@@ -19,7 +20,7 @@
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly.v4.kind :as kind]
-            [nextjournal.beholder :as beholder]))
+            #_[scicloj.kindly-render.notes.to-html-page :as to-html-page]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
@@ -299,70 +300,80 @@
                                           single-form
                                           single-value
                                           format
+                                          full-source-path
                                           full-target-path
                                           show
                                           run-quarto
                                           book
-                                          post-process]}]
+                                          post-process
+                                          use-kindly-render]}]
   (when (or (= source-type "clj")
             single-form
             single-value)
     (try
       (files/init-target! full-target-path)
-      (let [{:keys [items test-forms]} (notebook/items-and-test-forms
-                                        spec)
-            spec-with-items      (-> spec
-                                     (assoc :items items))
-            ]
-        [(case (first format)
-           :hiccup (let [qmd-path (-> full-target-path
-                                      (string/replace #"\.html$" ".edn"))]
-                     (page/hiccup spec-with-items))
-           :html (do (-> spec-with-items
-                         (config/add-field :page (if post-process
-                                                   (comp post-process page/html)
-                                                   page/html))
-                         server/update-page!)
-                     [:wrote full-target-path])
-           :quarto (let [qmd-path (-> full-target-path
-                                      (string/replace #"\.html$" ".qmd"))
-                         output-file (-> full-target-path
-                                         (string/split #"/")
-                                         last)]
-                     (-> spec-with-items
-                         (update-in [:quarto :format]
-                                    select-keys [(second format)])
-                         (update-in [:quarto :format (second format)]
-                                    assoc :output-file output-file)
-                         (cond-> book
-                           (update :quarto dissoc :title))
-                         page/md
-                         (->> (spit qmd-path)))
-                     (println [:wrote qmd-path (time/now)])
-                     (when-not book
-                       (if run-quarto
-                         (do (->> (shell/sh "quarto" "render" qmd-path)
-                                  ((juxt :err :out))
-                                  (mapv println))
-                             (println [:created full-target-path (time/now)])
-                             (when post-process
-                               (->> full-target-path
-                                    slurp
-                                    post-process
-                                    (spit full-target-path)))
-                             (-> spec
-                                 (assoc :full-target-path full-target-path)
-                                 server/update-page!))
-                         ;; else, just show the qmd file
-                         (-> spec
-                             (assoc :full-target-path qmd-path)
-                             server/update-page!)))
-                     (vec
-                      (concat [:wrote qmd-path]
-                              (when run-quarto
-                                [full-target-path])))))
-         (when test-forms
-           (write-test-forms-as-ns test-forms))])
+      (if use-kindly-render
+        nil
+        #_(let [notebook {:notes (-> full-source-path
+                                     slurp
+                                     read/->safe-notes)}]
+            (-> spec
+                (assoc :page (to-html-page/render-notebook notebook))
+                server/update-page!)
+            [:wrote-with-kindly-render full-target-path])
+        (let [{:keys [items test-forms]} (notebook/items-and-test-forms
+                                          spec)
+              spec-with-items      (-> spec
+                                       (assoc :items items))]
+          [(case (first format)
+             :hiccup (let [qmd-path (-> full-target-path
+                                        (string/replace #"\.html$" ".edn"))]
+                       (page/hiccup spec-with-items))
+             :html (do (-> spec-with-items
+                           (config/add-field :page (if post-process
+                                                     (comp post-process page/html)
+                                                     page/html))
+                           server/update-page!)
+                       [:wrote full-target-path])
+             :quarto (let [qmd-path (-> full-target-path
+                                        (string/replace #"\.html$" ".qmd"))
+                           output-file (-> full-target-path
+                                           (string/split #"/")
+                                           last)]
+                       (-> spec-with-items
+                           (update-in [:quarto :format]
+                                      select-keys [(second format)])
+                           (update-in [:quarto :format (second format)]
+                                      assoc :output-file output-file)
+                           (cond-> book
+                             (update :quarto dissoc :title))
+                           page/md
+                           (->> (spit qmd-path)))
+                       (println [:wrote qmd-path (time/now)])
+                       (when-not book
+                         (if run-quarto
+                           (do (->> (shell/sh "quarto" "render" qmd-path)
+                                    ((juxt :err :out))
+                                    (mapv println))
+                               (println [:created full-target-path (time/now)])
+                               (when post-process
+                                 (->> full-target-path
+                                      slurp
+                                      post-process
+                                      (spit full-target-path)))
+                               (-> spec
+                                   (assoc :full-target-path full-target-path)
+                                   server/update-page!))
+                           ;; else, just show the qmd file
+                           (-> spec
+                               (assoc :full-target-path qmd-path)
+                               server/update-page!)))
+                       (vec
+                        (concat [:wrote qmd-path]
+                                (when run-quarto
+                                  [full-target-path])))))
+           (when test-forms
+             (write-test-forms-as-ns test-forms))]))
       (catch Exception e
         (-> spec
             (assoc :page (-> spec
@@ -382,71 +393,6 @@
           (babashka.fs/delete-tree target))
         (io/make-parents target)
         (util.fs/copy-tree-no-clj subdir target)))))
-
-(defonce dir-watchers-initial {:watchers []
-                               :file-specs {}})
-
-(defonce *dir-watchers (atom dir-watchers-initial))
-
-(defn stop-watchers
-  "Stop all directory watchers."
-  []
-  (doseq [w (:watchers @*dir-watchers)]
-    (beholder/stop w))
-  (reset! *dir-watchers dir-watchers-initial))
-
-(declare make!)
-
-(defn- beholder-callback
-  "Callback function for beholder."
-  [event]
-  (let [canonical-path (str (-> event :path .toFile .getCanonicalPath))]
-    (when (and (identical? :modify (:type event))
-               (contains? (:file-specs @*dir-watchers) canonical-path))
-      (make! (get (:file-specs @*dir-watchers) canonical-path)))))
-
-(defn- watch-dir
-  "Watch directory changes if necessary."
-  [{:as spec
-    :keys [live-reload source-path]}]
-  (when (and live-reload
-             source-path)
-    (let [->canonical-path (fn [file] (.getCanonicalPath (io/file file)))
-          watched-files (->> @*dir-watchers
-                             :file-specs
-                             keys
-                             set)
-          new-files (->> source-path
-                         (#(if (vector? %) % [%]))
-                         ;; make sure all paths are canonical,
-                         ;; so that their containing directories can be properly watched by beholder
-                         (map ->canonical-path)
-                         (filter #(not (contains? watched-files %)))
-                         set)
-          new-dirs (->> new-files
-                        (map #(-> % io/file .getParent))
-                        set)]
-      ;; watch dir for notebook changes
-      (when-not (empty? new-dirs)
-        (swap! *dir-watchers
-               #(assoc %
-                       :watchers
-                       (conj (:watchers %)
-                             (apply beholder/watch
-                                    beholder-callback
-                                    new-dirs)))))
-      ;; save the spec for every file
-      (when-not (empty? new-files)
-        (swap! *dir-watchers #(assoc %
-                                     :file-specs
-                                     (->> new-files
-                                          (reduce (fn [pre-result file]
-                                                    (assoc pre-result
-                                                           file
-                                                           spec))
-                                                  {})
-                                          (merge (:file-specs @*dir-watchers))))))
-      new-files)))
 
 (defn make! [spec]
   (let [config (config/config)
@@ -470,6 +416,11 @@
      (-> main-spec
          handle-main-spec!)
      (->> single-ns-specs
-          (map watch-dir)
+          (map #(live-reload/start! make! %))
           (reduce into #{})
           (vector :watching-new-files))]))
+
+
+(comment
+  (make! {:source-path ["notebooks/scratch.clj"]
+          :use-kindly-render true}))
