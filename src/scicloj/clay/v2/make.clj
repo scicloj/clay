@@ -20,7 +20,7 @@
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly-render.notes.to-html-page :as to-html-page]))
+            #_[scicloj.kindly-render.notes.to-html-page :as to-html-page]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
@@ -313,13 +313,14 @@
     (try
       (files/init-target! full-target-path)
       (if use-kindly-render
-        (let [notebook {:notes (-> full-source-path
-                                   slurp
-                                   read/->safe-notes)}]
-          (-> spec
-              (assoc :page (to-html-page/render-notebook notebook))
-              server/update-page!)
-          [:wrote-with-kindly-render full-target-path])
+        nil
+        #_(let [notebook {:notes (-> full-source-path
+                                     slurp
+                                     read/->safe-notes)}]
+            (-> spec
+                (assoc :page (to-html-page/render-notebook notebook))
+                server/update-page!)
+            [:wrote-with-kindly-render full-target-path])
         (let [{:keys [items test-forms]} (notebook/items-and-test-forms
                                           spec)
               spec-with-items      (-> spec
@@ -363,7 +364,7 @@
                                (-> spec
                                    (assoc :full-target-path full-target-path)
                                    server/update-page!))
-                         ;; else, just show the qmd file
+                           ;; else, just show the qmd file
                            (-> spec
                                (assoc :full-target-path qmd-path)
                                server/update-page!)))
