@@ -113,9 +113,14 @@
                                (header state)]))
                         (communication-script state)))))
 
-(defn abcd [x]
-  (+ x 9))
+(def *registered-functions (atom {}))
 
+(swap! *registered-functions assoc :add (fn [a b] (+ a b)))
+
+(defn compute
+  [input]
+  (let [{:keys [func args]} input]
+    (apply (func @*registered-functions) args)))
 
 (defn routes
   "Web server routes."
@@ -142,7 +147,7 @@
                                              transit/read
                                              read-string)
                                    _ (prn [:input input])
-                                   output (abcd input)]
+                                   output (compute input)]
                                (prn [:output output])
                                {:body (pr-str output)
                                 :status 200})

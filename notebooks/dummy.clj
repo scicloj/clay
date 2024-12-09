@@ -6,7 +6,7 @@
 ;; Interpreted by the Scittle interpreter
 ;; in the browser.
 (kind/reagent
- '(def *a1 (reagent.core/atom 0)))
+ '(def *a1 (reagent.core/atom 10)))
 
 ;; Just JVM Clojure code.
 (def *a2 (atom 0))
@@ -35,9 +35,7 @@
           [:input {:type "button" :value "Click me!"
                    :on-click (fn []
                                (compute
-                                @*a1
-                                (fn [response]
-                                  (reset! *a1 response))))}]])])
-
-
-
+                                 {:func :add
+                                  :args [@*a1 20]}
+                                 (fn [response]
+                                     (reset! *a1 response))))}]])])
