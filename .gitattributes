@@ -1,2 +1,3 @@
 docs/* linguist-documentation
 resources/* linguist-vendored
+* language=Clojure
