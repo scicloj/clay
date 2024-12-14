@@ -104,6 +104,7 @@
 ;; - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 ;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 ;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
+;; - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
 
 ;; ## Videos
 
