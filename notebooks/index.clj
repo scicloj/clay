@@ -168,8 +168,6 @@
 
 ;; See [Integrating with Clay and data visualisation tools](https://github.com/Olical/conjure/wiki/Integrating-with-Clay-and-data-visualisation-tools) at the Conjure Wiki.
 
-;; More detailed integration is expected soon (Oct 2024).
-
 ;; ### IntelliJ Cursive
 ;;
 ;; Under preferences, search for "REPL Commands"
