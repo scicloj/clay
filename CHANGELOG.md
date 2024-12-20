@@ -1,8 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta26] - unreleased
+- brought the experimental use of ``kindly-render`` back
+
 ## [2-beta25] - 2024-12-02
-- disabled the experimental use of kindly-render
+- disabled the experimental use of ``kindly-render``
 - avoiding the unnecessary use of git clone for ggplotly deps
 
 ## [2-beta24] - 2024-11-30

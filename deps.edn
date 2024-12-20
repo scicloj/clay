@@ -14,9 +14,7 @@
         org.clojure/tools.reader {:mvn/version "1.3.7"}
         com.nextjournal/beholder {:mvn/version "1.0.2"}
         babashka/fs {:mvn/version "0.5.22"}
-        ;; org.scicloj/kindly-render {:git/sha "fb37e8a5946db602d7051e6f1d52c88498789366"
-        ;;                            :git/url "https://github.com/scicloj/kindly-render.git"}
-        }
+        org.scicloj/kindly-render {:mvn/version "0.1.1-alpha"}}
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {scicloj/tablecloth {:mvn/version "7.029.2"}
                               org.scicloj/tableplot {:mvn/version "1-alpha14.1"}
