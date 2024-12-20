@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta26] - unreleased
+## [2-beta26] - 2024-12-20
 - brought the experimental use of ``kindly-render`` back
 
 ## [2-beta25] - 2024-12-02
