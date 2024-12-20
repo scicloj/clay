@@ -1,3 +1,2 @@
-docs/* linguist-documentation
-resources/* linguist-vendored
-* language=Clojure
+docs/** linguist-documentation
+resources/** linguist-vendored
