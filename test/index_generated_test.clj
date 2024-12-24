@@ -122,129 +122,138 @@
 
 
 (def
- var19_line254
+ var19_line256
  (comment
   (clay/make! {:format [:html], :source-path "notebooks/index.clj"})))
 
 
-(def var20_line258 nil)
+(def var20_line260 nil)
 
 
 (def
- var21_line260
+ var21_line262
  (comment (clay/make! {:source-path "notebooks/index.clj"})))
 
 
-(def var22_line263 nil)
+(def var22_line265 nil)
 
 
 (def
- var23_line267
+ var23_line270
+ (comment
+  (clay/make! {:source-path "notebooks/index.clj", :browse false})))
+
+
+(def var24_line274 nil)
+
+
+(def
+ var25_line278
  (comment
   (clay/make! {:source-path "notebooks/index.clj", :show false})))
 
 
-(def var24_line271 nil)
+(def var26_line282 nil)
 
 
 (def
- var25_line274
+ var27_line285
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj",
     :favicon "notebooks/favicon.ico"})))
 
 
-(def var26_line278 nil)
+(def var28_line289 nil)
 
 
 (def
- var27_line282
+ var29_line293
  (comment
   (clay/make!
    {:source-path ["notebooks/slides.clj" "notebooks/index.clj"],
     :show false})))
 
 
-(def var28_line287 nil)
+(def var30_line298 nil)
 
 
 (def
- var29_line292
+ var31_line303
  (comment
   (clay/make!
    {:source-path ["notebooks/slides.clj" "notebooks/index.clj"],
     :live-reload true})))
 
 
-(def var30_line298 nil)
+(def var32_line309 nil)
 
 
 (def
- var31_line302
+ var33_line313
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj", :single-form '(+ 1 2)})))
 
 
-(def var32_line306 nil)
+(def var34_line317 nil)
 
 
-(def var33_line310 (comment (clay/make! {:single-form '(+ 1 2)})))
+(def var35_line321 (comment (clay/make! {:single-form '(+ 1 2)})))
 
 
-(def var34_line313 nil)
+(def var36_line324 nil)
 
 
-(def var35_line316 (comment (clay/make! {:single-value 3})))
+(def var37_line327 (comment (clay/make! {:single-value 3})))
 
 
-(def var36_line319 nil)
+(def var38_line330 nil)
 
 
 (def
- var37_line323
+ var39_line334
  (comment
   (clay/make!
    {:single-value 3333,
     :post-process (fn [html] (-> html (str/replace #"3333" "4444")))})))
 
 
-(def var38_line329 nil)
+(def var40_line340 nil)
 
 
 (def
- var39_line332
+ var41_line343
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj", :hide-ui-header true})))
 
 
-(def var40_line336 nil)
+(def var42_line347 nil)
 
 
 (def
- var41_line339
+ var43_line350
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj", :hide-info-line true})))
 
 
-(def var42_line343 nil)
+(def var44_line354 nil)
 
 
 (def
- var43_line348
+ var45_line359
  (comment
   (clay/make!
    {:format [:quarto :html], :source-path "notebooks/index.clj"})))
 
 
-(def var44_line352 nil)
+(def var46_line363 nil)
 
 
 (def
- var45_line359
+ var47_line370
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -252,31 +261,31 @@
     :run-quarto false})))
 
 
-(def var46_line364 nil)
+(def var48_line375 nil)
 
 
 (def
- var47_line370
+ var49_line381
  (comment
   (clay/make!
    {:format [:quarto :html], :source-path "notebooks/slides.clj"})))
 
 
-(def var48_line374 nil)
+(def var50_line385 nil)
 
 
 (def
- var49_line380
+ var51_line391
  (comment
   (clay/make!
    {:format [:quarto :revealjs], :source-path "notebooks/slides.clj"})))
 
 
-(def var50_line384 nil)
+(def var52_line395 nil)
 
 
 (def
- var51_line390
+ var53_line401
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -285,11 +294,11 @@
     {:highlight-style :nord, :format {:html {:theme :journal}}}})))
 
 
-(def var52_line396 nil)
+(def var54_line407 nil)
 
 
 (def
- var53_line406
+ var55_line417
  (comment
   (require
    '[scicloj.clay.v2.quarto.highlight-styles
@@ -304,21 +313,21 @@
      :format {:html {:theme quarto.themes/journal}}}})))
 
 
-(def var54_line414 nil)
+(def var56_line425 nil)
 
 
 (def
- var55_line419
+ var57_line430
  (comment
   (clay/make!
    {:base-source-path "notebooks/", :source-path "index.clj"})))
 
 
-(def var56_line423 nil)
+(def var58_line434 nil)
 
 
 (def
- var57_line425
+ var59_line436
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -333,11 +342,11 @@
     :clean-up-target-dir true})))
 
 
-(def var58_line438 nil)
+(def var60_line449 nil)
 
 
 (def
- var59_line440
+ var61_line451
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -348,11 +357,11 @@
     :clean-up-target-dir true})))
 
 
-(def var60_line452 nil)
+(def var62_line463 nil)
 
 
 (def
- var61_line454
+ var63_line465
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -365,25 +374,25 @@
     :clean-up-target-dir true})))
 
 
-(def var62_line467 nil)
+(def var64_line478 nil)
 
 
-(def var63_line470 (comment (clay/browse!)))
+(def var65_line481 (comment (clay/browse!)))
 
 
-(def var64_line473 nil)
+(def var66_line484 nil)
 
 
 (def
- var65_line491
+ var67_line502
  (comment (clay/make-hiccup {:source-path "notebooks/index.clj"})))
 
 
-(def var66_line494 nil)
+(def var68_line505 nil)
 
 
 (def
- var67_line557
+ var69_line569
  (->>
   ["purple" "darkgreen" "brown"]
   (mapcat
@@ -397,19 +406,19 @@
   kind/fragment))
 
 
-(def var68_line565 (->> (range 3) kind/fragment))
+(def var70_line577 (->> (range 3) kind/fragment))
 
 
-(def var69_line568 nil)
+(def var71_line580 nil)
 
 
 (def
- var70_line577
+ var72_line589
  (kind/fn {:x 1, :y 2} #:kindly{:f (fn [{:keys [x y]}] (+ x y))}))
 
 
 (def
- var71_line582
+ var73_line594
  (kind/fn
   {:my-video-src
    "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
@@ -419,59 +428,59 @@
             (kind/video {:src my-video-src}))}))
 
 
-(def var72_line587 nil)
+(def var74_line599 nil)
 
 
-(def var73_line589 (kind/fn [+ 1 2]))
+(def var75_line601 (kind/fn [+ 1 2]))
 
 
-(def var74_line592 nil)
+(def var76_line604 nil)
 
 
 (def
- var75_line594
+ var77_line606
  (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
 
 
-(def var76_line600 nil)
+(def var78_line612 nil)
 
 
 (def
- var77_line603
+ var79_line615
  (kind/fn
   {:x (range 3), :y (repeatedly 3 rand)}
   #:kindly{:f tc/dataset}))
 
 
 (def
- var78_line608
+ var80_line620
  (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
 
 
 (def
- var79_line613
+ var81_line625
  (kind/fn {:kindly/f tc/dataset, :x (range 3), :y (repeatedly 3 rand)}))
-
-
-(def var80_line618 nil)
-
-
-(def var81_line626 (delay (Thread/sleep 500) (+ 1 2)))
 
 
 (def var82_line630 nil)
 
 
+(def var83_line638 (delay (Thread/sleep 500) (+ 1 2)))
+
+
+(def var84_line642 nil)
+
+
 (def
- var83_line636
+ var85_line648
  (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
 
 
-(def var84_line639 (kind/image {:src "notebooks/images/Clay.svg.png"}))
+(def var86_line651 (kind/image {:src "notebooks/images/Clay.svg.png"}))
 
 
 (def
- var85_line642
+ var87_line654
  (kind/vega-lite
   {:data {:url "notebooks/datasets/iris.csv"},
    :mark "rule",
@@ -486,106 +495,106 @@
    :background "floralwhite"}))
 
 
-(def var86_line654 nil)
+(def var88_line666 nil)
 
 
-(def var87_line667 (+ 1 2))
+(def var89_line679 (+ 1 2))
 
 
-(deftest test88_line669 (is (> var87_line667 2.9)))
+(deftest test90_line681 (is (> var89_line679 2.9)))
 
 
-(deftest test89_line672 (is (> var87_line667 2.9)))
+(deftest test91_line684 (is (> var89_line679 2.9)))
 
 
-(deftest test90_line674 (is (> var87_line667 2.9)))
+(deftest test92_line686 (is (> var89_line679 2.9)))
 
 
-(def var91_line676 nil)
+(def var93_line688 nil)
 
 
 (def
- var92_line683
+ var94_line695
  (kindly/hide-code
   (kind/code
    "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
-(def var93_line692 nil)
+(def var95_line704 nil)
 
 
 (def
- var94_line702
+ var96_line714
  (kind/table
   {:column-names ["A" "B" "C"], :row-vectors [[1 2 3] [4 5 6]]}
   {:class "table-responsive", :style {:background "#f8fff8"}}))
 
 
-(def var95_line707 nil)
+(def var97_line719 nil)
 
 
 (def
- var96_line738
+ var98_line750
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :horizontal})
   false))
 
 
-(def var97_line742 (+ 1 2))
+(def var99_line754 (+ 1 2))
 
 
-(def var98_line744 (+ 3 4))
+(def var100_line756 (+ 3 4))
 
 
-(def var99_line746 nil)
+(def var101_line758 nil)
 
 
 (def
- var100_line748
+ var102_line760
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :vertical})
   false))
 
 
-(def var101_line752 (+ 1 2))
+(def var103_line764 (+ 1 2))
 
 
-(def var102_line754 (+ 3 4))
+(def var104_line766 (+ 3 4))
 
 
-(def var103_line756 nil)
+(def var105_line768 nil)
 
 
 (def
- var104_line758
+ var106_line770
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color "#ccddee"}})
   false))
 
 
-(def var105_line762 (kind/hiccup [:div [:p "hello"]]))
+(def var107_line774 (kind/hiccup [:div [:p "hello"]]))
 
 
-(def var106_line766 nil)
+(def var108_line778 nil)
 
 
-(def var107_line769 (tc/dataset {:x (range 3)}))
+(def var109_line781 (tc/dataset {:x (range 3)}))
 
 
-(def var108_line771 nil)
+(def var110_line783 nil)
 
 
-(def var109_line773 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
+(def var111_line785 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
 
 
-(def var110_line777 nil)
+(def var112_line789 nil)
 
 
 (def
- var111_line779
+ var113_line791
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color nil}})
   false))
 
 
-(def var112_line783 (kind/hiccup [:div [:p "hello"]]))
+(def var114_line795 (kind/hiccup [:div [:p "hello"]]))
