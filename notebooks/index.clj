@@ -250,7 +250,9 @@
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
 ;; as HTML
-;; and show it at the browser:
+;; and show it at the browser
+;; (opening a browser tab if this is the first
+;; time using Clay in the session):
 (comment
   (clay/make! {:format [:html]
                :source-path "notebooks/index.clj"}))
@@ -259,6 +261,15 @@
 ;; (since `:format [:html]` is the default):
 (comment
   (clay/make! {:source-path "notebooks/index.clj"}))
+
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as HTML
+;; and do not open a browser tab even if this
+;; is the first time using Clay in the session:
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :browse false}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
@@ -512,7 +523,8 @@
 ;; | `:source-path` | files to render | `["notebooks/index.clj"]` |
 ;; | `:title` | sets the HTML title that appears in the browser tab bar | `"My Title"` |
 ;; | `:favicon` | sets a page favicon | `"favicon.ico"` |
-;; | `:show` | starts the HTML server when true (the default) | `false` |
+;; | `:show` | when true (the default) updates the browser view (starts the HTML server if necessary) | `false` |
+;; | `:browse` | when true (the default) opens a new browser tab when the HTML server is started for the first time | `false` |
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
