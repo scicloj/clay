@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta27] - 2024-12-24
+- added a `:browse` option (default `true`) to determine whether to open a browser tab when the server is started
+
 ## [2-beta26] - 2024-12-20
 - brought the experimental use of [kindly-render](https://github.com/scicloj/kindly-render) back
 

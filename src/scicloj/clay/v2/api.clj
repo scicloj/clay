@@ -25,8 +25,8 @@
 
 (defn start!
   ([]
-   (start! {}))
-  ([{:as opts :keys [port]}]
+   (start! {:browse true}))
+  ([{:as opts :keys [port browse]}]
    (server/open! opts)
    (welcome!)
    [:ok]))
