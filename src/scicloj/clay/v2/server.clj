@@ -117,6 +117,16 @@
 
 (swap! *registered-functions assoc :add (fn [a b] (+ a b)))
 
+(swap! *registered-functions assoc :calc-click-and-open-rate
+       (fn [data]
+         (let [total-emails (count data)
+               opened-emails (count (filter #(nth % 2) data))
+               clicked-emails (count (filter #(nth % 3) data))
+               open-rate (if (pos? total-emails) (double (* 100 (/ opened-emails total-emails))) 0.0)
+               click-rate (if (pos? total-emails) (double (* 100 (/ clicked-emails total-emails))) 0.0)]
+           {:open-rate open-rate
+            :click-rate click-rate})))
+
 (defn compute
   [input]
   (let [{:keys [func args]} input]
