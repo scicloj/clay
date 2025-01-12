@@ -107,30 +107,22 @@
                                       :last-rendered-spec
                                       :hide-ui-header)
                           (hiccup/html
-                              #_[:style "* {margin: 0; padding: 0; top: 0;}"]
-                              [:div {:style {:height "70px"
-                                             :background-color "#eee"}}
-                               (header state)]))
+                           #_[:style "* {margin: 0; padding: 0; top: 0;}"]
+                           [:div {:style {:height "70px"
+                                          :background-color "#eee"}}
+                            (header state)]))
                         (communication-script state)))))
-
-(def *registered-functions (atom {}))
-
-(swap! *registered-functions assoc :add (fn [a b] (+ a b)))
-
-(swap! *registered-functions assoc :calc-click-and-open-rate
-       (fn [data]
-         (let [total-emails (count data)
-               opened-emails (count (filter #(nth % 2) data))
-               clicked-emails (count (filter #(nth % 3) data))
-               open-rate (if (pos? total-emails) (double (* 100 (/ opened-emails total-emails))) 0.0)
-               click-rate (if (pos? total-emails) (double (* 100 (/ clicked-emails total-emails))) 0.0)]
-           {:open-rate open-rate
-            :click-rate click-rate})))
 
 (defn compute
   [input]
   (let [{:keys [func args]} input]
-    (apply (func @*registered-functions) args)))
+    (if-let [func-var (resolve func)]
+      (if (-> func-var meta :kindly/servable)
+        (apply func-var args)
+        (throw (Exception. (str "Function is not safe to serve: "
+                                func))))
+      (throw (Exception. (str "Symbol not found: "
+                              func))))))
 
 (defn routes
   "Web server routes."
@@ -141,47 +133,47 @@
       (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
                                :on-close (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
-          (case [request-method uri]
-          [:get "/"] {:body (-> state
-                                page
-                                (wrap-html state))
-                      :headers {"Content-Type" "text/html"}
-                      :status 200}
-          [:get "/counter"] {:body (-> state
-                                       :counter
-                                       str)
-                             :status 200}
+      (case [request-method uri]
+        [:get "/"] {:body (-> state
+                              page
+                              (wrap-html state))
+                    :headers {"Content-Type" "text/html"}
+                    :status 200}
+        [:get "/counter"] {:body (-> state
+                                     :counter
+                                     str)
+                           :status 200}
 
-          [:post "/compute"] (let [input (-> body
-                                             (transit/reader :json)
-                                             transit/read
-                                             read-string)
-                                   _ (prn [:input input])
-                                   output (compute input)]
-                               (prn [:output output])
-                               {:body (pr-str output)
-                                :status 200})
+        [:post "/compute"] (let [input (-> body
+                                           (transit/reader :json)
+                                           transit/read
+                                           read-string)
+                                 _ (prn [:input input])
+                                 output (compute input)]
+                             (prn [:output output])
+                             {:body (pr-str output)
+                              :status 200})
 
         ;; else
-          (let [f (io/file (str (:base-target-path state) uri))]
-            (if (.exists f)
-              {:body    (if (re-matches #".*\.html$" uri)
-                          (-> f
-                              slurp
-                              (wrap-html state))
-                          f)
-               :headers (when (str/ends-with? uri ".js")
-                          {"Content-Type" "text/javascript"})
-               :status  200}
-              (case [request-method uri]
+        (let [f (io/file (str (:base-target-path state) uri))]
+          (if (.exists f)
+            {:body    (if (re-matches #".*\.html$" uri)
+                        (-> f
+                            slurp
+                            (wrap-html state))
+                        f)
+             :headers (when (str/ends-with? uri ".js")
+                        {"Content-Type" "text/javascript"})
+             :status  200}
+            (case [request-method uri]
               ;; user files have priority, otherwise serve the default from resources
-                [:get "/favicon.ico"] {:body   (io/input-stream (io/resource "favicon.ico"))
-                                       :status 200}
+              [:get "/favicon.ico"] {:body   (io/input-stream (io/resource "favicon.ico"))
+                                     :status 200}
               ;; this image is for the header above the page during interactive mode
-                [:get "/Clay.svg.png"] {:body   (io/input-stream (io/resource "Clay.svg.png"))
-                                        :status 200}
-                {:body   "not found"
-                 :status 404})))))))
+              [:get "/Clay.svg.png"] {:body   (io/input-stream (io/resource "Clay.svg.png"))
+                                      :status 200}
+              {:body   "not found"
+               :status 404})))))))
 
 (defonce *stop-server! (atom nil))
 
