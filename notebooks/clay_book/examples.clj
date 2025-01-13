@@ -894,7 +894,8 @@ Plot.plot({
 ;; ## Video
 
 ;; Videos can be specified as urls (possibly to local files):
-(kind/video {:src "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"})
+(kind/video {:src "https://www.sample-videos.com/video321/mp4/240/big_buck_bunny_240p_30mb.mp4"})
+
 
 ;; Videos can also be specified as youtube videos:
 ;; See, e.g.,  [HTML Youtube Videos](https://www.w3schools.com/html/html_youtube.asp) on w3schools.
