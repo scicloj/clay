@@ -143,17 +143,13 @@
                                      :counter
                                      str)
                            :status 200}
-
-        [:post "/compute"] (let [input (-> body
-                                           (transit/reader :json)
-                                           transit/read
-                                           read-string)
-                                 _ (prn [:input input])
-                                 output (compute input)]
-                             (prn [:output output])
-                             {:body (pr-str output)
-                              :status 200})
-
+        [:post "/kindly-compute"] (let [input (-> body
+                                                  (transit/reader :json)
+                                                  transit/read
+                                                  read-string)
+                                        output (compute input)]
+                                    {:body (pr-str output)
+                                     :status 200})
         ;; else
         (let [f (io/file (str (:base-target-path state) uri))]
           (if (.exists f)
