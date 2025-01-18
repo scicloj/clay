@@ -197,14 +197,15 @@
 
 (defn open!
   ([] (open! {}))
-  ([{:as opts :keys [port]}]
+  ([{:as opts :keys [port browse]}]
    (when-not @*stop-server!
      (let [port (or port (get-free-port))
            stop-server (core-http-server port)]
        (server.state/set-port! port)
        (reset! *stop-server! stop-server)
        (println "serving Clay at" (port->url port))
-       (browse!)))))
+       (when browse
+         (browse!))))))
 
 (defn update-page! [{:as spec
                      :keys [show
@@ -216,7 +217,7 @@
                                                   ".clay.html")}}]
   (server.state/set-base-target-path! base-target-path)
   (when show
-    (open!))
+    (open! spec))
   (io/make-parents full-target-path)
   (when page
     (spit full-target-path page))

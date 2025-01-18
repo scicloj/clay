@@ -104,6 +104,7 @@
 ;; - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 ;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 ;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
+;; - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
 
 ;; ## Videos
 
@@ -166,8 +167,6 @@
 ;; ### Neovim Conjure
 
 ;; See [Integrating with Clay and data visualisation tools](https://github.com/Olical/conjure/wiki/Integrating-with-Clay-and-data-visualisation-tools) at the Conjure Wiki.
-
-;; More detailed integration is expected soon (Oct 2024).
 
 ;; ### IntelliJ Cursive
 ;;
@@ -251,7 +250,9 @@
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
 ;; as HTML
-;; and show it at the browser:
+;; and show it at the browser
+;; (opening a browser tab if this is the first
+;; time using Clay in the session):
 (comment
   (clay/make! {:format [:html]
                :source-path "notebooks/index.clj"}))
@@ -260,6 +261,15 @@
 ;; (since `:format [:html]` is the default):
 (comment
   (clay/make! {:source-path "notebooks/index.clj"}))
+
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as HTML
+;; and do not open a browser tab even if this
+;; is the first time using Clay in the session:
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :browse false}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
@@ -513,7 +523,8 @@
 ;; | `:source-path` | files to render | `["notebooks/index.clj"]` |
 ;; | `:title` | sets the HTML title that appears in the browser tab bar | `"My Title"` |
 ;; | `:favicon` | sets a page favicon | `"favicon.ico"` |
-;; | `:show` | starts the HTML server when true (the default) | `false` |
+;; | `:show` | when true (the default) updates the browser view (starts the HTML server if necessary) | `false` |
+;; | `:browse` | when true (the default) opens a new browser tab when the HTML server is started for the first time | `false` |
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
