@@ -214,7 +214,6 @@
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
               (when favicon
                 [:link {:rel "icon" :href favicon}])
-              #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
               font-links
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
@@ -233,10 +232,7 @@
                 [:style (styles/main :bootstrap-toc-customization)])
               (include-libs spec [:css] special-libs)
               [:title (or title "Clay")]]
-        body [:body  {:style {;;:background "#fcfcfc"
-                              ;; :font-family "'Roboto', sans-serif"
-                              ;; :width "95%"
-                              :margin "auto"}
+        body [:body  {:style {:margin "auto"}
                       :data-spy "scroll"
                       :data-target "#toc"}
               (when toc?
