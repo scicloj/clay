@@ -9,6 +9,7 @@
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
+   [cognitect.transit :as transit]
    [hiccup.core :as hiccup])
   (:import (java.net ServerSocket)))
 
@@ -40,7 +41,6 @@
     clay_server_counter = '%d';
 
     clay_refresh = function() {location.assign('http://localhost:'+clay_port);}
-
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
 
     clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
@@ -107,11 +107,22 @@
                                       :last-rendered-spec
                                       :hide-ui-header)
                           (hiccup/html
-                              #_[:style "* {margin: 0; padding: 0; top: 0;}"]
-                              [:div {:style {:height "70px"
-                                             :background-color "#eee"}}
-                               (header state)]))
+                           #_[:style "* {margin: 0; padding: 0; top: 0;}"]
+                           [:div {:style {:height "70px"
+                                          :background-color "#eee"}}
+                            (header state)]))
                         (communication-script state)))))
+
+(defn compute
+  [input]
+  (let [{:keys [func args]} input]
+    (if-let [func-var (resolve func)]
+      (if (-> func-var meta :kindly/servable)
+        (apply func-var args)
+        (throw (Exception. (str "Function is not safe to serve: "
+                                func))))
+      (throw (Exception. (str "Symbol not found: "
+                              func))))))
 
 (defn routes
   "Web server routes."
@@ -132,7 +143,13 @@
                                      :counter
                                      str)
                            :status 200}
-
+        [:post "/kindly-compute"] (let [input (-> body
+                                                  (transit/reader :json)
+                                                  transit/read
+                                                  read-string)
+                                        output (compute input)]
+                                    {:body (pr-str output)
+                                     :status 200})
         ;; else
         (let [f (io/file (str (:base-target-path state) uri))]
           (if (.exists f)
@@ -211,3 +228,5 @@
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
+
+
