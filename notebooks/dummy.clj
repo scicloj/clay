@@ -17,43 +17,37 @@
     {:open-rate open-rate
      :click-rate click-rate}))
 
-;; Interpreted by the Scittle interpreter
-;; in the browser.
 (kind/reagent
- '(def *a1 (reagent.core/atom 10)))
-
-;; Just JVM Clojure code.
-(def *a2 (atom 0))
+ '(def *rates (reagent.core/atom {})))
 
 (kind/reagent
-  '(def *rates (reagent.core/atom {})))
-
-(kind/reagent
-  '(defn compute [input callback]
-         (ajax.core/POST
-           "/compute"
-           {:headers       {"Accept" "application/json"}
-            :params        (pr-str input)
-            :handler       (fn [response]
-                               (-> response
-                                   read-string
-                                   callback))
-            :error-handler (fn [e]
-                               (.log
-                                 js/console
-                                 (str "error on reset: " e)))})))
+ '(defn kindly-compute [input callback]
+    (ajax.core/POST
+     "/kindly-compute"
+     {:headers       {"Accept" "application/json"}
+      :params        (pr-str input)
+      :handler       (fn [response]
+                       (-> response
+                           read-string
+                           callback))
+      :error-handler (fn [e]
+                       (.log
+                        js/console
+                        (str "error on reset: " e)))})))
 
 (kind/reagent
  ['(fn []
-     [:div
-      [:p @*a1]
-      [:input {:type     "button" :value "Click me!"
-               :on-click (fn []
-                           (compute
-                            {:func 'dummy/add
-                             :args [@*a1 20]}
-                            (fn [response]
-                              (reset! *a1 response))))}]])])
+     (let [*a1 (reagent.core/atom 10)]
+       (fn []
+         [:div
+          [:p @*a1]
+          [:input {:type     "button" :value "Click me!"
+                   :on-click (fn []
+                               (kindly-compute
+                                {:func 'dummy/add
+                                 :args [@*a1 20]}
+                                (fn [response]
+                                  (reset! *a1 response))))}]])))])
 
 
 (kind/md
@@ -95,7 +89,7 @@
       [:p (str "Click rate " (:click-rate @*rates))]
       [:input {:type "button" :value "Click to calculate click and open rate"
                :on-click (fn []
-                           (compute
+                           (kindly-compute
                             {:func 'dummy/calc-click-and-open-rate
                              :args [email-data]}
                             (fn [response]
