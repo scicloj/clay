@@ -2,7 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta28] - unreleased
-- new `snippets` API namespace for easier editor inntegration
+- added a `snippets` API namespace for easier editor inntegration - by @timothyprately
+- added a `kindly-compute` endpoint - for requesting server computations - with @RamNarayan-27
 
 ## [2-beta27] - 2024-12-24
 - added a `:browse` option (default `true`) to determine whether to open a browser tab when the server is started
