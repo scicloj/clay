@@ -88,7 +88,7 @@
            :series [{:name "sales"
                      :type "bar"
                      :data [5 20 36
-                            10 10 20]}]}initial-spec
+                            10 10 20]}]}
    :transition '(fn [spec]
                   (update-in spec
                              [:series 0 :data]
