@@ -1,6 +1,24 @@
 (ns compute-examples
   (:require [scicloj.kindly.v4.kind :as kind]))
 
+(kind/scittle
+ '(defn f [x]
+    (+ x 9)))
+
+(kind/reagent
+ ['(fn []
+     [:p (f 11)])])
+
+(kind/hiccup
+ [:div
+  ;; recognized as `kind/scittle`
+  '(defn g [x]
+     (+ x 9))
+  ;; recognized as `kind/reagent`
+  ['(fn []
+      [:p (g 11)])]])
+
+
 (defn ^:kindly/servable
   add [a b]
   (+ a b))
@@ -21,13 +39,14 @@
        (fn []
          [:div
           [:p @*a1]
-          [:input {:type     "button" :value "Click me!"
-                   :on-click (fn []
-                               (kindly-compute
-                                {:func 'compute-examples/add
-                                 :args [@*a1 20]}
-                                (fn [response]
-                                  (reset! *a1 response))))}]])))])
+          [:input
+           {:type     "button" :value "Click me!"
+            :on-click (fn []
+                        (kindly-compute
+                         {:func 'compute-examples/add
+                          :args [@*a1 20]}
+                         (fn [response]
+                           (reset! *a1 response))))}]])))])
 
 
 (kind/md
