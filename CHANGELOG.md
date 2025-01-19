@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - added a `snippets` API namespace for easier editor inntegration - by @timothyprately
 - added a `kindly-compute` endpoint - for requesting server computations - with @RamNarayan-27
 - added `kind/scittle`
+- added automatic recognition of `kind/scittle` and `kind/reagent` when nested inside `kind/hiccup`
 
 ## [2-beta27] - 2024-12-24
 - added a `:browse` option (default `true`) to determine whether to open a browser tab when the server is started
