@@ -428,10 +428,6 @@
  (fn [context]
    (view-sequentially context "#{" "}")))
 
-(def next-id
-  (let [*counter (atom 0)]
-    #(str "id" (swap! *counter inc))))
-
 (add-preparer!
  :kind/reagent
  #'item/reagent)
