@@ -1,7 +1,5 @@
 (ns compute-examples
-  (:require [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly.v4.kind :as kind]))
+  (:require [scicloj.kindly.v4.kind :as kind]))
 
 (defn ^:kindly/servable
   add [a b]
