@@ -43,6 +43,8 @@
 
 ;; ## Reagent
 
+;; With `kind/reagent`, one may render [Reagent](https://reagent-project.github.io/) components.
+
 (kind/reagent
  ['(fn [numbers]
      [:p {:style {:background "#d4ebe9"}}
@@ -60,6 +62,48 @@
           [:input {:type "button" :value "Click me!"
                    :on-click #(swap! *click-count inc)}]])))])
 
+(kind/reagent
+ ['(fn [{:keys [spec0
+                transition
+                time-for-transition]}]
+     (let [*spec (reagent.core/atom spec0)]
+       (fn []
+         ^{:key @*spec}
+         [:div
+          [:div {:style {:height "400px"}
+                 :ref (fn [el]
+                        (when el
+                          (let [chart (.init js/echarts el)]
+                            (.setOption chart (clj->js @*spec)))))}]
+          (js/setInterval #(swap! *spec transition) time-for-transition)
+          ;; Include this to force component update:
+          [:p {:style {:display :none}}
+           (hash @*spec)]])))
+  {:spec0 initial-spec
+   :transition '(fn [spec]
+                  (update-in spec
+                             [:series 0 :data]
+                             (partial map #(+ %
+                                              (rand-int 10)
+                                              -5))))
+   :time-for-transition 1000}]
+ {:html/deps [:echarts]})
+
+;; ## Scittle
+
+;; With `kind/scittle`, one may specify Clojurescript code to run through
+;; [Scittle](https://github.com/babashka/scittle).
+
+(kind/scittle
+ '(.log js/console "hello"))
+
+(kind/scittle
+ '(defn f [x]
+    (+ x 9)))
+
+(kind/reagent
+ ['(fn []
+     [:p (f 11)])])
 
 ;; ## HTML
 
@@ -985,6 +1029,17 @@ Plot.plot({
         (pr-str (map inc numbers))])
     (vec (range 40))])])
 
+;; Scittle and Reagent kinds are recognized automatically
+;; inside Hiccup:
+
+(kind/hiccup
+ [:div
+  ;; recognized as `kind/scittle`
+  '(defn g [x]
+     (+ x 9))
+  ;; recognized as `kind/reagent`
+  ['(fn []
+      [:p (g 11)])]])
 
 ;; ## Nesting kinds in Tables
 
