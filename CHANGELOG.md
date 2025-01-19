@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - added a `snippets` API namespace for easier editor integration - by @timothyprately - experimental
 - added a `kindly-compute` endpoint - for requesting server computations - with @SpacePirate27
 - added `kind/scittle`
-- added automatic recognition of `kind/scittle` and `kind/reagent` when nested inside `kind/hiccup` - for compabiliity with Kindly-render
+- added automatic recognition of `kind/scittle` and `kind/reagent` when nested inside `kind/hiccup` - for compatibility with Kindly-render
 - added basic support for a Scittle header script with initial setup
 
 ## [2-beta27] - 2024-12-24
