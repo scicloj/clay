@@ -113,6 +113,21 @@
   {:md string
    :hiccup [:p string]})
 
+(def scittle-header-form
+  '(defn kindly-compute [input callback]
+     (ajax.core/POST
+      "/kindly-compute"
+      {:headers       {"Accept" "application/json"}
+       :params        (pr-str input)
+       :handler       (fn [response]
+                        (-> response
+                            read-string
+                            callback))
+       :error-handler (fn [e]
+                        (.log
+                         js/console
+                         (str "error on compute: " e)))})))
+
 (defn scittle-tag [cljs-form]
   [:script {:type "application/x-scittle"}
    (pr-str cljs-form)])
