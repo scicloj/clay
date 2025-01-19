@@ -1,5 +1,6 @@
 (ns compute-examples
-  (:require [scicloj.kindly.v4.kind :as kind]))
+  (:require [scicloj.kindly.v4.kind :as kind]
+            [clojure.java.io :as io]))
 
 (kind/scittle
  '(defn f [x]
@@ -32,6 +33,8 @@
         click-rate (if (pos? total-emails) (double (* 100 (/ clicked-emails total-emails))) 0.0)]
     {:open-rate open-rate
      :click-rate click-rate}))
+
+
 
 (kind/reagent
  ['(fn []
@@ -95,3 +98,54 @@
                                  (fn [response]
                                    (reset! *rates response))))}]])))]])
 
+
+(defn copy [uri file]
+  (with-open [in (io/input-stream uri)
+              out (io/output-stream file)]
+    (io/copy in out)))
+
+(copy "https://clojure.org/images/clojure-logo-120b.png"
+      "notebooks/clojure-logo-120b.png")
+
+(kind/hiccup
+ [:img {:src "notebooks/clojure-logo-120b.png"}])
+
+(def initial-spec
+  {:title {:text "Echarts Example"}
+   :tooltip {}
+   :legend {:data ["sales"]}
+   :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
+                  "Pants", "Heels", "Socks"]}
+   :yAxis {}
+   :series [{:name "sales"
+             :type "bar"
+             :data [5 20 36
+                    10 10 20]}]})
+
+
+(kind/reagent
+ ['(fn [{:keys [spec0
+                transition
+                time-for-transition]}]
+     (let [*spec (reagent.core/atom spec0)]
+       (fn []
+         ^{:key @*spec}
+         [:div
+          [:div {:style {:height "400px"}
+                 :ref (fn [el]
+                        (when el
+                          (let [chart (.init js/echarts el)]
+                            (.setOption chart (clj->js @*spec)))))}]
+          (js/setInterval #(swap! *spec transition) time-for-transition)
+          ;; Include this to force component update:
+          [:p {:style {:display :none}}
+           (hash @*spec)]])))
+  {:spec0 initial-spec
+   :transition '(fn [spec]
+                  (update-in spec
+                             [:series 0 :data]
+                             (partial map #(+ %
+                                              (rand-int 10)
+                                              -5))))
+   :time-for-transition 1000}]
+ {:html/deps [:echarts]})
