@@ -79,7 +79,16 @@
           ;; Include this to force component update:
           [:p {:style {:display :none}}
            (hash @*spec)]])))
-  {:spec0 initial-spec
+  {:spec0 {:title {:text "Echarts Example"}
+           :tooltip {}
+           :legend {:data ["sales"]}
+           :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
+                          "Pants", "Heels", "Socks"]}
+           :yAxis {}
+           :series [{:name "sales"
+                     :type "bar"
+                     :data [5 20 36
+                            10 10 20]}]}initial-spec
    :transition '(fn [spec]
                   (update-in spec
                              [:series 0 :data]
