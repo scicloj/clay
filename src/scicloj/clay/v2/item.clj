@@ -113,6 +113,37 @@
   {:md string
    :hiccup [:p string]})
 
+(def scittle-header-form
+  '(defn kindly-compute [input callback]
+     (ajax.core/POST
+      "/kindly-compute"
+      {:headers       {"Accept" "application/json"}
+       :params        (pr-str input)
+       :handler       (fn [response]
+                        (-> response
+                            read-string
+                            callback))
+       :error-handler (fn [e]
+                        (.log
+                         js/console
+                         (str "error on compute: " e)))})))
+
+(defn scittle-tag [cljs-form]
+  [:script {:type "application/x-scittle"}
+   (pr-str cljs-form)])
+
+(defn scittle [{:as context
+                :keys [value]}]
+  {:hiccup (scittle-tag value)
+   :deps (concat [:reagent]
+                 (-> context
+                     :kindly/options
+                     :html/deps)
+                 ;; deprecated:
+                 (-> context
+                     :kindly/options
+                     :reagent/deps))})
+
 (def next-id
   (let [*counter (atom 0)]
     #(str "id" (swap! *counter inc))))
@@ -121,11 +152,9 @@
                 :keys [value]}]
   (let [id (next-id)]
     {:hiccup [:div {:id id}
-              [:script {:type "application/x-scittle"}
-               (pr-str
-                (list 'reagent.dom/render
-                      value
-                      (list 'js/document.getElementById id)))]]
+              (scittle-tag (list 'reagent.dom/render
+                                 value
+                                 (list 'js/document.getElementById id)))]
      :deps (concat [:reagent]
                    (-> context
                        :kindly/options

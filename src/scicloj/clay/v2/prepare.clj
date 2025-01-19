@@ -63,8 +63,8 @@
   "NextJournal Markdown produces fragments (called :plain) which are rendered as :<>
   These are better represented as a sequence, which hiccup will treat as a fragment."
   (assoc mdt/default-hiccup-renderers
-    :plain (fn [ctx {:keys [text content]}]
-             (or text (map #(mdt/->hiccup ctx %) content)))))
+         :plain (fn [ctx {:keys [text content]}]
+                  (or text (map #(mdt/->hiccup ctx %) content)))))
 
 (defn md->hiccup
   "Converts markdown to hiccup, producing sequences instead of fragments, which hiccup prefers."
@@ -428,9 +428,9 @@
  (fn [context]
    (view-sequentially context "#{" "}")))
 
-(def next-id
-  (let [*counter (atom 0)]
-    #(str "id" (swap! *counter inc))))
+(add-preparer!
+ :kind/scittle
+ #'item/scittle)
 
 (add-preparer!
  :kind/reagent
@@ -451,6 +451,14 @@
     (into [:div] hiccups)
     (first hiccups)))
 
+(defn scittle-form? [form]
+  (and (list? form)
+       (-> form first symbol?)))
+
+(defn reagent-form? [form]
+  (and (vector? form)
+       (-> form first scittle-form?)))
+
 (add-preparer!
  :kind/hiccup
  (fn [{:as context
@@ -462,10 +470,19 @@
          hiccup (->> value
                      (claywalk/prewalk
                       (fn [subform]
-                        (let [subcontext (-> context
+                        (let [subform-for-context (cond
+                                                    (scittle-form? subform)
+                                                    (kind/scittle subform)
+                                                    ,                                                    
+                                                    (reagent-form? subform)
+                                                    (kind/reagent subform)
+                                                    ,
+                                                    :else
+                                                    subform)
+                              subcontext (-> context
                                              (dissoc :form :kind :advice)
                                              (update :kindly/options dissoc :element/max-height)
-                                             (assoc :value subform))]
+                                             (assoc :value subform-for-context))]
                           (if (some-> subcontext
                                       kindly-advice/advise
                                       :kind

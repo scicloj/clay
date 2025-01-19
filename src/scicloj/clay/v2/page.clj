@@ -10,7 +10,8 @@
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]))
+   [scicloj.clay.v2.files :as files]
+   [scicloj.clay.v2.item :as item]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -206,9 +207,8 @@
 
 (defn html [{:as spec
              :keys [items title toc? favicon]}]
-  (let [special-libs (->> items
-                          items->deps
-                          (concat [:html-default :katex]))
+  (let [deps (items->deps items)
+        special-libs (concat deps [:html-default :katex])
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
@@ -242,6 +242,9 @@
                  :js
                  spec))
               (include-libs spec [:js] special-libs)
+              (when (some #{:scittle :reagent} deps)
+                (item/scittle-tag
+                 item/scittle-header-form))
               [:div.container
                [:div.row
                 (when toc?
@@ -268,7 +271,8 @@
 
 (defn md [{:as spec
            :keys [items title favicon quarto format]}]
-  (let [quarto-target (if (=  format [:quarto :revealjs])
+  (let [deps (items->deps items)
+        quarto-target (if (=  format [:quarto :revealjs])
                         :revealjs
                         :html)]
     (str
@@ -282,13 +286,16 @@
                            str "<link rel = \"icon\" href = \"" favicon "\" />")))
      "\n---\n"
      (hiccup/html
-         [:style (styles/main :table)]
-       [:style (styles/main :md-main)]
-       [:style (styles/main :main)])
-     (->> items
-          items->deps
+      [:style (styles/main :table)]
+      [:style (styles/main :md-main)]
+      [:style (styles/main :main)])
+     (->> deps
           (cons :md-default)
           (include-libs spec [:js :css]))
+     (when (some #{:scittle :reagent} deps)
+       (hiccup/html
+        (item/scittle-tag
+         item/scittle-header-form)))
      (->> items
           (map-indexed
            (fn [i item]
@@ -298,8 +305,11 @@
 
 (defn hiccup [{:as spec
                :keys [items title quarto]}]
-  (vec (concat (->> items
-                    items->deps
-                    (include-libs-hiccup spec [:js :css]))
-               (->> items
-                    (map #(prepare/item->hiccup % spec))))))
+  (let [deps (items->deps items)]
+    (vec (concat (->> deps
+                      (include-libs-hiccup spec [:js :css]))
+                 (when (some #{:scittle :reagent} deps)
+                   (item/scittle-tag
+                    item/scittle-header-form))
+                 (->> items
+                      (map #(prepare/item->hiccup % spec)))))))
