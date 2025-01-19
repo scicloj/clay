@@ -429,6 +429,10 @@
    (view-sequentially context "#{" "}")))
 
 (add-preparer!
+ :kind/scittle
+ #'item/scittle)
+
+(add-preparer!
  :kind/reagent
  #'item/reagent)
 

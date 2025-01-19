@@ -45,6 +45,9 @@
                    "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]}
              :css {:from-the-web
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
+   :scittle {:js {:from-local-copy
+                  ["https://daslu.github.io/scittle/js/scittle.js"
+                   "https://daslu.github.io/scittle/js/scittle.cljs-ajax.js"]}}
    :reagent {:js {:from-local-copy
                   ["https://unpkg.com/react@18/umd/react.production.min.js"
                    "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"

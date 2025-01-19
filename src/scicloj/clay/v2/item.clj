@@ -113,6 +113,19 @@
   {:md string
    :hiccup [:p string]})
 
+(defn scittle [{:as context
+                :keys [value]}]
+  {:hiccup [:script {:type "application/x-scittle"}
+            (pr-str value)]
+   :deps (concat [:scittle]
+                 (-> context
+                     :kindly/options
+                     :html/deps)
+                 ;; deprecated:
+                 (-> context
+                     :kindly/options
+                     :reagent/deps))})
+
 (def next-id
   (let [*counter (atom 0)]
     #(str "id" (swap! *counter inc))))
