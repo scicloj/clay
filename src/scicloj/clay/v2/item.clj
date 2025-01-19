@@ -117,7 +117,7 @@
                 :keys [value]}]
   {:hiccup [:script {:type "application/x-scittle"}
             (pr-str value)]
-   :deps (concat [:scittle]
+   :deps (concat [:reagent]
                  (-> context
                      :kindly/options
                      :html/deps)
