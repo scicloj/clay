@@ -2,12 +2,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta28] - unreleased
-- added a `snippets` API namespace for easier editor inntegration - by @timothyprately
+- added a `snippets` API namespace for easier editor integration - by @timothyprately - experimental
 - added a `kindly-compute` endpoint - for requesting server computations - with @SpacePirate27
 - added `kind/scittle`
 - added automatic recognition of `kind/scittle` and `kind/reagent` when nested inside `kind/hiccup` - for compabiliity with Kindly-render
 - added basic support for a Scittle header script with initial setup
-- added a new `snippets` API namespace for editor integration - with @timothyprately - experimental
 
 ## [2-beta27] - 2024-12-24
 - added a `:browse` option (default `true`) to determine whether to open a browser tab when the server is started
