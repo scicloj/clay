@@ -18,21 +18,6 @@
      :click-rate click-rate}))
 
 (kind/reagent
- '(defn kindly-compute [input callback]
-    (ajax.core/POST
-     "/kindly-compute"
-     {:headers       {"Accept" "application/json"}
-      :params        (pr-str input)
-      :handler       (fn [response]
-                       (-> response
-                           read-string
-                           callback))
-      :error-handler (fn [e]
-                       (.log
-                        js/console
-                        (str "error on compute: " e)))})))
-
-(kind/reagent
  ['(fn []
      (let [*a1 (reagent.core/atom 10)]
        (fn []
