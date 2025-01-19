@@ -113,10 +113,13 @@
   {:md string
    :hiccup [:p string]})
 
+(defn scittle-tag [cljs-form]
+  [:script {:type "application/x-scittle"}
+   (pr-str cljs-form)])
+
 (defn scittle [{:as context
                 :keys [value]}]
-  {:hiccup [:script {:type "application/x-scittle"}
-            (pr-str value)]
+  {:hiccup (scittle-tag value)
    :deps (concat [:reagent]
                  (-> context
                      :kindly/options
@@ -134,11 +137,9 @@
                 :keys [value]}]
   (let [id (next-id)]
     {:hiccup [:div {:id id}
-              [:script {:type "application/x-scittle"}
-               (pr-str
-                (list 'reagent.dom/render
-                      value
-                      (list 'js/document.getElementById id)))]]
+              (scittle-tag (list 'reagent.dom/render
+                                 value
+                                 (list 'js/document.getElementById id)))]
      :deps (concat [:reagent]
                    (-> context
                        :kindly/options
