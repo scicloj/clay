@@ -127,7 +127,10 @@
        "fd4kjlws6Ts"]
       ["Dec. 17th 2023"
        "Cursive integration, API, configuration - blogging demo"
-       "GsML75MtNXw"]]
+       "GsML75MtNXw"]
+      ["Jan. 24th 2025"
+       "Noj v2 - getting started - from raw data to a blog post (demonstrating CIDER integration and Quarto publishing)"
+       "vnvcKtHHMVQ"]]
      reverse
      (map (fn [[date title youtube-id]]
             [:tr
