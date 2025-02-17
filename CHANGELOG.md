@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta29] - unreleased
 - updated deps
+- prevented unnecessary `def`s in generated test namespaces
 
 ## [2-beta28] - 2025-01-19
 - added a `snippets` API namespace for easier editor integration - by @timothyprately - experimental

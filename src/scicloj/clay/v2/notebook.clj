@@ -223,6 +223,7 @@
                              note]
                           (let [{:as complete-note :keys [form kind region]} (complete note)
                                 test-note (test-last? complete-note)
+                                comment (:comment? complete-note)
                                 new-items (when-not test-note
                                             (-> complete-note
                                                 (merge/deep-merge
@@ -234,23 +235,26 @@
                                                 (note-to-items options)))
                                 line-number (first region)
                                 varname (->var-name i line-number)
-                                test-form (if test-note
+                                test-form (cond
                                             ;; a deftest form
-                                            (deftest-form
-                                              (->test-name i line-number)
-                                              last-nontest-varname
-                                              form)
-                                            (if (ns-form? form)
-                                              ;; the test ns form
-                                              (test-ns-form form)
-                                              ;; the regular case, just a def
-                                              (def-form
-                                                varname
-                                                form)))]
+                                            test-note (deftest-form
+                                                        (->test-name i line-number)
+                                                        last-nontest-varname
+                                                        form)
+                                            ;; the test ns form
+                                            (ns-form? form) (test-ns-form form)
+                                            ;; a comment
+                                            comment nil
+                                            ;; the regular case, just a def
+                                            :else (def-form
+                                                    varname
+                                                    form))]
                             {:i              (inc i)
                              :items          (concat items new-items)
-                             :test-forms     (conj test-forms test-form)
-                             :last-nontest-varname (if (or (:comment? complete-note)
+                             :test-forms     (if test-form
+                                               (conj test-forms test-form)
+                                               test-forms)
+                             :last-nontest-varname (if (or comment
                                                            test-note)
                                                      last-nontest-varname
                                                      varname)}))
