@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta29] - unreleased
+- updated deps
+
 ## [2-beta28] - 2025-01-19
 - added a `snippets` API namespace for easier editor integration - by @timothyprately - experimental
 - added a `kindly-compute` endpoint - for requesting server computations - with @SpacePirate27
