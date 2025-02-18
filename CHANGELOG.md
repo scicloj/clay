@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta29] - unreleased
+## [2-beta29] - 2025-02-18
 - updated deps
 - prevented unnecessary `def`s in generated test namespaces
 - changed the loading animation to an opacity change, to avoid the unnecessary page refresh
