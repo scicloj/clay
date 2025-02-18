@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - updated deps
 - prevented unnecessary `def`s in generated test namespaces
 - changed the loading animation to an opacity change, to avoid the unnecessary page refresh
+- changed the refresh mechanism: keep page position on regular update, but return to current page after browsing to a different book page - thanks, @genmeblog, @whatacold, @holyjak
 
 ## [2-beta28] - 2025-01-19
 - added a `snippets` API namespace for easier editor integration - by @timothyprately - experimental
@@ -596,3 +597,4 @@ initial version of scittle viewer
 
 ## [1-alpha1] - 2022-04-08
 initial version
+mechanism

@@ -30,17 +30,39 @@
              (catch Exception e nil))
         (recur (inc port)))))
 
-
 (defn communication-script
   "The communication JS script to init a WebSocket to the server."
   [{:keys [port counter]}]
-  (format "
+  (let [reload-regexp ".*/(#[a-zA-Z\\-]+)?\\$"
+        ;; We use this regexp to recognize when to used
+        ;; page reload rather than revert to the original URL,
+        ;; see below.
+        ]
+    (->> [port counter reload-regexp]
+         (apply format "
 <script type=\"text/javascript\">
-  {
+  
     clay_port = %d;
     clay_server_counter = '%d';
+    reload_regexp = new RegExp('%s');
 
-    clay_refresh = function() {location.assign('http://localhost:'+clay_port);}
+    clay_refresh = function() {
+      location.assign('http://localhost:'+clay_port);
+
+      // alert(reload_regexp.test(window.location.href) + ' ' + window.location.href);
+
+      // Check whether we are still in the main page
+      // (but possibly in an anchor (#...) inside it):
+      if(reload_regexp.test(window.location.href)) {
+        // Just reload, keeping the current position:
+        location.reload();
+      } else {
+         // We might be in a different book to the chapter.
+         // So, reload and force returning to the main page.
+         location.assign('http://localhost:'+clay_port);
+      }
+    }
+
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
 
     clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
@@ -64,33 +86,28 @@
     }
   };
   clay_1();
-</script>
-"
-          port
-          counter))
+</script>"))))
 
 (defn header [state]
   (hiccup.core/html
-      [:div
-       [:div
-        [:img
-         {:style {:display "inline-block"
-                  :zoom 1
-                  :width "40px"
-                  :margin-left "20px"}
-          ;; { zoom: 1; vertical-align: top; font-size: 12px;}
-          :src "/Clay.svg.png"
-          :alt "Clay logo"}]
-        #_[:big [:big "(Clay)"]]
-        [:div {:style {:display "inline-block"
-                       :margin "20px"}}
-         [:pre {:style {:margin 0}}
-          (some->> state
-                   :last-rendered-spec
-                   :full-target-path)]
-         [:pre {:style {:margin 0}}
-          (time/now)]]]
-       #_(:hiccup item/separator)]))
+   [:div
+    [:div
+     [:img
+      {:style {:display "inline-block"
+               :zoom 1
+               :width "40px"
+               :margin-left "20px"},
+       ;; { zoom: 1; vertical-align: top; font-size: 12px;}
+       :src "/Clay.svg.png"
+       :alt "Clay logo"}]
+     [:div {:style {:display "inline-block"
+                    :margin "20px"}}
+      [:pre {:style {:margin 0}}
+       (some->> state
+                :last-rendered-spec
+                :full-target-path)]
+      [:pre {:style {:margin 0}}
+       (time/now)]]]]))
 
 (defn page
   ([]
@@ -110,10 +127,11 @@
                                       :hide-ui-header)
                           (hiccup/html
                            #_[:style "* {margin: 0; padding: 0; top: 0;}"]
-                           [:div {:style {:height "70px"
-                                          :background-color "#eee"}}
-                            (header state)]))
-                        (communication-script state)))))
+                                         [:div {:style {:height "70px"
+                                                        :background-color "#eee"}}
+                                          (header state)]))
+    (communication-script state)))))
+
 
 (defn compute
   [input]
