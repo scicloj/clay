@@ -404,12 +404,7 @@
       (babashka.fs/delete-tree base-target-path))
     (sync-resources! main-spec)
     (when show
-      (-> main-spec
-          (assoc :page (-> single-ns-specs
-                           first
-                           (assoc :items [item/loader])
-                           page/html))
-          server/update-page!))
+      (server/loading!))
     [(->> single-ns-specs
           (mapv handle-single-source-spec!))
      (-> main-spec

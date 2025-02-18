@@ -48,12 +48,14 @@
     clay_socket.addEventListener('message', (event)=> {
       if (event.data=='refresh') {
         clay_refresh();
+      } else if (event.data=='loading') {
+        document.body.style.opacity = 0.5;
+        document.body.prepend(document.createElement('div', {class: 'loader'}));
       } else {
         console.log('unknown ws message: ' + event.data);
       }
     });
-  }
-
+  
   async function clay_1 () {
     const response = await fetch('/counter');
     const response_counter = await response.json();
@@ -224,9 +226,11 @@
     (broadcast! "refresh"))
   [:ok])
 
+(defn loading! []
+  (broadcast! "loading"))
+
 (defn close! []
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
-
 
