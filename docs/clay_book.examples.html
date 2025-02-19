@@ -403,7 +403,7 @@ window.Quarto = {
 <span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>   <span class="at">:time-for-transition</span> <span class="dv">1000</span>}]</span>
 <span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a> {<span class="at">:html/deps</span> [<span class="at">:echarts</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="id3"><script type="application/x-scittle">(reagent.dom/render [(fn [{:keys [spec0 transition time-for-transition]}] (let [*spec (reagent.core/atom spec0)] (fn [] [:div [:div {:style {:height "400px"}, :ref (fn [el] (when el (let [chart (.init js/echarts el)] (.setOption chart (clj->js (clojure.core/deref *spec))))))}] (js/setInterval (fn* [] (swap! *spec transition)) time-for-transition) [:p {:style {:display :none}} (hash (clojure.core/deref *spec))]]))) {:spec0 {:title {:text "Echarts Example"}, :tooltip {}, :legend {:data ["sales"]}, :xAxis {:data ["Shirts" "Cardigans" "Chiffons" "Pants" "Heels" "Socks"]}, :yAxis {}, :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}, :transition (fn [spec] (update-in spec [:series 0 :data] (partial map (fn* [p1__60369#] (+ p1__60369# (rand-int 10) -5))))), :time-for-transition 1000}] (js/document.getElementById "id3"))</script></div>
+<div id="id3"><script type="application/x-scittle">(reagent.dom/render [(fn [{:keys [spec0 transition time-for-transition]}] (let [*spec (reagent.core/atom spec0)] (fn [] [:div [:div {:style {:height "400px"}, :ref (fn [el] (when el (let [chart (.init js/echarts el)] (.setOption chart (clj->js (clojure.core/deref *spec))))))}] (js/setInterval (fn* [] (swap! *spec transition)) time-for-transition) [:p {:style {:display :none}} (hash (clojure.core/deref *spec))]]))) {:spec0 {:title {:text "Echarts Example"}, :tooltip {}, :legend {:data ["sales"]}, :xAxis {:data ["Shirts" "Cardigans" "Chiffons" "Pants" "Heels" "Socks"]}, :yAxis {}, :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}, :transition (fn [spec] (update-in spec [:series 0 :data] (partial map (fn* [p1__57880#] (+ p1__57880# (rand-int 10) -5))))), :time-for-transition 1000}] (js/document.getElementById "id3"))</script></div>
 </section>
 <section id="scittle" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="scittle"><span class="header-section-number">2.5</span> Scittle</h2>
@@ -609,21 +609,21 @@ window.Quarto = {
 <div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">take</span> <span class="dv">5</span> people-as-maps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="printedClojure">
-<div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>({<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">55</span>}</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">62</span>}</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">73</span>}</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">13</span>}</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">17</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>({<span class="at">:preferred-language</span> <span class="st">"clojure"</span>, <span class="at">:age</span> <span class="dv">30</span>}</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">96</span>}</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">33</span>}</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojure"</span>, <span class="at">:age</span> <span class="dv">41</span>}</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">89</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb41"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">take</span> <span class="dv">5</span> people-as-vectors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="printedClojure">
-<div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>([<span class="st">"clojurescript"</span> <span class="dv">55</span>]</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojurescript"</span> <span class="dv">62</span>]</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">73</span>]</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">13</span>]</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojurescript"</span> <span class="dv">17</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>([<span class="st">"clojure"</span> <span class="dv">30</span>]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">96</span>]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">33</span>]</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojure"</span> <span class="dv">41</span>]</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">89</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb43"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;&gt;</span> people-as-vectors</span>
@@ -631,11 +631,11 @@ window.Quarto = {
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>     <span class="kw">set</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="printedClojure">
-<div class="sourceCode" id="cb44"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>#{[<span class="st">"babashka"</span> <span class="dv">73</span>]</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">55</span>]</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">62</span>]</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">13</span>]</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">17</span>]}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>#{[<span class="st">"babashka"</span> <span class="dv">33</span>]</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">89</span>]</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">96</span>]</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojure"</span> <span class="dv">41</span>]</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojure"</span> <span class="dv">30</span>]}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When something inside needs to be displayed in a special kind of way, the data structures are printed in a way that makes that clear.</p>
 <div class="sourceClojure">
@@ -924,64 +924,56 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td style="text-align: right;">55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td style="text-align: right;">62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td style="text-align: right;">73</td>
+<td>clojure</td>
+<td style="text-align: right;">30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td style="text-align: right;">13</td>
+<td style="text-align: right;">96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td style="text-align: right;">17</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td style="text-align: right;">42</td>
-</tr>
-<tr class="odd">
-<td>clojurescript</td>
-<td style="text-align: right;">39</td>
+<td>babashka</td>
+<td style="text-align: right;">33</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">41</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td style="text-align: right;">84</td>
+<td style="text-align: right;">89</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td style="text-align: right;">61</td>
+<td style="text-align: right;">94</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td style="text-align: right;">69</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td style="text-align: right;">88</td>
 </tr>
 <tr class="odd">
 <td>…</td>
 <td style="text-align: right;">…</td>
 </tr>
 <tr class="even">
-<td>clojure</td>
-<td style="text-align: right;">80</td>
+<td>clojurescript</td>
+<td style="text-align: right;">20</td>
 </tr>
 <tr class="odd">
 <td>clojure</td>
-<td style="text-align: right;">38</td>
-</tr>
-<tr class="even">
-<td>clojure</td>
-<td style="text-align: right;">10</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td style="text-align: right;">34</td>
+<td style="text-align: right;">49</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
@@ -989,27 +981,35 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td>clojure</td>
-<td style="text-align: right;">17</td>
+<td style="text-align: right;">44</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td style="text-align: right;">59</td>
+<td style="text-align: right;">63</td>
 </tr>
 <tr class="odd">
-<td>babashka</td>
-<td style="text-align: right;">24</td>
+<td>clojurescript</td>
+<td style="text-align: right;">23</td>
 </tr>
 <tr class="even">
-<td>clojure</td>
-<td style="text-align: right;">77</td>
+<td>clojurescript</td>
+<td style="text-align: right;">10</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td style="text-align: right;">13</td>
+<td>clojurescript</td>
+<td style="text-align: right;">12</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td style="text-align: right;">39</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td style="text-align: right;">55</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td style="text-align: right;">90</td>
 </tr>
 </tbody>
 </table>
@@ -1077,92 +1077,84 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>42</td>
-</tr>
-<tr class="odd">
-<td>clojurescript</td>
-<td>39</td>
+<td>babashka</td>
+<td>33</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>7</td>
+<td>41</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>84</td>
+<td>89</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
+<td>94</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>65</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>69</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
 <td>61</td>
 </tr>
-<tr class="odd">
-<td>clojure</td>
-<td>10</td>
-</tr>
 <tr class="even">
 <td>clojurescript</td>
-<td>22</td>
+<td>32</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td>55</td>
-</tr>
-<tr class="even">
 <td>clojurescript</td>
-<td>47</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>10</td>
+<td>53</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>9</td>
+<td>54</td>
 </tr>
 <tr class="odd">
+<td>clojure</td>
+<td>86</td>
+</tr>
+<tr class="even">
 <td>babashka</td>
 <td>0</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>27</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>20</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
 <td>49</td>
-</tr>
-<tr class="odd">
-<td>clojure</td>
-<td>80</td>
-</tr>
-<tr class="even">
-<td>clojure</td>
-<td>38</td>
-</tr>
-<tr class="odd">
-<td>clojure</td>
-<td>10</td>
-</tr>
-<tr class="even">
-<td>babashka</td>
-<td>34</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
@@ -1170,27 +1162,35 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>17</td>
+<td>44</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>59</td>
+<td>63</td>
 </tr>
 <tr class="even">
-<td>babashka</td>
-<td>24</td>
+<td>clojurescript</td>
+<td>23</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td>77</td>
+<td>clojurescript</td>
+<td>10</td>
 </tr>
 <tr class="even">
-<td>clojure</td>
-<td>13</td>
+<td>clojurescript</td>
+<td>12</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>39</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>90</td>
 </tr>
 </tbody>
 </table>
@@ -1206,24 +1206,24 @@ window.Quarto = {
 <table class="table table-hover clay-table caption-top" data-quarto-postprocess="true">
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
+<td>babashka</td>
+<td>33</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>41</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>89</td>
 </tr>
 </tbody>
 </table>
@@ -1245,24 +1245,24 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
+<td>babashka</td>
+<td>33</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>41</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>89</td>
 </tr>
 </tbody>
 </table>
@@ -1284,19 +1284,19 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
+<td>clojure</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
+<td>babashka</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
 </tr>
 </tbody>
 </table>
@@ -1311,24 +1311,24 @@ window.Quarto = {
 <table class="table table-hover clay-table caption-top" data-quarto-postprocess="true">
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
+<td>babashka</td>
+<td>33</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>41</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>89</td>
 </tr>
 </tbody>
 </table>
@@ -1348,24 +1348,24 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
+<td>babashka</td>
+<td>33</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>41</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>89</td>
 </tr>
 </tbody>
 </table>
@@ -1434,92 +1434,84 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>42</td>
-</tr>
-<tr class="odd">
-<td>clojurescript</td>
-<td>39</td>
+<td>babashka</td>
+<td>33</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>7</td>
+<td>41</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>84</td>
+<td>89</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
+<td>94</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>65</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>69</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
 <td>61</td>
 </tr>
-<tr class="odd">
-<td>clojure</td>
-<td>10</td>
-</tr>
 <tr class="even">
 <td>clojurescript</td>
-<td>22</td>
+<td>32</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td>55</td>
-</tr>
-<tr class="even">
 <td>clojurescript</td>
-<td>47</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>10</td>
+<td>53</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>9</td>
+<td>54</td>
 </tr>
 <tr class="odd">
+<td>clojure</td>
+<td>86</td>
+</tr>
+<tr class="even">
 <td>babashka</td>
 <td>0</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>27</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>20</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
 <td>49</td>
-</tr>
-<tr class="odd">
-<td>clojure</td>
-<td>80</td>
-</tr>
-<tr class="even">
-<td>clojure</td>
-<td>38</td>
-</tr>
-<tr class="odd">
-<td>clojure</td>
-<td>10</td>
-</tr>
-<tr class="even">
-<td>babashka</td>
-<td>34</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
@@ -1527,27 +1519,35 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>17</td>
+<td>44</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>59</td>
+<td>63</td>
 </tr>
 <tr class="even">
-<td>babashka</td>
-<td>24</td>
+<td>clojurescript</td>
+<td>23</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td>77</td>
+<td>clojurescript</td>
+<td>10</td>
 </tr>
 <tr class="even">
-<td>clojure</td>
-<td>13</td>
+<td>clojurescript</td>
+<td>12</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>39</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>90</td>
 </tr>
 </tbody>
 </table>
@@ -1570,92 +1570,84 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>clojurescript</td>
-<td>55</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>62</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>73</td>
+<td>clojure</td>
+<td>30</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
-<td>13</td>
+<td>96</td>
 </tr>
 <tr class="odd">
-<td>clojurescript</td>
-<td>17</td>
-</tr>
-<tr class="even">
-<td>clojurescript</td>
-<td>42</td>
-</tr>
-<tr class="odd">
-<td>clojurescript</td>
-<td>39</td>
+<td>babashka</td>
+<td>33</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>7</td>
+<td>41</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>84</td>
+<td>89</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
+<td>94</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>65</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>69</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
 <td>61</td>
 </tr>
-<tr class="odd">
-<td>clojure</td>
-<td>10</td>
-</tr>
 <tr class="even">
 <td>clojurescript</td>
-<td>22</td>
+<td>32</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td>55</td>
-</tr>
-<tr class="even">
 <td>clojurescript</td>
-<td>47</td>
-</tr>
-<tr class="odd">
-<td>babashka</td>
-<td>10</td>
+<td>53</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>9</td>
+<td>54</td>
 </tr>
 <tr class="odd">
+<td>clojure</td>
+<td>86</td>
+</tr>
+<tr class="even">
 <td>babashka</td>
 <td>0</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>27</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>20</td>
 </tr>
 <tr class="even">
 <td>clojure</td>
 <td>49</td>
-</tr>
-<tr class="odd">
-<td>clojure</td>
-<td>80</td>
-</tr>
-<tr class="even">
-<td>clojure</td>
-<td>38</td>
-</tr>
-<tr class="odd">
-<td>clojure</td>
-<td>10</td>
-</tr>
-<tr class="even">
-<td>babashka</td>
-<td>34</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
@@ -1663,27 +1655,35 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>clojure</td>
-<td>17</td>
+<td>44</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>59</td>
+<td>63</td>
 </tr>
 <tr class="even">
-<td>babashka</td>
-<td>24</td>
+<td>clojurescript</td>
+<td>23</td>
 </tr>
 <tr class="odd">
-<td>clojure</td>
-<td>77</td>
+<td>clojurescript</td>
+<td>10</td>
 </tr>
 <tr class="even">
-<td>clojure</td>
-<td>13</td>
+<td>clojurescript</td>
+<td>12</td>
 </tr>
 <tr class="odd">
 <td>babashka</td>
-<td>39</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>90</td>
 </tr>
 </tbody>
 </table>
@@ -1698,7 +1698,7 @@ window.Quarto = {
 </div>
 <div class="clay-table">
 <div class="clay-table">
-<table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>clojurescript</td><td>55</td></tr><tr><td>clojurescript</td><td>62</td></tr><tr><td>babashka</td><td>73</td></tr><tr><td>babashka</td><td>13</td></tr><tr><td>clojurescript</td><td>17</td></tr><tr><td>clojurescript</td><td>42</td></tr><tr><td>clojurescript</td><td>39</td></tr><tr><td>clojure</td><td>7</td></tr><tr><td>babashka</td><td>84</td></tr><tr><td>clojure</td><td>61</td></tr><tr><td>clojure</td><td>10</td></tr><tr><td>clojurescript</td><td>22</td></tr><tr><td>clojure</td><td>55</td></tr><tr><td>clojurescript</td><td>47</td></tr><tr><td>babashka</td><td>10</td></tr><tr><td>clojure</td><td>9</td></tr><tr><td>babashka</td><td>0</td></tr><tr><td>clojure</td><td>49</td></tr><tr><td>clojure</td><td>80</td></tr><tr><td>clojure</td><td>38</td></tr><tr><td>clojure</td><td>10</td></tr><tr><td>babashka</td><td>34</td></tr><tr><td>clojurescript</td><td>57</td></tr><tr><td>clojure</td><td>17</td></tr><tr><td>babashka</td><td>59</td></tr><tr><td>babashka</td><td>24</td></tr><tr><td>clojure</td><td>77</td></tr><tr><td>clojure</td><td>13</td></tr><tr><td>babashka</td><td>39</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"paging":false,"scrollY":400,"sPaginationType":"full_numbers","order":[]});</script></table>
+<table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>clojure</td><td>30</td></tr><tr><td>babashka</td><td>96</td></tr><tr><td>babashka</td><td>33</td></tr><tr><td>clojure</td><td>41</td></tr><tr><td>babashka</td><td>89</td></tr><tr><td>clojure</td><td>94</td></tr><tr><td>clojure</td><td>65</td></tr><tr><td>clojurescript</td><td>1</td></tr><tr><td>babashka</td><td>69</td></tr><tr><td>clojurescript</td><td>88</td></tr><tr><td>clojurescript</td><td>61</td></tr><tr><td>clojurescript</td><td>32</td></tr><tr><td>clojurescript</td><td>53</td></tr><tr><td>clojure</td><td>54</td></tr><tr><td>clojure</td><td>86</td></tr><tr><td>babashka</td><td>0</td></tr><tr><td>clojurescript</td><td>11</td></tr><tr><td>babashka</td><td>27</td></tr><tr><td>clojurescript</td><td>20</td></tr><tr><td>clojure</td><td>49</td></tr><tr><td>clojurescript</td><td>57</td></tr><tr><td>clojure</td><td>44</td></tr><tr><td>babashka</td><td>63</td></tr><tr><td>clojurescript</td><td>23</td></tr><tr><td>clojurescript</td><td>10</td></tr><tr><td>clojurescript</td><td>12</td></tr><tr><td>babashka</td><td>6</td></tr><tr><td>clojurescript</td><td>55</td></tr><tr><td>clojurescript</td><td>90</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"paging":false,"scrollY":400,"sPaginationType":"full_numbers","order":[]});</script></table>
 </div>
 </div>
 <div class="sourceClojure">
@@ -1708,7 +1708,7 @@ window.Quarto = {
 </div>
 <div class="clay-table">
 <div class="clay-table">
-<table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>clojurescript</td><td>55</td></tr><tr><td>clojurescript</td><td>62</td></tr><tr><td>babashka</td><td>73</td></tr><tr><td>babashka</td><td>13</td></tr><tr><td>clojurescript</td><td>17</td></tr><tr><td>clojurescript</td><td>42</td></tr><tr><td>clojurescript</td><td>39</td></tr><tr><td>clojure</td><td>7</td></tr><tr><td>babashka</td><td>84</td></tr><tr><td>clojure</td><td>61</td></tr><tr><td>clojure</td><td>10</td></tr><tr><td>clojurescript</td><td>22</td></tr><tr><td>clojure</td><td>55</td></tr><tr><td>clojurescript</td><td>47</td></tr><tr><td>babashka</td><td>10</td></tr><tr><td>clojure</td><td>9</td></tr><tr><td>babashka</td><td>0</td></tr><tr><td>clojure</td><td>49</td></tr><tr><td>clojure</td><td>80</td></tr><tr><td>clojure</td><td>38</td></tr><tr><td>clojure</td><td>10</td></tr><tr><td>babashka</td><td>34</td></tr><tr><td>clojurescript</td><td>57</td></tr><tr><td>clojure</td><td>17</td></tr><tr><td>babashka</td><td>59</td></tr><tr><td>babashka</td><td>24</td></tr><tr><td>clojure</td><td>77</td></tr><tr><td>clojure</td><td>13</td></tr><tr><td>babashka</td><td>39</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"scrollY":300,"paging":false,"sPaginationType":"full_numbers","order":[]});</script></table>
+<table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>clojure</td><td>30</td></tr><tr><td>babashka</td><td>96</td></tr><tr><td>babashka</td><td>33</td></tr><tr><td>clojure</td><td>41</td></tr><tr><td>babashka</td><td>89</td></tr><tr><td>clojure</td><td>94</td></tr><tr><td>clojure</td><td>65</td></tr><tr><td>clojurescript</td><td>1</td></tr><tr><td>babashka</td><td>69</td></tr><tr><td>clojurescript</td><td>88</td></tr><tr><td>clojurescript</td><td>61</td></tr><tr><td>clojurescript</td><td>32</td></tr><tr><td>clojurescript</td><td>53</td></tr><tr><td>clojure</td><td>54</td></tr><tr><td>clojure</td><td>86</td></tr><tr><td>babashka</td><td>0</td></tr><tr><td>clojurescript</td><td>11</td></tr><tr><td>babashka</td><td>27</td></tr><tr><td>clojurescript</td><td>20</td></tr><tr><td>clojure</td><td>49</td></tr><tr><td>clojurescript</td><td>57</td></tr><tr><td>clojure</td><td>44</td></tr><tr><td>babashka</td><td>63</td></tr><tr><td>clojurescript</td><td>23</td></tr><tr><td>clojurescript</td><td>10</td></tr><tr><td>clojurescript</td><td>12</td></tr><tr><td>babashka</td><td>6</td></tr><tr><td>clojurescript</td><td>55</td></tr><tr><td>clojurescript</td><td>90</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"scrollY":300,"paging":false,"sPaginationType":"full_numbers","order":[]});</script></table>
 </div>
 </div>
 </section>
@@ -1744,7 +1744,7 @@ window.Quarto = {
 <div class="sourceClojure">
 <div class="sourceCode" id="cb77"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>(random-vega-lite-plot <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":4,"z":2,"x":0,"y":0.20182439201342917},{"w":7,"z":5,"x":1,"y":0.5637129830750821},{"w":0,"z":1,"x":2,"y":0.9659943888432182},{"w":3,"z":8,"x":3,"y":0.61144779755639},{"w":0,"z":0,"x":4,"y":0.6769167710644296},{"w":2,"z":7,"x":5,"y":0.6312820148861841},{"w":6,"z":3,"x":6,"y":0.47184895720292097},{"w":2,"z":0,"x":7,"y":0.9209384305129904},{"w":1,"z":3,"x":8,"y":0.64008178384304}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":0,"z":3,"x":0,"y":-0.4253482720334292},{"w":0,"z":8,"x":1,"y":-0.2785800295987486},{"w":3,"z":0,"x":2,"y":0.08857602207881787},{"w":6,"z":7,"x":3,"y":0.18598556616085482},{"w":6,"z":0,"x":4,"y":0.09774892463324814},{"w":0,"z":6,"x":5,"y":-0.1357712307754384},{"w":0,"z":6,"x":6,"y":-0.4052598063231998},{"w":1,"z":3,"x":7,"y":-0.21135047008571528},{"w":8,"z":2,"x":8,"y":0.02259933500185407}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div>
 <p>When the vega/vega-lite data is given in CSV format, Clay will serve it in a separate CSV file alongside the generated HTML.</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb78"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> {<span class="at">:data</span> {<span class="at">:values</span> <span class="st">"x,y</span></span>
@@ -2452,7 +2452,7 @@ window.Quarto = {
 <span id="cb111-14"><a href="#cb111-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">:labels</span> {<span class="at">:x</span> <span class="st">"wt"</span></span>
 <span id="cb111-15"><a href="#cb111-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">:y</span> <span class="st">"mpg"</span>}}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-11" style="width:100%;height:400px;"><script data-for="htmlwidget-11" type="application/htmlwidget-sizing">{"viewer":{"width":"100%","height":400,"padding":"0","fille":true},"browser":{"width":"100%","height":400,"padding":"0","fille":true}}</script><script data-for="htmlwidget-11" type="application/json">{"x":{"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"layout":{"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"xaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[0.0,16.0,32.0,48.0,64.0,80.0,96.0],"zeroline":false,"title":{"text":"wt","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"y","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"categoryorder":"array","range":[-9.9,108.9]},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"showlegend":false,"barmode":"relative","yaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[-3.0,-2.0,-1.0,0.0],"zeroline":false,"title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["-3.0","-2.0","-1.0","0.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"x","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["-3.0","-2.0","-1.0","0.0"],"categoryorder":"array","range":[-3.526744435664103,1.271180959802402]},"hovermode":"closest","margin":{"t":25.7412480974125,"r":7.30593607305936,"b":39.6955859969559,"l":37.2602739726027},"shapes":[{"yref":"paper","fillcolor":null,"xref":"paper","y1":1,"type":"rect","line":{"color":null,"width":0,"linetype":[]},"y0":0,"x1":1,"x0":0}]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https:\/\/plot.ly","cur_data":"1f2fea5b54d146","source":"A","shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"attrs":{"1f2fea5b54d146":{"x":{},"y":{},"type":"scatter"}},"data":[{"y":[0.018336797694166407,0.22704291938798182,0.19764091126971517,0.6545256009393392,0.23028953589707768,-0.2249042196946751,-0.7117671840750486,-1.1743322717169453,-1.5812788452684996,-1.5940328178205538,-1.6408636619277908,-1.4262331781125597,-1.4284015048455676,-1.1740812307253956,-0.7959503899389904,-0.7392818986293379,-0.9864577696728778,-0.9241738342858768,-1.291553051558016,-1.5196723618313126,-1.4529686851322203,-1.2292337480302624,-1.033328419995708,-1.085384567160639,-1.0080859812360636,-1.4236025671823729,-1.7971994813306242,-2.005986228377006,-2.143326658459462,-2.4388706400834983,-2.580046407724226,-2.3898622391677424,-2.1362133829978616,-2.540803850665868,-2.64237564045994,-2.542437284140293,-2.4713081644352553,-2.4546031387644422,-2.707699910681687,-2.5091664084007883,-2.4176729957434397,-2.6175523642860403,-2.9018924925963234,-2.900246828892948,-2.6440551317519407,-2.218398220214449,-2.583528557897262,-2.4451525681240938,-2.0610788947562275,-2.4585628265627024,-2.608193182645147,-2.3192085890412004,-2.3994272532671794,-2.4765150182974724,-2.1609232659485675,-1.7965070896952784,-1.7394179153182292,-1.988321007557836,-2.4563551793355907,-2.5885216166834577,-2.675517999695511,-2.289557755907973,-2.720773922931392,-2.700797491641877,-2.4041998361825847,-2.211404613560978,-2.309103126211962,-2.1560882829046224,-2.140117725023173,-2.3018291222136833,-1.9479354448962862,-1.8662674098599186,-2.2688810030972792,-2.2863523775588543,-2.3079847912981855,-2.662273882452258,-2.909713963327988,-3.1269173193752273,-2.77083919243846,-2.3862471357837145,-2.4630260857723183,-2.1168900873005327,-1.740612304054748,-1.3878735059321166,-1.6313684499763275,-1.8002005792389286,-1.5360271295425751,-1.1228009204613119,-0.7024230188449366,-0.45807196565408836,-0.15762112855209987,-0.19978249457130226,0.05543892974420661,0.15729729211038057,0.5668638266264368,0.4600178436772998,0.8358842999054529,0.8713538435135266,0.423250964945721,0.3283834127593246],"hoveron":"points","frame":null,"hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"mode":"markers","type":"scatter","xaxis":"x","showlegend":false,"yaxis":"y","x":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99],"text":["{:x 0, :y 0.018336797694166407}","{:x 1, :y 0.22704291938798182}","{:x 2, :y 0.19764091126971517}","{:x 3, :y 0.6545256009393392}","{:x 4, :y 0.23028953589707768}","{:x 5, :y -0.2249042196946751}","{:x 6, :y -0.7117671840750486}","{:x 7, :y -1.1743322717169453}","{:x 8, :y -1.5812788452684996}","{:x 9, :y -1.5940328178205538}","{:x 10, :y -1.6408636619277908}","{:x 11, :y -1.4262331781125597}","{:x 12, :y -1.4284015048455676}","{:x 13, :y -1.1740812307253956}","{:x 14, :y -0.7959503899389904}","{:x 15, :y -0.7392818986293379}","{:x 16, :y -0.9864577696728778}","{:x 17, :y -0.9241738342858768}","{:x 18, :y -1.291553051558016}","{:x 19, :y -1.5196723618313126}","{:x 20, :y -1.4529686851322203}","{:x 21, :y -1.2292337480302624}","{:x 22, :y -1.033328419995708}","{:x 23, :y -1.085384567160639}","{:x 24, :y -1.0080859812360636}","{:x 25, :y -1.4236025671823729}","{:x 26, :y -1.7971994813306242}","{:x 27, :y -2.005986228377006}","{:x 28, :y -2.143326658459462}","{:x 29, :y -2.4388706400834983}","{:x 30, :y -2.580046407724226}","{:x 31, :y -2.3898622391677424}","{:x 32, :y -2.1362133829978616}","{:x 33, :y -2.540803850665868}","{:x 34, :y -2.64237564045994}","{:x 35, :y -2.542437284140293}","{:x 36, :y -2.4713081644352553}","{:x 37, :y -2.4546031387644422}","{:x 38, :y -2.707699910681687}","{:x 39, :y -2.5091664084007883}","{:x 40, :y -2.4176729957434397}","{:x 41, :y -2.6175523642860403}","{:x 42, :y -2.9018924925963234}","{:x 43, :y -2.900246828892948}","{:x 44, :y -2.6440551317519407}","{:x 45, :y -2.218398220214449}","{:x 46, :y -2.583528557897262}","{:x 47, :y -2.4451525681240938}","{:x 48, :y -2.0610788947562275}","{:x 49, :y -2.4585628265627024}","{:x 50, :y -2.608193182645147}","{:x 51, :y -2.3192085890412004}","{:x 52, :y -2.3994272532671794}","{:x 53, :y -2.4765150182974724}","{:x 54, :y -2.1609232659485675}","{:x 55, :y -1.7965070896952784}","{:x 56, :y -1.7394179153182292}","{:x 57, :y -1.988321007557836}","{:x 58, :y -2.4563551793355907}","{:x 59, :y -2.5885216166834577}","{:x 60, :y -2.675517999695511}","{:x 61, :y -2.289557755907973}","{:x 62, :y -2.720773922931392}","{:x 63, :y -2.700797491641877}","{:x 64, :y -2.4041998361825847}","{:x 65, :y -2.211404613560978}","{:x 66, :y -2.309103126211962}","{:x 67, :y -2.1560882829046224}","{:x 68, :y -2.140117725023173}","{:x 69, :y -2.3018291222136833}","{:x 70, :y -1.9479354448962862}","{:x 71, :y -1.8662674098599186}","{:x 72, :y -2.2688810030972792}","{:x 73, :y -2.2863523775588543}","{:x 74, :y -2.3079847912981855}","{:x 75, :y -2.662273882452258}","{:x 76, :y -2.909713963327988}","{:x 77, :y -3.1269173193752273}","{:x 78, :y -2.77083919243846}","{:x 79, :y -2.3862471357837145}","{:x 80, :y -2.4630260857723183}","{:x 81, :y -2.1168900873005327}","{:x 82, :y -1.740612304054748}","{:x 83, :y -1.3878735059321166}","{:x 84, :y -1.6313684499763275}","{:x 85, :y -1.8002005792389286}","{:x 86, :y -1.5360271295425751}","{:x 87, :y -1.1228009204613119}","{:x 88, :y -0.7024230188449366}","{:x 89, :y -0.45807196565408836}","{:x 90, :y -0.15762112855209987}","{:x 91, :y -0.19978249457130226}","{:x 92, :y 0.05543892974420661}","{:x 93, :y 0.15729729211038057}","{:x 94, :y 0.5668638266264368}","{:x 95, :y 0.4600178436772998}","{:x 96, :y 0.8358842999054529}","{:x 97, :y 0.8713538435135266}","{:x 98, :y 0.423250964945721}","{:x 99, :y 0.3283834127593246}"]}]},"evals":[],"jsHooks":[]}</script></div>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-11" style="width:100%;height:400px;"><script data-for="htmlwidget-11" type="application/htmlwidget-sizing">{"viewer":{"width":"100%","height":400,"padding":"0","fille":true},"browser":{"width":"100%","height":400,"padding":"0","fille":true}}</script><script data-for="htmlwidget-11" type="application/json">{"x":{"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"layout":{"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"xaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[0.0,16.0,32.0,48.0,64.0,80.0,96.0],"zeroline":false,"title":{"text":"wt","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"y","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"categoryorder":"array","range":[-9.9,108.9]},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"showlegend":false,"barmode":"relative","yaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[-0.0,1.0,2.0,3.0],"zeroline":false,"title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["-0.0","1.0","2.0","3.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"x","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["-0.0","1.0","2.0","3.0"],"categoryorder":"array","range":[-1.2471631560395835,4.073312861392788]},"hovermode":"closest","margin":{"t":25.7412480974125,"r":7.30593607305936,"b":39.6955859969559,"l":37.2602739726027},"shapes":[{"yref":"paper","fillcolor":null,"xref":"paper","y1":1,"type":"rect","line":{"color":null,"width":0,"linetype":[]},"y0":0,"x1":1,"x0":0}]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https:\/\/plot.ly","cur_data":"1f2fea5b54d146","source":"A","shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"attrs":{"1f2fea5b54d146":{"x":{},"y":{},"type":"scatter"}},"data":[{"y":[0.42321341764099085,0.7605337133173433,1.1534561602735873,1.4586293273556956,1.5429825658975354,1.6638961895151811,1.4517946408507445,1.5444675526872997,1.1676827977959552,0.7112809282908815,0.779231405787102,0.5795178234868893,0.9465657747460584,1.3473788682025685,1.7267155215243455,1.35200489096398,1.0353815387206269,1.4527694424292648,1.2846504181184515,1.5132931121156337,1.0316102527093969,1.3228661970702367,1.256399806673086,1.5318506742379916,1.1874328978532913,1.5704722460727238,1.8420511379300404,2.1339511563192337,2.527794192626854,2.849471441763889,3.2986600661193566,3.3161992377027234,3.62993985994009,3.157654466990482,2.7454307808544978,2.3617692338147815,2.0474948771907986,1.5910594615311422,2.004674300667835,1.9554529823110993,1.8114899137596323,1.9154922197933277,1.9769314139504992,1.5972278919585094,1.2377405743760592,1.318084294274514,1.5663468595412655,1.185076605939721,1.5396371424145716,1.3278449130878394,1.7252373888787278,2.0002163429308055,1.6127120684827045,1.2741684281466652,0.8998099247095722,0.5067289599980291,0.9473186647629501,0.9111695907132689,1.157154216518974,1.497822259614643,1.063375818963022,1.098536636838468,0.6819597475287463,0.3075983329669143,0.2714126206273255,-0.178684583656176,0.2748885557593741,0.1852565624744794,0.07208087936758334,0.4766681893613772,0.08817253696472949,-0.3768830055181498,-0.7631055485615408,-0.6198134602727268,-0.7772014592430363,-0.4342859864116122,-0.30879856832318975,-0.02721990738610358,0.11059422672826635,0.1294805974853419,-0.12870133384238502,0.36651189063290046,-0.061365719480651615,-0.14377942957505052,-0.623842845034085,-0.22099466879817686,-0.13235087788990363,-0.26635139545408515,-0.39455663711908406,-0.8037901545868859,-0.4244621135768515,-0.6322319331454519,-0.20560671912433415,-0.6026213666517691,-0.153338751282857,-0.09024903200397827,-0.45237605188221686,-0.6009136830916425,-0.34767726048423675,-0.2507128511591201],"hoveron":"points","frame":null,"hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"mode":"markers","type":"scatter","xaxis":"x","showlegend":false,"yaxis":"y","x":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99],"text":["{:x 0, :y 0.42321341764099085}","{:x 1, :y 0.7605337133173433}","{:x 2, :y 1.1534561602735873}","{:x 3, :y 1.4586293273556956}","{:x 4, :y 1.5429825658975354}","{:x 5, :y 1.6638961895151811}","{:x 6, :y 1.4517946408507445}","{:x 7, :y 1.5444675526872997}","{:x 8, :y 1.1676827977959552}","{:x 9, :y 0.7112809282908815}","{:x 10, :y 0.779231405787102}","{:x 11, :y 0.5795178234868893}","{:x 12, :y 0.9465657747460584}","{:x 13, :y 1.3473788682025685}","{:x 14, :y 1.7267155215243455}","{:x 15, :y 1.35200489096398}","{:x 16, :y 1.0353815387206269}","{:x 17, :y 1.4527694424292648}","{:x 18, :y 1.2846504181184515}","{:x 19, :y 1.5132931121156337}","{:x 20, :y 1.0316102527093969}","{:x 21, :y 1.3228661970702367}","{:x 22, :y 1.256399806673086}","{:x 23, :y 1.5318506742379916}","{:x 24, :y 1.1874328978532913}","{:x 25, :y 1.5704722460727238}","{:x 26, :y 1.8420511379300404}","{:x 27, :y 2.1339511563192337}","{:x 28, :y 2.527794192626854}","{:x 29, :y 2.849471441763889}","{:x 30, :y 3.2986600661193566}","{:x 31, :y 3.3161992377027234}","{:x 32, :y 3.62993985994009}","{:x 33, :y 3.157654466990482}","{:x 34, :y 2.7454307808544978}","{:x 35, :y 2.3617692338147815}","{:x 36, :y 2.0474948771907986}","{:x 37, :y 1.5910594615311422}","{:x 38, :y 2.004674300667835}","{:x 39, :y 1.9554529823110993}","{:x 40, :y 1.8114899137596323}","{:x 41, :y 1.9154922197933277}","{:x 42, :y 1.9769314139504992}","{:x 43, :y 1.5972278919585094}","{:x 44, :y 1.2377405743760592}","{:x 45, :y 1.318084294274514}","{:x 46, :y 1.5663468595412655}","{:x 47, :y 1.185076605939721}","{:x 48, :y 1.5396371424145716}","{:x 49, :y 1.3278449130878394}","{:x 50, :y 1.7252373888787278}","{:x 51, :y 2.0002163429308055}","{:x 52, :y 1.6127120684827045}","{:x 53, :y 1.2741684281466652}","{:x 54, :y 0.8998099247095722}","{:x 55, :y 0.5067289599980291}","{:x 56, :y 0.9473186647629501}","{:x 57, :y 0.9111695907132689}","{:x 58, :y 1.157154216518974}","{:x 59, :y 1.497822259614643}","{:x 60, :y 1.063375818963022}","{:x 61, :y 1.098536636838468}","{:x 62, :y 0.6819597475287463}","{:x 63, :y 0.3075983329669143}","{:x 64, :y 0.2714126206273255}","{:x 65, :y -0.178684583656176}","{:x 66, :y 0.2748885557593741}","{:x 67, :y 0.1852565624744794}","{:x 68, :y 0.07208087936758334}","{:x 69, :y 0.4766681893613772}","{:x 70, :y 0.08817253696472949}","{:x 71, :y -0.3768830055181498}","{:x 72, :y -0.7631055485615408}","{:x 73, :y -0.6198134602727268}","{:x 74, :y -0.7772014592430363}","{:x 75, :y -0.4342859864116122}","{:x 76, :y -0.30879856832318975}","{:x 77, :y -0.02721990738610358}","{:x 78, :y 0.11059422672826635}","{:x 79, :y 0.1294805974853419}","{:x 80, :y -0.12870133384238502}","{:x 81, :y 0.36651189063290046}","{:x 82, :y -0.061365719480651615}","{:x 83, :y -0.14377942957505052}","{:x 84, :y -0.623842845034085}","{:x 85, :y -0.22099466879817686}","{:x 86, :y -0.13235087788990363}","{:x 87, :y -0.26635139545408515}","{:x 88, :y -0.39455663711908406}","{:x 89, :y -0.8037901545868859}","{:x 90, :y -0.4244621135768515}","{:x 91, :y -0.6322319331454519}","{:x 92, :y -0.20560671912433415}","{:x 93, :y -0.6026213666517691}","{:x 94, :y -0.153338751282857}","{:x 95, :y -0.09024903200397827}","{:x 96, :y -0.45237605188221686}","{:x 97, :y -0.6009136830916425}","{:x 98, :y -0.34767726048423675}","{:x 99, :y -0.2507128511591201}"]}]},"evals":[],"jsHooks":[]}</script></div>
 </section>
 <section id="dmol.js" class="level2" data-number="2.24">
 <h2 data-number="2.24" class="anchored" data-anchor-id="dmol.js"><span class="header-section-number">2.24</span> 3DMol.js</h2>
@@ -2567,7 +2567,7 @@ window.Quarto = {
 </div>
 <div><script>portal_api.embed().renderOutputItem(
                 {'mime': 'x-application/edn',
-                 'text': (() => "[^{:kindly/kind :kind/hiccup, :kindly/options nil, :portal.viewer/default :portal.viewer/hiccup} [:big [:big \"a plot\"]] ^#:portal.viewer{:default :portal.viewer/hiccup} [:portal.viewer/vega-lite ^#:kindly{:kind :kind/vega-lite, :options nil} {:data {:values ({:w 5, :z 1, :x 0, :y 0.4877764240645105} {:w 7, :z 5, :x 1, :y 0.9565689140549198} {:w 2, :z 5, :x 2, :y 0.5160842674417726} {:w 0, :z 4, :x 3, :y 0.6334581995192871} {:w 8, :z 1, :x 4, :y 0.3904143745765566} {:w 4, :z 6, :x 5, :y 0.21231058674140812} {:w 7, :z 5, :x 6, :y -0.15388488995936245} {:w 7, :z 4, :x 7, :y -0.3961858338949764} {:w 7, :z 7, :x 8, :y -0.6682657354660625})}, :mark \"point\", :encoding {:size {:field \"w\", :type \"quantitative\"}, :x {:field \"x\", :type \"quantitative\"}, :y {:field \"y\", :type \"quantitative\"}, :fill {:field \"z\", :type \"nominal\"}}}]]")}
+                 'text': (() => "[^{:kindly/kind :kind/hiccup, :kindly/options nil, :portal.viewer/default :portal.viewer/hiccup} [:big [:big \"a plot\"]] ^#:portal.viewer{:default :portal.viewer/hiccup} [:portal.viewer/vega-lite ^#:kindly{:kind :kind/vega-lite, :options nil} {:data {:values ({:w 2, :z 4, :x 0, :y 0.013865447905486716} {:w 5, :z 6, :x 1, :y 0.17320919203612506} {:w 6, :z 3, :x 2, :y 0.5141559973764882} {:w 1, :z 0, :x 3, :y 0.9239803597171543} {:w 6, :z 5, :x 4, :y 0.862923444958626} {:w 5, :z 5, :x 5, :y 0.6587603278970258} {:w 4, :z 6, :x 6, :y 0.7466928532633026} {:w 6, :z 8, :x 7, :y 0.7782534890724637} {:w 6, :z 0, :x 8, :y 0.8147572964778902})}, :mark \"point\", :encoding {:size {:field \"w\", :type \"quantitative\"}, :x {:field \"x\", :type \"quantitative\"}, :y {:field \"y\", :type \"quantitative\"}, :fill {:field \"z\", :type \"nominal\"}}}]]")}
                 , document.currentScript.parentElement);</script></div>
 </section>
 <section id="nesting-kinds-in-hiccup" class="level2" data-number="2.27">
@@ -2869,7 +2869,7 @@ window.Quarto = {
 </tbody>
 </table>
 </div>
-<hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":3,"z":0,"x":0,"y":0.1525105153105667},{"w":7,"z":4,"x":1,"y":-0.32863206520300947},{"w":3,"z":8,"x":2,"y":-0.6361007303123333},{"w":4,"z":5,"x":3,"y":-0.6761933204184241},{"w":3,"z":7,"x":4,"y":-0.4575037537268484},{"w":4,"z":8,"x":5,"y":-0.09778926272388944},{"w":1,"z":0,"x":6,"y":0.27520247534124487},{"w":8,"z":8,"x":7,"y":0.6710439013581383},{"w":0,"z":2,"x":8,"y":0.5764204927712653}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"clay_book.examples_files\/1.csv","format":{"type":"csv"}},"mark":"point","encoding":{"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"}}});</script></div><hr><pre><code>kind/reagent</code></pre><div id="id9"><script type="application/x-scittle">(reagent.dom/render [(fn [numbers] [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))]) [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39]] (js/document.getElementById "id9"))</script></div></div>
+<hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":3,"z":0,"x":0,"y":-0.3108069738417012},{"w":4,"z":3,"x":1,"y":0.04540798796573897},{"w":4,"z":8,"x":2,"y":-0.2237716033333056},{"w":8,"z":4,"x":3,"y":-0.06950808392423014},{"w":0,"z":2,"x":4,"y":0.20844826120957471},{"w":3,"z":5,"x":5,"y":0.42739948362493785},{"w":6,"z":1,"x":6,"y":0.916156811540947},{"w":5,"z":7,"x":7,"y":1.1793996962308082},{"w":2,"z":1,"x":8,"y":0.7776173103257747}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"clay_book.examples_files\/1.csv","format":{"type":"csv"}},"mark":"point","encoding":{"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"}}});</script></div><hr><pre><code>kind/reagent</code></pre><div id="id9"><script type="application/x-scittle">(reagent.dom/render [(fn [numbers] [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))]) [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39]] (js/document.getElementById "id9"))</script></div></div>
 <p>Scittle and Reagent kinds are recognized automatically inside Hiccup:</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb124"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>(kind/hiccup</span>
@@ -2932,7 +2932,7 @@ window.Quarto = {
 12<br>
 23</td>
 <td><div>
-<script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":5,"z":5,"x":0,"y":-0.021642532846383178},{"w":7,"z":3,"x":1,"y":-0.24352551995746807},{"w":2,"z":3,"x":2,"y":-0.38441458014151086},{"w":4,"z":7,"x":3,"y":-0.5711355596287303},{"w":2,"z":7,"x":4,"y":-0.9089688110776767},{"w":3,"z":6,"x":5,"y":-1.012395902835741},{"w":2,"z":2,"x":6,"y":-0.9622263762326462},{"w":5,"z":8,"x":7,"y":-0.884692051514526},{"w":2,"z":8,"x":8,"y":-0.6404573513771262}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
+<script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":8,"z":7,"x":0,"y":0.3924934735972593},{"w":7,"z":6,"x":1,"y":0.03903594155459977},{"w":8,"z":5,"x":2,"y":0.3049776029621305},{"w":4,"z":3,"x":3,"y":-0.10848454362980042},{"w":7,"z":5,"x":4,"y":0.16143057561956353},{"w":2,"z":6,"x":5,"y":0.6291699339423512},{"w":6,"z":3,"x":6,"y":0.9844767026512624},{"w":4,"z":0,"x":7,"y":1.3574962894523193},{"w":0,"z":7,"x":8,"y":1.461078211376074}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
 </div></td>
 </tr>
 <tr class="odd">
@@ -2985,7 +2985,7 @@ window.Quarto = {
 </div></td>
 <td><div style="margin-left:10px;">
 <div>
-<script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":5,"z":0,"x":0,"y":0.08235079550175461},{"w":6,"z":1,"x":1,"y":-0.3397700648631271},{"w":7,"z":2,"x":2,"y":-0.05872379897418789},{"w":8,"z":8,"x":3,"y":-0.5133163181685546},{"w":5,"z":4,"x":4,"y":-0.6113541347677022},{"w":6,"z":5,"x":5,"y":-1.0489680862741348},{"w":2,"z":1,"x":6,"y":-0.9383906980799164},{"w":7,"z":7,"x":7,"y":-1.391116113896139},{"w":4,"z":0,"x":8,"y":-1.5539830642733623}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
+<script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":7,"z":4,"x":0,"y":-0.4754390561182865},{"w":4,"z":3,"x":1,"y":-0.4238834421921285},{"w":0,"z":4,"x":2,"y":-0.3088254984381279},{"w":5,"z":2,"x":3,"y":-0.1555517769745941},{"w":8,"z":2,"x":4,"y":-0.4164593857789207},{"w":2,"z":3,"x":5,"y":-0.38010342206818215},{"w":5,"z":5,"x":6,"y":-0.4239596207992459},{"w":0,"z":8,"x":7,"y":-0.7416751284015538},{"w":1,"z":8,"x":8,"y":-0.8301874887071445}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
 </div>
 </div></td>
 </tr>
@@ -3014,15 +3014,15 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.36264222</td>
+<td style="text-align: right;">0.59681720</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.23351816</td>
+<td style="text-align: right;">0.93958885</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.64799165</td>
+<td style="text-align: right;">0.86005698</td>
 </tr>
 </tbody>
 </table>
@@ -3067,7 +3067,7 @@ window.Quarto = {
 <span id="cb133-14"><a href="#cb133-14" aria-hidden="true" tabindex="-1"></a>                   :=mark-size <span class="dv">3</span></span>
 <span id="cb133-15"><a href="#cb133-15" aria-hidden="true" tabindex="-1"></a>                   :=mark-opacity <span class="fl">0.2</span>}))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div><p>[</p><div class="clay-sequential" style="margin-left:10%;width:110%;"><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":6,"z":5,"x":0,"y":-0.3548492334743514},{"w":8,"z":0,"x":1,"y":-0.28588930376346977},{"w":7,"z":1,"x":2,"y":-0.27283139460353967},{"w":0,"z":5,"x":3,"y":-0.46040481730910177},{"w":8,"z":8,"x":4,"y":-0.5419769445695373},{"w":6,"z":6,"x":5,"y":-0.5991861994287944},{"w":7,"z":2,"x":6,"y":-0.1409969420221846},{"w":2,"z":5,"x":7,"y":-0.11960973583989798},{"w":0,"z":6,"x":8,"y":-0.45490513339766725}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><div class="clay-dataset"><p>_unnamed [3 2]:</p>
+<div><p>[</p><div class="clay-sequential" style="margin-left:10%;width:110%;"><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":1,"z":1,"x":0,"y":-0.1908970613540032},{"w":7,"z":2,"x":1,"y":-0.057906584160469676},{"w":3,"z":6,"x":2,"y":0.11151722529660413},{"w":4,"z":5,"x":3,"y":-0.30326515849142865},{"w":6,"z":5,"x":4,"y":0.19387352616850184},{"w":0,"z":8,"x":5,"y":0.6483550450303271},{"w":3,"z":1,"x":6,"y":0.6218730595655912},{"w":8,"z":6,"x":7,"y":0.5019459246810184},{"w":8,"z":0,"x":8,"y":0.7798894956687352}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><div class="clay-dataset"><p>_unnamed [3 2]:</p>
 <table class="table caption-top" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
@@ -3078,15 +3078,15 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.91093349</td>
+<td style="text-align: right;">0.20467323</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.55243335</td>
+<td style="text-align: right;">0.92565343</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.93693351</td>
+<td style="text-align: right;">0.93146825</td>
 </tr>
 </tbody>
 </table>
