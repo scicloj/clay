@@ -63,7 +63,7 @@
 ;; and congratulations, you've just made your first Clay document!
 
 ;; Now you can keep updating the document by trying different forms,
-;; like 
+;; like
 ;; ```clj
 ;; (clay/make! {:single-form '(str "hello" "world")})
 ;; ```
@@ -154,14 +154,40 @@
 
 ;; ### VSCode Calva
 
-;; If you now run a REPL with Clay version in  your classpath, then Calva will have the relevant [custom REPL commands](https://calva.io/custom-commands/), as defined [here](https://github.com/scicloj/clay/blob/main/resources/calva.exports/config.edn).
+;; With Clay in your classpath, [Calva](https://calva.io/) will discover [Custom REPL Commands](https://calva.io/custom-commands/).
 ;;
-;; |name|function|
-;; |--|--|
-;; |`Clay make Namespace as HTML`|will genenrate an HTML rendering of the current namespace.
-;; |`Clay make Namespace as Quarto, then HTML`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.|
-;; |`Clay make Namespace as Quarto, then reveal.js`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.|
-;; |`Clay make current form as HTML`|will generate an HTML rendering of the current form, in the context of the current namespace.|
+;; |key|name|function|
+;; |--|--|--|
+;; |n|`Clay make Namespace as HTML`|will generate an HTML rendering of the current namespace.
+;; |q|`Clay make Namespace as Quarto, then HTML`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.|
+;; |r|`Clay make Namespace as Quarto, then reveal.js`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.|
+;; |,|`Clay make current form as HTML`|will generate an HTML rendering of the current form, in the context of the current namespace.|
+
+;; To invoke a custom REPL command, press `ctrl+alt+space` followed by `n` to invoke **Clay make Namespace as HTML**.
+;; Pressing `ctrl+alt+space` followed by `space` opens a quick-pick list of custom REPL commands to invoke.
+
+;; Clay exports these custom command snippets via [resources/calva.exports/config.edn](https://github.com/scicloj/clay/blob/main/resources/calva.exports/config.edn).
+
+;; If you prefer a different keyboard shortcut, use the command palette to find **Preferences: Open Keyboard Shortcuts (JSON)** and add:
+
+;;```json
+;;    {
+;;        "key": "alt+x",
+;;        "command": "calva.runCustomREPLCommand",
+;;        "args": ",",
+;;        "when": "calva:connected && calva:keybindingsEnabled"
+;;    },
+;;    {
+;;        "key": "shift+alt+x",
+;;        "command": "calva.runCustomREPLCommand",
+;;        "args": "n",
+;;        "when": "calva:connected && calva:keybindingsEnabled"
+;;    },
+;; ```
+
+;; Now **alt+x** will **Clay make current form as HTML**,
+;; and **shift+alt+x** will **Clay make Namespace as HTML**.
+;; The "args" matches the "key" of the custom REPL commands.
 
 ;; ### Emacs CIDER
 
