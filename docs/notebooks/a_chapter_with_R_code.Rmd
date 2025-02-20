@@ -1,0 +1,13 @@
+# A chapter with R code
+
+## Section 1
+
+```{r}
+1+2
+```
+
+## Section 2
+
+```{r}
+hist(rnorm(99))
+```

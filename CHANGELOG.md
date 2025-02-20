@@ -1,8 +1,325 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-alpha50]
+## [2-beta30]
 - adds main cli: `clojure -M:dev -m scicloj.clay.v2.main`
+
+## [2-beta29] - 2025-02-18
+- updated deps
+- prevented unnecessary `def`s in generated test namespaces
+- changed the loading animation to an opacity change, to avoid the unnecessary page refresh
+- changed the refresh mechanism: keep page position on regular update, but return to current page after browsing to a different book page - thanks, @genmeblog, @whatacold, @holyjak
+
+## [2-beta28] - 2025-01-19
+- added a `snippets` API namespace for easier editor integration - by @timothyprately - experimental
+- added a `kindly-compute` endpoint - for requesting server computations - with @SpacePirate27
+- added `kind/scittle`
+- added automatic recognition of `kind/scittle` and `kind/reagent` when nested inside `kind/hiccup` - for compatibility with Kindly-render
+- added basic support for a Scittle header script with initial setup
+
+## [2-beta27] - 2024-12-24
+- added a `:browse` option (default `true`) to determine whether to open a browser tab when the server is started
+
+## [2-beta26] - 2024-12-20
+- brought the experimental use of [kindly-render](https://github.com/scicloj/kindly-render) back
+
+## [2-beta25] - 2024-12-02
+- disabled the experimental use of [kindly-render](https://github.com/scicloj/kindly-render)
+- avoiding the unnecessary use of git clone for ggplotly deps
+
+## [2-beta24] - 2024-11-30
+- tests defined with `deftest` will run and show results
+- updated deps (http-kit, clj-yaml, kindly, kind-portal, babashka/fs)
+- Watch a dir only if all of its ancestor dirs not being watched. (PR #179) by @whatacold
+- refactoring of the live-reload support by @whatacold 
+
+## [2-beta23] - 2024-11-08
+- bugfix: refreshing page appropriately to keep the main URL - by @whatacold
+
+## [2-beta22] - 2024-11-07
+- fix #176 live reload problem when there's no deps.edn (PR #177) by @whatacold
+- updated deps (kindly-advice)
+
+## [2-beta21] - 2024-10-27
+- updated deps: kindly-advice
+- added for expansion (`emmy.viewer/expand`) for `:kind/emmy-viewers`
+
+## [2-beta20] - 2024-10-22
+- updated deps: kindly, kindly-advice
+- added partial support for `:kind/emmy-viewers`
+
+## [2-beta19] - 2024-10-22
+- a minor cleanup of the data structure being read from code
+- bugfix: made the special kinds `:kind/fn` and `:kind/fragment` nest inside others
+
+## [2-beta18] - 2024-10-20
+- `:live-reload` support - experimental - thanks, @whatacold
+- emmy-viewers support - experimental - thanks, @reedho
+
+## [2-beta17] - 2024-09-30
+- removed unused require (PR #162) - thanks, @schneiderlin, @mchughs
+- updated `nextjournal/mardkown` version, which brings Java 22 support
+- add original line-number to generated test vars names (#163) - thanks, @behrica
+- cleaning "\r\n" to avoid a tools.reader bug - thanks, @schneiderlin
+- added support for image urls in `:kind/image` - thanks, @lightmatters
+- added support for video urls in `:kind/video` - thanks, @holyjak
+- added support for `:kindly/options` in `:kind/fn` - thanks, @holyjak
+
+## [2-beta16] - 2024-09-14
+- Class or style from kindly/options (#139)
+- updated Kindly and Kindly-advice versions
+- rely on `*ns*` `:kindly/options` and kindly-advice for options (PR #148)
+- bugfix in handling `:kindly/options` at item preparation
+- check for horizontal in clay and kindly options (PR #149)
+- bugfix in handling options in notebook generation
+- bugfix: handling the edge case of string hiccup carefully
+- bugfix: handling `:kind/hidden` correctly in notebook generation
+- applying `:kindly/options` in all hiccup-based pathways
+- bugfix: using the appropriate Quarto target format in Markdown generation (fixes #137, #147)
+- removed the `:fontsize` setting in the default config (as it interferred with revealjs slides) (fixes #155)
+- added support for hiding the info line; server refactoring (fixes #156)
+- added support for hiding the ui header; server refactoring (fixes #154)
+- added support for HTML post-processing (`:post-process` option)
+- bugfix: fixed the `:inline-js-and-css` support at the experimental `make-hiccup` funciton (fixes #144)
+
+
+## [2-beta15] - 2024-07-27
+- introducing code-and-value and horizontal layout - WIP (PR #127)
+- code cleanup (PR #131)
+- fix backquote readinging in wrong namespace affecting macros (#132)
+- fix switching to the namespace (#92)
+
+## [2-beta14] - 2024-07-22
+- proper handling of static resources (PR #126)
+
+## [2-beta13] - 2024-07-19
+- fixed server should respond with 404 when file is not found
+- serve /favicon.ico and /Clay.svg.png locally from resources
+- removed the avoid-favicon code, it is not needed, browsers will now find favicon.ico in development.
+- introduced :favicon configuration for adding a favicon in both quarto and html
+- added initial configuration table to index
+- bugfix: less agressive leading space cleaning (#123) - thanks, @genmeblog
+
+## [2-beta12] - 2024-07-13
+- regression fix: make `*stop-server!` a fn for stopping the server - thanks, @olavfosse
+- teach `start!` to take a port number (#107) - thanks, @olavfosse
+- pass all relevant options to Quarto book setup (#114)
+- bugfix: correctly include inline JS - thanks, Jarkko Saltiola
+- refactoring of config propagation
+- Quarto book parts support 
+
+## [2-beta11] - 2024-06-15
+- support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
+- mode careful escaping of characters (#104)
+- using kindly-advice earlier in the pipeline, e.g. to recognize kinds where code should be hidden (#105)
+- bugfix: the `kind/image` annotation failed to render (#105)
+- updated Kindly version
+- `kind/tex` support
+- updated version for KaTeX js dependency
+- supporting TeX inside Markdown in all cases (not just some Quarto cases as before)
+- support for inline js and css in page generation (WIP)
+
+## [2-beta10] - 2024-05-25
+- added classes to elements that have styling applied to facilitate custom styles (#102)
+- added partial support for dataset print options as kindly options
+- made a minor change in `make!` return values for clarity
+- added support for returning a page as plain Hiccup (experimental)
+
+## [2-beta9] - 2024-05-18
+- extended the `kind/fn` semantics to a map spec
+
+## [2-beta8] - 2024-04-22
+- allowing `.Rmd` files in Quarto books
+- test-generation support - experimental
+
+## [2-beta7] - 2024-04-10
+- added `kind/fn` support - evaluating given function and arguments and displaying the result
+
+## [2-beta6] - 2024-04-09
+- Calva custom REPL commands - making sure `:base-source-path` is `nil` in all `make!` calls (#96)
+- bugfix: using a temporary target HTML in single form evaluations (#93)
+- avoiding target directory cleanup on single form evaluations (#97)
+- removing redundant merge operation in `make!` implementation (should not change any behaviour)
+
+## [2-beta5] - 2024-04-06
+- removed escaping in printed values (probably not needed anymore in current pathways and did create problems with `<` `>` symbols)
+
+## [2-beta4] - 2024-04-05
+- updated the `[:html]` target to use the `bootstrap.min.css` currently generated by `[:quarto :html]`
+- changed the default styling of plots (WIP)
+- changed the default Quarto config - smaller font size
+
+## [2-beta3] - 2024-03-29
+- fixed a Clojar deployment problem (broken Github link)
+
+## [2-beta1] - 2024-03-29
+- updated deps (no longer using a temporary adaptation of Portal)
+
+## [2-alpha87] - 2024-03-19
+- `kind/highcharts` support - PR by @adham-omran
+
+## [2-alpha86] - 2024-03-19
+- bugfix: copying the `:htmlwidgets-plotly` deps correctly (avoiding copying the `.git` subdirectory which breaks the doc served on github pages)
+
+## [2-alpha85] - 2024-03-19
+- extended `kind/plotly` API - PR by @roterski
+- using `:html/deps` to specify dependencies in `:kindly/options` (depracating the confusing `:reagent/deps`, still supported though)
+- support for adding deps on `kind/hiccup`, not only `kind/reagent`
+- support for JS & CSS deps from github repos
+- page generation - minor refactoring
+- updated Kindly version: `"4-alpha18"`
+- `kind/htmlwidgets-ggplotly` support - WIP
+
+## [2-alpha84] - 2024-03-16
+- bugfix in `kind/table` preparation: dissocing irrelevant details correctly
+- simpler handling of plain values inside `kind/table` - solving some of the crashes of big tables and making the resulting HTML more lightweight
+
+## [2-alpha83] - 2024-03-15
+- more input kinds supported by `kind/table` (PR by @genmeblog)
+  - added `seq-of-seqs`, `seq-of-maps` and `map-of-seqs` with better infering column names for `seq-of-maps`
+
+## [2-alpha82] - 2024-03-14
+- changed default Quarto theme to `cosmo`
+- support for dedicated CSS classes of certain items (e.g., "clay-image")
+- images are styled through classes, keeping original size by default
+- support for `kind/table` with no head
+- support for nested kinds in `kind/table` column names
+- bugfix: passing fallback preparer inside fragments (#85)
+- bugfix: handling markdown generation consistently when a js script is included
+- bugfix: using Quarto's data-qmd approach only inside tables (#80)
+- file management - cleaning up memory to avoid memory leakage (#84)
+- support for `.ipynb` Jupyter notebooks in books (#77)
+
+## [2-alpha81] - 2024-02-24
+- bugfix: typo in handling :kindly/options of nested elements
+- bugfix: assigning the full target path to a book's index page
+- bugfix: avoiding global quarto title in book chapters
+- bugfix: making sure all book pages are wrapped with header and live-reload script
+- returning to main page on reload
+
+## [2-alpha80] - 2024-02-17
+- avoiding the iframe when serving the page (simplifies URL handling, etc.)
+- slight changes in styling
+- handling space lines between comments carefully
+- passing content-type information on the web server
+- `kind/observable` ([Observable](https://observablehq.com/)) support (when rendering through Quarto)
+
+## [2-alpha79] - 2024-02-08
+- handling element max height in markdown
+- refactoring item preparation, making sure datatables.js works in Quarto in the new setup
+- bugfix: making sure a book index page is available if not provided
+- added `.table-hover` & `.table-responsive` classes for `kind/table`
+
+## [2-alpha78] - 2024-02-04
+- using Quarto raw-html and data-qmd support (thus supporting formulae in tables) - fixing #54
+- showing keywords correctly in column names - fixing #52
+- some code simplification
+
+## [2-alpha77] - 2024-02-02
+- `kind/fragment` support
+- avoiding `:element/max-size` by default
+- supporting kinds that hide code globally
+- removed the obsolete `scicloj.clay.v2.book` ns and the corresponding API function
+
+## [2-alpha76] - 2024-01-28
+- using a temporary Portal build to enjoy some fixes
+- not relying on Portal for syntax highlighting anymore
+
+## [2-alpha75] - 2024-01-27
+- added a dedicated namespace of Quarto themes
+- added a dedicated namespace of Quarto code highlight styles
+
+## [2-alpha74] - 2024-01-27
+- added leaflet-providers support
+
+## [2-alpha73] - 2024-01-26
+- added d3 js dependency
+
+## [2-alpha72] - 2024-01-21
+- removed highlighting theme from default config - using the Quarto default now
+- added missing css (forgot to commit in `"2-alpha70"`)
+
+## [2-alpha71] - 2024-01-21
+- bugfix - adding a Portal item to ensure Portal syntax highlight on `[:html]` targets
+
+## [2-alpha70] - 2024-01-21
+- more styling of `[:html]` target - combining Bootswatch Spacelab with the `bootstrap.min.css` generated by Quarto
+
+## [2-alpha69] - 2024-01-21
+- updated highlight.js (version 11.9.0) - but we'll use it through the standalone Portal bundle for now
+- code style change for `[:html]` target - using Portal's syntax highlighting
+- using Bootswatch Spacelab theme for `[:html]` target - adapted for lighter bg-light
+
+## [2-alpha68] - 2024-01-18
+- `kind/video` support
+
+## [2-alpha67] - 2024-01-17
+- reagent deps are now expressed through kindly options
+
+## [2-alpha66] - 2024-01-15
+- using deep merge when merging configurations
+
+## [2-alpha65] - 2024-01-14
+- removed unnecessary printing
+
+## [2-alpha64] - 2024-01-14
+- nested kinds in `kind/map`:
+  - bugfix: some kv pairs were skipped
+  - styling change
+
+## [2-alpha63] - 2024-01-14
+- expressing classes in Quarto more idiomatically (using `::: ... :::` rather than explicit `div`s)
+- the target directory can now be cleaned up by explicitly specifying `:clean-up-target-dir true`, but not by default on books as it used to be.
+
+## [2-alpha62] - 2024-01-12
+- bugfix: passing `:kindly/options` to the item context
+- cleaned up the default table.css, for now 
+- limiting the height of output elements by default
+- the subdirectories to synchronize with targets are now configurable through `:subdirs-to-sync`
+
+## [2-alpha61] - 2024-01-11
+- updated vega-lite versions (#34)
+
+## [2-alpha60] - 2024-01-11
+- support for `:kind/smile-model`
+- hiding the ouptout of calls to `require`
+
+## [2-alpha59] - 2024-01-11
+- updated some deps
+- improved book making: taking care of rendering and repositioning the rendered files
+
+## [2-alpha58] - 2024-01-08
+- fixed the handling of `:kindly/options` in context
+- changed the default behaviour of `kind/table` (WIP)
+
+## [2-alpha57] - 2024-01-05
+- adapting to Kindly changes: kindly options are passed as metadata
+
+## [2-alpha56] - 2024-01-03
+- bugfix: marking table class when nesting markdown inside other structures
+
+## [2-alpha55] - 2024-01-01
+- minor refactoring for clarity
+- cancelled opinionated table styling
+- bugfix: using real paths when figuring out the path relative to repo
+
+## [2-alpha54] - 2023-12-24
+- minor changes to Calva custom REPL commands: names, printing, etc.
+- updating to Kindly version `4-alpha9` supports, among other things, an `option` argument to kinds, and an API extension for hiding code
+- breaking changes in the way options are passed to `kind/cytoscape`, `kind/echarts`, `kind/plotly` -- now we use `[spec options]` rather than `[options spec]`
+- datatables options support for `kind/table`
+
+## [2-alpha53] - 2023-12-14
+- Calva custom REPL commands
+
+## [2-alpha52] - 2023-12-12
+- kindly version update
+
+## [2-alpha51] - 2023-12-10
+- bugfix: passing full context in recursive item preparation
+
+## [2-alpha50] - 2023-12-10
+- When vega/vega-lite data is given in CSV format, Clay will serve it in a separate CSV file alongside the generated HTML.
 
 ## [2-alpha49] - 2023-12-04
 - fixed broken welcome message on `start!`
@@ -40,7 +357,6 @@ All notable changes to this project will be documented in this file. This change
 - refactoring of parameter flow
 - displaying errors on the browser view
 - support for markdown files in books through `make!`
-
 
 ## [2-alpha41] - 2023-11-25
 - using `qmd` rather than `md` for Quarto files (to support R code blocks, etc.)
@@ -284,3 +600,4 @@ initial version of scittle viewer
 
 ## [1-alpha1] - 2022-04-08
 initial version
+mechanism

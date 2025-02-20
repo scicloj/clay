@@ -28,3 +28,9 @@
 /classes
 /target
 .clerk
+.clay.html
+/.clj-kondo/
+/temp/
+docs/*qmd
+_quarto.yml
+book

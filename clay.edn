@@ -1,13 +1,9 @@
-{:remote-repo {:git-url "https://github.com/scicloj/clay"
-               :branch "main"}
- :quarto {:format {:html {:toc true
-                          :toc-depth 4
-                          :theme :spacelab}
-                   :revealjs {:theme :solarized
-                              :navigation-mode :vertical
-                              :transition :slide
-                              :background-transition :fade
-                              :incremental true}}
-          :highlight-style :solarized
-          :code-block-background true
-          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}}
+{:favicon     "notebooks/favicon.ico"
+ :remote-repo {:git-url "https://github.com/scicloj/clay"
+               :branch  "main"}
+ :quarto      {:format            {:html {:theme [:cosmo "notebooks/custom.scss"]}}
+               :include-in-header {:text             "<meta property=\"og:image\" content=\"notebooks/images/Clay.svg.png\"/>
+<meta property=\"og:title\" content=\"Clay documentation\"/>
+<meta property=\"og:description\" content=\"A minimalistic Clojure tool for data visualization and literate programming\"/>
+"}}
+ :base-target-path "temp"}

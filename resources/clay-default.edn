@@ -1,15 +1,20 @@
 {:base-target-path "docs"
+ :subdirs-to-sync ["src" "notebooks"]
  :format [:html]
  :show true
+ :browse true
+ :live-reload false
  :run-quarto true
  :quarto {:format {:html {:toc true
                           :toc-depth 4
-                          :theme :spacelab}
+                          :theme :cosmo}
                    :revealjs {:theme :solarized
                               :navigation-mode :vertical
                               :transition :slide
                               :background-transition :fade
                               :incremental true}}
-          :highlight-style :solarized
-          :code-block-background true
-          :include-in-header {:text "<link rel = \"icon\" href = \"data:,\" />"}}}
+          :code-block-background true}
+ :kindly/options {:datatables {:paging false
+                               :scrollY 400
+                               :sPaginationType "full_numbers"
+                               :order []}}}

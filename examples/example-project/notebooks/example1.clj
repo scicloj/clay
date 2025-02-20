@@ -2,9 +2,11 @@
 
 ;; ## Setup
 
+;; Note that Clay does not need to be required
+;; in a namespace to be used as a notebook.
+
 (ns example1
-  (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.kindly.v4.kind :as kind]))
+  (:require [scicloj.kindly.v4.kind :as kind]))
 
 ;; ## Examples
 
@@ -24,13 +26,14 @@
   ;; Instead of using your editor setup and keybindings,
   ;; you can also use the Clay API directly:
 
+  (require '[scicloj.clay.v2.api :as clay])
+
   ;; Show the whole namespace
-  (clay/show-namespace! "notebooks/example1.clj")
+  (clay/make! {:source-path "notebooks/example1.clj"})
 
   ;; Show a given value
-  (clay/handle-value!
-   (kind/hiccup
-    [:div {:style
-           {:background-color "#eeddcc"}}
-     [:p "hello"]]))
+  (clay/make! {:single-value (kind/hiccup
+                              [:div {:style
+                                     {:background-color "#eeddcc"}}
+                               [:p "hello"]])})
   ,)

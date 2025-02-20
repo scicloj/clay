@@ -1,184 +1,541 @@
 ;; # Clay
 
-^{:kindly/hide-code? true
+^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
 [:img
  {:style {:width "100px"}
   :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
   :alt "Clay logo"}]
 
-;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly/) convention.
+;; ## About
+
+;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly-noted/kindly) convention.
+;; It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from Clojure source code and comments.
 ;;
-;; Also see the [Babashka Conf 2023 talk](https://www.youtube.com/watch?v=HvhMsv3iVGM).
-
-;; ## Status
-;; This project is still alpha-stage and changing. As of October 2023, it is going through extensive refactoring, mostly seeking simpler and leaner implemenation and API.
-;; Clay is developed in parallel and in coordination with [Claykind](https://github.com/timothypratley/claykind), a tool with similar goals which is build in a more thoughtful process, aiming at a more modular structure.
-
+;;
+;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
+;;
+;; **Artifact:** [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
+;;
+;; **Status:** The project has moved into Beta stage (March 2024).
+;;
+;;
 ;; ## Goals
 
 ;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
 ;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
 ;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
 
+;; ## Getting started
+
+;; Try it out by starting a Clojure command line
+;; ```bash
+;; clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"
+;; ```
+;; The `:mvn/version` may be changing frequently, copy the up-to-date version from
+;; [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay).
+
+;; Wait for a while, it will drop you at a prompt reading `user=> `,
+;; now let's require the clay namespace by typing
+;; ```clj
+;; (require '[scicloj.clay.v2.api :as clay])
+;; ```
+;; and then type:
+;; ```clj
+;; (clay/make! {:single-form '(+ 1 2 3)})
+;; ```
+;;
+;; The terminal now looks something like below:
+;; ```clj
+;; $ clj -Sdeps '{:deps {org.scicloj/clay {:mvn/version "2-beta23"}}}'
+;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.pom from clojars
+;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.jar from clojars
+;; Clojure 1.10.3
+;; user=> (require '[scicloj.clay.v2.api :as clay])
+;; nil
+;; user=> (clay/make! {:single-form '(+ 1 2 3)})
+;; serving Clay at http://localhost:1971/
+;; [[[[:wrote "docs/.clay.html"] nil]] nil [:watching-new-files #{}]]
+;; ```
+
+;; It will open `http://localhost:1971/` in your web browser
+;; (or use another port if 1971 is taken),
+;; and congratulations, you've just made your first Clay document!
+
+;; Now you can keep updating the document by trying different forms,
+;; like
+;; ```clj
+;; (clay/make! {:single-form '(str "hello" "world")})
+;; ```
+;; or whatever is interesting to you.
+;; Along the way, the web page will get updated automatically for you!
+
+;; At some point, you might find that you'd better write code in a .clj file.
+;; No problem, Clay can also render a document from a Clojure file.
+;; Here, we take [notebooks/demo.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj) as an example.
+;; Click the link and save the file to your computer as, say, `/tmp/demo.clj`,
+;; then you can render this Clojure namespace (or file if you prefer) by typing the following in the REPL:
+;; ```clj
+;; (clay/make! {:source-path "/tmp/demo.clj"})
+;; ```
+
+;;
+;; As your docs evolve, you may want to add more Clojure files, and manage them as a project.
+;; You can organize them as a normal Clojure project with a `deps.edn`,
+;; you can browse Clay's own [notebooks/](https://github.com/scicloj/clay/tree/main/notebooks)
+;; to get a sense.
+;;
+;; You can also:
+
+;; - Head over to [Examples](clay_book.examples.html) to see what features it provides and corresponding examples.
+;; - See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
+;; - See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+;;
+;; ## Projects using Clay
+
+;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
+;; - [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
+;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
+;; - [Wolframite documentation](https://scicloj.github.io/wolframite)
+;; - [Clay documentation](https://scicloj.github.io/clay/)
+;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
+;; - [Noj documentation](https://scicloj.github.io/noj/) - WIP
+;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
+;; - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
+;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
+;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
+;; - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
+
+;; ## Videos
+
+^{:kindly/hide-code true
+  :kindly/kind :kind/hiccup}
+(->> [["June 10th 2023"
+       "An early overview - babashka-conf"
+       "HvhMsv3iVGM"]
+      ["Dec. 1st 2023"
+       "Kindly & Clay overview - visual-tools group - see Daniel's & Tim's parts"
+       "DAQnvAgBma8"]
+      ["Dec. 12th 2023"
+       "Demo & Clay overview - London Clojurians - see Tim's part"
+       "skMMvxWjmNM"]
+      ["Dec. 16th 2023"
+       "Calva integration - datavis demo"
+       "X_SsjhmG5Ok"]
+      ["Dec. 17th 2023"
+       "CIDER integration - image processing demo"
+       "fd4kjlws6Ts"]
+      ["Dec. 17th 2023"
+       "Cursive integration, API, configuration - blogging demo"
+       "GsML75MtNXw"]
+      ["Jan. 24th 2025"
+       "Noj v2 - getting started - from raw data to a blog post (demonstrating CIDER integration and Quarto publishing)"
+       "vnvcKtHHMVQ"]]
+     reverse
+     (map (fn [[date title youtube-id]]
+            [:tr
+             [:td date]
+             [:td title]
+             [:td ^:kind/video {:youtube-id youtube-id}]]))
+     (into [:table]))
+
 ;; ## Setup
 
 ;; See [the example project](https://github.com/scicloj/clay/tree/main/examples/example-project) for a concrete example.
 
-;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations. This requires some setup at the your editor.
+;; To enjoy Clay's dynamic interaction, you also need to inform it about code evaluations.
+;; This requires some editor setup.
 ;;
-;; See the suggested setup for popular editors below. If your favourite editor is not supported yet, let us talk and make it work.
+;; To use [Quarto](https://quarto.org/)-related actions,
+;; it is necessary to have the Quarto CLI [installed](https://quarto.org/docs/get-started/) in your system.
+;;
+;; See the suggested setup for popular editors below.
+;; If your favourite editor is not supported yet, let us talk and make it work.
 
 ;; ### VSCode Calva
-;; **(coming soon)**
+
+;; With Clay in your classpath, [Calva](https://calva.io/) will discover [Custom REPL Commands](https://calva.io/custom-commands/).
+;;
+;; |key|name|function|
+;; |--|--|--|
+;; |n|`Clay make Namespace as HTML`|will generate an HTML rendering of the current namespace.
+;; |q|`Clay make Namespace as Quarto, then HTML`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.|
+;; |r|`Clay make Namespace as Quarto, then reveal.js`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.|
+;; |,|`Clay make current form as HTML`|will generate an HTML rendering of the current form, in the context of the current namespace.|
+
+;; To invoke a custom REPL command, press `ctrl+alt+space` followed by `n` to invoke **Clay make Namespace as HTML**.
+;; Pressing `ctrl+alt+space` followed by `space` opens a quick-pick list of custom REPL commands to invoke.
+
+;; Clay exports these custom command snippets via [resources/calva.exports/config.edn](https://github.com/scicloj/clay/blob/main/resources/calva.exports/config.edn).
+
+;; If you prefer a different keyboard shortcut, use the command palette to find **Preferences: Open Keyboard Shortcuts (JSON)** and add:
+
+;;```json
+;;    {
+;;        "key": "alt+x",
+;;        "command": "calva.runCustomREPLCommand",
+;;        "args": ",",
+;;        "when": "calva:connected && calva:keybindingsEnabled"
+;;    },
+;;    {
+;;        "key": "shift+alt+x",
+;;        "command": "calva.runCustomREPLCommand",
+;;        "args": "n",
+;;        "when": "calva:connected && calva:keybindingsEnabled"
+;;    },
+;; ```
+
+;; Now **alt+x** will **Clay make current form as HTML**,
+;; and **shift+alt+x** will **Clay make Namespace as HTML**.
+;; The "args" matches the "key" of the custom REPL commands.
 
 ;; ### Emacs CIDER
-;;
-;; Please load [clay.el](https://github.com/scicloj/clay/blob/main/clay.el) at your Emacs config.
-;;
-;; It offers the following functions, that you may wish to create keybindings for:
-;;
-;; |name|function|
-;; |--|--|
-;; |`clay/start`|start clay if not started yet|
-;; |`clay/make-ns-hmtl`|save clj buffer, render it as html, and show that in the browser view|
-;; |`clay/make-ns-quarto-html`|save clj buffer, render it as quarto, render that as html, and show that in the browser view|
-;; |`clay/make-ns-quarto-revealjs`|save clj buffer, render it as quarto, render that as a revealjs slideshow, and show that in the browser view|
-;; |`clay/make-last-sexp`|render the last s-expression|
-;; |`clay/make-defun-at-point`|render the [defun-at-point](https://www.emacswiki.org/emacs/ThingAtPoint)|
+
+;; See the [clay.el](https://github.com/scicloj/clay.el) package for the relevant interactive functions.
+
+;; ### Neovim Conjure
+
+;; See [Integrating with Clay and data visualisation tools](https://github.com/Olical/conjure/wiki/Integrating-with-Clay-and-data-visualisation-tools) at the Conjure Wiki.
 
 ;; ### IntelliJ Cursive
-;; **(coming soon)**
+;;
+;; Under preferences, search for "REPL Commands"
+;; (or use the menu IntelliJ -> Preferences -> Languages and Frameworks -> Clojure -> REPL Commands)
+;;
+;; Add a global command, and edit it with these settings:
+;;
+;; **Name:** Send form to Clay\
+;; **Execution:** Command
+;;
+^{:kind/code true
+  :kindly/hide-code true}
+["(do (require '[scicloj.clay.v2.api :as clay])
+    (clay/make! {:single-form '~form-before-caret
+                 :source-path [\"~file-path\"]}))"]
+;;
+;; You might also like to create a command to compile the namespace:
+;;
+^{:kind/code true
+  :kindly/hide-code true}
+["(do (require '[scicloj.clay.v2.api :as clay])
+    (clay/make! {:source-path [\"~file-path\"]}))"]
+;;
+;; Or a `top-level-form` (replace `form-before-caret` with `top-level-form`).
+;;
+;; You can then add keybindings under Preferences -> Keymap for the new commands.
+;;
+;; For more information about commands, see the Cursive documentation on [REPL commands and substitutions](https://cursive-ide.com/userguide/repl.html#repl-commands).
+
+;; ## Example notebook namespace
+
+;; This notebook is created by [a Clojure namespace](https://github.com/scicloj/clay/blob/main/notebooks/index.clj).
+;; Here is the namespace definition and a few examples of what such a namespace may contain.
+
+(ns index
+  (:require
+   [scicloj.kindly.v4.api :as kindly]
+   [scicloj.kindly.v4.kind :as kind]
+   [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
+   [scicloj.clay.v2.quarto.themes :as quarto.themes]
+   [scicloj.metamorph.ml.toydata :as toydata]
+   [scicloj.tableplot.v1.hanami :as hanami]
+   [tablecloth.api :as tc]
+   [clojure.string :as str]))
+
+;; A Hiccup spec:
+(kind/hiccup
+ [:div {:style {:background "#efe9e6"
+                :border-style :solid}}
+  [:ul
+   [:li "one"]
+   [:li "two"]
+   [:li "three"]]])
+
+;; A dataset using [Tablecloth](https://scicloj.github.io/tablecloth/):
+(-> {:x (range 5)
+     :y (repeatedly 5 rand)}
+    tc/dataset
+    (tc/set-dataset-name "my dataset"))
+
+;; A plot using [Tableplot](https://github.com/scicloj/tableplot):
+(-> (toydata/iris-ds)
+    (hanami/plot hanami/rule-chart
+                 {:=x :sepal_width
+                  :=x2 :sepal_length
+                  :=y :petal_width
+                  :=y2 :petal_length
+                  :=color :species
+                  :=color-type :nominal
+                  :=mark-size 3
+                  :=mark-opacity 0.2}))
 
 ;; ## API
+
+(require '[scicloj.clay.v2.api :as clay])
 
 ;; The entry point of the Clay API  is the `scicloj.clay.v2.api/make!` function.
 ;; Here are some usage examples.
 
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as HTML
+;; and show it at the browser
+;; (opening a browser tab if this is the first
+;; time using Clay in the session):
 (comment
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/index.clj"`
-  ;; as HTML
-  ;; and show it at the browser.
   (clay/make! {:format [:html]
-               :source-path "notebooks/index.clj"})
+               :source-path "notebooks/index.clj"}))
 
-  ;; Do the same as above
-  ;; (since `:format [:html]` is the default).
-  (clay/make! {:source-path "notebooks/index.clj"})
+;; Do the same as above by default
+;; (since `:format [:html]` is the default):
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/index.clj"`
-  ;; as HTML
-  ;; and do not show it at the browser.
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as HTML
+;; and do not open a browser tab even if this
+;; is the first time using Clay in the session:
+(comment
   (clay/make! {:source-path "notebooks/index.clj"
-               :show false})
+               :browse false}))
 
-  ;; Evaluate and render
-  ;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
-  ;; as HTML
-  ;; and do not show it at the browser.
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as HTML
+;; and do not show it at the browser:
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :show false}))
+
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; and use the favicon at `"notebooks/favicon.ico"`
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :favicon "notebooks/favicon.ico"}))
+
+;; Evaluate and render
+;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
+;; as HTML
+;; and do not show it at the browser:
+(comment
   (clay/make! {:source-path ["notebooks/slides.clj"
                              "notebooks/index.clj"]
-               :show false})
+               :show false}))
 
-  ;; Evaluate and render a single form
-  ;; in the context of the namespace in `"notebooks/index.clj"`
-  ;; as HTML
-  ;; and show it at the browser.
+;; Evaluate and render
+;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
+;; as HTML
+;; and start watching these files for live reload:
+;; (experimental)
+(comment
+  (clay/make! {:source-path ["notebooks/slides.clj"
+                             "notebooks/index.clj"]
+               :live-reload true}))
+
+
+;; Evaluate and render a single form
+;; in the context of the namespace in `"notebooks/index.clj"`
+;; as HTML
+;; and show it at the browser:
+(comment
   (clay/make! {:source-path "notebooks/index.clj"
-               :single-form '(kind/cytoscape
-                              [{:style {:width "300px"
-                                        :height "300px"}}
-                               cytoscape-example])})
+               :single-form '(+ 1 2)}))
 
-  ;; Evaluate and render a single form
-  ;; in the context of the current namespace (`*ns*`)
-  ;; as HTML
-  ;; and show it at the browser.
-  (clay/make! {:single-form '(kind/cytoscape
-                              [{:style {:width "300px"
-                                        :height "300px"}}
-                               cytoscape-example])})
+;; Evaluate and render a single form
+;; in the context of the current namespace (`*ns*`)
+;; as HTML
+;; and show it at the browser:
+(comment
+  (clay/make! {:single-form '(+ 1 2)}))
 
-  ;; Render a single value
-  ;; as HTML
-  ;; and show it at the browser.
-  (clay/make! {:single-value (kind/cytoscape
-                              [{:style {:width "300px"
-                                        :height "300px"}}
-                               cytoscape-example])})
+;; Render a single value
+;; as HTML
+;; and show it at the browser:
+(comment
+  (clay/make! {:single-value 3}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/index.clj"`
-  ;; as a Quarto qmd file
-  ;; then, using Quarto, render that file as HTML
-  ;; and show it at the browser.
+;; Render a single value
+;; as HTML
+;; and process the resulting HTML
+;; using a custom function.
+(comment
+  (clay/make! {:single-value 3333
+               :post-process (fn [html]
+                               (-> html
+                                   (str/replace #"3333" "4444")))}))
+
+;; Render a namespace
+;; as HTML
+;; and hide the UI banner in the browser view.
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :hide-ui-header true}))
+
+;; Render a namespace
+;; as HTML
+;; and hide the information line at the bottom of the page.
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :hide-info-line true}))
+
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as a Quarto qmd file
+;; then, using Quarto, render that file as HTML
+;; and show it at the browser:
+(comment
   (clay/make! {:format [:quarto :html]
-               :source-path "notebooks/index.clj"})
+               :source-path "notebooks/index.clj"}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/index.clj"`
-  ;; as a Quarto qmd file
-  ;; and show it at the browser.
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as a Quarto qmd file
+;; and show it at the browser:
+;; (note the current browser view of this format
+;; it not so sophisticated and lacks live-reload
+;; on page updates).
+(comment
   (clay/make! {:format [:quarto :html]
                :source-path "notebooks/index.clj"
-               :run-quarto false})
+               :run-quarto false}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/slides.clj"`
-  ;; as a Quarto qmd file
-  ;; (using its namespace-specific config from the ns metadata)
-  ;; then, using Quarto, render that file as HTML
-  ;; and show it at the browser.
+;; Evaluate and render
+;; the namespace in `"notebooks/slides.clj"`
+;; as a Quarto qmd file
+;; (using its namespace-specific config from the ns metadata)
+;; then, using Quarto, render that file as HTML
+;; and show it at the browser:
+(comment
   (clay/make! {:format [:quarto :html]
-               :source-path "notebooks/slides.clj"})
+               :source-path "notebooks/slides.clj"}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/slides.clj"`
-  ;; as a Quarto qmd file
-  ;; (using its namespace-specific config from the ns metadata)
-  ;; then, using Quarto, render that file as a reveal.js slideshow
-  ;; and show it at the browser.
+;; Evaluate and render
+;; the namespace in `"notebooks/slides.clj"`
+;; as a Quarto qmd file
+;; (using its namespace-specific config from the ns metadata)
+;; then, using Quarto, render that file as a reveal.js slideshow
+;; and show it at the browser:
+(comment
   (clay/make! {:format [:quarto :revealjs]
-               :source-path "notebooks/slides.clj"})
+               :source-path "notebooks/slides.clj"}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"notebooks/index.clj"`
-  ;; as a Quarto qmd file
-  ;; with a custom Quarto config
-  ;; then, using Quarto, render that file as HTML
-  ;; and show it at the browser.
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as a Quarto qmd file
+;; with a custom Quarto config
+;; then, using Quarto, render that file as HTML
+;; and show it at the browser:
+(comment
   (clay/make! {:format [:quarto :html]
                :source-path "notebooks/index.clj"
-               :quarto {:highlight-style :nord}})
+               :quarto {:highlight-style :nord
+                        :format {:html {:theme :journal}}}}))
 
-  ;; Evaluate and render
-  ;; the namespace in `"index.clj"`
-  ;; under the `"notebooks"` directory
-  ;; as HTML
-  ;; and show it at the browser.
-  (clay/make! {:base-source-path "notebooks/"
-               :source-path "index.clj"})
-
-  ;; Create a Quarto book
-  ;; (to be documented better soon).
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
+;; as a Quarto qmd file
+;; with a custom Quarto config
+;; where the higlight style is fetched from
+;; the `scicloj.clay.v2.quarto.highlight-styles` namespace,
+;; and the theme is fetched from
+;; the `scicloj.clay.v2.quarto.themes` namespace,
+;; then, using Quarto, render that file as HTML
+;; and show it at the browser:
+(comment
+  (require '[scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
+           '[scicloj.clay.v2.quarto.themes :as quarto.themes])
   (clay/make! {:format [:quarto :html]
-          :base-source-path "notebooks"
-          :source-path ["index.clj"
-                        "chapter.clj"]
-          :base-target-path "book"
-          :show false
-          :run-quarto false
-          :book {:title "Book Example"}})
+               :source-path "notebooks/index.clj"
+               :quarto {:highlight-style quarto.highlight-styles/nord
+                        :format {:html {:theme quarto.themes/journal}}}}))
 
-  ,)
+;; Evaluate and render
+;; the namespace in `"index.clj"`
+;; under the `"notebooks"` directory
+;; as HTML
+;; and show it at the browser:
+(comment
+  (clay/make! {:base-source-path "notebooks/"
+               :source-path "index.clj"}))
 
-;; ## Configutation
+;; Create a Quarto book
+;; with a default generated index page:
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path ["chapter.clj"
+                             "another_chapter.md"
+                             "a_chapter_with_R_code.Rmd"
+                             "test.ipynb"]
+               :base-target-path "book"
+               :book {:title "Book Example"}
+               ;; Empty the target directory first:
+               :clean-up-target-dir true}))
+
+
+;; Create a Quarto book
+;; with a specified favicon:
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path ["index.clj"
+                             "chapter.clj"
+                             "another_chapter.md"]
+               :base-target-path "book"
+               :book {:title "Book Example"
+                      :favicon "notebooks/favicon.ico"}
+               ;; Empty the target directory first:
+               :clean-up-target-dir true}))
+
+;; Create a Quarto book
+;; with [book parts](https://quarto.org/docs/books/book-structure.html#parts-appendices):
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path [{:part "Part A"
+                              :chapters ["index.clj"
+                                         "chapter.clj"]}
+                             {:part "Part B"
+                              :chapters ["another_chapter.md"]}]
+               :base-target-path "book"
+               :book {:title "Book Example"}
+               ;; Empty the target directory first:
+               :clean-up-target-dir true}))
+
+;; Reopen the Clay view in the browser
+;; (in case you closed the browser tab previously opened):
+
+(comment
+  (clay/browse!))
+
+;; ### Live reload
+;; (experimental)
+
+;; Clay can listen to file changes (using [nextjournal/beholder](https://github.com/nextjournal/beholder))
+;; and respond with remaking the page.
+
+;; See the example above with `:live-reload true`.
+
+;; One caveat: You may not want to use this if the containing directory of this file
+;; has a lot of files and/or sub-directories, as it may take quite a long time (e.g. ~1 minute)
+;; for beholder to watch the containing directory for file changes.
+
+;; ### Hiccup output
+
+;; (experimental 🛠)
+
+;; Render a notebook in Hiccup format and return the resulting Hiccup structure:
+
+(comment
+  (clay/make-hiccup {:source-path "notebooks/index.clj"}))
+
+;; ## Configuration
 
 ;; Calls to the `make!` function are affected by various parameters
 ;; which collected as one nested map.
-;; This map is the result of merging four sources:
+;; This map is the result of deep-merging four sources:
 ;;
 ;; - the default configuration: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
 ;;
@@ -190,57 +547,36 @@
 ;;
 ;; Here are some of the parameters worth knowing about:
 ;;
-;; **(to be documented soon)**
+;; | Key | Purpose | Example |
+;; |-----|---------|---------|
+;; | `:source-path` | files to render | `["notebooks/index.clj"]` |
+;; | `:title` | sets the HTML title that appears in the browser tab bar | `"My Title"` |
+;; | `:favicon` | sets a page favicon | `"favicon.ico"` |
+;; | `:show` | when true (the default) updates the browser view (starts the HTML server if necessary) | `false` |
+;; | `:browse` | when true (the default) opens a new browser tab when the HTML server is started for the first time | `false` |
+;; | `:single-form` | render just one form | `(inc 1)` |
+;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
+;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
+;; | `:base-target-path` | the output directory |  `"temp"` |
+;; | `:base-source-path` | where to find `:source-path` | `"notebooks"` |
+;; | `:clean-up-target-dir` | delete (!) target directory before repopulating it  | `true` |
+;; | `:remote-repo` | linking to source | `{:git-url "https://github.com/scicloj/clay" :branch  "main"}` |
+;; | `:hide-info-line` | hiding the source reference at the bottom | `true` |
+;; | `:hide-ui-header` | hiding the ui info at the top | `true` |
+;; | `:post-process` | post-processing the resulting HTML | `#(str/replace "#3" "4")` |
+;; | `:live-reload` | whether to make and live reload the HTML automatically after its source file is changed | `true` |
 
-;; ## Starting a Clay namespace
-
-;; Now, we can write a namespace and play with Clay.
-
-(ns index
-  (:require [scicloj.clay.v2.api :as clay]
-            [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly.v4.kind :as kind]))
-
-(defonce memoized-slurp
-  (memoize slurp))
-
-;; ## A few useful actions
-
-;; Showing the whole namespace:
-(comment
-  (clay/show-doc! "notebooks/index.clj"))
-
-;; Writing the document:
-(comment
-  (clay/show-doc-and-write-html!
-   "notebooks/index.clj"
-   {:toc? true}))
-
-;; Reopening the Clay view in the browser (in case you closed the browser tab previously opened by `clay/start!`)
-(comment
-  (clay/browse!))
-
-;; These can be conveniently bound to functions and keys at your editor (to b documented soon).
-
-;; ## Interaction
-
-;; Clay responds to user evaluations by displaying the result visually.
-
-(+ 1111 2222)
-
-;; In Emacs CIDER, after evaluation of a form (or a region),
-;; the browser view should show the evaluation result.
-
-;; In VSCode Calva, a similar effect can be achieved
-;; using the dedicated command and keybinding defined above.
+;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
+;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
+;; When publishing a static page, you may wish to target a `docs` directory by setting `:base-target-path "docs"`
+;; in your call to `clay/make!`.
+;; Creating a dev namespace is a good way to invoke a different configuration for publishing.
 
 ;; ## Kinds
 
-;; The way things should be visualized is determined by the advice of
-;; [Kindly](https://github.com/scicloj/kindly).
-
-;; In this namespace we demonstrate Kindly's default advice.
-;; User-defined Kindly advices should work as well.
+;; The way things should be visualized is determined by the
+;; [Kindly](https://scicloj.github.io/kindly-noted/kindly)
+;; specification.
 
 ;; Kindly advises tools (like Clay) about the kind of way a given context
 ;; should be displayed, by assigning to it a so-called kind.
@@ -248,374 +584,77 @@
 ;; Please refer to the Kindly documentation for details about specifying
 ;; and using kinds.
 
+;; In this documentation we demonstrate Kindly's default advice.
+;; [User-defined](https://scicloj.github.io/kindly-noted/kindly_advice.html#extending) Kindly [advices](https://scicloj.github.io/kindly-noted/kindly_advice.html) should work as well.
+
 ;; ## Examples
 
-;; ### Plain values
+;; See the dedicated 📖 [Examples chapter](./clay_book.examples.html) 📖 of this book.
 
-;; By default, when there is no kind information provided by Kindly,
-;; values are simply pretty-printed.
+;; ## Fragments
 
-(+ 4 5)
+;; `kind/fragment` is a special kind. It expects a sequential value and generates multiple items, of potentially multiple kinds, from its elements.
 
-(str "abcd" "efgh")
+(->> ["purple" "darkgreen" "brown"]
+     (mapcat (fn [color]
+               [(kind/md (str "### subsection: " color))
+                (kind/hiccup [:div {:style {:background-color color
+                                            :color "lightgrey"}}
+                              [:big [:p color]]])]))
+     kind/fragment)
 
-;; ### Hidden
+(->> (range 3)
+     kind/fragment)
 
-;; Values of :kind/hidden are not shown.
+;; Importantly, markdown subsections affect the Quarto table of contents.
 
-(kind/hidden 9)
+;; ## Functions
 
-;; ### Hiccup
+;; `kind/fn` is a special kind. It is displayed by first evaluating
+;; a given function and arguments, then proceeding recursively
+;; with the resulting value.
 
-;; [Hiccup](https://github.com/weavejester/hiccup), a popular Clojure way to represent HTML, can be specified by kind:
+;; The function can be specified through the Kindly options.
+(kind/fn {:x 1
+          :y 2}
+  {:kindly/f (fn [{:keys [x y]}]
+               (+ x y))})
 
-(kind/hiccup
- [:ul
-  [:li [:p "hi"]]
-  [:li [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
-                        {:color "#7F5F3F"}}
-                    "hello"]]]]])
+(kind/fn {:my-video-src "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
+  {:kindly/f (fn [{:keys [my-video-src]}]
+               (kind/video
+                {:src my-video-src}))})
 
-;; As we can see, this kind is displayed by converting Hiccup to HTML.
+;; If the value is a vector, the function is the first element, and the arguments are the rest.
 
-;; ### Reagent
+(kind/fn
+  [+ 1 2])
 
-(kind/reagent
- ['(fn [numbers]
-     [:p {:style {:background "#d4ebe9"}}
-      (pr-str (map inc numbers))])
-  (vec (range 40))])
+;; If the value is a map, the function is held at the key `:kindly/f`, and the argument is the map.
 
-;; From the [reagent tutorial](https://reagent-project.github.io/):
-(kind/reagent
- ['(fn []
-     (let [*click-count (reagent.core/atom 0)]
-       (fn []
-         [:div
-          "The atom " [:code "*click-count"] " has value: "
-          @*click-count ". "
-          [:input {:type "button" :value "Click me!"
-                   :on-click #(swap! *click-count inc)}]])))])
+(kind/fn
+  {:kindly/f (fn [{:keys [x y]}]
+               (+ x y))
+   :x 1
+   :y 2})
 
-;; [d3-require](https://github.com/d3/d3-require) can be used to provide js dependencies:
+;; The kind of the value returned by the function is respected.
+;; For example, here are examples with a function returning `kind/dataset`.
 
-(kind/reagent
- ['(fn []
-     (reagent.core/with-let
-       [*result (reagent.core/atom nil)]
-       (-> js/d3
-           (.require "d3-array")
-           (.then (fn [d3-array]
-                    (reset! *result
-                            (-> d3-array
-                                (.range 9)
-                                pr-str)))))
-       [:pre @*result]))])
+(kind/fn
+  {:x (range 3)
+   :y (repeatedly 3 rand)}
+  {:kindly/f tc/dataset})
 
-;; ### HTML
+(kind/fn
+  [tc/dataset
+   {:x (range 3)
+    :y (repeatedly 3 rand)}])
 
-;; Raw html can be represented as a kind too:
-
-(kind/html "<div style='height:40px; width:40px; background:purple'></div> ")
-
-(kind/html
- "
-<svg height=100 width=100>
-<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />
-</svg> ")
-
-
-;; ### Markdown
-
-;; Markdown text (a vector of strings) can be handled using a kind too.
-
-(kind/md
- "This is [markdown](https://www.markdownguide.org/).")
-
-(kind/md
- ["
-* This is [markdown](https://www.markdownguide.org/).
-  * *Isn't it??*"
-  "
-* Here is **some more** markdown."])
-
-;; When rendering through Quarto, LaTeX formulae are supported as well.
-
-(kind/md
- "Let $x=9$. Then $$x+11=20$$")
-
-;; ### Images
-
-;; Java BufferedImage objects are displayed as images.
-
-(import javax.imageio.ImageIO
-        java.net.URL)
-
-(defonce clay-image
-  (->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-       (URL.)
-       (ImageIO/read)))
-
-clay-image
-
-;; ### Plain data structures
-
-;; Plain data structures (lists and sequnces, vectors, sets, maps)
-;; are pretty printed if there isn't any value inside
-;; which needs to be displayed in special kind of way.
-
-(def people-as-maps
-  (->> (range 29)
-       (mapv (fn [i]
-               {:preferred-language (["clojure" "clojurescript" "babashka"]
-                                     (rand-int 3))
-                :age (rand-int 100)}))))
-
-(def people-as-vectors
-  (->> people-as-maps
-       (mapv (juxt :preferred-language :age))))
-
-(take 5 people-as-maps)
-
-(take 5 people-as-vectors)
-
-(->> people-as-vectors
-     (take 5)
-     set)
-
-;; When something inside needs to be displayed in a special kind of way,
-;; the data structures are printed in a way that makes that clear.
-
-(def nested-structure-1
-  {:vector-of-numbers [2 9 -1]
-   :vector-of-different-things ["hi"
-                                (kind/hiccup
-                                 [:big [:big "hello"]])]
-   :map-of-different-things {:markdown (kind/md ["*hi*, **hi**"])
-                             :number 9999}
-   :hiccup (kind/hiccup
-            [:big [:big "bye"]])})
-
-nested-structure-1
-
-
-;; ### Pretty printing
-
-;; The `:kind/pprint` kind  makes sure to simply pretty-print values:
-(kind/pprint nested-structure-1)
-
-;; ### Datasets
-
-;; [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) datasets currently use the default printing of the library,
-
-;; Let us create such a dataset using [Tablecloth](https://github.com/scicloj/tablecloth).
-
-(require '[tablecloth.api :as tc])
-
-(-> {:x (range 6)
-     :y [:A :B :C :A :B :C]}
-    tc/dataset)
-
-(-> {:x [1 [2 3] 4]
-     :y [:A :B :C]}
-    tc/dataset)
-
-(-> [{:x 1 :y 2 :z 3}
-     {:y 4 :z 5}]
-    tc/dataset)
-
-(-> people-as-maps
-    tc/dataset)
-
-;; ### Tables
-
-;; The `:kind/table` kind can be handy for an interactive table view.
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-vectors people-as-vectors})
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-maps people-as-maps})
-
-(kind/table
- {:column-names [:preferred-language :age]
-  :row-maps (take 5 people-as-maps)})
-
-(-> people-as-maps
-    tc/dataset
-    kind/table)
-
-;; ### [Vega](https://vega.github.io/vega/) and [Vega-Lite](https://vega.github.io/vega-lite/)
-
-(defn vega-lite-point-plot [data]
-  (-> {:data {:values data},
-       :mark "point"
-       :encoding
-       {:size {:field "w" :type "quantitative"}
-        :x {:field "x", :type "quantitative"},
-        :y {:field "y", :type "quantitative"},
-        :fill {:field "z", :type "nominal"}}}
-      kind/vega-lite))
-
-(defn random-data [n]
-  (->> (repeatedly n #(- (rand) 0.5))
-       (reductions +)
-       (map-indexed (fn [x y]
-                      {:w (rand-int 9)
-                       :z (rand-int 9)
-                       :x x
-                       :y y}))))
-
-(defn random-vega-lite-plot [n]
-  (-> n
-      random-data
-      vega-lite-point-plot))
-
-(random-vega-lite-plot 9)
-
-;; ### Cytoscape
-
-(def cytoscape-example
-  {:elements {:nodes [{:data {:id "a" :parent "b"} :position {:x 215 :y 85}}
-                      {:data {:id "b"}}
-                      {:data {:id "c" :parent "b"} :position {:x 300 :y 85}}
-                      {:data {:id "d"} :position {:x 215 :y 175}}
-                      {:data {:id "e"}}
-                      {:data {:id "f" :parent "e"} :position {:x 300 :y 175}}]
-              :edges [{:data {:id "ad" :source "a" :target "d"}}
-                      {:data {:id "eb" :source "e" :target "b"}}]}
-   :style [{:selector "node"
-            :css {:content "data(id)"
-                  :text-valign "center"
-                  :text-halign "center"}}
-           {:selector "parent"
-            :css {:text-valign "top"
-                  :text-halign "center"}}
-           {:selector "edge"
-            :css {:curve-style "bezier"
-                  :target-arrow-shape "triangle"}}]
-   :layout {:name "preset"
-            :padding 5}})
-
-(kind/cytoscape
- cytoscape-example)
-
-(kind/cytoscape
- [{:style {:width "100px"
-           :height "100px"}}
-  cytoscape-example])
-
-;; ### ECharts
-
-;; This example is taken from Apache ECharts' [Getting Started](https://echarts.apache.org/handbook/en/get-started/).
-
-(def echarts-example
-  {:title {:text "Echarts Example"}
-   :tooltip {}
-   :legend {:data ["sales"]}
-   :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
-                  "Pants", "Heels", "Socks"]}
-   :yAxis {}
-   :series [{:name "sales"
-             :type "bar"
-             :data [5 20 36
-                    10 10 20]}]})
-
-(kind/echarts
- echarts-example)
-
-(kind/echarts
- [{:style {:width "500px"
-           :height "200px"}}
-  echarts-example])
-
-
-;; ### Plotly
-(kind/plotly
- {:data [{:x [0 1 3 2]
-          :y [0 6 4 5]
-          :z [0 8 9 7]
-          :type :scatter3d
-          :mode :lines+markers
-          :opacity 0.5
-          :line {:width 5}
-          :marker {:size 4
-                   :colorscale :Viridis}}]})
-
-;; ### Leaflet
-
-;; (experimental)
-
-;; This example was adapted from [the Leaflet website](https://leafletjs.com/).
-
-(kind/reagent
- ^{:deps [:leaflet]}
- ['(fn []
-     [:div
-      [:div {:style {:height "200px"}
-             :ref (fn [el]
-                    (let [m (-> js/L
-                                (.map el)
-                                (.setView (clj->js [51.505 -0.09])
-                                          13))]
-                      (-> js/L
-                          (.tileLayer "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                      (clj->js
-                                       {:maxZoom 19
-                                        :attribution "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"}))
-                          (.addTo m))
-                      (-> js/L
-                          (.marker (clj->js [51.5 -0.09]))
-                          (.addTo m)
-                          (.bindPopup "A pretty CSS popup.<br> Easily customizable.")
-                          (.openPopup))))}]])])
-
-;; ### 3DMol.js
-
-;; Embedding a 3Dmol Viewer ([original example](https://3dmol.csb.pitt.edu/doc/tutorial-embeddable.html)):
-
-(kind/reagent
- ^{:deps [:three-d-mol]}
- ['(fn [{:keys [data-pdb]}]
-     [:div {:style {:height "400px"
-                    :width "400px"
-                    :position :relative}
-            :class "viewer_3Dmoljs"
-            :data-pdb data-pdb
-            :data-backgroundcolor "0xffffff"
-            :data-style "stick"
-            :data-ui true}])
-  {:data-pdb "2POR"}])
-
-;; Using 3Dmol within your code (inspired by [these examples](https://3dmol.csb.pitt.edu/doc/tutorial-code.html)):
-
-(kind/reagent
- ^{:deps [:three-d-mol]}
- ['(fn [{:keys [pdb-data]}]
-     [:div
-      {:style {:width "100%"
-               :height "500px"
-               :position "relative"}
-       :ref (fn [el]
-              (let [config (clj->js
-                            {:backgroundColor "0xffffff"})
-                    viewer (.createViewer js/$3Dmol el)]
-                (.setViewStyle viewer (clj->js
-                                       {:style "outline"}))
-                (.addModelsAsFrames viewer pdb-data "pdb")
-                (.addSphere viewer (clj->js
-                                    {:center {:x 0
-                                              :y 0
-                                              :z 0}
-                                     :radius 5
-                                     :color "green"
-                                     :alpha 0.2}))
-                (.zoomTo viewer)
-                (.render viewer)
-                (.zoom viewer 0.8 2000)))}])
-  {:pdb-data (memoized-slurp "https://files.rcsb.org/download/2POR.pdb")}])
+(kind/fn
+  {:kindly/f tc/dataset
+   :x (range 3)
+   :y (repeatedly 3 rand)})
 
 ;; ## Delays
 
@@ -629,85 +668,17 @@ nested-structure-1
   (Thread/sleep 500)
   (+ 1 2))
 
-;; ## Embedded Portal
-
-(kind/portal {:x (range 3)})
-
-(kind/portal
- [(kind/hiccup [:img {:height 50 :width 50
-                      :src "https://clojure.org/images/clojure-logo-120b.png"}])
-  (kind/hiccup [:img {:height 50 :width 50
-                      :src "https://raw.githubusercontent.com/djblue/portal/fbc54632adc06c6e94a3d059c858419f0063d1cf/resources/splash.svg"}])])
-
-(kind/portal
- [(kind/hiccup [:big [:big "a plot"]])
-  (random-vega-lite-plot 9)])
-
-;; ## Nesting kinds in Hiccup (WIP)
-
-(kind/hiccup
- [:div {:style {:background "#f5f3ff"
-                :border "solid"}}
-
-  [:hr]
-  [:h3 [:code ":kind/md"]]
-  (kind/md "*some text* **some more text**")
-
-  [:hr]
-  [:h3 [:code ":kind/code"]]
-  (kind/code "{:x (1 2 [3 4])}")
-
-  [:hr]
-  [:h3 [:code "kind/dataset"]]
-  (tc/dataset {:x (range 33)
-               :y (map inc (range 33))})
-
-  [:hr]
-  [:h3 [:code "kind/table"]]
-  (kind/table
-   (tc/dataset {:x (range 33)
-                :y (map inc (range 33))}))
-
-  [:hr]
-  [:h3 [:code "kind/vega"]]
-  (random-vega-lite-plot 9)
-
-
-  [:hr]
-  [:h3 [:code "kind/reagent"]]
-  (kind/reagent
-   ['(fn [numbers]
-       [:p {:style {:background "#d4ebe9"}}
-        (pr-str (map inc numbers))])
-    (vec (range 40))])])
-
-
-;; ## Nesting kinds in Tables (WIP)
-
-(kind/table
- {:column-names [:x :y]
-  :row-vectors [[(kind/md "*some text* **some more text**")
-                 (kind/code "{:x (1 2 [3 4])}")]
-                [(tc/dataset {:x (range 3)
-                              :y (map inc (range 3))})
-                 (random-vega-lite-plot 9)]]})
-
-;; ## More nesting examples
-
-{:plot (random-vega-lite-plot 9)
- :dataset (tc/dataset {:x (range 3)
-                       :y (repeatedly 3 rand)})}
-
-[(random-vega-lite-plot 9)
- (tc/dataset {:x (range 3)
-              :y (repeatedly 3 rand)})]
-
 ;; ## Referring to files
 
-;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`.
+;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`. By default, all files except of these directories, except for Clojure files, are copied alongside the HTML target.
+;;
+;; This default can be overridden using the `:subdirs-to-sync` config option. E.g., `:subdirs-to-sync ["notebooks" "data"]` will copy files from the `"notebooks"` and `"data"` directories, but not from `"src"`. Clojure source files (`.clj`, etc.) are not synched.
 
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
+
+(kind/image
+ {:src "notebooks/images/Clay.svg.png"})
 
 (kind/vega-lite
  {:data {:url "notebooks/datasets/iris.csv"},
@@ -721,8 +692,135 @@ nested-structure-1
              :color {:field "species", :type "nominal"}}
   :background "floralwhite"})
 
-;; ## Coming soon
+;; ## Hiding code
 
-;; In the past, Clay used to support various data visualization libraries such as MathBox.
+;; By default, a Clay notebook shows both the code and the result of an evaluated form.
+;; Here are a few ways one may hide the code:
 ;;
-;; These have been disabled in a recent refactoring (Oct. 2023) and will be brought back soon.
+;; 1. Add the metadata `:kindly/hide-code true` to the form (e.g., by preceding it with `^:kindly/hide-code`).
+;; 2. Add the metadata `:kindly/hide-code true` to the value.
+;; 3. Globally define certain kinds (e.g., `:kind/md`, `:kind/hiccup`) to always hide code (on project level or namespace level) by adding theme as a set to the project config or namespace config, e.g., `:kindly/options {:kinds-that-hide-code #{:kind/md :kind/hiccup}}`.
+
+;; ## Test generation
+
+;; (experimental 🛠)
+
+(+ 1 2)
+
+(kind/test-last [> 2.9])
+
+^kind/test-last
+[> 2.9]
+
+(kindly/check > 2.9)
+
+;; We generate tests checking whether
+;; this last value is greater than 2.9.
+;; We can do it in a few ways.
+
+;; We include the test annotations in the markdown text,
+;; since the annotations themselves are invisible.
+
+(kindly/hide-code
+ (kind/code
+  "(kind/test-last [> 2.9])
+
+^kind/test-last
+[> 2.9]
+
+(kindly/check > 2.9)"))
+
+;; See the generated [test/index_generated_test.clj](https://github.com/scicloj/clay/blob/main/test/index_generated_test.clj).
+
+;; For a detailed example using this mechanism, see [the source](https://github.com/scicloj/clojisr/blob/master/notebooks/clojisr/v1/tutorials/main.clj) of the [ClojisR tutorial](https://scicloj.github.io/clojisr/clojisr.v1.tutorials.main.html).
+
+;; ## CSS classes and styles
+;; ### Styling HTML visualizations
+
+;; Clay will transfer CSS classes and styles present in `:kindly/options` metadata to the visualization.
+;; The recommended way to prepare `:kindly/options` metadata is through the `kind` api:
+
+(kind/table {:column-names ["A" "B" "C"]
+             :row-vectors  [[1 2 3] [4 5 6]]}
+            {:class "table-responsive"
+             :style {:background "#f8fff8"}})
+
+;; See also the Kindly documentation on [passing options](https://scicloj.github.io/kindly-noted/kindly#passing-options).
+;; Optional class and style attributes will only be applied to hiccup elements (not markdown content).
+
+;; ### Styling Markdown content
+
+;; Quarto uses pandoc attributes (see https://quarto.org/docs/authoring/markdown-basics.html#sec-divs-and-spans) to attach classes.
+;; ```
+;; ::: {.alert .alert-primary}
+;; Example alert
+;; :::
+;; ```
+;; ::: {.alert .alert-primary}
+;; Example alert
+;; :::
+;; | A | B | C |
+;; |---|---|---|
+;; | 1 | 2 | 3 |
+;; | 4 | 5 | 6 |
+;; : This table is responsive {.responsive}
+
+;; Markdown styling is not currently handled when rendering direct to HTML.
+
+;; ## Varying kindly options
+
+;; (experimental)
+
+;; `kindly/merge-options!` varies the options to affect the notes coming below.
+;; Let us use it to present code and value horizontally.
+;; By default, calls to `kindly/merge-options!` are hidden.
+;; In this document, we use `#(kindly/hide-code % false)` to make them visible.`
+
+(kindly/hide-code
+ (kindly/merge-options! {:code-and-value :horizontal})
+ false)
+
+(+ 1 2)
+
+(+ 3 4)
+
+;; Let us change it back.
+
+(kindly/hide-code
+ (kindly/merge-options! {:code-and-value :vertical})
+ false)
+
+(+ 1 2)
+
+(+ 3 4)
+
+;; Let us now change the background color.
+
+(kindly/hide-code
+ (kindly/merge-options! {:style {:background-color "#ccddee"}})
+ false)
+
+(kind/hiccup
+ [:div
+  [:p "hello"]])
+
+;; In Quarto-based rendering, datasets are rendered as plain Markdown,
+;; and HTML options are not applied at the moment.
+
+(tc/dataset {:x (range 3)})
+
+;; To make sure the background color is applied, we wrap it with Hiccup.
+
+(kind/hiccup
+ [:div
+  (tc/dataset {:x (range 3)})])
+
+;; Let us cancel the setting of the background color.
+
+(kindly/hide-code
+ (kindly/merge-options! {:style {:background-color nil}})
+ false)
+
+(kind/hiccup
+ [:div
+  [:p "hello"]])

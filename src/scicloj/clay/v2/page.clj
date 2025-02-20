@@ -2,21 +2,22 @@
   (:require
    [clj-yaml.core :as yaml]
    [clojure.java.io :as io]
+   [clojure.java.shell :as shell]
    [clojure.string :as string]
    [hiccup.core :as hiccup]
    [hiccup.page]
-   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]))
+   [scicloj.clay.v2.files :as files]
+   [scicloj.clay.v2.item :as item]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
-               ["https://cdn.jsdelivr.net/npm/vega@5.22.1"
-                "https://cdn.jsdelivr.net/npm/vega-lite@5.6.0"
-                "https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"]}}
+               ["https://cdn.jsdelivr.net/npm/vega@5.25.0"
+                "https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"
+                "https://cdn.jsdelivr.net/npm/vega-embed@6.22.2"]}}
    :datatables {:js {:from-the-web
                      ["https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"]}
                 :css {:from-the-web
@@ -28,47 +29,79 @@
    :plotly {:js {:from-local-copy
                  ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}
    :katex {:js {:from-local-copy
-                ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"]}
+                ["https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"]}
            :css {:from-the-web
                  ;; fetching the KaTeX css from the web
                  ;; to avoid fetching the fonts locally,
                  ;; which would need a bit more care
                  ;; (see https://katex.org/docs/font.html)
-                 ["https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"]}}
+                 ["https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"]}}
    :three-d-mol {:js {:from-the-web
                       ["https://cdnjs.cloudflare.com/ajax/libs/3Dmol/1.5.3/3Dmol.min.js"]}}
    :leaflet {;; fetching Leaflet from the web
              ;; to avoid fetching the images locally,
              ;; which would need a bit more care.
              :js {:from-the-web
-                  ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"]}
+                  ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                   "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]}
              :css {:from-the-web
                    ["https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"]}}
    :reagent {:js {:from-local-copy
                   ["https://unpkg.com/react@18/umd/react.production.min.js"
                    "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
-                   "https://scicloj.github.io/scittle/js/scittle.js"
-                   "https://scicloj.github.io/scittle/js/scittle.cljs-ajax.js"
-                   "https://scicloj.github.io/scittle/js/scittle.reagent.js"
+                   "https://daslu.github.io/scittle/js/scittle.js"
+                   "https://daslu.github.io/scittle/js/scittle.cljs-ajax.js"
+                   "https://daslu.github.io/scittle/js/scittle.reagent.js"
                    "https://cdn.jsdelivr.net/npm/d3-require@1"]}}
-   :tmdjs {:js {:from-local-copy
-                ["https://scicloj.github.io/scittle/js/scittle.tmdjs.js"]}}
+   ;; :tmdjs {:js {:from-local-copy
+   ;;              ["https://daslu.github.io/scittle/js/scittle.tmdjs.js"]}}
    :emmy {:js {:from-local-copy
-               ["https://scicloj.github.io/scittle/js/scittle.emmy.js"]}}
-   :mathbox {:js {:from-local-copy
-                  ["https://scicloj.github.io/scittle/js/scittle.mathbox.js"]}}
+               ["https://daslu.github.io/scittle/js/scittle.emmy.js"]}}
+   :emmy-viewers {:js {:from-local-copy
+                       ["https://daslu.github.io/scittle/js/scittle.emmy.js"
+                        "https://daslu.github.io/scittle/js/scittle.emmy-viewers.js"]}
+                  :css {:from-local-copy
+                        ["https://unpkg.com/mafs@0.18.8/core.css"
+                         "https://unpkg.com/mafs@0.18.8/font.css"
+                         "https://unpkg.com/mathbox@2.3.1/build/mathbox.css"
+                         "https://unpkg.com/mathlive@0.85.1/dist/mathlive-static.css"
+                         "https://unpkg.com/mathlive@0.85.1/dist/mathlive-fonts.css"]}}
+   ;; :mathbox {:js {:from-local-copy
+   ;;                ["https://daslu.github.io/scittle/js/scittle.mathbox.js"]}}
    :portal {:js {:from-local-copy [portal/url]}}
+   :d3 {:js {:from-local-copy
+             ["https://cdn.jsdelivr.net/npm/d3@7"]}}
    :html-default {:js {:from-local-copy
                        ["https://code.jquery.com/jquery-3.6.0.min.js"
-                        "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"
-                        "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"]}}
+                        "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
    :md-default {:js {:from-local-copy
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
-                      "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}})
+                      "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
+   :htmlwidgets-ggplotly {:js {:from-local-copy
+                               ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/htmlwidgets-1.6.2/htmlwidgets.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-binding-4.10.4.9000/plotly.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/typedarray-0.1/typedarray.min.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/jquery-3.5.1/jquery.min.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/js/crosstalk.min.js"
+                                "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-main-2.11.1/plotly-latest.min.js"]}
+                          :css {:from-local-copy
+                                ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/css/crosstalk.min.css"
+                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css"]}}
+   :highcharts {:js {:from-the-web ["https://code.highcharts.com/highcharts.js"]}}})
 
 (def include
   {:js hiccup.page/include-js
    :css hiccup.page/include-css})
+
+(defn include-inline [js-or-css]
+  (fn [url]
+    (->> url
+         ((include js-or-css))
+         (map (fn [script-tag]
+                (let [{:keys [src]} (second script-tag)]
+                  (-> script-tag
+                      (conj (slurp src))
+                      (update 1 dissoc :src))))))))
 
 (defn include-from-a-local-file [url custom-name js-or-css
                                  {:keys [full-target-path base-target-path]}]
@@ -89,8 +122,36 @@
          "")
         ((include js-or-css)))))
 
-(defn include-libs [spec libs]
-  (->> [:js :css]
+(defn clone-repo-if-needed! [gh-repo]
+  (let [target-path (str "/tmp/.clay/clones/" gh-repo)]
+    (io/make-parents target-path)
+    (when-not
+        (.exists (io/file target-path))
+      (let [repo-url (str "https://github.com/" gh-repo)]
+        (prn [:cloning repo-url])
+        (shell/sh "git" "clone" repo-url target-path)))
+    target-path))
+
+(defn include-from-a-local-copy-of-repo [{:as details
+                                          :keys [gh-repo relative-path paths]}
+                                         lib
+                                         js-or-css
+                                         {:keys [base-target-path]}]
+  (let [repo-path (clone-repo-if-needed! gh-repo)
+        target-repo-path (str (name lib) "/gh-repos/" gh-repo)
+        target-copy-path (str base-target-path "/" target-repo-path)]
+    (when-not (.exists (io/file target-copy-path))
+      (babashka.fs/copy-tree (str repo-path "/" relative-path)
+                             target-copy-path))
+    (->> paths
+         (map (fn [path]
+                (->> path
+                     (str target-repo-path "/")
+                     ((include js-or-css))))))))
+
+(defn include-libs-hiccup [{:as spec :keys [inline-js-and-css]}
+                           deps-types libs]
+  (->> deps-types
        (mapcat (fn [js-or-css]
                  (->> libs
                       (mapcat
@@ -98,19 +159,38 @@
                          (->> lib
                               special-lib-resources
                               js-or-css
-                              ((fn [{:keys [from-the-web from-local-copy]}]
-                                 (concat
-                                  (some->> from-the-web
-                                           (apply (include js-or-css))
-                                           vector)
-                                  (some->> from-local-copy
-                                           (map (fn [url]
-                                                  (include-from-a-local-file
-                                                   url
-                                                   lib
-                                                   js-or-css
-                                                   spec)))))))))))))
-       (apply concat)
+                              ((fn [{:keys [from-the-web
+                                            from-local-copy
+                                            from-local-copy-of-repo]}]
+                                 (if inline-js-and-css
+                                   (->> (concat from-the-web
+                                                from-local-copy
+                                                from-local-copy-of-repo)
+                                        (map (include-inline js-or-css)))
+                                   ;; else
+                                   (concat
+                                    (some->> from-the-web
+                                             (apply (include js-or-css))
+                                             vector)
+                                    (some->> from-local-copy
+                                             (map (fn [url]
+                                                    (include-from-a-local-file
+                                                     url
+                                                     lib
+                                                     js-or-css
+                                                     spec))))
+                                    (some->> from-local-copy-of-repo
+                                             (map (fn [details]
+                                                    (include-from-a-local-copy-of-repo
+                                                     details
+                                                     lib
+                                                     js-or-css
+                                                     spec))))))))))))))
+       (apply concat)))
+
+(defn include-libs [spec deps-types libs]
+  (->> libs
+       (include-libs-hiccup spec deps-types)
        hiccup/html
        (format "\n%s\n")))
 
@@ -120,28 +200,28 @@
     <link href=\"https://fonts.googleapis.com/css2?family=Roboto&display=swap\" rel=\"stylesheet\">
 ")
 
+(defn items->deps [items]
+  (->> items
+       (mapcat :deps)
+       distinct))
 
 (defn html [{:as spec
-             :keys [items title toc?]}]
-  (let [special-libs (->> items
-                          (mapcat :deps)
-                          distinct
-                          (cons :html-default))
+             :keys [items title toc? favicon]}]
+  (let [deps (items->deps items)
+        special-libs (concat deps [:html-default :katex])
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-              [:link {:rel "icon" :href "data:,"}] ; avoid favicon.ico request: https://stackoverflow.com/a/38917888
-              #_[:link {:rel "stylesheet" :href "https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"}]
+              (when favicon
+                [:link {:rel "icon" :href favicon}])
               font-links
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
-              #_[:style (styles/main :code)]
-              [:style (styles/highlight :qtcreator-light)]
-              (include-from-a-local-file
-               "https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-               "bootstrap"
-               :css
-               spec)
+              [:style (styles/main :code)]
+              [:style (styles/main :bootswatch-cosmo-bootstrap.min)]
+              [:style (styles/main :bootstrap-generated-by-quarto.min)]
+              [:style (styles/highlight :panda-syntax-light)]
+              [:style (styles/main :main)]
               (when toc?
                 (include-from-a-local-file
                  "https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css"
@@ -150,30 +230,9 @@
                  spec))
               (when toc?
                 [:style (styles/main :bootstrap-toc-customization)])
-              (->> special-libs
-                   (mapcat (comp :from-the-web :css special-lib-resources))
-                   distinct
-                   (map #(-> %
-                             hiccup.page/include-css
-                             hiccup/html))
-                   (string/join "\n"))
-              (->> special-libs
-                   (mapcat (fn [lib]
-                             (->> lib
-                                  special-lib-resources
-                                  :css
-                                  :from-local-copy
-                                  (map (fn [url]
-                                         (include-from-a-local-file
-                                          url
-                                          lib
-                                          :css
-                                          spec)))))))
+              (include-libs spec [:css] special-libs)
               [:title (or title "Clay")]]
-        body [:body  {:style {:background "#fcfcfc"
-                              :font-family "'Roboto', sans-serif"
-                              :width "90%"
-                              :margin "auto"}
+        body [:body  {:style {:margin "auto"}
                       :data-spy "scroll"
                       :data-target "#toc"}
               (when toc?
@@ -182,26 +241,10 @@
                  "bootstrap-toc"
                  :js
                  spec))
-              [:script {:type "text/javascript"}
-               (-> "highlight/highlight.min.js"
-                   io/resource
-                   slurp)]
-              (->> special-libs
-                   (mapcat (fn [lib]
-                             (->> lib
-                                  special-lib-resources
-                                  :js
-                                  :from-local-copy
-                                  (map (fn [url]
-                                         (include-from-a-local-file
-                                          url
-                                          lib
-                                          :js
-                                          spec)))))))
-              (->> special-libs
-                   (mapcat (comp :from-the-web :js special-lib-resources))
-                   distinct
-                   (apply hiccup.page/include-js))
+              (include-libs spec [:js] special-libs)
+              (when (some #{:scittle :reagent} deps)
+                (item/scittle-tag
+                 item/scittle-header-form))
               [:div.container
                [:div.row
                 (when toc?
@@ -216,37 +259,57 @@
                        (map-indexed
                         (fn [i item]
                           [:div {:style {:margin "15px"}}
-                           (prepare/item->hiccup item
-                                                 {:id (str "item" i)})]))
+                           (prepare/item->hiccup item spec)]))
                        (into [:div]))]]]]
               [:script {:type "text/javascript"}
+               (-> "highlight/highlight.min.js"
+                   io/resource
+                   slurp)]
+              [:script {:type "text/javascript"}
                "hljs.highlightAll();"]]]
-    (-> (hiccup.page/html5 head body)
-        (string/replace #"<table>"
-                        "<table class='table table-hover'>"))))
-
-
-
+    (hiccup.page/html5 head body)))
 
 (defn md [{:as spec
-           :keys [items title quarto]}]
-  (str
-   (->> quarto
-        yaml/generate-string
-        (format "\n---\n%s\n---\n"))
-   ;; " "
-   (hiccup/html
-    [:style (styles/main :table)]
-    [:style (styles/main :md-main)])
-   (->> items
-        (mapcat :deps)
-        distinct
-        (cons :md-default)
-        (include-libs spec)
-        time)
-   (->> items
-        (map-indexed
-         (fn [i item]
-           (prepare/item->md item
-                             {:id (str "item" i)})))
-        (string/join "\n\n"))))
+           :keys [items title favicon quarto format]}]
+  (let [deps (items->deps items)
+        quarto-target (if (=  format [:quarto :revealjs])
+                        :revealjs
+                        :html)]
+    (str
+     "\n---\n"
+     (yaml/generate-string
+      (cond-> quarto
+        ;; Users may provide non-quarto specific configuration (see also html),
+        ;; if so this will be added to the quarto front-matter to make them behave the same way
+        title (assoc-in [:format :html :title] title)
+        favicon (update-in [:format quarto-target :include-in-header :text]
+                           str "<link rel = \"icon\" href = \"" favicon "\" />")))
+     "\n---\n"
+     (hiccup/html
+      [:style (styles/main :table)]
+      [:style (styles/main :md-main)]
+      [:style (styles/main :main)])
+     (->> deps
+          (cons :md-default)
+          (include-libs spec [:js :css]))
+     (when (some #{:scittle :reagent} deps)
+       (hiccup/html
+        (item/scittle-tag
+         item/scittle-header-form)))
+     (->> items
+          (map-indexed
+           (fn [i item]
+             (prepare/item->md item)))
+          (string/join "\n\n")))))
+
+
+(defn hiccup [{:as spec
+               :keys [items title quarto]}]
+  (let [deps (items->deps items)]
+    (vec (concat (->> deps
+                      (include-libs-hiccup spec [:js :css]))
+                 (when (some #{:scittle :reagent} deps)
+                   (item/scittle-tag
+                    item/scittle-header-form))
+                 (->> items
+                      (map #(prepare/item->hiccup % spec)))))))

@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [clojure.test]
    [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.book :as book]
+   [scicloj.clay.v2.live-reload :as live-reload]
    [scicloj.clay.v2.server :as server]
    [scicloj.clay.v2.make :as make]
    [scicloj.kindly.v4.api :as kindly]
@@ -11,6 +11,7 @@
 
 (defn stop! []
   (server/close!)
+  (live-reload/stop!)
   [:ok])
 
 (defn welcome! []
@@ -22,16 +23,27 @@
                                "Clay"]
                          " is ready, waiting for interaction."]]])}))
 
-(defn start! []
-  (server/open!)
-  (welcome!)
-  [:ok])
+(defn start!
+  ([]
+   (start! {:browse true}))
+  ([{:as opts :keys [port browse]}]
+   (server/open! opts)
+   (welcome!)
+   [:ok]))
 
 (defn make! [spec]
   (make/make! spec))
 
+(defn make-hiccup [spec]
+  (-> spec
+      (assoc :format [:hiccup]
+             :show false)
+      make/make!
+      first first first))
+
 (defn browse! []
   (server/browse!))
+
 (defn port []
   (server/port))
 
@@ -40,6 +52,3 @@
 
 (defn config []
   (config/config))
-
-(defn make-book! [options]
-  (book/write-book! options))

@@ -2,7 +2,7 @@
   (:require [clojure.tools.reader]
             [clojure.tools.reader.reader-types]
             [parcera.core :as parcera]
-            [clojure.string :as string]))
+            [clojure.string :as str]))
 
 (def *generation (atom 0))
 
@@ -17,6 +17,7 @@
        (map #(clojure.tools.reader/read % false ::EOF))
        (take-while (partial not= ::EOF))))
 
+
 (defn read-ns-form [code]
   (->> code
        read-forms
@@ -26,21 +27,23 @@
        first))
 
 (defn read-by-tools-reader [code]
-  (->> code
-       read-forms
-       (map (fn [form]
-              (let [{:keys [line column
-                            end-line end-column
-                            code]}
-                    (meta form)]
-                (when line ; skip forms with no location info
-                  {:method :tools-reader
-                   :region [line column
-                            end-line end-column]
-                   :code (-> form meta :source)
-                   :meta (meta form)
-                   :form form}))))
-       (filter some?)))
+  (-> code
+      ;; avoiding a tools.reader bug -- see:
+      ;; https://github.com/scicloj/clay/issues/151#issuecomment-2373488031
+      (str/replace #"\r\n" "\n")
+      (->> read-forms
+           (map (fn [form]
+                  (let [{:keys [line column
+                                end-line end-column
+                                code]}
+                        (meta form)]
+                    (when line ; skip forms with no location info
+                      {:method :tools-reader
+                       :region [line column
+                                end-line end-column]
+                       :code (-> form meta :source)
+                       :form form}))))
+           (filter some?))))
 
 (defn read-by-parcera [code]
   (->> code
@@ -78,8 +81,23 @@
                               :region
                               (drop 2))))
    :code (->> comment-blocks-sorted-by-region
-              (map :code)
-              (string/join "\n"))
+              (reduce (fn [{:keys [generated-string max-line]}
+                           {:keys [region code]}]
+                        {:generated-string (str generated-string
+                                                (apply str (-> region
+                                                               first
+                                                               (- max-line)
+                                                               (repeat "\n")))
+                                                code)
+                         :max-line (-> region
+                                       (nth 2)
+                                       (max max-line))})
+                      {:generated-string ""
+                       :max-line (->> comment-blocks-sorted-by-region
+                                      first
+                                      :region
+                                      first)})
+              :generated-string)
    :comment? true})
 
 (defn ->notes [code]

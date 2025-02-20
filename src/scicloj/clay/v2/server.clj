@@ -2,15 +2,16 @@
   (:require
    [clojure.java.browse :as browse]
    [clojure.java.io :as io]
-   [clojure.java.shell :as shell]
    [clojure.string :as string]
    [hiccup.page]
    [org.httpkit.server :as httpkit]
    [scicloj.clay.v2.server.state :as server.state]
-   [scicloj.clay.v2.util.path :as path]
    [scicloj.clay.v2.util.time :as time]
    [scicloj.clay.v2.item :as item]
-   [scicloj.kindly.v4.api :as kindly]))
+   [clojure.string :as str]
+   [cognitect.transit :as transit]
+   [hiccup.core :as hiccup])
+  (:import (java.net ServerSocket)))
 
 (def default-port 1971)
 
@@ -21,23 +22,46 @@
     (httpkit/send! ch msg)))
 
 (defn get-free-port []
-  (loop [port 1971]
+  (loop [port default-port]
     ;; Check if the port is free:
     ;; (https://codereview.stackexchange.com/a/31591)
-    (or (try (do (.close (java.net.ServerSocket. port))
+    (or (try (do (.close (ServerSocket. port))
                  port)
              (catch Exception e nil))
         (recur (inc port)))))
 
-
-(defn communication-script [{:keys [port counter]}]
-  (format "
+(defn communication-script
+  "The communication JS script to init a WebSocket to the server."
+  [{:keys [port counter]}]
+  (let [reload-regexp ".*/(#[a-zA-Z\\-]+)?\\$"
+        ;; We use this regexp to recognize when to used
+        ;; page reload rather than revert to the original URL,
+        ;; see below.
+        ]
+    (->> [port counter reload-regexp]
+         (apply format "
 <script type=\"text/javascript\">
-  {
+  
     clay_port = %d;
     clay_server_counter = '%d';
+    reload_regexp = new RegExp('%s');
 
-    clay_refresh = function() {location.reload();}
+    clay_refresh = function() {
+      location.assign('http://localhost:'+clay_port);
+
+      // alert(reload_regexp.test(window.location.href) + ' ' + window.location.href);
+
+      // Check whether we are still in the main page
+      // (but possibly in an anchor (#...) inside it):
+      if(reload_regexp.test(window.location.href)) {
+        // Just reload, keeping the current position:
+        location.reload();
+      } else {
+         // We might be in a different book to the chapter.
+         // So, reload and force returning to the main page.
+         location.assign('http://localhost:'+clay_port);
+      }
+    }
 
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
 
@@ -46,12 +70,14 @@
     clay_socket.addEventListener('message', (event)=> {
       if (event.data=='refresh') {
         clay_refresh();
+      } else if (event.data=='loading') {
+        document.body.style.opacity = 0.5;
+        document.body.prepend(document.createElement('div', {class: 'loader'}));
       } else {
         console.log('unknown ws message: ' + event.data);
       }
     });
-  }
-
+  
   async function clay_1 () {
     const response = await fetch('/counter');
     const response_counter = await response.json();
@@ -60,17 +86,7 @@
     }
   };
   clay_1();
-</script>
-"
-          port
-          counter))
-
-(defn add-communication-script [page state]
-  (-> page
-      (string/replace #"</body></html>$"
-                      (str "\n"
-                           (communication-script state)
-                           "\n</body></html>"))))
+</script>"))))
 
 (defn header [state]
   (hiccup.core/html
@@ -80,73 +96,100 @@
       {:style {:display "inline-block"
                :zoom 1
                :width "40px"
-               :margin-left "20px"}
+               :margin-left "20px"},
        ;; { zoom: 1; vertical-align: top; font-size: 12px;}
-       :src "https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png"
+       :src "/Clay.svg.png"
        :alt "Clay logo"}]
-     #_[:big [:big "(Clay)"]]
      [:div {:style {:display "inline-block"
                     :margin "20px"}}
-      [:pre (some->> state
-                     :full-target-path)]
-      [:pre (time/now)]]]
-    #_(:hiccup item/separator)]))
-
-(def avoid-favicon
-  ;; avoid favicon.ico request: https://stackoverflow.com/a/38917888
-  [:link {:rel "icon" :href "data:,"}])
+      [:pre {:style {:margin 0}}
+       (some->> state
+                :last-rendered-spec
+                :full-target-path)]
+      [:pre {:style {:margin 0}}
+       (time/now)]]]]))
 
 (defn page
   ([]
    (page @server.state/*state))
   ([state]
-   (hiccup.page/html5
-    [:head avoid-favicon]
-    [:body {:style {:overflow-x "hidden"}}
-     [:style "* {margin: 0; padding: 0; top: 0;}"]
-     [:div {:style {:left "0px"
-                    :top "0px"
-                    :height "70px"
-                    :background-color "#ddd"}}
-      (header state)]
-     ;; https://makersaid.com/make-iframe-fit-100-of-remaining-height/
-     [:iframe {:style {:height "calc(100vh - 100px)"
-                       :width "100%"
-                       :border "none"}
-               :src (some-> state
-                            :full-target-path
-                            (string/replace (re-pattern (str "^"
-                                                             (:base-target-path state)
-                                                             "/"))
-                                            ""))}]
-     (communication-script state)])))
+   (some-> state
+           :last-rendered-spec
+           :full-target-path
+           slurp)))
+
+(defn wrap-html [html state]
+  (-> html
+      (str/replace #"(<\s*body[^>]*>)"
+                   (str "$1"
+                        (when-not (-> state
+                                      :last-rendered-spec
+                                      :hide-ui-header)
+                          (hiccup/html
+                           #_[:style "* {margin: 0; padding: 0; top: 0;}"]
+                                         [:div {:style {:height "70px"
+                                                        :background-color "#eee"}}
+                                          (header state)]))
+    (communication-script state)))))
 
 
-(defn routes [{:keys [:body :request-method :uri]
-               :as req}]
+(defn compute
+  [input]
+  (let [{:keys [func args]} input]
+    (if-let [func-var (resolve func)]
+      (if (-> func-var meta :kindly/servable)
+        (apply func-var args)
+        (throw (Exception. (str "Function is not safe to serve: "
+                                func))))
+      (throw (Exception. (str "Symbol not found: "
+                              func))))))
+
+(defn routes
+  "Web server routes."
+  [{:keys [:body :request-method :uri]
+    :as req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
       (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
                                :on-close (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
       (case [request-method uri]
-        [:get "/"] {:body (page state)
+        [:get "/"] {:body (-> state
+                              page
+                              (wrap-html state))
+                    :headers {"Content-Type" "text/html"}
                     :status 200}
         [:get "/counter"] {:body (-> state
                                      :counter
                                      str)
                            :status 200}
+        [:post "/kindly-compute"] (let [input (-> body
+                                                  (transit/reader :json)
+                                                  transit/read
+                                                  read-string)
+                                        output (compute input)]
+                                    {:body (pr-str output)
+                                     :status 200})
         ;; else
-        {:body (try (->> uri
-                         (str (:base-target-path state))
-                         (java.io.FileInputStream.))
-                    (catch java.io.FileNotFoundException e
-                      ;; Ignoring missing source maps.
-                      ;; TODO: Figure this problem out.
-                      (if (.endsWith ^String uri ".map")
-                        nil
-                        (throw e))))
-         :status 200}))))
+        (let [f (io/file (str (:base-target-path state) uri))]
+          (if (.exists f)
+            {:body    (if (re-matches #".*\.html$" uri)
+                        (-> f
+                            slurp
+                            (wrap-html state))
+                        f)
+             :headers (when (str/ends-with? uri ".js")
+                        {"Content-Type" "text/javascript"})
+             :status  200}
+            (case [request-method uri]
+              ;; user files have priority, otherwise serve the default from resources
+              [:get "/favicon.ico"] {:body   (io/input-stream (io/resource "favicon.ico"))
+                                     :status 200}
+              ;; this image is for the header above the page during interactive mode
+              [:get "/Clay.svg.png"] {:body   (io/input-stream (io/resource "Clay.svg.png"))
+                                      :status 200}
+              {:body   "not found"
+               :status 404})))))))
 
 (defonce *stop-server! (atom nil))
 
@@ -168,16 +211,20 @@
 (defn browse! []
   (browse/browse-url (url)))
 
-(defn open! []
-  (when-not @*stop-server!
-    (let [port (get-free-port)
-          server (core-http-server port)]
-      (server.state/set-port! port)
-      (reset! *stop-server! port)
-      (println "serving Clay at" (port->url port))
-      (browse!))))
+(defn open!
+  ([] (open! {}))
+  ([{:as opts :keys [port browse]}]
+   (when-not @*stop-server!
+     (let [port (or port (get-free-port))
+           stop-server (core-http-server port)]
+       (server.state/set-port! port)
+       (reset! *stop-server! stop-server)
+       (println "serving Clay at" (port->url port))
+       (when browse
+         (browse!))))))
 
-(defn update-page! [{:keys [show
+(defn update-page! [{:as spec
+                     :keys [show
                             base-target-path
                             page
                             full-target-path]
@@ -186,16 +233,22 @@
                                                   ".clay.html")}}]
   (server.state/set-base-target-path! base-target-path)
   (when show
-    (open!))
+    (open! spec))
   (io/make-parents full-target-path)
   (when page
     (spit full-target-path page))
-  (server.state/reset-full-target-path! full-target-path)
+  (-> spec
+      (assoc :full-target-path full-target-path)
+      (server.state/reset-last-rendered-spec!))
   (when show
     (broadcast! "refresh"))
   [:ok])
+
+(defn loading! []
+  (broadcast! "loading"))
 
 (defn close! []
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
+
