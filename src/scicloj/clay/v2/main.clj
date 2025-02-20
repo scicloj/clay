@@ -4,27 +4,29 @@
             [clojure.tools.cli :as cli]
             [scicloj.clay.v2.api :as api]))
 
-;; TODO: option validation should be done by the API
 (def cli-options
   [["-s" "--source-path PATHS"
-    :validate [sequential? (str "paths should be a sequence like " (pr-str ["notebooks"]))]
     :default-desc (pr-str ["notebooks"])
     :parse-fn edn/read-string]
-   ["-t" "--target-dir DIR" :default-desc "docs"]
+   ["-t" "--base-target-path DIR"
+    :default-desc "docs"]
    ["-h" "--help"]])
 
 (defn -main
-  "Invoke with `clojure -M:dev -m scicloj.claykind.main --help` to see options"
+  "Invoke with `clojure -M:dev -m scicloj.clay.v2.main --help` to see options"
   [& args]
   (let [{:keys [options summary arguments errors]} (cli/parse-opts args cli-options)
-        {:keys [help]} options]
-    (cond help (println "Clay" \newline
-                        "Description: Clay evaluates Clojure namespaces into Markdown" \newline
-                        "Options:" \newline
-                        summary)
-          errors (do (println "ERROR:" errors)
+        {:keys [help]} options
+        opts (merge (when (seq arguments)
+                      {:source-path (vec arguments)})
+                    options)]
+    (println "Options:")
+    (pr-str opts)
+    (cond help (do (println "Clay")
+                   (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")
+                   (println summary)
+                   (System/exit 0))
+          errors (do (println "Error:" errors)
                      (System/exit -1))
-          :else (do (api/make! (merge (when (seq arguments)
-                                          {:source-path (vec arguments)})
-                                        options))
+          :else (do (api/make! opts)
                     (System/exit 0)))))
