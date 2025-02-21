@@ -2,7 +2,8 @@
   "command line interface"
   (:require [clojure.edn :as edn]
             [clojure.tools.cli :as cli]
-            [scicloj.clay.v2.api :as api]))
+            [scicloj.clay.v2.api :as api]
+            [nrepl.cmdline]))
 
 (def cli-options
   [["-s" "--source-path PATHS"
@@ -10,6 +11,7 @@
     :parse-fn edn/read-string]
    ["-t" "--base-target-path DIR"
     :default-desc "docs"]
+   ["-r" "--live-reload"]
    ["-h" "--help"]])
 
 (defn -main
@@ -21,7 +23,7 @@
                       {:source-path (vec arguments)})
                     options)]
     (println "Options:")
-    (pr-str opts)
+    (prn opts)
     (cond help (do (println "Clay")
                    (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")
                    (println summary)
@@ -29,4 +31,6 @@
           errors (do (println "Error:" errors)
                      (System/exit -1))
           :else (do (api/make! opts)
-                    (System/exit 0)))))
+                    (if (:live-reload opts)
+                      (nrepl.cmdline/-main)
+                      (System/exit 0))))))
