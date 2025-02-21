@@ -531,6 +531,28 @@
 (comment
   (clay/make-hiccup {:source-path "notebooks/index.clj"}))
 
+;; ## CLI
+
+;; When Clay is on the classpath, it exports a `-main` suitable for execution,
+;; so that you may invoke it from the terminal.
+
+;; To run the CLI using the `clojure` command line tool:
+
+;; ```sh
+;; clojure -m scicloj.clay.v2.main --help
+;; ```
+
+;; A typical usage is
+
+;; ```sh
+;; clojure -M:dev -m scicloj.clay.v2.main notebooks/index.clj -r
+;; ```
+
+;; `notebooks/index.clj` is the file to render (when present, overrides the `:source-path` option)
+
+;; `-r` or `--live-reload` starts an nREPL server and will remake the source if it changes,
+;; as described in the [Live reload section](index.html#live-reload).
+;;
 ;; ## Configuration
 
 ;; Calls to the `make!` function are affected by various parameters
