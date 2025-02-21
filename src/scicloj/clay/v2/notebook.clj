@@ -240,9 +240,8 @@
                                                                    :format])))
                                                 (note-to-items options)
                                                 (cond->> mark
-                                                  (#(map (fn [item]
-                                                           (assoc item :mark mark))
-                                                         %)))))
+                                                  (map (fn [item]
+                                                         (assoc item :mark mark))))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
                                 test-form (cond
@@ -278,8 +277,8 @@
                    (fn [items]
                      (-> items
                          (->> (remove nil?))
-                         (cond-> some-marks
-                           (->> (#(filter :mark %))))
+                         (cond->> some-marks
+                           (filter :mark))
                          (add-info-line options)
                          doall)))
            (update :test-forms
