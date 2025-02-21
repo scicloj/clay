@@ -32,18 +32,21 @@
                                   :remote-repo
                                   (path/file-git-url relative-file-path))})))
 
+
 (defn complete [{:as note
                  :keys [comment? code form value]}]
   (-> (if (or value comment?)
         note
         (assoc note
-          :value (cond code (-> code
-                                read-string
-                                eval
-                                deref-if-needed)
-                       form (-> form
-                                eval
-                                deref-if-needed))))
+               :value (cond code (-> code
+                                     read-string
+                                     eval
+                                     deref-if-needed)
+                            form (-> form
+                                     eval
+                                     deref-if-needed))
+               :mark (some->> code
+                              (re-find #",,"))))
       (cond-> (not comment?)
         kindly-advice/advise)))
 
@@ -202,7 +205,8 @@
             full-target-path
             single-form
             single-value
-            format]}]
+            format
+            respect-marks]}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
              *unchecked-math* *unchecked-math*]
@@ -214,14 +218,16 @@
                    single-form (conj (when code
                                        [{:form (read/read-ns-form code)}])
                                      {:form single-form})
-                   :else (read/->safe-notes code))]
+                   :else (read/->safe-notes code))
+           some-marks (when respect-marks
+                        (re-find #",," code))]
        (-> (->> notes
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
                                                      test-forms
                                                      last-nontest-varname]}
                              note]
-                          (let [{:as complete-note :keys [form kind region]} (complete note)
+                          (let [{:as complete-note :keys [form kind region mark]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
                                 new-items (when-not test-note
@@ -232,7 +238,11 @@
                                                                    :full-target-path
                                                                    :kindly/options
                                                                    :format])))
-                                                (note-to-items options)))
+                                                (note-to-items options)
+                                                (cond->> mark
+                                                  (#(map (fn [item]
+                                                           (assoc item :mark mark))
+                                                         %)))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
                                 test-form (cond
@@ -268,15 +278,19 @@
                    (fn [items]
                      (-> items
                          (->> (remove nil?))
+                         (cond-> some-marks
+                           (->> (#(filter :mark %))))
                          (add-info-line options)
                          doall)))
            (update :test-forms
                    ;; Leave the test-form only when
                    ;; at least one of them is a `deftest`.
-                   (fn [test-forms]
-                     (when (->> test-forms
-                                (some #(-> % first (= 'deftest))))
-                       test-forms))))))))
+                   (if some-marks
+                     (constantly nil)
+                     (fn [test-forms]
+                       (when (->> test-forms
+                                  (some #(-> % first (= 'deftest))))
+                         test-forms)))))))))
 
 
 (comment
