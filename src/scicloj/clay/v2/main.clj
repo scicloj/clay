@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.main
   "command line interface"
+  (:gen-class)
   (:require [clojure.edn :as edn]
             [clojure.tools.cli :as cli]
             [scicloj.clay.v2.api :as api]
