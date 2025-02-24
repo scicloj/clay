@@ -219,8 +219,8 @@
                                        [{:form (read/read-ns-form code)}])
                                      {:form single-form})
                    :else (read/->safe-notes code))
-           some-marks (when respect-marks
-                        (re-find #",," code))]
+           show-only-marked (and respect-marks
+                                 (re-find #",," code))]
        (-> (->> notes
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
@@ -230,8 +230,8 @@
                           (let [{:as complete-note :keys [form kind region mark]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
-                                new-items (if (or (not some-marks)
-                                                  mark)
+                                new-items (when (or (not show-only-marked)
+                                                    mark)
                                             (when-not test-note
                                               (-> complete-note
                                                   (merge/deep-merge
@@ -240,9 +240,10 @@
                                                                      :full-target-path
                                                                      :kindly/options
                                                                      :format])))
-                                                  (note-to-items (merge options
-                                                                        (when mark
-                                                                          {:hide-code true}))))))
+                                                  (note-to-items
+                                                   (merge options
+                                                          (when (and respect-marks mark)
+                                                            {:hide-code true}))))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
                                 test-form (cond
@@ -283,7 +284,7 @@
            (update :test-forms
                    ;; Leave the test-form only when
                    ;; at least one of them is a `deftest`.
-                   (if some-marks
+                   (if show-only-marked
                      (constantly nil)
                      (fn [test-forms]
                        (when (->> test-forms
