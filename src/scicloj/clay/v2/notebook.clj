@@ -1,16 +1,15 @@
 (ns scicloj.clay.v2.notebook
-  (:require
-   [clojure.string :as string]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.util.path :as path]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.read :as read]
-   [scicloj.clay.v2.config :as config]
-   [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.api :as kindly]
-   [scicloj.kindly.v4.kind :as kind]
-   [scicloj.kindly-advice.v1.api :as kindly-advice]))
+  (:require [clojure.string :as string]
+            [scicloj.clay.v2.item :as item]
+            [scicloj.clay.v2.util.path :as path]
+            [scicloj.clay.v2.item :as item]
+            [scicloj.clay.v2.prepare :as prepare]
+            [scicloj.clay.v2.read :as read]
+            [scicloj.clay.v2.config :as config]
+            [scicloj.clay.v2.util.merge :as merge]
+            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v4.kind :as kind]
+            [scicloj.kindly-advice.v1.api :as kindly-advice]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -205,8 +204,7 @@
             full-target-path
             single-form
             single-value
-            format
-            respect-marks]}]
+            format]}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
              *unchecked-math* *unchecked-math*]
@@ -219,8 +217,7 @@
                                        [{:form (read/read-ns-form code)}])
                                      {:form single-form})
                    :else (read/->safe-notes code))
-           show-only-marked (and respect-marks
-                                 (re-find #",," code))]
+           some-marks (re-find #",," code)]
        (-> (->> notes
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
@@ -230,7 +227,7 @@
                           (let [{:as complete-note :keys [form kind region mark]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
-                                new-items (when (or (not show-only-marked)
+                                new-items (when (or (not some-marks)
                                                     mark)
                                             (when-not test-note
                                               (-> complete-note
@@ -242,7 +239,7 @@
                                                                      :format])))
                                                   (note-to-items
                                                    (merge options
-                                                          (when (and respect-marks mark)
+                                                          (when mark
                                                             {:hide-code true}))))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
@@ -284,7 +281,7 @@
            (update :test-forms
                    ;; Leave the test-form only when
                    ;; at least one of them is a `deftest`.
-                   (if show-only-marked
+                   (if some-marks
                      (constantly nil)
                      (fn [test-forms]
                        (when (->> test-forms
