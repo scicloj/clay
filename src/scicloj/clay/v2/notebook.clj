@@ -44,8 +44,8 @@
                             form (-> form
                                      eval
                                      deref-if-needed))
-               :mark (some->> code
-                              (re-find #",,"))))
+               :narrowed (some->> code
+                                  (re-find #",,"))))
       (cond-> (not comment?)
         kindly-advice/advise)))
 
@@ -217,18 +217,18 @@
                                        [{:form (read/read-ns-form code)}])
                                      {:form single-form})
                    :else (read/->safe-notes code))
-           some-marks (re-find #",," code)]
+           narrowing (re-find #",," code)]
        (-> (->> notes
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
                                                      test-forms
                                                      last-nontest-varname]}
                              note]
-                          (let [{:as complete-note :keys [form kind region mark]} (complete note)
+                          (let [{:as complete-note :keys [form kind region narrowed]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
-                                new-items (when (or (not some-marks)
-                                                    mark)
+                                new-items (when (or (not narrowing)
+                                                    narrowed)
                                             (when-not test-note
                                               (-> complete-note
                                                   (merge/deep-merge
@@ -239,7 +239,7 @@
                                                                      :format])))
                                                   (note-to-items
                                                    (merge options
-                                                          (when mark
+                                                          (when narrowed
                                                             {:hide-code true}))))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
@@ -281,7 +281,7 @@
            (update :test-forms
                    ;; Leave the test-form only when
                    ;; at least one of them is a `deftest`.
-                   (if some-marks
+                   (if narrowing
                      (constantly nil)
                      (fn [test-forms]
                        (when (->> test-forms
