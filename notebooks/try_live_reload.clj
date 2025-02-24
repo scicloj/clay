@@ -1,4 +1,3 @@
-^{:clay {:respect-marks true}}
 (ns try-live-reload
   (:require [scicloj.kindly.v4.kind :as kind]))
 
@@ -7,8 +6,8 @@
   (clay/make! {:source-path "notebooks/try_live_reload.clj"
                :live-reload true}))
 
-(kind/echarts
- ,,
+
+(,, kind/echarts
  {:title {:text "Echarts Example"}
   :tooltip {}
   :legend {:data ["sales"]}
@@ -19,5 +18,6 @@
             :type "bar"
             :data [5 20 36
                    10 10 20]}]})
+
 
 
