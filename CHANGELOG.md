@@ -2,10 +2,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta30]
-- adds main cli: `clojure -M:dev -m scicloj.clay.v2.main`
+- added main cli: `clojure -M:dev -m scicloj.clay.v2.main`
 - launch nrepl when using live-reload from cli
-- `,,` marks support - WIP
 - defined a default target path for the case of no `ns` form
+- support for marking the narrowing the visualiztion - WIP
 
 ## [2-beta29] - 2025-02-18
 - updated deps
