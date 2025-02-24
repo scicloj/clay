@@ -230,18 +230,19 @@
                           (let [{:as complete-note :keys [form kind region mark]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
-                                new-items (when-not test-note
-                                            (-> complete-note
-                                                (merge/deep-merge
-                                                 (-> options
-                                                     (select-keys [:base-target-path
-                                                                   :full-target-path
-                                                                   :kindly/options
-                                                                   :format])))
-                                                (note-to-items options)
-                                                (cond->> mark
-                                                  (map (fn [item]
-                                                         (assoc item :mark mark))))))
+                                new-items (if (or (not some-marks)
+                                                  mark)
+                                            (when-not test-note
+                                              (-> complete-note
+                                                  (merge/deep-merge
+                                                   (-> options
+                                                       (select-keys [:base-target-path
+                                                                     :full-target-path
+                                                                     :kindly/options
+                                                                     :format])))
+                                                  (note-to-items (merge options
+                                                                        (when mark
+                                                                          {:hide-code true}))))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
                                 test-form (cond
@@ -277,8 +278,6 @@
                    (fn [items]
                      (-> items
                          (->> (remove nil?))
-                         (cond->> some-marks
-                           (filter :mark))
                          (add-info-line options)
                          doall)))
            (update :test-forms
