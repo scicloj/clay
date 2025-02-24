@@ -217,7 +217,8 @@
                                        [{:form (read/read-ns-form code)}])
                                      {:form single-form})
                    :else (read/->safe-notes code))
-           narrowing (re-find #",," code)]
+           narrowing (some->> code
+                              (re-find #",,"))]
        (-> (->> notes
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
