@@ -79,9 +79,10 @@
                    "/"
                    full-source-path)
       "clj" (path/ns->target-path base-target-path
-                                  (-> ns-form
-                                      second
-                                      name)
+                                  (or (some-> ns-form
+                                              second
+                                              name)
+                                      "unnamed")
                                   (str (when (-> format
                                                  second
                                                  (= :revealjs))
