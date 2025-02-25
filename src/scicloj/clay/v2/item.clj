@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
-            [charred.api :as charred]
+            [scicloj.clay.v2.util.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
@@ -84,7 +84,7 @@
   [:div
    [:script
     (->> string
-         charred/write-json-str
+         jso/write-json-str
          (format
           "katex.render(%s, document.currentScript.parentElement, {throwOnError: false});"))]])
 
@@ -206,7 +206,7 @@
             {:style (extract-style context)}
             [:script
              (->> value
-                  charred/write-json-str
+                  jso/write-json-str
                   (format
                    "
 {
@@ -222,7 +222,7 @@
             {:style (extract-style context)}
             [:script
              (->> value
-                  charred/write-json-str
+                  jso/write-json-str
                   (format
                    "
 {
@@ -239,11 +239,11 @@
             {:style (extract-style context)}
             [:script
              (format
-              "Plotly.newPlot(document.currentScript.parentElement,
-              %s, %s, %s);"
-              (charred/write-json-str data)
-              (charred/write-json-str layout)
-              (charred/write-json-str config))]]
+               "Plotly.newPlot(document.currentScript.parentElement,
+               %s, %s, %s);"
+               (jso/write-json-str data)
+               (jso/write-json-str layout)
+               (jso/write-json-str config))]]
    :deps [:plotly]})
 
 (defn portal [value]
@@ -338,7 +338,7 @@
     {:hiccup [:div
               [:script (-> value
                            (assoc :data data-to-use)
-                           charred/write-json-str
+                           jso/write-json-str
                            (->> (format "vegaEmbed(document.currentScript.parentElement, %s);")))]]
      :deps [:vega]}))
 
@@ -387,17 +387,17 @@
                     :style "width:100%;height:400px;"}
               [:script {:type "application/htmlwidget-sizing"
                         :data-for id}
-               (charred/write-json-str {:viewer {:width "100%"
-                                                 :height 400
+               (jso/write-json-str {:viewer      {:width  "100%"
+                                                 :height  400
                                                  :padding "0"
-                                                 :fille true}
+                                                 :fille   true}
                                         :browser {:width "100%"
                                                   :height 400
                                                   :padding "0"
                                                   :fille true}})]
               [:script {:type "application/json"
                         :data-for id}
-               (charred/write-json-str spec)]]
+               (jso/write-json-str spec)]]
      :deps [:htmlwidgets-ggplotly]}))
 
 (defn highcharts
@@ -406,8 +406,8 @@
   {:hiccup [:div
             [:script
              (format
-              "Highcharts.chart(document.currentScript.parentElement, %s);"
-              (charred/write-json-str value))]]
+               "Highcharts.chart(document.currentScript.parentElement, %s);"
+               (jso/write-json-str value))]]
    :deps [:highcharts]})
 
 (defn dataset [{:as context

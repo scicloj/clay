@@ -678,6 +678,25 @@
    :x (range 3)
    :y (repeatedly 3 rand)})
 
+;; ## JavaScript Functions
+
+;; Visualizations are often compiled to JavaScript which can make use of functions.
+;; To make this accessible, Regex expressions are treated as JavaScript literals.
+;; Clojure has a Regex syntax #"...", making it convenient for inserting code.
+;; In this example, the tooltip formatter is an inline JavaScript function:
+
+(kind/echarts
+  {:title {:text "Echarts Example"}
+   :tooltip {:formatter #"(params) => 'hello: ' + params.name"}
+   :legend {:data ["sales"]}
+   :xAxis {:data ["Shirts", "Cardigans", "Chiffons",
+                  "Pants", "Heels", "Socks"]}
+   :yAxis {}
+   :series [{:name "sales"
+             :type "bar"
+             :data [5 20 36
+                    10 10 20]}]})
+
 ;; ## Delays
 
 ;; Clojure Delays are a common way to define computations that do not take place immediately. The computation takes place when dereferencing the value for the first time.
