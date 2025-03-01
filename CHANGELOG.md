@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta31] - 2025-02-21
+- treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately
+
 ## [2-beta30] - 2025-02-24
 - added main cli: `clojure -M:dev -m scicloj.clay.v2.main`
 - launch nrepl when using live-reload from cli
