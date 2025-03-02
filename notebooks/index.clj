@@ -532,6 +532,7 @@
   (clay/make-hiccup {:source-path "notebooks/index.clj"}))
 
 ;; ## CLI
+;; (experimental)
 
 ;; When Clay is on the classpath, it exports a `-main` suitable for execution,
 ;; so that you may invoke it from the terminal.
