@@ -3,117 +3,101 @@
             [babashka.fs :as fs]
             [nextjournal.beholder :as beholder]))
 
-(defn subdir-paths
-  "Return subdir paths of `paths1` who is a sub-directory of any `paths2`."
+(def empty-state {:watchers   {}
+                  :file-specs {}})
+
+(def *state (atom empty-state))
+
+(defn subdir? [dir root]
+  (and (not= dir root)
+       (fs/starts-with? dir root)))
+
+(defn subdirs
+  "Return a subset of `paths1` that are subdirectories of any `paths2`."
   [paths1 paths2]
-  (reduce (fn [result dir1]
-            (if (some #(and (not= dir1 %)
-                            (fs/starts-with? dir1 %))
-                      paths2)
-              (conj result dir1)
-              result))
+  (reduce (fn [acc path]
+            (if (some #(subdir? path %) paths2)
+              (conj acc path)
+              acc))
           #{}
           paths1))
 
-(defn exclude-subdir-paths
-  "Exclude paths who are sub-directories of any one of `paths`."
+(defn roots
+  "Remove from paths any subdirectories."
   [paths]
-  (let [origin-dirs (set paths)
-        to-remove (subdir-paths origin-dirs origin-dirs)]
-    (set/difference origin-dirs to-remove)))
+  (set/difference paths (subdirs paths paths)))
 
 (defn dirs-to-watch
-  "Find out directories of files in `file-paths` to watch."
-  [watched-dir-paths file-paths]
-  (->> file-paths
-       (map fs/parent)
-       (filter #(not (some (fn [watched-dir]
-                             (fs/starts-with? % watched-dir))
-                           watched-dir-paths)))
-       exclude-subdir-paths))
+  "Returns any parents of file-paths that are not in watched-dirs."
+  [watched-dirs file-paths]
+  (-> (map (comp str fs/parent) file-paths)
+      (set)
+      (set/union watched-dirs)
+      (roots)
+      (set/difference watched-dirs)))
 
-(def ^:private dir-watchers-initial {:watchers {}
-                                     :file-specs {}})
+(defn watched-dirs []
+  (-> @*state :watchers keys set))
 
-(def ^:private *dir-watchers (atom dir-watchers-initial))
+(defn watched-files []
+  (-> @*state :file-specs keys set))
 
-(defn beholder-callback!
-  "Return a callback function for beholder."
-  [make-fn]
-  (fn [event]
-    (let [canonical-path (-> event :path fs/canonicalize)
-          spec (get (:file-specs @*dir-watchers) canonical-path)]
-      (when (and spec (identical? :modify (:type event)))
-        (make-fn spec)))))
+(defn file-spec [file]
+  (get-in @*state [:file-specs file]))
 
-(defn watched-dirs!
-  "Get all watched dirs as paths."
-  []
-  (->> @*dir-watchers :watchers keys set))
+(defn watch-files! [files spec]
+  (swap! *state update :file-specs into
+         (for [file files]
+           [file spec])))
 
-(defn watched-files!
-  "Get all watched dirs as paths."
-  []
-  (->> @*dir-watchers :file-specs keys set))
-
-(defn start-watching-dirs!
-  "Start watching file changes in all `dirs`, with callback `cb`."
-  [dirs cb]
-  (doseq [dir dirs]
-    (when-not (contains? (watched-dirs!) dir)
-      (swap! *dir-watchers
-             #(assoc %
-                     :watchers
-                     (assoc (:watchers %)
-                            dir
-                            (beholder/watch cb (str dir))))))))
+(defn watch-dirs!
+  "Start watching file changes in `dirs` with make."
+  [dirs make-fn spec]
+  {:pre [(empty? (set/intersection (set dirs) (watched-dirs)))]}
+  (when (seq dirs)
+    (println "WATCHING:" (pr-str dirs)))
+  (swap! *state update :watchers into
+         (for [dir dirs]
+           [dir (beholder/watch (fn watch-callback [{:as event :keys [type path]}]
+                                  (println "EVENT:" type (str path))
+                                  ;; TODO; handle deleted??
+                                  (when (#{:create :modify} type)
+                                    ;; TODO: what if the spec is a book?
+                                    (make-fn (-> (or (file-spec (str path)) spec)
+                                                 (assoc :source-path (str path))))))
+                                dir)])))
 
 (defn stop-watching-dirs!
   "Stop watching file changes in all `dirs`."
   [dirs]
   (doseq [dir dirs]
-    (when-let [watcher (-> @*dir-watchers :watchers (get dir))]
-      (beholder/stop watcher)
-      (swap! *dir-watchers
-             #(assoc %
-                     :watchers
-                     (dissoc (:watchers %) dir))))))
+    (beholder/stop (get-in @*state [:watchers dir])))
+  (swap! *state update :watchers dissoc dirs))
 
+;; make/make! calls start!, which sets up callbacks to make/make!
+;; this is a circular dependency, so we pass make/make! in (dependency injection) instead of referring to it directly
+;; source-paths and base-source-path may come from configuration rather than the spec
 (defn start!
-  "Watch directory changes for `source-path`."
-  [make-fn {:as spec
-            :keys [live-reload source-path]}]
-  (when (and live-reload
-             source-path)
-    (let [new-files (->> source-path
-                         (#(if (vector? %) % [%]))
-                         ;; make sure all paths are canonical,
-                         ;; so that their containing directories can be properly watched by beholder
-                         (map fs/canonicalize)
-                         (filter #(not (contains? (watched-files!) %)))
-                         set)
-          new-dirs (dirs-to-watch (watched-dirs!)
-                                  new-files)]
-      ;; stop watching dirs now having been subdirs.
-      (when-let [dirs-to-stop (subdir-paths (watched-dirs!)
-                                            new-dirs)]
-        (stop-watching-dirs! dirs-to-stop))
-      ;; watch new dirs for notebook changes
-      (when-not (empty? new-dirs)
-        (start-watching-dirs! new-dirs (beholder-callback! make-fn)))
-      ;; save the spec for every file
-      (when-not (empty? new-files)
-        (swap! *dir-watchers #(assoc %
-                                     :file-specs
-                                     (->> new-files
-                                          (reduce (fn [result file]
-                                                    (assoc result file spec))
-                                                  {})
-                                          (merge (:file-specs @*dir-watchers))))))
-      new-files)))
+  "Watch directories of a spec"
+  [make-fn spec source-paths watch-dirs]
+  (let [canonical-paths (set (map (comp str fs/canonicalize)
+                                  (concat
+                                    (map #(babashka.fs/path % "unnamed.clj") watch-dirs)
+                                    (remove nil? source-paths))))
+        dirs (dirs-to-watch (watched-dirs) canonical-paths)]
+    ;; TODO: maybe make a directory instead?
+    (when-let [bad-path (first (filter (complement babashka.fs/exists?) canonical-paths))]
+      (throw (ex-info (str "Does not exist: " bad-path)
+                      {:id   ::bad-path
+                       :path bad-path})))
+    (watch-files! canonical-paths spec)
+    ;; if we started watching a parent directory, stop watching the subdirs
+    (stop-watching-dirs! (subdirs (watched-dirs) dirs))
+    ;; watch new dirs for notebook changes
+    (watch-dirs! dirs make-fn spec)))
 
 (defn stop!
   "Stop all directory watchers."
   []
-  (stop-watching-dirs! (watched-dirs!))
-  (reset! *dir-watchers dir-watchers-initial))
+  (stop-watching-dirs! (watched-dirs))
+  (reset! *state empty-state))

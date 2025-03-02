@@ -1,28 +1,45 @@
 (ns scicloj.clay.v2.main
   "command line interface"
   (:gen-class)
-  (:require [clojure.edn :as edn]
+  (:require [babashka.fs :as fs]
             [clojure.tools.cli :as cli]
             [scicloj.clay.v2.api :as api]
             [nrepl.cmdline]))
 
 (def cli-options
-  [["-s" "--source-path PATHS"
-    :default-desc (pr-str ["notebooks"])
-    :parse-fn edn/read-string]
-   ["-t" "--base-target-path DIR"
-    :default-desc "docs"]
-   ["-r" "--live-reload"]
+  [["-t" "--base-target-path DIR" :default-desc "docs"]
+   ["-r" "--render"]
    ["-h" "--help"]])
 
+(def default-options
+  {:live-reload true})
+
+(def render-options
+  {:show        false
+   :serve       false
+   :live-reload false})
+
 (defn -main
-  "Invoke with `clojure -M:dev -m scicloj.clay.v2.main --help` to see options"
+  "Invoke with `clojure -M:dev -m scicloj.clay.v2.main --help` to see options
+
+  arguments should be files or directories"
   [& args]
   (let [{:keys [options summary arguments errors]} (cli/parse-opts args cli-options)
-        {:keys [help]} options
-        opts (merge (when (seq arguments)
-                      {:source-path (vec arguments)})
-                    options)]
+        {:keys [help render]} options
+        opts (merge {:watch-dirs ["notebooks"]}
+                    (when (seq arguments)
+                      (when-let [x (first (filter (complement fs/exists?) arguments))]
+                        (println x "does not exist")
+                        (System/exit -1))
+                      (let [dirs (filter fs/directory? arguments)
+                            files (remove fs/directory? arguments)]
+                        (cond-> {}
+                                (seq files) (assoc :source-path (vec files))
+                                (seq dirs) (assoc :watch-dirs (vec dirs)))))
+                    (dissoc options :render)
+                    (if render
+                      render-options
+                      default-options))]
     (println "Options:")
     (prn opts)
     (cond help (do (println "Clay")

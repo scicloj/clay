@@ -8,22 +8,22 @@
     (is (= #{(fs/path test-dir "foo" "a")
              (fs/path test-dir "foo" "a" "b")
              (fs/path test-dir "bar" "a")}
-           (lr/subdir-paths [(fs/path test-dir "foo" "a")
+           (lr/subdirs [(fs/path test-dir "foo" "a")
                              (fs/path test-dir "foo" "a" "b")
                              (fs/path test-dir "bar" "a")
                              (fs/path test-dir "baz" "a")]
-                            [(fs/path test-dir "foo")
+                       [(fs/path test-dir "foo")
                              (fs/path test-dir "bar")])))))
 
 (deftest exclude-subdir-paths-test
   (fs/with-temp-dir [test-dir]
     (is (= #{(fs/path test-dir "foo")
              (fs/path test-dir "bar")}
-           (lr/exclude-subdir-paths [(fs/path test-dir "foo")
+           (lr/roots [(fs/path test-dir "foo")
                                      (fs/path test-dir "bar")])))
     (is (= #{(fs/path test-dir "foo")
              (fs/path test-dir "bar")}
-           (lr/exclude-subdir-paths [(fs/path test-dir "foo")
+           (lr/roots [(fs/path test-dir "foo")
                                      (fs/path test-dir "foo" "a")
                                      (fs/path test-dir "bar")
                                      (fs/path test-dir "bar" "b")])))))
@@ -50,55 +50,55 @@
                 (fs/path test-dir "foo")
                 (fs/path test-dir "bar")]]
       (create-dirs dirs)
-      (lr/start-watching-dirs! dirs mock-make-fn)
+      (lr/watch-dirs! dirs mock-make-fn)
       (is (= #{(fs/path test-dir "foo")
                (fs/path test-dir "bar")}
-             (lr/watched-dirs!))
+             (lr/watched-dirs))
           "watch a dir exactly once")
       (lr/stop-watching-dirs! dirs)
       (is (= #{}
-             (lr/watched-dirs!))
+             (lr/watched-dirs))
           "all being stopped"))))
 
 (deftest start!-stop!-test
   (fs/with-temp-dir [test-dir]
-    (let [file1 (fs/path test-dir "foo" "bar" "a.clj")]
-      (fs/create-dirs (fs/parent file1))
-      (lr/start! mock-make-fn {:live-reload true
+                    (let [file1 (fs/path test-dir "foo" "bar" "a.clj")]
+                      (fs/create-dirs (fs/parent file1))
+                      (lr/start! mock-make-fn {:live-reload true
                                :source-path (str file1)})
-      (is (= #{file1}
-             (lr/watched-files!))
+                      (is (= #{file1}
+                             (lr/watched-files))
           "watch first file")
-      (is (= #{(fs/parent file1)}
-             (lr/watched-dirs!))
+                      (is (= #{(fs/parent file1)}
+                             (lr/watched-dirs))
           "watch first dir")
-      (lr/stop!)
-      (is (= #{}
-             (lr/watched-files!)))
-      (is (= #{}
-             (lr/watched-dirs!)))
-      ;; do it again
-      (lr/start! mock-make-fn {:live-reload true
+                      (lr/stop!)
+                      (is (= #{}
+                             (lr/watched-files)))
+                      (is (= #{}
+                             (lr/watched-dirs)))
+                      ;; do it again
+                      (lr/start! mock-make-fn {:live-reload true
                                :source-path (str file1)})
-      (is (= #{(fs/parent file1)}
-             (lr/watched-dirs!))
+                      (is (= #{(fs/parent file1)}
+                             (lr/watched-dirs))
           "watch first dir")
-      ;; make other files
-      (let [files [(fs/path test-dir "foo" "a.clj")
+                      ;; make other files
+                      (let [files [(fs/path test-dir "foo" "a.clj")
                    (fs/path test-dir "foo" "baz" "a.clj")
                    (fs/path test-dir "bar" "a.clj")]]
-        (create-dirs (map fs/parent files))
-        (lr/start! mock-make-fn {:live-reload true
+                        (create-dirs (map fs/parent files))
+                        (lr/start! mock-make-fn {:live-reload true
                                  :source-path (into [] (map str files))})
-        (is (= (set (apply vector file1 files))
-               (lr/watched-files!))
+                        (is (= (set (apply vector file1 files))
+                               (lr/watched-files))
             "watch files twice")
-        (is (= #{(fs/path test-dir "foo")
+                        (is (= #{(fs/path test-dir "foo")
                  (fs/path test-dir "bar")}
-               (lr/watched-dirs!))
+                               (lr/watched-dirs))
             "watch dirs twice")
-        (lr/stop!)
-        (is (= #{}
-               (lr/watched-files!)))
-        (is (= #{}
-               (lr/watched-dirs!)))))))
+                        (lr/stop!)
+                        (is (= #{}
+                               (lr/watched-files)))
+                        (is (= #{}
+                               (lr/watched-dirs)))))))

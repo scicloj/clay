@@ -270,12 +270,6 @@
      [:ok])])
 
 
-(defn handle-main-spec! [{:as spec
-                          :keys [book]}]
-  (when book
-    (make-book! spec)))
-
-
 (defn write-test-forms-as-ns [forms]
   (let [path (-> forms
                  (->> (filter notebook/ns-form?))
@@ -397,23 +391,20 @@
 (defn make! [spec]
   (let [config (config/config)
         {:keys [single-form single-value]} spec
-        {:keys [main-spec single-ns-specs]} (extract-specs config
-                                                           spec)
-        {:keys [show book base-target-path clean-up-target-dir]} main-spec]
+        {:keys [main-spec single-ns-specs]} (extract-specs config spec)
+        {:keys [show book base-target-path watch-dirs clean-up-target-dir live-reload]} main-spec
+        source-paths (set (map :source-path single-ns-specs))]
     (when (and clean-up-target-dir
                (not (or single-form single-value)))
       (babashka.fs/delete-tree base-target-path))
     (sync-resources! main-spec)
     (when show
       (server/loading!))
-    [(->> single-ns-specs
-          (mapv handle-single-source-spec!))
-     (-> main-spec
-         handle-main-spec!)
-     (->> single-ns-specs
-          (map #(live-reload/start! make! %))
-          (reduce into #{})
-          (vector :watching-new-files))]))
+    [(mapv handle-single-source-spec! single-ns-specs)
+     (when book
+       (make-book! spec))
+     (when live-reload
+       (live-reload/start! make! spec source-paths watch-dirs))]))
 
 
 (comment
