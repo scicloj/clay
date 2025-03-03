@@ -63,7 +63,7 @@
                                   (let [path (str path)]
                                     (println "EVENT:" type path)
                                     (when (and (#{:create :modify} type)
-                                               (str/ends-with? path ".clj"))
+                                               (str/ends-with? (str/lower-case path) ".clj"))
                                       ;; TODO: what if the spec is a book?
                                       (make-fn (-> (or (file-spec path) spec)
                                                    (assoc :source-path path))))))
