@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.live-reload
   (:require [clojure.set :as set]
             [babashka.fs :as fs]
+            [clojure.string :as str]
             [nextjournal.beholder :as beholder]))
 
 (def empty-state {:watchers   {}
@@ -59,12 +60,13 @@
   (swap! *state update :watchers into
          (for [dir dirs]
            [dir (beholder/watch (fn watch-callback [{:as event :keys [type path]}]
-                                  (println "EVENT:" type (str path))
-                                  ;; TODO; handle deleted??
-                                  (when (#{:create :modify} type)
-                                    ;; TODO: what if the spec is a book?
-                                    (make-fn (-> (or (file-spec (str path)) spec)
-                                                 (assoc :source-path (str path))))))
+                                  (let [path (str path)]
+                                    (println "EVENT:" type path)
+                                    (when (and (#{:create :modify} type)
+                                               (str/ends-with? path ".clj"))
+                                      ;; TODO: what if the spec is a book?
+                                      (make-fn (-> (or (file-spec path) spec)
+                                                   (assoc :source-path path))))))
                                 dir)])))
 
 (defn stop-watching-dirs!
