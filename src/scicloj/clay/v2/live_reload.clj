@@ -83,8 +83,7 @@
   "Watch directories of a spec"
   [make-fn spec source-paths watch-dirs]
   (let [files (set (map (comp str fs/canonicalize)
-                        (remove #(or (nil? %)
-                                     (fs/directory? %))
+                        (remove (some-fn nil? fs/directory?)
                                 source-paths)))
         dirs (set (map (comp str fs/canonicalize)
                        watch-dirs))
@@ -105,3 +104,4 @@
   []
   (stop-watching-dirs! (watched-dirs))
   (reset! *state empty-state))
+
