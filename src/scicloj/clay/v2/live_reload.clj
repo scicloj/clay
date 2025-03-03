@@ -90,7 +90,8 @@
     (doseq [dir watch]
       (when (not (fs/exists? dir))
         (fs/create-dir dir)
-        (println "Clay created a directory:" dir)))
+        (println "Clay created a directory:" dir)
+        (println (str "Now you can create a Clojure file: " dir "/my_notebook.clj"))))
     (watch-files! files spec)
     ;; if we started watching a parent directory, stop watching the subdirs
     (stop-watching-dirs! (subdirs (watched-dirs) watch))
