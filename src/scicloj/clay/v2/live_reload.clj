@@ -56,12 +56,12 @@
   [dirs make-fn spec]
   {:pre [(empty? (set/intersection (set dirs) (watched-dirs)))]}
   (when (seq dirs)
-    (println "WATCHING:" (pr-str dirs)))
+    (println "Clay watching:" (pr-str dirs)))
   (swap! *state update :watchers into
          (for [dir dirs]
            [dir (beholder/watch (fn watch-callback [{:as event :keys [type path]}]
                                   (let [path (str path)]
-                                    (println "EVENT:" type path)
+                                    (println "Clay file event:" type path)
                                     (when (and (#{:create :modify} type)
                                                (str/ends-with? (str/lower-case path) ".clj"))
                                       ;; TODO: what if the spec is a book?
@@ -83,14 +83,14 @@
   "Watch directories of a spec"
   [make-fn spec source-paths watch-dirs]
   (let [files (set (map (comp str fs/canonicalize)
-                        (remove fs/directory? source-paths)))
+                        (remove nil? source-paths)))
         dirs (set (map (comp str fs/canonicalize)
                        watch-dirs))
         watch (dirs-to-watch (watched-dirs) dirs files)]
     (doseq [dir watch]
       (when (not (fs/exists? dir))
         (fs/create-dir dir)
-        (println "Created:" dir)))
+        (println "Clay created a directory:" dir)))
     (watch-files! files spec)
     ;; if we started watching a parent directory, stop watching the subdirs
     (stop-watching-dirs! (subdirs (watched-dirs) watch))

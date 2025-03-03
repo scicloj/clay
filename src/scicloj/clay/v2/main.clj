@@ -29,24 +29,23 @@
         opts (merge {:watch-dirs ["notebooks"]}
                     (when (seq arguments)
                       (when-let [x (first (filter (complement fs/exists?) arguments))]
-                        (println x "does not exist")
+                        (println "Clay error:" x "does not exist")
                         (System/exit -1))
                       (let [dirs (filter fs/directory? arguments)
                             files (remove fs/directory? arguments)]
                         (cond-> {}
-                                (seq files) (assoc :source-path (vec files))
-                                (seq dirs) (assoc :watch-dirs (vec dirs)))))
+                          (seq files) (assoc :source-path (vec files))
+                          (seq dirs) (assoc :watch-dirs (vec dirs)))))
                     (dissoc options :render)
                     (if render
                       render-options
                       default-options))]
-    (println "Options:")
-    (prn opts)
+    (println "Clay options:" (pr-str opts))
     (cond help (do (println "Clay")
                    (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")
                    (println summary)
                    (System/exit 0))
-          errors (do (println "Error:" errors)
+          errors (do (println "Clay error:" errors)
                      (System/exit -1))
           :else (do (api/make! opts)
                     (if (:live-reload opts)

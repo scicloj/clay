@@ -219,7 +219,7 @@
            stop-server (core-http-server port)]
        (server.state/set-port! port)
        (reset! *stop-server! stop-server)
-       (println "serving Clay at" (port->url port))
+       (println "Clay serving at" (port->url port))
        (when browse
          (browse!))))))
 

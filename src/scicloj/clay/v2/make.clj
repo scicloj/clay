@@ -258,7 +258,7 @@
      (->> (shell/sh "quarto" "render")
           (shell/with-sh-dir base-target-path)
           ((juxt :err :out))
-          (mapv println))
+          (mapv (partial println "Clay Quarto:")))
      (babashka.fs/copy-tree (str base-target-path "/_book")
                             base-target-path
                             {:replace-existing true})
@@ -343,13 +343,13 @@
                              (update :quarto dissoc :title))
                            page/md
                            (->> (spit qmd-path)))
-                       (println [:wrote qmd-path (time/now)])
+                       (println "Clay:" [:wrote qmd-path (time/now)])
                        (when-not book
                          (if run-quarto
                            (do (->> (shell/sh "quarto" "render" qmd-path)
                                     ((juxt :err :out))
-                                    (mapv println))
-                               (println [:created full-target-path (time/now)])
+                                    (mapv (partial println "Clay Quarto:")))
+                               (println "Clay:" [:created full-target-path (time/now)])
                                (when post-process
                                  (->> full-target-path
                                       slurp
