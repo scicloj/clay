@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta31] - unreleased
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately
+- updated the cli signature
+- added support for live-reload of whole directories
+- refactored and simplified the live-reload logic
 
 ## [2-beta30] - 2025-02-24
 - added main cli: `clojure -M:dev -m scicloj.clay.v2.main`
