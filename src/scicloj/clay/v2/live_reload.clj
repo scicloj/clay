@@ -30,10 +30,10 @@
 
 (defn dirs-to-watch
   "Returns any parents of file-paths that are not in watched-dirs."
-  [watched-dirs file-paths]
+  [watched-dirs dirs file-paths]
   (-> (map (comp str fs/parent) file-paths)
       (set)
-      (set/union watched-dirs)
+      (set/union watched-dirs dirs)
       (roots)
       (set/difference watched-dirs)))
 
@@ -82,21 +82,20 @@
 (defn start!
   "Watch directories of a spec"
   [make-fn spec source-paths watch-dirs]
-  (let [canonical-paths (set (map (comp str fs/canonicalize)
-                                  (concat
-                                    (map #(babashka.fs/path % "unnamed.clj") watch-dirs)
-                                    (remove nil? source-paths))))
-        dirs (dirs-to-watch (watched-dirs) canonical-paths)]
-    ;; TODO: maybe make a directory instead?
-    (when-let [bad-path (first (filter (complement babashka.fs/exists?) canonical-paths))]
-      (throw (ex-info (str "Does not exist: " bad-path)
-                      {:id   ::bad-path
-                       :path bad-path})))
-    (watch-files! canonical-paths spec)
+  (let [files (set (map (comp str fs/canonicalize)
+                        (remove fs/directory? source-paths)))
+        dirs (set (map (comp str fs/canonicalize)
+                       watch-dirs))
+        watch (dirs-to-watch (watched-dirs) dirs files)]
+    (doseq [dir watch]
+      (when (not (fs/exists? dir))
+        (fs/create-dir dir)
+        (println "Created:" dir)))
+    (watch-files! files spec)
     ;; if we started watching a parent directory, stop watching the subdirs
-    (stop-watching-dirs! (subdirs (watched-dirs) dirs))
+    (stop-watching-dirs! (subdirs (watched-dirs) watch))
     ;; watch new dirs for notebook changes
-    (watch-dirs! dirs make-fn spec)))
+    (watch-dirs! watch make-fn spec)))
 
 (defn stop!
   "Stop all directory watchers."
