@@ -544,12 +544,13 @@
 
 scicloj.clay.v2.main/default-options
 
+;; The default usage is as follows:
 ;; ```sh
 ;; clojure -m scicloj.clay.v2.main
 ;; ```
 
 ;; Different files and directoies can be passed as arguments
-;; and then they will be watched too. If `.clj` files are passed,
+;; and then they will be watched. If `.clj` files are passed,
 ;; they will be immediately rendered as HTML.
 
 ;; For example:
