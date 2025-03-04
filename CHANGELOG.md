@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - updated the cli signature, made live-reload the default behaviour
 - added support for live-reload of whole directories
 - refactored and simplified the live-reload logic
+- more consistent logging
 
 ## [2-beta30] - 2025-02-24
 - added main cli: `clojure -M:dev -m scicloj.clay.v2.main`
