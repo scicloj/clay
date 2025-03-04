@@ -239,6 +239,7 @@
    [scicloj.clay.v2.quarto.themes :as quarto.themes]
    [scicloj.metamorph.ml.toydata :as toydata]
    [scicloj.tableplot.v1.hanami :as hanami]
+   [scicloj.clay.v2.main]
    [tablecloth.api :as tc]
    [clojure.string :as str]))
 
