@@ -20,9 +20,7 @@
    :live-reload false})
 
 (defn -main
-  "Invoke with `clojure -M:dev -m scicloj.clay.v2.main --help` to see options
-
-  arguments should be files or directories"
+  "Invoke Clay from the command line. See https://scicloj.github.io/clay/#cli ."
   [& args]
   (let [{:keys [options summary arguments errors]} (cli/parse-opts args cli-options)
         {:keys [help render]} options
