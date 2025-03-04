@@ -402,7 +402,7 @@
       (server/loading!))
     [(mapv handle-single-source-spec! single-ns-specs)
      (when book
-       (make-book! spec))
+       (make-book! main-spec))
      (when live-reload
        (live-reload/start! make! spec source-paths watch-dirs))]))
 
