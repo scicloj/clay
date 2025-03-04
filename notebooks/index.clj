@@ -572,9 +572,9 @@ scicloj.clay.v2.main/render-options
 
 ;; For example:
 
-;; Immediately render `my-namespace` and exit.
+;; Immediately render `my-namespace` and exit:
 ;; ```sh
-;; clojure -m scicloj.clay.v2.main notebooks/my_namespace.clj
+;; clojure -m scicloj.clay.v2.main notebooks/my_namespace.clj -r
 ;; ```
 
 ;;
