@@ -258,7 +258,7 @@
      (->> (shell/sh "quarto" "render")
           (shell/with-sh-dir base-target-path)
           ((juxt :err :out))
-          (mapv println))
+          (mapv (partial println "Clay Quarto:")))
      (babashka.fs/copy-tree (str base-target-path "/_book")
                             base-target-path
                             {:replace-existing true})
@@ -268,12 +268,6 @@
            (assoc :full-target-path (str base-target-path "/index.html"))
            server/update-page!))
      [:ok])])
-
-
-(defn handle-main-spec! [{:as spec
-                          :keys [book]}]
-  (when book
-    (make-book! spec)))
 
 
 (defn write-test-forms-as-ns [forms]
@@ -349,13 +343,13 @@
                              (update :quarto dissoc :title))
                            page/md
                            (->> (spit qmd-path)))
-                       (println [:wrote qmd-path (time/now)])
+                       (println "Clay:" [:wrote qmd-path (time/now)])
                        (when-not book
                          (if run-quarto
                            (do (->> (shell/sh "quarto" "render" qmd-path)
                                     ((juxt :err :out))
-                                    (mapv println))
-                               (println [:created full-target-path (time/now)])
+                                    (mapv (partial println "Clay Quarto:")))
+                               (println "Clay:" [:created full-target-path (time/now)])
                                (when post-process
                                  (->> full-target-path
                                       slurp
@@ -397,23 +391,20 @@
 (defn make! [spec]
   (let [config (config/config)
         {:keys [single-form single-value]} spec
-        {:keys [main-spec single-ns-specs]} (extract-specs config
-                                                           spec)
-        {:keys [show book base-target-path clean-up-target-dir]} main-spec]
+        {:keys [main-spec single-ns-specs]} (extract-specs config spec)
+        {:keys [show book base-target-path watch-dirs clean-up-target-dir live-reload]} main-spec
+        source-paths (set (map :source-path single-ns-specs))]
     (when (and clean-up-target-dir
                (not (or single-form single-value)))
       (babashka.fs/delete-tree base-target-path))
     (sync-resources! main-spec)
     (when show
       (server/loading!))
-    [(->> single-ns-specs
-          (mapv handle-single-source-spec!))
-     (-> main-spec
-         handle-main-spec!)
-     (->> single-ns-specs
-          (map #(live-reload/start! make! %))
-          (reduce into #{})
-          (vector :watching-new-files))]))
+    [(mapv handle-single-source-spec! single-ns-specs)
+     (when book
+       (make-book! main-spec))
+     (when live-reload
+       (live-reload/start! make! spec source-paths watch-dirs))]))
 
 
 (comment

@@ -239,6 +239,7 @@
    [scicloj.clay.v2.quarto.themes :as quarto.themes]
    [scicloj.metamorph.ml.toydata :as toydata]
    [scicloj.tableplot.v1.hanami :as hanami]
+   [scicloj.clay.v2.main]
    [tablecloth.api :as tc]
    [clojure.string :as str]))
 
@@ -537,22 +538,45 @@
 ;; When Clay is on the classpath, it exports a `-main` suitable for execution,
 ;; so that you may invoke it from the terminal.
 
-;; To run the CLI using the `clojure` command line tool:
+;; By deafault, it runs clay in live-reload mode, 
+;;as described in the [Live reload section](index.html#live-reload),
+;; watching  changes in the `notebooks` directory.
 
+scicloj.clay.v2.main/default-options
+
+;; The default usage is as follows:
 ;; ```sh
-;; clojure -m scicloj.clay.v2.main --help
+;; clojure -m scicloj.clay.v2.main
 ;; ```
 
-;; A typical usage is
+;; Different files and directoies can be passed as arguments
+;; and then they will be watched. If `.clj` files are passed,
+;; they will be immediately rendered as HTML.
 
+;; For example:
+
+;; Immediately render `my-namespace` and watch `notebooks`.
 ;; ```sh
-;; clojure -M:dev -m scicloj.clay.v2.main notebooks/index.clj -r
+;; clojure -m scicloj.clay.v2.main notebooks/my_namespace.clj
 ;; ```
 
-;; `notebooks/index.clj` is the file to render (when present, overrides the `:source-path` option)
+;; Watch `notebooks1` and `notebooks2` instead of `notebooks`:
+;; ```sh
+;; clojure -m scicloj.clay.v2.main notebooks1 notebooks2
+;; ```
 
-;; `-r` or `--live-reload` starts an nREPL server and will remake the source if it changes,
-;; as described in the [Live reload section](index.html#live-reload).
+;; The `-r` or `--render` argument cancels the `live-reload` behaviour
+;; and can be used for rendering files as a batch task.
+
+scicloj.clay.v2.main/render-options
+
+;; For example:
+
+;; Immediately render `my-namespace` and exit:
+;; ```sh
+;; clojure -m scicloj.clay.v2.main notebooks/my_namespace.clj -r
+;; ```
+
 ;;
 ;; ## Configuration
 
