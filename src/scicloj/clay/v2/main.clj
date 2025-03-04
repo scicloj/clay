@@ -47,7 +47,8 @@
                    (System/exit 0))
           errors (do (println "Clay error:" errors)
                      (System/exit -1))
-          :else (do (api/make! opts)
+          :else (do (println
+                     (api/make! opts))
                     (if (:live-reload opts)
                       (nrepl.cmdline/-main)
                       (System/exit 0))))))
