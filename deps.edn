@@ -20,7 +20,8 @@
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {org.scicloj/noj {:mvn/version "2-beta6.1"}
                               org.mentat/emmy {:mvn/version "0.31.0"
-                                               :exclusions [org.babashka/sci]}}}
+                                               :exclusions [org.babashka/sci]}
+                              org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}}
            :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
                           slipset/deps-deploy {:mvn/version "0.2.1"}}
                    :ns-default build}
