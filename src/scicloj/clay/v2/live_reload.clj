@@ -74,7 +74,7 @@
   [dirs]
   (doseq [dir dirs]
     (beholder/stop (get-in @*state [:watchers dir])))
-  (swap! *state update :watchers dissoc dirs))
+  (swap! *state update :watchers #(apply dissoc %1 %2) dirs))
 
 ;; make/make! calls start!, which sets up callbacks to make/make!
 ;; this is a circular dependency, so we pass make/make! in (dependency injection) instead of referring to it directly
