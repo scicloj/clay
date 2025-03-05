@@ -15,7 +15,7 @@
             [deps-deploy.deps-deploy :as dd]))
 
 (def lib 'org.scicloj/clay)
-(def version "2-beta31")
+(def version "2-beta31.1")
 
 (def snapshot (str version "-SNAPSHOT"))
 (def class-dir "target/classes")
