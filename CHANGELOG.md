@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - avoiding silent failure on code read errors
 - apply narrowing only when `,,` appears inside a form
 
-## [2-beta31] - 2025-03-05
+## [2-beta31.1] - 2025-03-05
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately
 - updated the cli signature, made live-reload the default behaviour
 - added support for live-reload of whole directories
