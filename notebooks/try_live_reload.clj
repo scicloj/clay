@@ -6,8 +6,12 @@
   (clay/make! {:source-path "notebooks/try_live_reload.clj"
                :live-reload true}))
 
+(Thread/sleep 1000)
 
-(,, kind/echarts
+
+
+(kind/echarts
+ ,,
  {:title {:text "Echarts Example"}
   :tooltip {}
   :legend {:data ["sales"]}
@@ -21,3 +25,7 @@
 
 
 
+(Thread/sleep 5000)
+
+
+(+ 1 2)
