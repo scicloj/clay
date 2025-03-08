@@ -310,7 +310,7 @@
       (if use-kindly-render
         (let [notebook {:notes (-> full-source-path
                                    slurp
-                                   read/->safe-notes)}]
+                                   read/->notes)}]
           (-> spec
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)

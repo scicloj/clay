@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta32] - unlreleased
 - when a namespace is narrowed, evaluate only the relevant forms
+- avoiding silent failure on code read errors
 
 ## [2-beta31] - 2025-03-05
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately

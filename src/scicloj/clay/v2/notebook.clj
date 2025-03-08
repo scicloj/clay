@@ -240,7 +240,7 @@
                             single-form (conj (when code
                                                 [{:form (read/read-ns-form code)}])
                                               {:form single-form})
-                            :else (read/->safe-notes code))
+                            :else (read/->notes code))
                       (map-indexed (fn [i {:as note
                                            :keys [code]}]
                                      (assoc note
