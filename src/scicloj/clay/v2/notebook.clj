@@ -9,7 +9,8 @@
             [scicloj.clay.v2.util.merge :as merge]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly-advice.v1.api :as kindly-advice]))
+            [scicloj.kindly-advice.v1.api :as kindly-advice]
+            [clojure.string :as str]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -31,6 +32,9 @@
                                   :remote-repo
                                   (path/file-git-url relative-file-path))})))
 
+(defn narrowed? [code]
+  (-> code 
+      (str/includes? ",,")))
 
 (defn complete [{:as note
                  :keys [comment? code form value]}]
@@ -43,9 +47,7 @@
                                      deref-if-needed)
                             form (-> form
                                      eval
-                                     deref-if-needed))
-               :narrowed (some->> code
-                                  (re-find #",,"))))
+                                     deref-if-needed))))
       (cond-> (not comment?)
         kindly-advice/advise)))
 
@@ -193,6 +195,27 @@
                                 '[[clojure.test :refer [deftest is]]])
                         part))))))
 
+(defn first-line-of-change [code new-code]
+  (if code
+    (->> [code new-code]
+         (map str/split-lines)
+         (apply map =)
+         (take-while true?)
+         count)
+    0))
+
+(def *path->last (atom {}))
+
+(defn slurp-and-compare [path]
+  (swap! *path->last
+         update
+         path
+         (fn [{:keys [code]}]
+           (let [new-code (slurp path)]
+             {:code new-code
+              :first-line-of-change (first-line-of-change
+                                     code new-code)})))
+  (@*path->last path))
 
 (defn items-and-test-forms
   ([{:as options
@@ -208,18 +231,41 @@
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
              *unchecked-math* *unchecked-math*]
-     (let [code (some-> full-source-path slurp)
-           notes (cond
-                   single-value (conj (when code
-                                        [{:form (read/read-ns-form code)}])
-                                      {:value single-value})
-                   single-form (conj (when code
-                                       [{:form (read/read-ns-form code)}])
-                                     {:form single-form})
-                   :else (read/->safe-notes code))
-           narrowing (some->> code
-                              (re-find #",,"))]
-       (-> (->> notes
+     (let [{:keys [code
+                   first-line-of-change]} (some-> full-source-path
+                                                  slurp-and-compare)
+           notes (->> (cond single-value (conj (when code
+                                                 [{:form (read/read-ns-form code)}])
+                                               {:value single-value})
+                            single-form (conj (when code
+                                                [{:form (read/read-ns-form code)}])
+                                              {:form single-form})
+                            :else (read/->safe-notes code))
+                      (map-indexed (fn [i {:as note
+                                           :keys [code]}]
+                                     (assoc note
+                                            :i i
+                                            :narrowed (narrowed? code)))))
+           narrowing (some :narrowed notes)
+           narrowed-indices (when narrowing
+                              (->> notes
+                                   (map (fn [{:keys [i narrowed]}]
+                                          (when narrowed i)))
+                                   (remove nil?)))
+           first-narrowed-index (first narrowed-indices)
+           last-narrowed-index (last narrowed-indices)
+           relevant-notes (if narrowing
+                            (->> notes
+                                 (take (inc last-narrowed-index))
+                                 (filter (fn [{:keys [i code form region]}]
+                                           (or (ns-form? form)
+                                               (>= i first-narrowed-index)
+                                               (-> region
+                                                   (nth 2) ;last region line
+                                                   (> first-line-of-change))))))
+                            ;; else - all notes
+                            notes)]
+       (-> (->> relevant-notes
                 (reduce (fn [{:as aggregation :keys [i
                                                      items
                                                      test-forms

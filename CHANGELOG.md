@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta32] - unlreleased
+- when a namespace is narrowed, evaluate only the relevant forms
+
 ## [2-beta31] - 2025-03-05
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately
 - updated the cli signature, made live-reload the default behaviour
