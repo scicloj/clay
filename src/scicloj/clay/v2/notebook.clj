@@ -227,7 +227,8 @@
             full-target-path
             single-form
             single-value
-            format]}]
+            format
+            smart-sync]}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
              *unchecked-math* *unchecked-math*]
@@ -254,7 +255,8 @@
                                    (remove nil?)))
            first-narrowed-index (first narrowed-indices)
            last-narrowed-index (last narrowed-indices)
-           relevant-notes (if narrowing
+           relevant-notes (if (and narrowing
+                                   smart-sync)
                             (->> notes
                                  (take (inc last-narrowed-index))
                                  (filter (fn [{:keys [i code form region]}]
