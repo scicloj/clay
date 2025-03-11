@@ -368,7 +368,7 @@
                                   [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))]))
-      (catch Exception e
+      (catch Throwable e
         (-> spec
             (assoc :page (-> spec
                              (assoc :items [(item/pprint e)])

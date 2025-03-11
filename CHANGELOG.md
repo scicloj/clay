@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
     * ending at the last `,,`
 - apply narrowing only when `,,` appears inside a form (and not, e.g., inside a line comment)
 - avoid silent failure on code read errors
+- catch and report all Throwable, not only Exception
 
 ## [2-beta31.1] - 2025-03-05
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately
