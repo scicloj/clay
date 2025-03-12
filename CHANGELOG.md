@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. This change
   * the forms in the following segment:
     * starting from the first `,,` form or the first file change, whichever comes first
     * ending at the last `,,`
+- added support for narrower narrow `,,,` - eval only marked forms
 
 ## [2-beta31.1] - 2025-03-05
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately

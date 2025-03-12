@@ -36,6 +36,10 @@
   (-> code 
       (str/includes? ",,")))
 
+(defn narrower? [code]
+  (-> code 
+      (str/includes? ",,,")))
+
 (defn complete [{:as note
                  :keys [comment? code form value]}]
   (-> (if (or value comment?)
@@ -246,17 +250,26 @@
                                            :keys [code]}]
                                      (assoc note
                                             :i i
-                                            :narrowed (narrowed? code)))))
-           narrowing (some :narrowed notes)
-           narrowed-indices (when narrowing
+                                            :narrowed (narrowed? code)
+                                            :narrower (narrower? code)))))
+           some-narrowed (some :narrowed notes)
+           some-narrower (some :narrower notes)
+           narrowed-indices (when some-narrowed
                               (->> notes
                                    (map (fn [{:keys [i narrowed]}]
                                           (when narrowed i)))
                                    (remove nil?)))
            first-narrowed-index (first narrowed-indices)
            last-narrowed-index (last narrowed-indices)
-           relevant-notes (if (and narrowing
-                                   smart-sync)
+           relevant-notes (cond
+                            ;;
+                            some-narrower
+                            (->> notes
+                                 (filter (fn [{:keys [narrower form]}]
+                                           (or narrower
+                                               (ns-form? form)))))
+                            ;;
+                            (and some-narrowed smart-sync)
                             (->> notes
                                  (take (inc last-narrowed-index))
                                  (filter (fn [{:keys [i code form region]}]
@@ -265,7 +278,8 @@
                                                (-> region
                                                    (nth 2) ;last region line
                                                    (> first-line-of-change))))))
-                            ;; else - all notes
+                            ;;
+                            :else
                             notes)]
        (-> (->> relevant-notes
                 (reduce (fn [{:as aggregation :keys [i
@@ -276,7 +290,7 @@
                           (let [{:as complete-note :keys [form kind region narrowed]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
-                                new-items (when (or (not narrowing)
+                                new-items (when (or (not some-narrowed)
                                                     narrowed)
                                             (when-not test-note
                                               (-> complete-note
@@ -330,7 +344,7 @@
            (update :test-forms
                    ;; Leave the test-form only when
                    ;; at least one of them is a `deftest`.
-                   (if narrowing
+                   (if some-narrowed
                      (constantly nil)
                      (fn [test-forms]
                        (when (->> test-forms
