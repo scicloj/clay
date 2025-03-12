@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta32] - 2025-03-12
+- apply narrowing only when `,,` appears inside a form (and not, e.g., inside a line comment)
+- avoid silent failure on code read errors
+- catch and report all Throwable, not only Exception
+- experimental: added a smart-sync option: when a namespace is narrowed by `,,` forms, evaluate only the relevant forms
+  * the `ns` form
+  * the forms in the following segment:
+    * starting from the first `,,` form or the first file change, whichever comes first
+    * ending at the last `,,`
+- experimental: added support for narrower narrow `,,,` - eval only marked forms
+
 ## [2-beta31.1] - 2025-03-05
 - treating Clojure regex as Javascript literal when generating JSON for various data visualizations - by @timothyprately
 - updated the cli signature, made live-reload the default behaviour

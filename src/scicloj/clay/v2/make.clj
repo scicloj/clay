@@ -310,7 +310,7 @@
       (if use-kindly-render
         (let [notebook {:notes (-> full-source-path
                                    slurp
-                                   read/->safe-notes)}]
+                                   read/->notes)}]
           (-> spec
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
@@ -368,7 +368,7 @@
                                   [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))]))
-      (catch Exception e
+      (catch Throwable e
         (-> spec
             (assoc :page (-> spec
                              (assoc :items [(item/pprint e)])
