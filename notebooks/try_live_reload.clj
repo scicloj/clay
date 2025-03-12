@@ -1,4 +1,4 @@
-^{:clay {:smart-sync true}}
+;; ^{:clay {:smart-sync true}}
 (ns try-live-reload
   (:require [scicloj.kindly.v4.kind :as kind]))
 
@@ -8,7 +8,6 @@
                :live-reload true}))
 
 (Thread/sleep 1000)
-
 
 (kind/echarts
  ,,
@@ -22,6 +21,8 @@
             :type "bar"
             :data [5 20 36
                    10 10 20]}]})
+
+#_(+ 1 2,,,)
 
 
 (Thread/sleep 5000)
