@@ -33,12 +33,12 @@
                                   (path/file-git-url relative-file-path))})))
 
 (defn narrowed? [code]
-  (-> code 
-      (str/includes? ",,")))
+  (some-> code 
+          (str/includes? ",,")))
 
 (defn narrower? [code]
-  (-> code 
-      (str/includes? ",,,")))
+  (some-> code 
+          (str/includes? ",,,")))
 
 (defn complete [{:as note
                  :keys [comment? code form value]}]
