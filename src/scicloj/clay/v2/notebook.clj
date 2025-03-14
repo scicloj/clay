@@ -10,7 +10,8 @@
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
             [scicloj.kindly-advice.v1.api :as kindly-advice]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.pprint :as pp]))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -232,10 +233,13 @@
             single-form
             single-value
             format
-            smart-sync]}]
+            smart-sync
+            pprint-margin]
+     :or {pprint-margin pp/*print-right-margin*}}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
-             *unchecked-math* *unchecked-math*]
+             *unchecked-math* *unchecked-math*
+             pp/*print-right-margin* pprint-margin]
      (let [{:keys [code
                    first-line-of-change]} (some-> full-source-path
                                                   slurp-and-compare)
@@ -247,7 +251,7 @@
                                               {:form single-form})
                             :else (read/->notes code))
                       (map-indexed (fn [i {:as note
-                                           :keys [code]}]
+                                          :keys [code]}]
                                      (assoc note
                                             :i i
                                             :narrowed (narrowed? code)
@@ -283,10 +287,10 @@
                             notes)]
        (-> (->> relevant-notes
                 (reduce (fn [{:as aggregation :keys [i
-                                                     items
-                                                     test-forms
-                                                     last-nontest-varname]}
-                             note]
+                                                    items
+                                                    test-forms
+                                                    last-nontest-varname]}
+                            note]
                           (let [{:as complete-note :keys [form kind region narrowed]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
