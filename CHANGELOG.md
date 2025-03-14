@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [next version]
+- added `:pprint-margin` option to control wrapping margin when results are rendered
+
 ## [2-beta32] - 2025-03-12
 - apply narrowing only when `,,` appears inside a form (and not, e.g., inside a line comment)
 - avoid silent failure on code read errors

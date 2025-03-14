@@ -610,6 +610,7 @@ scicloj.clay.v2.main/render-options
 ;; | `:remote-repo` | linking to source | `{:git-url "https://github.com/scicloj/clay" :branch  "main"}` |
 ;; | `:hide-info-line` | hiding the source reference at the bottom | `true` |
 ;; | `:hide-ui-header` | hiding the ui info at the top | `true` |
+;; | `:pprint-margin` | result rendering will try to wrap anything going beyond this value | `nil` or `72` |
 ;; | `:post-process` | post-processing the resulting HTML | `#(str/replace "#3" "4")` |
 ;; | `:live-reload` | whether to make and live reload the HTML automatically after its source file is changed | `true` |
 
@@ -618,6 +619,8 @@ scicloj.clay.v2.main/render-options
 ;; When publishing a static page, you may wish to target a `docs` directory by setting `:base-target-path "docs"`
 ;; in your call to `clay/make!`.
 ;; Creating a dev namespace is a good way to invoke a different configuration for publishing.
+
+;; Rendering a result is based on `clojure.pprint/pprint` behaviour. By default it will wrap anything beyond `clojure.pprint/*print-right-margin*` (default: 72) number of chars in the single line. For example `(range 100)` will be rendered as long vertical list of numbers. You can overwrite it by setting `:pprint-margin` option. When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
 
 ;; ## Kinds
 
