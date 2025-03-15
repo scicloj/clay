@@ -18,7 +18,7 @@
         babashka/fs {:mvn/version "0.5.24"}
         org.scicloj/kindly-render {:mvn/version "0.1.1-alpha"}}
  :aliases {:dev {:extra-paths ["notebooks"]
-                 :extra-deps {org.scicloj/noj {:mvn/version "2-beta6.1"}
+                 :extra-deps {org.scicloj/noj {:mvn/version "2-beta10.1"}
                               org.mentat/emmy {:mvn/version "0.31.0"
                                                :exclusions [org.babashka/sci]}
                               org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}}
