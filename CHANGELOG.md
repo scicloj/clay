@@ -1,10 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [next version]
-- added `:pprint-margin` option to control wrapping margin when results are rendered
-- avoiding failure when it is impossible to automatically open the browser
-- fixed CDN links for some JS dependencies (coping with the [unpkg outage](https://github.com/unpkg/unpkg/issues/412))
+## [2-beta33 - 2025-03-15]
+- added `:pprint-margin` option to control wrapping margin when results are rendered - thanks, @genmeblog
+- avoiding failure when it is impossible to automatically open the browser - thans, @smee
+- fixed CDN links for some JS dependencies (coping with the [unpkg outage](https://github.com/unpkg/unpkg/issues/412)) - thanks, @SpacePirate27
 
 ## [2-beta32] - 2025-03-12
 - apply narrowing only when `,,` appears inside a form (and not, e.g., inside a line comment)
