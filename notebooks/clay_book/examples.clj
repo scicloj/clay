@@ -1094,10 +1094,10 @@ Plot.plot({
                  (+ 3 4)])
  (-> (toydata/iris-ds)
      (hanami/plot hanami/rule-chart
-                  {:=x :sepal_width
-                   :=x2 :sepal_length
-                   :=y :petal_width
-                   :=y2 :petal_length
+                  {:=x :sepal-width
+                   :=x2 :sepal-length
+                   :=y :petal-width
+                   :=y2 :petal-length
                    :=color :species
                    :=color-type :nominal
                    :=mark-size 3
