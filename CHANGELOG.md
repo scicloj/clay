@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [next version]
 - added `:pprint-margin` option to control wrapping margin when results are rendered
+- avoiding failure when it is impossible to automatically open the browser
 
 ## [2-beta32] - 2025-03-12
 - apply narrowing only when `,,` appears inside a form (and not, e.g., inside a line comment)
