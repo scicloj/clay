@@ -82,10 +82,10 @@
   (toydata/iris-ds)
   (hanami/plot
    hanami/rule-chart
-   {:=x :sepal_width,
-    :=x2 :sepal_length,
-    :=y :petal_width,
-    :=y2 :petal_length,
+   {:=x :sepal-width,
+    :=x2 :sepal-length,
+    :=y :petal-width,
+    :=y2 :petal-length,
     :=color :species,
     :=color-type :nominal,
     :=mark-size 3,
@@ -297,7 +297,7 @@
 
 
 (def
- var73_line645
+ var73_line648
  (->>
   ["purple" "darkgreen" "brown"]
   (mapcat
@@ -311,16 +311,16 @@
   kind/fragment))
 
 
-(def var74_line653 (->> (range 3) kind/fragment))
+(def var74_line656 (->> (range 3) kind/fragment))
 
 
 (def
- var76_line665
+ var76_line668
  (kind/fn {:x 1, :y 2} #:kindly{:f (fn [{:keys [x y]}] (+ x y))}))
 
 
 (def
- var77_line670
+ var77_line673
  (kind/fn
   {:my-video-src
    "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
@@ -330,33 +330,33 @@
             (kind/video {:src my-video-src}))}))
 
 
-(def var79_line677 (kind/fn [+ 1 2]))
+(def var79_line680 (kind/fn [+ 1 2]))
 
 
 (def
- var81_line682
+ var81_line685
  (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
 
 
 (def
- var83_line691
+ var83_line694
  (kind/fn
   {:x (range 3), :y (repeatedly 3 rand)}
   #:kindly{:f tc/dataset}))
 
 
 (def
- var84_line696
+ var84_line699
  (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
 
 
 (def
- var85_line701
+ var85_line704
  (kind/fn {:kindly/f tc/dataset, :x (range 3), :y (repeatedly 3 rand)}))
 
 
 (def
- var87_line714
+ var87_line717
  (kind/echarts
   {:title {:text "Echarts Example"},
    :tooltip {:formatter #"(params) => 'hello: ' + params.name"},
@@ -367,19 +367,19 @@
    :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}))
 
 
-(def var89_line734 (delay (Thread/sleep 500) (+ 1 2)))
+(def var89_line737 (delay (Thread/sleep 500) (+ 1 2)))
 
 
 (def
- var91_line744
+ var91_line747
  (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
 
 
-(def var92_line747 (kind/image {:src "notebooks/images/Clay.svg.png"}))
+(def var92_line750 (kind/image {:src "notebooks/images/Clay.svg.png"}))
 
 
 (def
- var93_line750
+ var93_line753
  (kind/vega-lite
   {:data {:url "notebooks/datasets/iris.csv"},
    :mark "rule",
@@ -394,79 +394,79 @@
    :background "floralwhite"}))
 
 
-(def var95_line775 (+ 1 2))
+(def var95_line778 (+ 1 2))
 
 
-(deftest test96_line777 (is (> var95_line775 2.9)))
+(deftest test96_line780 (is (> var95_line778 2.9)))
 
 
-(deftest test97_line780 (is (> var95_line775 2.9)))
+(deftest test97_line783 (is (> var95_line778 2.9)))
 
 
-(deftest test98_line782 (is (> var95_line775 2.9)))
+(deftest test98_line785 (is (> var95_line778 2.9)))
 
 
 (def
- var100_line791
+ var100_line794
  (kindly/hide-code
   (kind/code
    "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
 (def
- var102_line810
+ var102_line813
  (kind/table
   {:column-names ["A" "B" "C"], :row-vectors [[1 2 3] [4 5 6]]}
   {:class "table-responsive", :style {:background "#f8fff8"}}))
 
 
 (def
- var104_line846
+ var104_line849
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :horizontal})
   false))
 
 
-(def var105_line850 (+ 1 2))
+(def var105_line853 (+ 1 2))
 
 
-(def var106_line852 (+ 3 4))
+(def var106_line855 (+ 3 4))
 
 
 (def
- var108_line856
+ var108_line859
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :vertical})
   false))
 
 
-(def var109_line860 (+ 1 2))
+(def var109_line863 (+ 1 2))
 
 
-(def var110_line862 (+ 3 4))
+(def var110_line865 (+ 3 4))
 
 
 (def
- var112_line866
+ var112_line869
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color "#ccddee"}})
   false))
 
 
-(def var113_line870 (kind/hiccup [:div [:p "hello"]]))
+(def var113_line873 (kind/hiccup [:div [:p "hello"]]))
 
 
-(def var115_line877 (tc/dataset {:x (range 3)}))
+(def var115_line880 (tc/dataset {:x (range 3)}))
 
 
-(def var117_line881 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
+(def var117_line884 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
 
 
 (def
- var119_line887
+ var119_line890
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color nil}})
   false))
 
 
-(def var120_line891 (kind/hiccup [:div [:p "hello"]]))
+(def var120_line894 (kind/hiccup [:div [:p "hello"]]))
