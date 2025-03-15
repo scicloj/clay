@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta34 - 2025-03-15]
+- fixed more CDN links - thanks, @borkdude
+
 ## [2-beta33 - 2025-03-15]
 - added `:pprint-margin` option to control wrapping margin when results are rendered - thanks, @genmeblog
 - avoiding failure when it is impossible to automatically open the browser - thans, @smee

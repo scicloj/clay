@@ -47,8 +47,8 @@
              :css {:from-the-web
                    ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}}
    :reagent {:js {:from-local-copy
-                  ["https://unpkg.com/react@18/umd/react.production.min.js"
-                   "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+                  ["https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"
+                   "https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"
                    "https://daslu.github.io/scittle/js/scittle.js"
                    "https://daslu.github.io/scittle/js/scittle.cljs-ajax.js"
                    "https://daslu.github.io/scittle/js/scittle.reagent.js"

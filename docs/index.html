@@ -152,12 +152,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Examples</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./clay_book.emmy_viewers.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Emmy-viewers</span></span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -491,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>   [<span class="at">:li</span> <span class="st">"two"</span>]</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   [<span class="at">:li</span> <span class="st">"three"</span>]]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background:#efe9e6;background-color:;border-style:solid;"><ul><li>one</li><li>two</li><li>three</li></ul></div>
+<div style="background:#efe9e6;border-style:solid;"><ul><li>one</li><li>two</li><li>three</li></ul></div>
 <p>A dataset using <a href="https://scicloj.github.io/tablecloth/">Tablecloth</a>:</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> {<span class="at">:x</span> (<span class="kw">range</span> <span class="dv">5</span>)</span>
@@ -511,23 +505,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.79547241</td>
+<td style="text-align: right;">0.08734443</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.98422609</td>
+<td style="text-align: right;">0.26607831</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.24402397</td>
+<td style="text-align: right;">0.86118917</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.01281514</td>
+<td style="text-align: right;">0.25645950</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.98599318</td>
+<td style="text-align: right;">0.79983713</td>
 </tr>
 </tbody>
 </table>
@@ -536,16 +530,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceClojure">
 <div class="sourceCode" id="cb13"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> (toydata/iris-ds)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    (hanami/plot hanami/rule-chart</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 {:=x <span class="at">:sepal</span>_width</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                  :=x2 <span class="at">:sepal</span>_length</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                  :=y <span class="at">:petal</span>_width</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                  :=y2 <span class="at">:petal</span>_length</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 {:=x <span class="at">:sepal-width</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                  :=x2 <span class="at">:sepal-length</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                  :=y <span class="at">:petal-width</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                  :=y2 <span class="at">:petal-length</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                  :=color <span class="at">:species</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                  :=color-type <span class="at">:nominal</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                  :=mark-size <span class="dv">3</span></span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                  :=mark-opacity <span class="fl">0.2</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background-color:;"><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"color":{"field":"species","type":"nominal"},"x":{"field":"sepal_width","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"rule","size":3,"opacity":0.2,"tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"color":{"field":"species","type":"nominal"},"x":{"field":"sepal-width","type":"quantitative"},"y":{"field":"petal-width","type":"quantitative"},"x2":{"field":"sepal-length","type":"quantitative"},"y2":{"field":"petal-length","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"rule","size":3,"opacity":0.2,"tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
 </section>
 <section id="api" class="level2" data-number="1.8">
 <h2 data-number="1.8" class="anchored" data-anchor-id="api"><span class="header-section-number">1.8</span> API</h2>
@@ -871,11 +865,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>true</code></td>
 </tr>
 <tr class="odd">
+<td><code>:pprint-margin</code></td>
+<td>result rendering will try to wrap anything going beyond this value</td>
+<td><code>nil</code> or <code>72</code></td>
+</tr>
+<tr class="even">
 <td><code>:post-process</code></td>
 <td>post-processing the resulting HTML</td>
 <td><code>#(str/replace "#3" "4")</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>:live-reload</code></td>
 <td>whether to make and live reload the HTML automatically after its source file is changed</td>
 <td><code>true</code></td>
@@ -883,6 +882,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded. For example: you may set <code>:base-target-path "temp"</code> at your <code>clay.edn</code> file. When publishing a static page, you may wish to target a <code>docs</code> directory by setting <code>:base-target-path "docs"</code> in your call to <code>clay/make!</code>. Creating a dev namespace is a good way to invoke a different configuration for publishing.</p>
+<p>Rendering a result is based on <code>clojure.pprint/pprint</code> behaviour. By default it will wrap anything beyond <code>clojure.pprint/*print-right-margin*</code> (default: 72) number of chars in the single line. For example <code>(range 100)</code> will be rendered as long vertical list of numbers. You can overwrite it by setting <code>:pprint-margin</code> option. When set to <code>nil</code> there won’t be wrapping at all and <code>(range 100)</code> will be rendered in one horizontal list of numbers.</p>
 </section>
 <section id="kinds" class="level2" data-number="1.11">
 <h2 data-number="1.11" class="anchored" data-anchor-id="kinds"><span class="header-section-number">1.11</span> Kinds</h2>
@@ -909,15 +909,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="subsection-purple" class="level3" data-number="1.13.1">
 <h3 data-number="1.13.1" class="anchored" data-anchor-id="subsection-purple"><span class="header-section-number">1.13.1</span> subsection: purple</h3>
-<div style="background-color:;color:lightgrey;"><big><p>purple</p></big></div>
+<div style="background-color:purple;color:lightgrey;"><big><p>purple</p></big></div>
 </section>
 <section id="subsection-darkgreen" class="level3" data-number="1.13.2">
 <h3 data-number="1.13.2" class="anchored" data-anchor-id="subsection-darkgreen"><span class="header-section-number">1.13.2</span> subsection: darkgreen</h3>
-<div style="background-color:;color:lightgrey;"><big><p>darkgreen</p></big></div>
+<div style="background-color:darkgreen;color:lightgrey;"><big><p>darkgreen</p></big></div>
 </section>
 <section id="subsection-brown" class="level3" data-number="1.13.3">
 <h3 data-number="1.13.3" class="anchored" data-anchor-id="subsection-brown"><span class="header-section-number">1.13.3</span> subsection: brown</h3>
-<div style="background-color:;color:lightgrey;"><big><p>brown</p></big></div>
+<div style="background-color:brown;color:lightgrey;"><big><p>brown</p></big></div>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb49"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">3</span>)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>     kind/fragment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -953,7 +953,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>               (kind/video</span>
 <span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                {<span class="at">:src</span> my-video-src}))})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<video controls="" style="background-color:;"><source src="https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4" type="video/mp4"></video>
+<video controls=""><source src="https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4" type="video/mp4"></video>
 <p>If the value is a vector, the function is the first element, and the arguments are the rest.</p>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb56"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(kind/fn</span>
@@ -992,15 +992,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.82827832</td>
+<td style="text-align: right;">0.33292651</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.75795927</td>
+<td style="text-align: right;">0.81006917</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.57671579</td>
+<td style="text-align: right;">0.84992605</td>
 </tr>
 </tbody>
 </table>
@@ -1023,15 +1023,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.65010035</td>
+<td style="text-align: right;">0.76545653</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.33737802</td>
+<td style="text-align: right;">0.15887192</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.71252086</td>
+<td style="text-align: right;">0.93316221</td>
 </tr>
 </tbody>
 </table>
@@ -1054,15 +1054,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.86600771</td>
+<td style="text-align: right;">0.94550728</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.45220880</td>
+<td style="text-align: right;">0.81527380</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.46093983</td>
+<td style="text-align: right;">0.38805745</td>
 </tr>
 </tbody>
 </table>
@@ -1085,7 +1085,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">:data</span> [<span class="dv">5</span> <span class="dv">20</span> <span class="dv">36</span></span>
 <span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">10</span> <span class="dv">10</span> <span class="dv">20</span>]}]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background-color:;height:400px;width:100%;"><script>
+<div style="height:400px;width:100%;"><script>
 {
   var myChart = echarts.init(document.currentScript.parentElement);
   myChart.setOption({"title":{"text":"Echarts Example"},"tooltip":{"formatter":(params) => 'hello: ' + params.name},"legend":{"data":["sales"]},"xAxis":{"data":["Shirts","Cardigans","Chiffons","Pants","Heels","Socks"]},"yAxis":{},"series":[{"name":"sales","type":"bar","data":[5,20,36,10,10,20]}]});
@@ -1113,13 +1113,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb66"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>(kind/hiccup</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a> [<span class="at">:img</span> {<span class="at">:src</span> <span class="st">"notebooks/images/Clay.svg.png"</span>}])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<img src="notebooks/images/Clay.svg.png" style="background-color:;">
+<img src="notebooks/images/Clay.svg.png">
 <div class="sourceClojure">
 <div class="sourceCode" id="cb67"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>(kind/image</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:src</span> <span class="st">"notebooks/images/Clay.svg.png"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="clay-image">
-<img class="clay-image" src="notebooks/images/Clay.svg.png" style="background-color:;">
+<img class="clay-image" src="notebooks/images/Clay.svg.png">
 </div>
 <div class="sourceClojure">
 <div class="sourceCode" id="cb68"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>(kind/vega-lite</span>
@@ -1134,7 +1134,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">:color</span> {<span class="at">:field</span> <span class="st">"species"</span>, <span class="at">:type</span> <span class="st">"nominal"</span>}}</span>
 <span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:background</span> <span class="st">"floralwhite"</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div style="background-color:;"><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"notebooks\/datasets\/iris.csv"},"mark":"rule","encoding":{"opacity":{"value":0.2},"size":{"value":3},"x":{"field":"sepal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"},"color":{"field":"species","type":"nominal"}},"background":"floralwhite"});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"notebooks\/datasets\/iris.csv"},"mark":"rule","encoding":{"opacity":{"value":0.2},"size":{"value":3},"x":{"field":"sepal_width","type":"quantitative"},"x2":{"field":"sepal_length","type":"quantitative"},"y":{"field":"petal_width","type":"quantitative"},"y2":{"field":"petal_length","type":"quantitative"},"color":{"field":"species","type":"nominal"}},"background":"floralwhite"});</script></div>
 </section>
 <section id="hiding-code" class="level2" data-number="1.18">
 <h2 data-number="1.18" class="anchored" data-anchor-id="hiding-code"><span class="header-section-number">1.18</span> Hiding code</h2>
