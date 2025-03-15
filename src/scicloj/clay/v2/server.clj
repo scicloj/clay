@@ -127,10 +127,10 @@
                                       :hide-ui-header)
                           (hiccup/html
                            #_[:style "* {margin: 0; padding: 0; top: 0;}"]
-                                         [:div {:style {:height "70px"
-                                                        :background-color "#eee"}}
-                                          (header state)]))
-    (communication-script state)))))
+                           [:div {:style {:height "70px"
+                                          :background-color "#eee"}}
+                            (header state)]))
+                        (communication-script state)))))
 
 
 (defn compute
@@ -209,7 +209,11 @@
           port->url))
 
 (defn browse! []
-  (browse/browse-url (url)))
+  (let [u (url)]
+    (try
+      (browse/browse-url u)
+      (catch Exception e
+        (println "Clay could not open the browser for" u)))))
 
 (defn open!
   ([] (open! {}))
