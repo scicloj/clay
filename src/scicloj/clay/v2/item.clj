@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
-            [scicloj.clay.v2.util.jso :as jso]
+            [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
