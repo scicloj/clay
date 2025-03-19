@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2-beta35 - 2025-03-19]
 - updated deps (kindly-render)
 - using the javascript-object functionality that was moved to kindly-render
 - consistently using the javascript-object aware version of `write-json-str`
