@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [unreleased]
 - updated deps (kindly-render)
 - using the javascript-object functionality that was moved to kindly-render
+- consistently using the javascript-object aware version of `write-json-str`
 
 ## [2-beta34 - 2025-03-15]
 - fixed more CDN links - thanks, @borkdude
