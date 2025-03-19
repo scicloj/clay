@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.prepare
   (:require
    [clojure.string :as string]
-    [clojure.test :as test]
+   [clojure.test :as test]
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.table :as table]
    [scicloj.clay.v2.util.walk :as claywalk]
@@ -12,7 +12,8 @@
    [hiccup.core :as hiccup]
    [charred.api :as charred]
    [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.kind :as kind]))
+   [scicloj.kindly.v4.kind :as kind]
+   [scicloj.kindly-render.shared.jso :as jso]))
 
 (def *kind->preparer
   (atom {}))
@@ -268,7 +269,7 @@
                   (->> context
                        :kindly/options
                        :datatables
-                       charred/write-json-str
+                       jso/write-json-str
                        (format "new DataTable(document.currentScript.parentElement, %s);"))]
          :deps (->> @*deps
                     (cons :datatables)

@@ -208,7 +208,7 @@
 (defn html [{:as spec
              :keys [items title toc? favicon]}]
   (let [deps (items->deps items)
-        special-libs (concat deps [:html-default :katex])
+        special-libs (concat [:html-default :katex] deps)
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
