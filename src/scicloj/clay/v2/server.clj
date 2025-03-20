@@ -41,7 +41,7 @@
     (->> [port counter reload-regexp]
          (apply format "
 <script type=\"text/javascript\">
-  
+
     clay_port = %d;
     clay_server_counter = '%d';
     reload_regexp = new RegExp('%s');
@@ -77,7 +77,7 @@
         console.log('unknown ws message: ' + event.data);
       }
     });
-  
+
   async function clay_1 () {
     const response = await fetch('/counter');
     const response_counter = await response.json();
@@ -217,7 +217,7 @@
 
 (defn open!
   ([] (open! {}))
-  ([{:as opts :keys [port browse]}]
+  ([{:as opts :keys [port browse ide]}]
    (when-not @*stop-server!
      (let [port (or port (get-free-port))
            stop-server (core-http-server port)]
@@ -225,7 +225,9 @@
        (reset! *stop-server! stop-server)
        (println "Clay serving at" (port->url port))
        (when browse
-         (browse!))))))
+         (when (or (= browse :browser)
+                   (not ide))
+           (browse!)))))))
 
 (defn update-page! [{:as spec
                      :keys [show
@@ -255,4 +257,3 @@
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
-

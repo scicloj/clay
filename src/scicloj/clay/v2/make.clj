@@ -47,7 +47,7 @@
           source-path)
       ;; else
       :else
-      (throw (ex-info "invalid source path"
+      (throw (ex-info (str "Invalid source path: " (pr-str source-path))
                       {:source-path source-path})))))
 
 
@@ -124,7 +124,7 @@
                        source-path
                        [source-path])
         ;; collect specs for single namespaces,
-        ;; keeping the book parts sturcture, if any
+        ;; keeping the book parts structure, if any
         single-ns-specs-w-book-struct (->> source-paths
                                            (map (fn [path]
                                                   (cond
@@ -146,7 +146,7 @@
                                                                                      chapter-path)))))
                                                     ;; else
                                                     :else
-                                                    (throw (ex-info "invalid source path"
+                                                    (throw (ex-info (str "Invalid source path: " (pr-str path))
                                                                     {:path path}))))))]
     {:main-spec (-> config-and-spec
                     (assoc :full-target-paths-w-book-struct
@@ -392,7 +392,7 @@
   (let [config (config/config)
         {:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
-        {:keys [show book base-target-path watch-dirs clean-up-target-dir live-reload]} main-spec
+        {:keys [ide browse show book base-target-path watch-dirs clean-up-target-dir live-reload]} main-spec
         source-paths (set (map :source-path single-ns-specs))]
     (when (and clean-up-target-dir
                (not (or single-form single-value)))
@@ -400,11 +400,20 @@
     (sync-resources! main-spec)
     (when show
       (server/loading!))
-    [(mapv handle-single-source-spec! single-ns-specs)
-     (when book
-       (make-book! main-spec))
-     (when live-reload
-       (live-reload/start! make! spec source-paths watch-dirs))]))
+    (let [info [(mapv handle-single-source-spec! single-ns-specs)
+                  (when book
+                    (make-book! main-spec))
+                  (when live-reload
+                    (live-reload/start! make! spec source-paths watch-dirs))]
+          summary {:url (server/url)
+                   :key "clay"
+                   :title "Clay"
+                   ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
+                   :reveal false
+                   :info info}]
+      (if (and ide (not= browse :browser))
+        (tagged-literal 'flare/html summary)
+        summary))))
 
 
 (comment

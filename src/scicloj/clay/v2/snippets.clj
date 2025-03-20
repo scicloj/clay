@@ -34,7 +34,7 @@
    (prn ["Clay make current namespace as " (pr-str format) file])
    (api/make! (merge {:base-source-path nil
                       :source-path      file
-                      :format format}
+                      :format           format}
                      options))))
 
 (defn make-ns-html!
