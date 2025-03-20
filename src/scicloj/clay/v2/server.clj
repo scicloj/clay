@@ -224,10 +224,13 @@
        (server.state/set-port! port)
        (reset! *stop-server! stop-server)
        (println "Clay serving at" (port->url port))
-       (when browse
-         (when (or (= browse :browser)
-                   (not ide))
-           (browse!)))))))
+       ;; browse can be :browser to prefer using a browser always
+       (when (or (= browse :browser)
+                 ;; clay default is browse true,
+                 ;; ide flag causes a flare to request a webview in the ide
+                 ;; so if ide is true we do not show the browser, even when browse is true
+                 (and browse (not ide)))
+         (browse!))))))
 
 (defn update-page! [{:as spec
                      :keys [show
