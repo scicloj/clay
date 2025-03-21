@@ -538,7 +538,7 @@
 ;; When Clay is on the classpath, it exports a `-main` suitable for execution,
 ;; so that you may invoke it from the terminal.
 
-;; By deafault, it runs clay in live-reload mode, 
+;; By deafault, it runs clay in live-reload mode,
 ;;as described in the [Live reload section](index.html#live-reload),
 ;; watching  changes in the `notebooks` directory.
 
@@ -601,6 +601,7 @@ scicloj.clay.v2.main/render-options
 ;; | `:favicon` | sets a page favicon | `"favicon.ico"` |
 ;; | `:show` | when true (the default) updates the browser view (starts the HTML server if necessary) | `false` |
 ;; | `:browse` | when true (the default) opens a new browser tab when the HTML server is started for the first time | `false` |
+;; | `:ide` | (experimental) causes `make!` to open a webview instead of browser, use `:browse :browser` to avoid | `:calva` |
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
