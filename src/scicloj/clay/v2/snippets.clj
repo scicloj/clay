@@ -55,3 +55,8 @@
 (defn browse! []
   "Open the Clay browser view."
   (api/browse!))
+
+(defn watch! [options]
+  (api/make! (merge {:live-reload true
+                     :watch-dirs ["notebooks"]}
+                    options)))
