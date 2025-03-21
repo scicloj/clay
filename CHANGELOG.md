@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta37 - unreleased]
+- added a `watch!` function to the `snippets` API and the Calva custom REPL commands
+
 ## [2-beta36 - 2025-03-21]
 - support for using webview in IDEs
 - minor improvements in error reporting
