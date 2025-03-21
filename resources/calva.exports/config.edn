@@ -22,4 +22,8 @@
   {:name    "Clay open browser"
    :key     "b"
    :snippet (do (require '[scicloj.clay.v2.snippets])
-                (scicloj.clay.v2.snippets/browse!))}]}
+                (scicloj.clay.v2.snippets/browse!))}
+  {:name    "Clay watch notebooks"
+   :key     "w"
+   :snippet (do (require '[scicloj.clay.v2.snippets])
+                (scicloj.clay.v2.snippets/watch! {:ide :calva}))}]}
