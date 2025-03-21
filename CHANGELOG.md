@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta36 - unreleased]
+- support for using webview in ides
+- minor improvements in error reporting
+
 ## [2-beta35 - 2025-03-19]
 - updated deps (kindly-render)
 - using the javascript-object functionality that was moved to kindly-render

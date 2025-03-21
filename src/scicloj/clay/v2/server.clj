@@ -41,7 +41,7 @@
     (->> [port counter reload-regexp]
          (apply format "
 <script type=\"text/javascript\">
-  
+
     clay_port = %d;
     clay_server_counter = '%d';
     reload_regexp = new RegExp('%s');
@@ -77,7 +77,7 @@
         console.log('unknown ws message: ' + event.data);
       }
     });
-  
+
   async function clay_1 () {
     const response = await fetch('/counter');
     const response_counter = await response.json();
@@ -217,14 +217,19 @@
 
 (defn open!
   ([] (open! {}))
-  ([{:as opts :keys [port browse]}]
+  ([{:as opts :keys [port browse ide]}]
    (when-not @*stop-server!
      (let [port (or port (get-free-port))
            stop-server (core-http-server port)]
        (server.state/set-port! port)
        (reset! *stop-server! stop-server)
        (println "Clay serving at" (port->url port))
-       (when browse
+       ;; browse can be :browser to prefer using a browser always
+       (when (or (= browse :browser)
+                 ;; clay default is browse true,
+                 ;; ide flag causes a flare to request a webview in the ide
+                 ;; so if ide is true we do not show the browser, even when browse is true
+                 (and browse (not ide)))
          (browse!))))))
 
 (defn update-page! [{:as spec
@@ -255,4 +260,3 @@
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
-
