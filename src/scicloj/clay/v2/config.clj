@@ -22,8 +22,9 @@
           edn/read-string))
 
 (defn add-field [config kw compute]
-  (-> config
-      (assoc kw (compute config))))
+  (if (contains? config kw)
+    config
+    (assoc config kw (compute config))))
 
 (defn config []
   (-> (default-config)
