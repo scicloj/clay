@@ -535,34 +535,43 @@
 ;; ## CLI
 ;; (experimental)
 
-;; When Clay is on the classpath, it exports a `-main` suitable for execution,
-;; so that you may invoke it from the terminal.
+;; You can launch Clay From the command line:
 
-;; By deafault, it runs clay in live-reload mode, 
-;;as described in the [Live reload section](index.html#live-reload),
-;; watching  changes in the `notebooks` directory.
+;; ```sh
+;; clojure -M -m scicloj.clay.v2.main
+;; ```
+
+;; Clay will watch the `notebooks` directory in live-reload mode,
+;; as described in the [Live reload section](index.html#live-reload).
 
 scicloj.clay.v2.main/default-options
 
-;; The default usage is as follows:
-;; ```sh
-;; clojure -m scicloj.clay.v2.main
+;; Add a `:clay` alias to your `deps.edn` to make it easier to launch:
+
+;; ```clojure
+;; {:aliases
+;;   {:clay {:main-opts ["-m" "scicloj.clay.v2.main"]}}}
 ;; ```
 
-;; Different files and directoies can be passed as arguments
-;; and then they will be watched. If `.clj` files are passed,
-;; they will be immediately rendered as HTML.
+;; Then you can run it a little more conveniently:
+
+;; ```sh
+;; clojure -M:clay
+;; ```
+
+;; Files and directories to watch can be passed as arguments.
+;; If `.clj` files are passed, they will be immediately rendered as HTML.
 
 ;; For example:
 
 ;; Immediately render `my-namespace` and watch `notebooks`.
 ;; ```sh
-;; clojure -m scicloj.clay.v2.main notebooks/my_namespace.clj
+;; clojure -M -m scicloj.clay.v2.main notebooks/my_namespace.clj
 ;; ```
 
 ;; Watch `notebooks1` and `notebooks2` instead of `notebooks`:
 ;; ```sh
-;; clojure -m scicloj.clay.v2.main notebooks1 notebooks2
+;; clojure -M -m scicloj.clay.v2.main notebooks1 notebooks2
 ;; ```
 
 ;; The `-r` or `--render` argument cancels the `live-reload` behaviour
