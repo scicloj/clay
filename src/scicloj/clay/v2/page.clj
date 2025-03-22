@@ -276,7 +276,7 @@
                         :revealjs
                         :html)]
     (str
-     "\n---\n"
+     "---\n"
      (yaml/generate-string
       (cond-> quarto
         ;; Users may provide non-quarto specific configuration (see also html),
