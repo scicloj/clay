@@ -11,6 +11,9 @@
                       :source-path      file
                       :single-form      form
                       :format format}
+                     (when (:ide options)
+                       {:hide-ui-header true
+                        :hide-info-line true})
                      options))))
 
 (defn make-form-html!
@@ -30,12 +33,12 @@
 
 (defn make-ns!
   "Make a given Clojure file in a given format."
-  ([file format options]
-   (prn ["Clay make current namespace as " (pr-str format) file])
-   (api/make! (merge {:base-source-path nil
-                      :source-path      file
-                      :format           format}
-                     options))))
+  [file format options]
+  (prn ["Clay make current namespace as " (pr-str format) file])
+  (api/make! (merge {:base-source-path nil
+                     :source-path      file
+                     :format           format}
+                    options)))
 
 (defn make-ns-html!
   "Make a given Clojure file in HTML format."
