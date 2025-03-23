@@ -3,8 +3,8 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta37 - unreleased]
 - added a `watch!` function to the `snippets` API and the Calva custom REPL commands
-- bugfix: made sure that Quarto frontmatter would appear on the first line
-- made sure the output flares would be cursive/html compatible
+- bugfix: made sure that Quarto frontmatter would appear on the first line (PR #236)
+- made sure the output flares would be cursive/html compatible (PR #235)
 
 ## [2-beta36 - 2025-03-21]
 - support for using webview in IDEs
