@@ -412,7 +412,7 @@
                    :reveal false
                    :info info}]
       (if (and ide (not= browse :browser))
-        (tagged-literal 'flare/html summary)
+        (tagged-literal 'cursive/html summary)
         summary))))
 
 
