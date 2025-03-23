@@ -634,6 +634,18 @@ scicloj.clay.v2.main/render-options
 
 ;; Rendering a result is based on `clojure.pprint/pprint` behaviour. By default it will wrap anything beyond `clojure.pprint/*print-right-margin*` (default: 72) number of chars in the single line. For example `(range 100)` will be rendered as long vertical list of numbers. You can overwrite it by setting `:pprint-margin` option. When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
 
+;; ### Namespace configuration and front matter
+
+;; Configuration is discovered as metadata under the `:clay` key on the namespace form:
+
+^{:clay {:quarto {:myfrontmatterkey "myfrontmattervalue"}}}
+(ns index)
+
+;; * the clay metadata is on the form rather than the var itself.
+;; * the `:quarto` configuration will be placed in the front matter for markdown output.
+;;
+;; See [Quarto front matter docs](https://quarto.org/docs/authoring/front-matter.html).
+
 ;; ## Kinds
 
 ;; The way things should be visualized is determined by the
