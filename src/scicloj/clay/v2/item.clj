@@ -6,7 +6,8 @@
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
             [hiccup.page]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure+.error]))
 
 (def *id (atom 0))
 
@@ -74,6 +75,15 @@
       with-out-str
       ;; escape
       printed-clojure))
+
+(defn print-throwable [value]
+  (with-open [w (java.io.StringWriter.)]
+    (try (/ 1 0)
+         (catch Exception e
+           (clojure+.error/print-readably w value)))
+    (-> w
+        str
+        printed-clojure)))
 
 (defn md [text]
   {:md (->> text

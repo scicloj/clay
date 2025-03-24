@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 - made sure the output flares would be cursive/html compatible (PR #235)
 - supressed header and footer for a single form visualized in an IDE (PR #234)
 - set automatic height for `kind/plotly`
+- changed error reporting to use `clojure+.error/print-readably`
 
 ## [2-beta36 - 2025-03-21]
 - support for using webview in IDEs
