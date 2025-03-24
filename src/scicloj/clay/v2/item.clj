@@ -236,14 +236,18 @@
                 :or {layout {}
                      config {}}} :value}]
   {:hiccup [:div
-            {:style (extract-style context)}
+            {:style (-> context
+                        :kindly/options
+                        :element/style
+                        (or {:height "auto"
+                             :width "100%"}))}
             [:script
              (format
-               "Plotly.newPlot(document.currentScript.parentElement,
+              "Plotly.newPlot(document.currentScript.parentElement,
                %s, %s, %s);"
-               (jso/write-json-str data)
-               (jso/write-json-str layout)
-               (jso/write-json-str config))]]
+              (jso/write-json-str data)
+              (jso/write-json-str layout)
+              (jso/write-json-str config))]]
    :deps [:plotly]})
 
 (defn portal [value]
