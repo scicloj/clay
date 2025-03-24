@@ -328,6 +328,7 @@
                                                      (comp post-process page/html)
                                                      page/html))
                            server/update-page!)
+                       (println "Clay wrote: " full-target-path)
                        [:wrote full-target-path])
              :quarto (let [qmd-path (-> full-target-path
                                         (string/replace #"\.html$" ".qmd"))
