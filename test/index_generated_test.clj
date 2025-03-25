@@ -26,7 +26,14 @@
     "GsML75MtNXw"]
    ["Jan. 24th 2025"
     "Noj v2 - getting started - from raw data to a blog post (demonstrating CIDER integration and Quarto publishing)"
-    "vnvcKtHHMVQ"]]
+    "vnvcKtHHMVQ"]
+   ["Mar 7th 2025"
+    "Noj in a JAR - setup-free Clojure for beginners"
+    "gHwFCOkBb_o"]
+   ["Mar 7th 2025" "Noj Reload Executable" "tDz1x2d65C0"]
+   ["Mar 24th 2025"
+    "Clojure visual-tools 31 - Workflow Demos 5: Clay overview"
+    "WiOUiHsq_dc"]]
   reverse
   (map
    (fn
@@ -36,12 +43,12 @@
 
 
 (def
- var5_line215
+ var5_line225
  ["(do (require '[scicloj.clay.v2.api :as clay])\n    (clay/make! {:single-form '~form-before-caret\n                 :source-path [\"~file-path\"]}))"])
 
 
 (def
- var7_line223
+ var7_line233
  ["(do (require '[scicloj.clay.v2.api :as clay])\n    (clay/make! {:source-path [\"~file-path\"]}))"])
 
 
@@ -61,7 +68,7 @@
 
 
 (def
- var11_line250
+ var11_line260
  (kind/hiccup
   [:div
    {:style {:background "#efe9e6", :border-style :solid}}
@@ -69,7 +76,7 @@
 
 
 (def
- var13_line259
+ var13_line269
  (->
   {:x (range 5), :y (repeatedly 5 rand)}
   tc/dataset
@@ -77,7 +84,7 @@
 
 
 (def
- var15_line265
+ var15_line275
  (->
   (toydata/iris-ds)
   (hanami/plot
@@ -92,34 +99,34 @@
     :=mark-opacity 0.2})))
 
 
-(def var17_line278 (require '[scicloj.clay.v2.api :as clay]))
+(def var17_line288 (require '[scicloj.clay.v2.api :as clay]))
 
 
 (def
- var19_line289
+ var19_line299
  (comment
   (clay/make! {:format [:html], :source-path "notebooks/index.clj"})))
 
 
 (def
- var21_line295
+ var21_line305
  (comment (clay/make! {:source-path "notebooks/index.clj"})))
 
 
 (def
- var23_line303
+ var23_line313
  (comment
   (clay/make! {:source-path "notebooks/index.clj", :browse false})))
 
 
 (def
- var25_line311
+ var25_line321
  (comment
   (clay/make! {:source-path "notebooks/index.clj", :show false})))
 
 
 (def
- var27_line318
+ var27_line328
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj",
@@ -127,7 +134,7 @@
 
 
 (def
- var29_line326
+ var29_line336
  (comment
   (clay/make!
    {:source-path ["notebooks/slides.clj" "notebooks/index.clj"],
@@ -135,7 +142,7 @@
 
 
 (def
- var31_line336
+ var31_line346
  (comment
   (clay/make!
    {:source-path ["notebooks/slides.clj" "notebooks/index.clj"],
@@ -143,20 +150,20 @@
 
 
 (def
- var33_line346
+ var33_line356
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj", :single-form '(+ 1 2)})))
 
 
-(def var35_line354 (comment (clay/make! {:single-form '(+ 1 2)})))
+(def var35_line364 (comment (clay/make! {:single-form '(+ 1 2)})))
 
 
-(def var37_line360 (comment (clay/make! {:single-value 3})))
+(def var37_line370 (comment (clay/make! {:single-value 3})))
 
 
 (def
- var39_line367
+ var39_line377
  (comment
   (clay/make!
    {:single-value 3333,
@@ -164,28 +171,28 @@
 
 
 (def
- var41_line376
+ var41_line386
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj", :hide-ui-header true})))
 
 
 (def
- var43_line383
+ var43_line393
  (comment
   (clay/make!
    {:source-path "notebooks/index.clj", :hide-info-line true})))
 
 
 (def
- var45_line392
+ var45_line402
  (comment
   (clay/make!
    {:format [:quarto :html], :source-path "notebooks/index.clj"})))
 
 
 (def
- var47_line403
+ var47_line413
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -194,21 +201,21 @@
 
 
 (def
- var49_line414
+ var49_line424
  (comment
   (clay/make!
    {:format [:quarto :html], :source-path "notebooks/slides.clj"})))
 
 
 (def
- var51_line424
+ var51_line434
  (comment
   (clay/make!
    {:format [:quarto :revealjs], :source-path "notebooks/slides.clj"})))
 
 
 (def
- var53_line434
+ var53_line444
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -218,7 +225,7 @@
 
 
 (def
- var55_line450
+ var55_line460
  (comment
   (require
    '[scicloj.clay.v2.quarto.highlight-styles
@@ -234,14 +241,14 @@
 
 
 (def
- var57_line463
+ var57_line473
  (comment
   (clay/make!
    {:base-source-path "notebooks/", :source-path "index.clj"})))
 
 
 (def
- var59_line469
+ var59_line479
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -257,7 +264,7 @@
 
 
 (def
- var61_line484
+ var61_line494
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -269,7 +276,7 @@
 
 
 (def
- var63_line498
+ var63_line508
  (comment
   (clay/make!
    {:format [:quarto :html],
@@ -282,25 +289,25 @@
     :clean-up-target-dir true})))
 
 
-(def var65_line514 (comment (clay/browse!)))
+(def var65_line524 (comment (clay/browse!)))
 
 
 (def
- var67_line535
+ var67_line545
  (comment (clay/make-hiccup {:source-path "notebooks/index.clj"})))
 
 
-(def var69_line550 scicloj.clay.v2.main/default-options)
+(def var69_line560 scicloj.clay.v2.main/default-options)
 
 
-(def var71_line583 scicloj.clay.v2.main/render-options)
+(def var71_line593 scicloj.clay.v2.main/render-options)
 
 
 (ns index-generated-test)
 
 
 (def
- var75_line673
+ var75_line683
  (->>
   ["purple" "darkgreen" "brown"]
   (mapcat
@@ -314,16 +321,16 @@
   kind/fragment))
 
 
-(def var76_line681 (->> (range 3) kind/fragment))
+(def var76_line691 (->> (range 3) kind/fragment))
 
 
 (def
- var78_line693
+ var78_line703
  (kind/fn {:x 1, :y 2} #:kindly{:f (fn [{:keys [x y]}] (+ x y))}))
 
 
 (def
- var79_line698
+ var79_line708
  (kind/fn
   {:my-video-src
    "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
@@ -333,33 +340,33 @@
             (kind/video {:src my-video-src}))}))
 
 
-(def var81_line705 (kind/fn [+ 1 2]))
+(def var81_line715 (kind/fn [+ 1 2]))
 
 
 (def
- var83_line710
+ var83_line720
  (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
 
 
 (def
- var85_line719
+ var85_line729
  (kind/fn
   {:x (range 3), :y (repeatedly 3 rand)}
   #:kindly{:f tc/dataset}))
 
 
 (def
- var86_line724
+ var86_line734
  (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
 
 
 (def
- var87_line729
+ var87_line739
  (kind/fn {:kindly/f tc/dataset, :x (range 3), :y (repeatedly 3 rand)}))
 
 
 (def
- var89_line742
+ var89_line752
  (kind/echarts
   {:title {:text "Echarts Example"},
    :tooltip {:formatter #"(params) => 'hello: ' + params.name"},
@@ -370,19 +377,19 @@
    :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}))
 
 
-(def var91_line762 (delay (Thread/sleep 500) (+ 1 2)))
+(def var91_line772 (delay (Thread/sleep 500) (+ 1 2)))
 
 
 (def
- var93_line772
+ var93_line782
  (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
 
 
-(def var94_line775 (kind/image {:src "notebooks/images/Clay.svg.png"}))
+(def var94_line785 (kind/image {:src "notebooks/images/Clay.svg.png"}))
 
 
 (def
- var95_line778
+ var95_line788
  (kind/vega-lite
   {:data {:url "notebooks/datasets/iris.csv"},
    :mark "rule",
@@ -397,79 +404,79 @@
    :background "floralwhite"}))
 
 
-(def var97_line803 (+ 1 2))
+(def var97_line813 (+ 1 2))
 
 
-(deftest test98_line805 (is (> var97_line803 2.9)))
+(deftest test98_line815 (is (> var97_line813 2.9)))
 
 
-(deftest test99_line808 (is (> var97_line803 2.9)))
+(deftest test99_line818 (is (> var97_line813 2.9)))
 
 
-(deftest test100_line810 (is (> var97_line803 2.9)))
+(deftest test100_line820 (is (> var97_line813 2.9)))
 
 
 (def
- var102_line819
+ var102_line829
  (kindly/hide-code
   (kind/code
    "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
 (def
- var104_line838
+ var104_line848
  (kind/table
   {:column-names ["A" "B" "C"], :row-vectors [[1 2 3] [4 5 6]]}
   {:class "table-responsive", :style {:background "#f8fff8"}}))
 
 
 (def
- var106_line874
+ var106_line884
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :horizontal})
   false))
 
 
-(def var107_line878 (+ 1 2))
+(def var107_line888 (+ 1 2))
 
 
-(def var108_line880 (+ 3 4))
+(def var108_line890 (+ 3 4))
 
 
 (def
- var110_line884
+ var110_line894
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :vertical})
   false))
 
 
-(def var111_line888 (+ 1 2))
+(def var111_line898 (+ 1 2))
 
 
-(def var112_line890 (+ 3 4))
+(def var112_line900 (+ 3 4))
 
 
 (def
- var114_line894
+ var114_line904
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color "#ccddee"}})
   false))
 
 
-(def var115_line898 (kind/hiccup [:div [:p "hello"]]))
+(def var115_line908 (kind/hiccup [:div [:p "hello"]]))
 
 
-(def var117_line905 (tc/dataset {:x (range 3)}))
+(def var117_line915 (tc/dataset {:x (range 3)}))
 
 
-(def var119_line909 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
+(def var119_line919 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
 
 
 (def
- var121_line915
+ var121_line925
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color nil}})
   false))
 
 
-(def var122_line919 (kind/hiccup [:div [:p "hello"]]))
+(def var122_line929 (kind/hiccup [:div [:p "hello"]]))
