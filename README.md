@@ -33,18 +33,23 @@ The [Claykind](https://github.com/timothypratley/claykind) project is rethinking
 
 Please reach out to add your project to this list.
 
+;; ## Projects using Clay
+
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
-- [Fastmath 3 documentation (WIP)](https://github.com/generateme/fastmath/tree/3.x)
-- [ClojisR documentation](https://scicloj.github.io/clojisr/)
 - [Wolframite documentation](https://scicloj.github.io/wolframite)
 - [Clay documentation](https://scicloj.github.io/clay/)
-- [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
-- [Noj documentation](https://scicloj.github.io/noj/) - WIP
+- [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly
+- [Noj documentation](https://scicloj.github.io/noj/)
+- [Tableplot documentation](https://scicloj.github.io/tableplot/)
+- [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
+- [Tablemath documentation](https://scicloj.github.io/tablemath/)
+- [ClojisR documentation](https://scicloj.github.io/clojisr/)
 - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
 - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
+- the [SciNoj Light](https://scicloj.github.io/docs/community/groups/scinoj-light/) conference
 
 ## Discussion
 
