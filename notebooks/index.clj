@@ -113,7 +113,8 @@
 
 ^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
-(->> [["June 10th 2023"
+(->> [
+      ["June 10th 2023"
        "An early overview - babashka-conf"
        "HvhMsv3iVGM"]
       ["Dec. 1st 2023"
@@ -133,7 +134,16 @@
        "GsML75MtNXw"]
       ["Jan. 24th 2025"
        "Noj v2 - getting started - from raw data to a blog post (demonstrating CIDER integration and Quarto publishing)"
-       "vnvcKtHHMVQ"]]
+       "vnvcKtHHMVQ"]
+      ["Mar 7th 2025"
+       "Noj in a JAR - setup-free Clojure for beginners"
+       "gHwFCOkBb_o"]
+      ["Mar 7th 2025"
+       "Noj Reload Executable"
+       "tDz1x2d65C0"]
+      ["Mar 24th 2025"
+       "Clojure visual-tools 31 - Workflow Demos 5: Clay overview"
+       "WiOUiHsq_dc"]]
      reverse
      (map (fn [[date title youtube-id]]
             [:tr
