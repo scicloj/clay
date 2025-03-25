@@ -94,13 +94,14 @@
 ;; ## Projects using Clay
 
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
-;; - [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
-;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
 ;; - [Wolframite documentation](https://scicloj.github.io/wolframite)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
-;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly - WIP
+;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly
 ;; - [Noj documentation](https://scicloj.github.io/noj/)
 ;; - [Tableplot documentation](https://scicloj.github.io/tableplot/)
+;; - [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
+;; - [Tablemath documentation](https://scicloj.github.io/tablemath/)
+;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
 ;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
 ;; - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 ;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
