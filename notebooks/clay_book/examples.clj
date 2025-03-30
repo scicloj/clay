@@ -1105,4 +1105,4 @@ Plot.plot({
 
 ;; ## emmy-viewers
 ;; The support for [Emmy-viewers](https://github.com/mentat-collective/emmy-viewers)
-;; is documented at the 📖 [Emmy-viewers chapter](./clay_book.emmy_viewers.html)📖 of this book.
+;; is documented at the 📖 [Emmy-viewers chapter](./clay_book.emmy_viewers.html)📖 of this book (temporarily removed).
