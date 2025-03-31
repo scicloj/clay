@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta38-SNAPSHOT]
+- handling values that cannot be pretty printed
+
 ## [2-beta37 - 2025-03-24]
 - added a `watch!` function to the `snippets` API and the Calva custom REPL commands
 - bugfix: made sure that Quarto frontmatter would appear on the first line (PR #236)

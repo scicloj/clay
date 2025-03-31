@@ -70,11 +70,15 @@
       printed-clojure))
 
 (defn pprint [value]
-  (-> value
-      pp/pprint
-      with-out-str
-      ;; escape
-      printed-clojure))
+  (printed-clojure
+   (try (-> value
+            pp/pprint
+            with-out-str)
+        (catch java.lang.IllegalArgumentException e
+          (str ";; (note: the following value could not be pretty-printed)"
+               (-> value
+                   println
+                   with-out-str))))))
 
 (defn print-throwable [value]
   (with-open [w (java.io.StringWriter.)]
