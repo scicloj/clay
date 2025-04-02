@@ -82,9 +82,7 @@
 
 (defn print-throwable [value]
   (with-open [w (java.io.StringWriter.)]
-    (try (/ 1 0)
-         (catch Exception e
-           (clojure+.error/print-readably w value)))
+    (clojure+.error/print-readably w value)
     (-> w
         str
         printed-clojure)))

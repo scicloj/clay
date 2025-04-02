@@ -6,7 +6,7 @@
 (defn- make-form!
   "Make a given Clojure form in a given format."
   ([form file format options]
-   (prn ["Clay make current form as " (pr-str format) file form])
+   (println "Clay make current form as " (pr-str format) file form)
    (api/make! (merge {:base-source-path nil
                       :source-path      file
                       :single-form      form
@@ -34,7 +34,7 @@
 (defn make-ns!
   "Make a given Clojure file in a given format."
   [file format options]
-  (prn ["Clay make current namespace as " (pr-str format) file])
+  (println "Clay make current namespace as " (pr-str format) file)
   (api/make! (merge {:base-source-path nil
                      :source-path      file
                      :format           format}
