@@ -2,12 +2,11 @@
   (:require
    [clojure.java.browse :as browse]
    [clojure.java.io :as io]
-   [clojure.string :as string]
    [hiccup.page]
    [org.httpkit.server :as httpkit]
+   [ring.util.mime-type :as mime-type]
    [scicloj.clay.v2.server.state :as server.state]
    [scicloj.clay.v2.util.time :as time]
-   [scicloj.clay.v2.item :as item]
    [clojure.string :as str]
    [cognitect.transit :as transit]
    [hiccup.core :as hiccup])
@@ -178,8 +177,8 @@
                             slurp
                             (wrap-html state))
                         f)
-             :headers (when (str/ends-with? uri ".js")
-                        {"Content-Type" "text/javascript"})
+             :headers (when-let [t (mime-type/ext-mime-type uri)]
+                        {"Content-Type" t})
              :status  200}
             (case [request-method uri]
               ;; user files have priority, otherwise serve the default from resources

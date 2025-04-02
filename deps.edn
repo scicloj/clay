@@ -6,6 +6,7 @@
         carocad/parcera {:mvn/version "0.11.6"}
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
         http-kit/http-kit {:mvn/version "2.8.0"}
+        ring/ring-core {:mvn/version "1.14.1"}
         io.github.nextjournal/markdown {:mvn/version "0.6.157"}
         hiccup/hiccup {:mvn/version "2.0.0-RC4"}
         clj-commons/clj-yaml {:mvn/version "1.0.29"}
