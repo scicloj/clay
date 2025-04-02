@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-beta38-SNAPSHOT]
 - handling values that cannot be pretty printed
 - added mime type when serving files (PR #238)
+- avoiding narrowing in semicolon comments (fixes #232)
 
 ## [2-beta37 - 2025-03-24]
 - added a `watch!` function to the `snippets` API and the Calva custom REPL commands

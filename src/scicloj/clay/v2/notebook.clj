@@ -251,11 +251,12 @@
                                               {:form single-form})
                             :else (read/->notes code))
                       (map-indexed (fn [i {:as note
-                                          :keys [code]}]
-                                     (assoc note
-                                            :i i
-                                            :narrowed (narrowed? code)
-                                            :narrower (narrower? code)))))
+                                           :keys [code]}]
+                                     (merge note
+                                            {:i i}
+                                            (when-not (:comment? note)
+                                              {:narrowed (narrowed? code)
+                                               :narrower (narrower? code)})))))
            some-narrowed (some :narrowed notes)
            some-narrower (some :narrower notes)
            narrowed-indices (when some-narrowed
@@ -287,10 +288,10 @@
                             notes)]
        (-> (->> relevant-notes
                 (reduce (fn [{:as aggregation :keys [i
-                                                    items
-                                                    test-forms
-                                                    last-nontest-varname]}
-                            note]
+                                                     items
+                                                     test-forms
+                                                     last-nontest-varname]}
+                             note]
                           (let [{:as complete-note :keys [form kind region narrowed]} (complete note)
                                 test-note (test-last? complete-note)
                                 comment (:comment? complete-note)
