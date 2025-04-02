@@ -1,8 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta38-SNAPSHOT]
-- handling values that cannot be pretty printed
+## [2-beta38 - 2025-04-02]
+- bugfix: handling values that cannot be pretty printed
 - added mime type when serving files (PR #238)
 - avoiding narrowing in semicolon comments (fixes #232)
 
