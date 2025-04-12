@@ -3,7 +3,7 @@
 
 ![Clay logo](resources/Clay.svg)
 
-Clay is a REPL-friendly Clojure tool for a dynamic workflow of data visualization and literate programming.
+Clay is a REPL-friendly Clojure tool for data visualization and literate programming.
 
 It also offers a set of tools to integrate Clojure literate programming with the [Quarto](https://quarto.org/) publishing system.
 
@@ -20,6 +20,8 @@ More details may be found in the [Documentation](https://scicloj.github.io/clay/
 ## Related projects
 
 The [Claykind](https://github.com/timothypratley/claykind) project is rethinking the Clay architecture and implementation from scratch, in a new code base. Currently (Fall 2023), the two projects are being developed in coordination.
+
+The [clay.el](https://github.com/scicloj/clay.el) Emacs package offers relevant interactive functions to use Clay from Emacs
 
 [Kindly](https://scicloj.github.io/kindly-noted/kindly) is a common ground for defining how things should be visualized, seeking compatibility across tools.
 
