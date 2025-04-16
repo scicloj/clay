@@ -58,12 +58,14 @@ Please reach out to add your project to this list.
 Regular updates are given at the [visual-tools meetings](https://scicloj.github.io/docs/community/groups/visual-tools/).
 
 The best places to discuss this project are:
-* a topic thread under the [#clay-dev stream](https://clojurians.zulipchat.com/#narrow/stream/422115-clay-dev) at the Clojurians Zulip (more about chat streams [here](https://scicloj.github.io/docs/community/chat/)) 
+* a topic thread under the [#clay-dev stream](https://clojurians.zulipchat.com/#narrow/stream/422115-clay-dev) at the Clojurians Zulip (more about chat streams [here](https://scicloj.github.io/docs/community/chat/))
 * a [github issue](https://github.com/scicloj/clay/issues)
 * a thread at the [visual-tools channel](https://clojurians.slack.com/archives/C02V9TL2G3V) of the Clojurians slack
 
 ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
 (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
+
+[Errors Errors Errors (Zulip topic)](https://clojurians.zulipchat.com/#narrow/channel/422115-clay-dev/topic/Error.20handling.20working.20bee)!
 
 ## License
 

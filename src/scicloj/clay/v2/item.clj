@@ -81,6 +81,7 @@
                    with-out-str))))))
 
 (defn print-throwable [value]
+  ;; Can do interesting things with stacktrace here
   (with-open [w (java.io.StringWriter.)]
     (clojure+.error/print-readably w value)
     (-> w

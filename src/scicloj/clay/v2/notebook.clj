@@ -34,11 +34,11 @@
                                   (path/file-git-url relative-file-path))})))
 
 (defn narrowed? [code]
-  (some-> code 
+  (some-> code
           (str/includes? ",,")))
 
 (defn narrower? [code]
-  (some-> code 
+  (some-> code
           (str/includes? ",,,")))
 
 (defn complete [{:as note
@@ -49,7 +49,7 @@
                :value (cond code (-> code
                                      read-string
                                      eval
-                                     deref-if-needed)
+                                     deref-if-needed) ;; error / stacktrace
                             form (-> form
                                      eval
                                      deref-if-needed))))

@@ -17,6 +17,20 @@
        (map #(clojure.tools.reader/read % false ::EOF))
        (take-while (partial not= ::EOF))))
 
+(comment
+  (read-forms (slurp "src/scicloj/clay/v2/styles.clj"))
+
+    (->> (slurp "src/scicloj/clay/v2/styles.clj")
+         clojure.tools.reader.reader-types/source-logging-push-back-reader
+         clojure.tools.reader/read
+       ;; repeat
+       ;; (map #(clojure.tools.reader/read % false ::EOF))
+       ;; (take-while (partial not= ::EOF))
+         )
+
+    (clojure.repl/doc
+     clojure.tools.reader.reader-types/source-logging-push-back-reader)
+  )
 
 (defn read-ns-form [code]
   (->> code
