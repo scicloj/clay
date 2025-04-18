@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta40 - unreleased]
 - calva custom REPL commands - added "make top level form"
+- added the hashp dependency and made sure to preload it in the `make` namespace
 
 ## [2-beta39 - 2025-04-03]
 by @timothyprately

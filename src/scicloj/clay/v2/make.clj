@@ -20,7 +20,9 @@
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly-render.notes.to-html-page :as to-html-page]))
+            [scicloj.kindly-render.notes.to-html-page :as to-html-page]
+            ;; hashp debugging support:
+            [hashp.preload]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path
