@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta40 - 2025-04-18]
+## [2-beta40 - unreleased]
 - calva custom REPL commands - added "make top level form"
 
 ## [2-beta39 - 2025-04-03]
