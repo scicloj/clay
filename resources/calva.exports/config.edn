@@ -19,6 +19,11 @@
    :snippet (do (require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-form-html!
                   (quote $current-form) "$file" {:ide :calva}))}
+  {:name   "Clay make top level form as HTML"
+   :key     "."
+   :snippet (do (require '[scicloj.clay.v2.snippets])
+                (scicloj.clay.v2.snippets/make-form-html!
+                 (quote $top-level-form) "$file" {:ide :calva}))}
   {:name    "Clay open browser"
    :key     "b"
    :snippet (do (require '[scicloj.clay.v2.snippets])
