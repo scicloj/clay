@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta40 - 2025-04-18]
 - calva custom REPL commands - added "make top level form"
+  - (So far, we had commands to visualize the current form near the cursor and the whole namespace. Now, we can also visualize the top level form near the cursor.)
 - added the hashp dependency and made sure to preload it in the `make` namespace
 
 ## [2-beta39 - 2025-04-03]
