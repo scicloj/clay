@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta40 - unreleased]
+## [2-beta40 - 2025-04-18]
 - calva custom REPL commands - added "make top level form"
 - added the hashp dependency and made sure to preload it in the `make` namespace
 
