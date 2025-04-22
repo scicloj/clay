@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta41 - unreleased]
+- Use <detail> to render stack traces compactly in the HTML view (PR #245) - by @adityaathalye
+
 ## [2-beta40 - 2025-04-18]
 - calva custom REPL commands - added "make top level form"
   - (So far, we had commands to visualize the current form near the cursor and the whole namespace. Now, we can also visualize the top level form near the cursor.)
