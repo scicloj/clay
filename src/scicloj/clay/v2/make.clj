@@ -372,7 +372,7 @@
            (when test-forms
              (write-test-forms-as-ns test-forms))]))
       (catch Throwable e
-        (-> spec ;; all the Clay parameters (tap> this)
+        (-> spec
             (assoc :page (-> spec
                              (assoc :items [(item/print-throwable-v2 e)])
                              page/html))
