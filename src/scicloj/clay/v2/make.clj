@@ -374,7 +374,7 @@
       (catch Throwable e
         (-> spec
             (assoc :page (-> spec
-                             (assoc :items [(item/print-throwable e)])
+                             (assoc :items [(item/print-throwable-v2 e)])
                              page/html))
             server/update-page!)
         (throw e))

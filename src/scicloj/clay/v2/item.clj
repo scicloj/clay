@@ -7,6 +7,7 @@
             [scicloj.clay.v2.util.meta :as meta]
             [hiccup.page]
             [clojure.string :as str]
+            [clojure.datafy]
             [clojure+.error]))
 
 (def *id (atom 0))
@@ -86,6 +87,32 @@
     (-> w
         str
         printed-clojure)))
+
+(defn print-throwable-v2 [value]
+  (let [dv (clojure.datafy/datafy value)
+        safe-str (comp escape str)
+        ex-summary (first (:via dv))]
+    (with-open [w (java.io.StringWriter.)]
+      (clojure+.error/print-readably w value)
+      (let [ex-trace (str w)]
+        {:printed-clojure true
+         :hiccup [:details
+                  [:summary
+                   [:strong {:style "color: red;"} "An Exception Occurred!"]
+                   [:ul
+                    [:li (safe-str "Message: " (:message ex-summary))]
+                    [:li (safe-str "Type: " (:type ex-summary))]
+                    [:li (safe-str "Thrown at: " (:at ex-summary))]]
+                   [:p "[+] " [:em "Expand for stacktrace."]]]
+                  [:pre [:code.sourceCode.language-clojure.printed-clojure
+                         ex-trace]]]
+         :md (format "
+::: {.%s}
+```clojure
+%s
+```
+:::
+" (name :printedClojure) (str/join "\n" ex-trace))}))))
 
 (defn md [text]
   {:md (->> text
