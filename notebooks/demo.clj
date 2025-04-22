@@ -13,6 +13,8 @@
 
 (+ 1 2)
 
+;; (/ 1 0) ; un-comment and evaluate to observe error handling
+
 (str "Hello, " "Clay!")
 
 (defn greet [name]
