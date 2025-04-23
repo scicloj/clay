@@ -114,6 +114,20 @@
  ['(fn []
      [:p (f 11)])])
 
+;; Code defined with `kind/scittle` is by default evaluated asynchronously, which fits very well with Reagent. However, the Scittle API allows to turn off this default and force synchronous evaluation with the following JavaScript commands:
+
+^:kindly/hide-code
+(kind/code
+"scittle.core.disable_auto_eval();
+scittle.core.eval_script_tags();")
+
+;; Also the Small Clojure Interpreter wich powers Scittle is exposed to JavaScript. Because within this notebook the default evaluation is still active, you can check in the browser console that the following string `123` appears before the above `hello`.
+
+(kind/html
+"<script>
+scittle.core.eval_string('(.log js/console 123)')
+</script>")
+
 ;; ## HTML
 
 ;; Raw html can be represented as a kind too:
