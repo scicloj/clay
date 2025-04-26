@@ -1123,12 +1123,13 @@ Plot.plot({
 
 ;; ## Blockly
 
+;; Here is an example of how one may embed [Blockly](https://developers.google.com/blockly/guides/get-started/what-is-blockly) in a page.
+
 (kind/hiccup
-  [:div
-   [:script {:src "https://kloimhardt.github.io/twotiles/twotiles_core.js"}]
-   [:script "var parse = scittle.core.eval_string(twotiles.parse_clj);"]
-   [:script {:src "https://unpkg.com/blockly/blockly_compressed.js"}]
-   [:script "Blockly.defineBlocksWithJsonArray(twotiles.blocks);"]])
+ [[:script {:src "https://kloimhardt.github.io/twotiles/twotiles_core.js"}]
+  [:script "var parse = scittle.core.eval_string(twotiles.parse_clj);"]
+  [:script {:src "https://unpkg.com/blockly/blockly_compressed.js"}]
+  [:script "Blockly.defineBlocksWithJsonArray(twotiles.blocks);"]])
 
 (def code '(->> (+ x 4) (for [x [1 2 3]])))
 
