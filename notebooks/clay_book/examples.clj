@@ -1120,3 +1120,23 @@ Plot.plot({
 ;; ## emmy-viewers
 ;; The support for [Emmy-viewers](https://github.com/mentat-collective/emmy-viewers)
 ;; is documented at the 📖 [Emmy-viewers chapter](./clay_book.emmy_viewers.html)📖 of this book (temporarily removed).
+
+;; ## Blockly
+
+(kind/hiccup
+  [:div
+   [:script {:src "https://kloimhardt.github.io/twotiles/twotiles_core.js"}]
+   [:script "var parse = scittle.core.eval_string(twotiles.parse_clj);"]
+   [:script {:src "https://unpkg.com/blockly/blockly_compressed.js"}]
+   [:script "Blockly.defineBlocksWithJsonArray(twotiles.blocks);"]])
+
+(def code '(->> (+ x 4) (for [x [1 2 3]])))
+
+(kind/hiccup
+  [:div
+   [:script (str "var xml1 = parse('" code "')")]
+   [:div {:id "blocklyDiv1", :style {:height "100px"}}]
+   [:script "var workspace1 = Blockly.inject('blocklyDiv1',
+{'toolbox': twotiles.toolbox, 'sounds': false})"]
+   [:script "const xmlDom1 = Blockly.utils.xml.textToDom(xml1)"]
+   [:script "Blockly.Xml.clearWorkspaceAndLoadFromXml(xmlDom1,workspace1)"]])
