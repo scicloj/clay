@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta41 - unreleased]
 - Use <detail> to render stack traces compactly in the HTML view (PR #245) - by @adityaathalye
+- updated Calva custom REPL commands:
+  - shortented the command names
+  - added a few commands from the `snippets` API
+  - switched to using fully qualified `clojure.core/require` 
 
 ## [2-beta40 - 2025-04-18]
 - calva custom REPL commands - added "make top level form"
