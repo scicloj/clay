@@ -1,42 +1,42 @@
 {:customREPLCommandSnippets
  [{:name    "Clay make file"
    :key     "n"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-ns-html!
                  "$file" {:ide :calva}))}
   {:name    "Clay make file Quarto"
    :key     "q"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-ns-quarto-html!
                  "$file" {:ide :calva}))}
   {:name    "Clay make file reveal.js"
    :key     "r"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-ns-quarto-revealjs!
                  "$file" {:ide :calva}))}
   {:name    "Clay make current form"
    :key     ","
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-form-html!
                  (quote $current-form) "$file" {:ide :calva}))}
   {:name   "Clay make top level form"
    :key     "."
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-form-html!
                  (quote $top-level-form) "$file" {:ide :calva}))}
   {:name    "Clay make current form Quarto"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-form-quarto-html!
                  (quote $current-form) "$file" {:ide :calva}))}
   {:name    "Clay make top level form Quarto"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/make-form-quarto-html!
                  (quote $top-level-form) "$file" {:ide :calva}))}
   {:name    "Clay browse"
    :key     "b"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/browse!))}
   {:name    "Clay watch"
    :key     "w"
-   :snippet (do (require '[scicloj.clay.v2.snippets])
+   :snippet (do (clojure.core/require '[scicloj.clay.v2.snippets])
                 (scicloj.clay.v2.snippets/watch! {:ide :calva}))}]}
