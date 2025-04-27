@@ -39,6 +39,7 @@
       (assoc :format [:hiccup]
              :show false)
       make/make!
+      :info
       first first first))
 
 (defn browse! []
