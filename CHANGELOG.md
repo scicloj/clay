@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2-beta41 - 2025-04-28]
 - Use `<detail>` to render stack traces compactly in the HTML view (PR #245) - by @adityaathalye
 - updated Calva custom REPL commands:
-  - shortented the command names
+  - shortened the command names
   - added a few commands from the `snippets` API
   - switched to using fully qualified `clojure.core/require` 
 - bugfix: adapted the (experimental) `make-hiccup` API to recent format changes
