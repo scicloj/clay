@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
   - added a few commands from the `snippets` API
   - switched to using fully qualified `clojure.core/require` 
 - bugfix: adapted the (experimental) `make-hiccup` API to recent format changes
+- bugfix: fixed a typo in the `snippets/make-form-quarto-html!` function
 
 ## [2-beta40 - 2025-04-18]
 - calva custom REPL commands - added "make top level form"
