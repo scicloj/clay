@@ -24,7 +24,7 @@
 (defn make-form-quarto-html!
   "Make a given Clojure form in Quarto format, then render it as HTML."
   [form file options]
-  (make-form! form file [:quarto :revealjs] options))
+  (make-form! form file [:quarto :html] options))
 
 (defn make-form-quarto-revealjs!
   "Make a given Clojure form in Quarto format, then render it as reveal.js."

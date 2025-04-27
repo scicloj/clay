@@ -1,5 +1,13 @@
 ;; # Clay
 
+^:kindly/hide-code
+(ns index
+  (:require [clojure.java.io :as io]
+            [clojure.edn :as edn]
+            [scicloj.kindly.v4.kind :as kind]
+            [tablecloth.api :as tc]
+            [scicloj.kindly.v4.api :as kindly]))
+
 ^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
 [:img
@@ -168,15 +176,18 @@
 ;; ### VSCode Calva
 
 ;; With Clay in your classpath, [Calva](https://calva.io/) will discover [Custom REPL Commands](https://calva.io/custom-commands/).
-;;
-;; |key|name|function|
-;; |--|--|--|
-;; |n|`Clay make Namespace as HTML`|will generate an HTML rendering of the current namespace.
-;; |q|`Clay make Namespace as Quarto, then HTML`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as HTML through Quarto.|
-;; |r|`Clay make Namespace as Quarto, then reveal.js`|will generate a Quarto `.qmd` rendering of the current namespace, then render it as a reveal.js slideshow through Quarto.|
-;; |,|`Clay make current form as HTML`|will generate an HTML rendering of the current form, in the context of the current namespace.|
 
-;; To invoke a custom REPL command, press `ctrl+alt+space` followed by `n` to invoke **Clay make Namespace as HTML**.
+^:kindly/hide-code
+(-> "calva.exports/config.edn"
+    io/resource
+    slurp
+    edn/read-string
+    :customREPLCommandSnippets
+    tc/dataset
+    (tc/select-columns [:name :key])
+    kind/table)
+
+;; To invoke a custom REPL command, press `ctrl+alt+space` followed by the corresponding key.
 ;; Pressing `ctrl+alt+space` followed by `space` opens a quick-pick list of custom REPL commands to invoke.
 
 ;; Clay exports these custom command snippets via [resources/calva.exports/config.edn](https://github.com/scicloj/clay/blob/main/resources/calva.exports/config.edn).
