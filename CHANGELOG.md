@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta41 - 2025-04-28]
-- Use <detail> to render stack traces compactly in the HTML view (PR #245) - by @adityaathalye
+- Use `<detail>` to render stack traces compactly in the HTML view (PR #245) - by @adityaathalye
 - updated Calva custom REPL commands:
   - shortented the command names
   - added a few commands from the `snippets` API
