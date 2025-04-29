@@ -110,7 +110,7 @@
 ;; - [Fastmath 3 documentation](https://generateme.github.io/fastmath/clay)
 ;; - [Tablemath documentation](https://scicloj.github.io/tablemath/)
 ;; - [ClojisR documentation](https://scicloj.github.io/clojisr/)
-;; - [Clojure Tidy Tuesdays](https://kiramclean.github.io/clojure-tidy-tuesdays/) data-science explorations
+;; - [Clojure Tidy Tuesdays](https://codewithkira.com/clojure-tidy-tuesdays/) data-science explorations
 ;; - [Clojure Data Tutorials](https://scicloj.github.io/clojure-data-tutorials/)
 ;; - [Clojure Data Scrapbook](https://scicloj.github.io/clojure-data-scrapbook/)
 ;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
