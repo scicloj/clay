@@ -151,7 +151,10 @@
        "tDz1x2d65C0"]
       ["Mar 24th 2025"
        "Clojure visual-tools 31 - Workflow Demos 5: Clay overview"
-       "WiOUiHsq_dc"]]
+       "WiOUiHsq_dc"]
+      ["May 2nd 2025"
+       "Clojure for data analysis - getting started with Noj v2, VSCode, Calva, and Clay"
+       "B1yPkpyiEEs"]]
      reverse
      (map (fn [[date title youtube-id]]
             [:tr
