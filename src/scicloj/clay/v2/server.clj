@@ -46,10 +46,6 @@
     reload_regexp = new RegExp('%s');
 
     clay_refresh = function() {
-      location.assign('http://localhost:'+clay_port);
-
-      // alert(reload_regexp.test(window.location.href) + ' ' + window.location.href);
-
       // Check whether we are still in the main page
       // (but possibly in an anchor (#...) inside it):
       if(reload_regexp.test(window.location.href)) {
