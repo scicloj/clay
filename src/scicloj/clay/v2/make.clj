@@ -416,7 +416,7 @@
                    :info info}]
       (if (and ide (not= browse :browser))
         (if (= ide :cursive)
-          (tagged-literal 'cursive/html (select-keys summary [:url]))
+          (tagged-literal 'cursive/html summary)
           (tagged-literal 'flare/html summary))
         summary))))
 
