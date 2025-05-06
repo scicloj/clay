@@ -411,6 +411,7 @@
           summary {:url (server/url)
                    :key "clay"
                    :title "Clay"
+                   :display (if single-form :inline :editor)
                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
                    :reveal false
                    :info info}]
