@@ -411,13 +411,12 @@
           summary {:url (server/url)
                    :key "clay"
                    :title "Clay"
+                   :display (if single-form :inline :editor)
                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
                    :reveal false
                    :info info}]
       (if (and ide (not= browse :browser))
-        (if (= ide :cursive)
-          (tagged-literal 'cursive/html (select-keys summary [:url]))
-          (tagged-literal 'flare/html summary))
+        (tagged-literal 'flare/html summary)
         summary))))
 
 
