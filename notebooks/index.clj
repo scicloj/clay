@@ -226,28 +226,15 @@
 
 ;; ### IntelliJ Cursive
 ;;
-;; Under preferences, search for "REPL Commands"
-;; (or use the menu IntelliJ -> Preferences -> Languages and Frameworks -> Clojure -> REPL Commands)
+;; At a Clojure project managed in Cursive, the `.idea/repl-commands.xml` file allows defining custom REPL commands.
+;; To enable Clay-related commands, you can copy [Clay's configuration](https://github.com/scicloj/clay/blob/main/.idea/repl-commands.xml)
+;; into your `.idea/repl-commands.xml` file.
 ;;
-;; Add a global command, and edit it with these settings:
+;; You can also copy the file to your IntelliJ configuration directory to make it global for all projects.
+;; For example, in Linux, that directory will be something like `~/.config/JetBrains/IdeaIC2025.1/options`,
+;; with the appropriate version of IntelliJ Idea or IntelliJ Idea Community Edition.
 ;;
-;; **Name:** Send form to Clay\
-;; **Execution:** Command
-;;
-^{:kind/code true
-  :kindly/hide-code true}
-["(do (require '[scicloj.clay.v2.api :as clay])
-    (clay/make! {:single-form '~form-before-caret
-                 :source-path [\"~file-path\"]}))"]
-;;
-;; You might also like to create a command to compile the namespace:
-;;
-^{:kind/code true
-  :kindly/hide-code true}
-["(do (require '[scicloj.clay.v2.api :as clay])
-    (clay/make! {:source-path [\"~file-path\"]}))"]
-;;
-;; Or a `top-level-form` (replace `form-before-caret` with `top-level-form`).
+;; **Caution:** If you have some existing custom REPL commands, you will have to merge the files manually.
 ;;
 ;; You can then add keybindings under Preferences -> Keymap for the new commands.
 ;;
