@@ -244,7 +244,7 @@
 ;;
 ;; At a Clojure project managed in Cursive, the `.idea/repl-commands.xml` file allows defining custom REPL commands.
 ;; To enable Clay-related commands, you can copy [Clay's configuration](https://github.com/scicloj/clay/blob/main/.idea/repl-commands.xml)
-;; into your `.idea/repl-commands.xml` file.
+;; into your `.idea/repl-commands.xml` file (then restart the IDE to enable them).
 ;;
 ;; You can also copy the file to your IntelliJ configuration directory to make it global for all projects.
 ;; For example, in Linux, that directory will be something like `~/.config/JetBrains/IdeaIC2025.1/options`,
