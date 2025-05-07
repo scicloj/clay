@@ -6,7 +6,8 @@
             [clojure.edn :as edn]
             [scicloj.kindly.v4.kind :as kind]
             [tablecloth.api :as tc]
-            [scicloj.kindly.v4.api :as kindly]))
+            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.clay.v2.api :as clay]))
 
 ^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
@@ -178,7 +179,22 @@
 
 ;; ### VSCode Calva
 
-;; With Clay in your classpath, [Calva](https://calva.io/) will discover [Custom REPL Commands](https://calva.io/custom-commands/).
+;; There are two ways to add Clay-related commands to Calva.
+
+;; #### Calva Power Tools
+
+;; The [Calva Power Tools](https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva-power-tools)
+;; extension can be installed from within VSCode `Install Extensions`.
+
+;; It will provide a few Clay-related commands such as `Clay Make File`.
+
+;; You can find these commands and their default key bindings
+;; by searching for `"Clay"` in your VCode Command Palette.
+
+;; #### Calva Custom REPL Commands
+
+;; With Clay in your classpath, [Calva](https://calva.io/) will discover
+;; [Custom REPL Commands](https://calva.io/custom-commands/).
 
 ^:kindly/hide-code
 (-> "calva.exports/config.edn"
