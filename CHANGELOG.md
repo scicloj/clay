@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta43 - 2025-05-07]
+- updated Cursive integration through Flares (PR #250)
+
 ## [2-beta42 - 2025-05-03]
 - fixed page refresh Javascript code - removed unnecessary `location.assign`
 
