@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta44 - 2025-05-08]
+- updated deps (tools.cli, Charred, Hiccup, Kindly, Kindly-advice, tools.reader, babashka.fs, clojure-plus)
+
 ## [2-beta43 - 2025-05-07]
 - updated Cursive integration through Flares (PR #250)
 

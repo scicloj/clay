@@ -1,24 +1,24 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        org.clojure/tools.cli {:mvn/version "1.0.219"}
+        org.clojure/tools.cli {:mvn/version "1.1.230"}
         nrepl/nrepl {:mvn/version "1.3.1"}
-        com.cnuernber/charred {:mvn/version "1.036"}
+        com.cnuernber/charred {:mvn/version "1.037"}
         carocad/parcera {:mvn/version "0.11.6"}
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
         http-kit/http-kit {:mvn/version "2.8.0"}
         ring/ring-core {:mvn/version "1.14.1"}
         io.github.nextjournal/markdown {:mvn/version "0.6.157"}
-        hiccup/hiccup {:mvn/version "2.0.0-RC4"}
+        hiccup/hiccup {:mvn/version "2.0.0-RC5"}
         clj-commons/clj-yaml {:mvn/version "1.0.29"}
-        org.scicloj/kindly {:mvn/version "4-beta14"}
-        org.scicloj/kindly-advice {:mvn/version "1-beta12"}
+        org.scicloj/kindly {:mvn/version "4-beta16"}
+        org.scicloj/kindly-advice {:mvn/version "1-beta14"}
         org.scicloj/tempfiles {:mvn/version "1-beta1"}
         org.scicloj/kind-portal {:mvn/version "1-beta3"}
-        org.clojure/tools.reader {:mvn/version "1.5.0"}
+        org.clojure/tools.reader {:mvn/version "1.5.2"}
         com.nextjournal/beholder {:mvn/version "1.0.2"}
-        babashka/fs {:mvn/version "0.5.24"}
+        babashka/fs {:mvn/version "0.5.25"}
         org.scicloj/kindly-render {:mvn/version "0.1.5-alpha"}
-        io.github.tonsky/clojure-plus {:mvn/version "1.3.3"}
+        io.github.tonsky/clojure-plus {:mvn/version "1.4.0"}
         dev.weavejester/hashp {:mvn/version "0.4.0"}}
  :aliases {:dev {:extra-paths ["dev" "notebooks"]
                  :extra-deps {org.scicloj/noj {:mvn/version "2-beta10.1"}
