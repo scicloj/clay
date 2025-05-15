@@ -122,17 +122,17 @@
       (config/add-field :full-target-path spec->full-target-path)))
 
 (defn extract-specs [config spec]
-  (let [{:as config-and-spec :keys [source-path base-source-target render]}
+  (let [{:as config-and-spec :keys [source-path base-source-path render]}
         (merge/deep-merge config spec)                      ; prioritize spec over global config
         config-and-spec (cond-> config-and-spec
                                 render (merge {:show        false
                                                :serve       false
                                                :browse      false
                                                :live-reload false}))
-        render-all (and base-source-target (or (nil? source-path) (#{:all} source-path)) render)
+        render-all (and base-source-path (or (nil? source-path) (#{:all} source-path)) render)
         ;;
         source-paths (cond
-                       render-all (util.fs/find-notebooks base-source-target)
+                       render-all (util.fs/find-notebooks base-source-path)
                        (sequential? source-path) source-path
                        :else [source-path])
         ;; collect specs for single namespaces,
@@ -384,7 +384,7 @@
       (let [target (if sync-as-subdirs
                      (str base-target-path "/" subdir)
                      base-target-path)]
-        (when (fs/exists? target)
+        (when (and sync-as-subdirs (fs/exists? target))
           (fs/delete-tree target))
         (util.fs/copy-tree-no-clj subdir target)))))
 
