@@ -81,13 +81,20 @@
 ;; source-paths and base-source-path may come from configuration rather than the spec
 (defn start!
   "Watch directories of a spec"
-  [make-fn spec source-paths watch-dirs]
+  [make-fn {:as spec :keys [base-source-path watch-dirs]} source-paths]
   (let [files (set (map (comp str fs/canonicalize)
                         (remove (some-fn nil? fs/directory?)
                                 source-paths)))
+        ;; when nothing was specified to watch, watch the base-source-path
+        watch-dirs (if (and (empty? files)
+                            (empty? watch-dirs)
+                            base-source-path)
+                     #{base-source-path}
+                     watch-dirs)
         dirs (set (map (comp str fs/canonicalize)
                        watch-dirs))
-        watch (dirs-to-watch (watched-dirs) dirs files)]
+        watch (dirs-to-watch (watched-dirs) dirs files)
+        root (fs/canonicalize ".")]
     (doseq [dir watch]
       (when (not (fs/exists? dir))
         (fs/create-dir dir)
@@ -97,7 +104,8 @@
     ;; if we started watching a parent directory, stop watching the subdirs
     (stop-watching-dirs! (subdirs (watched-dirs) watch))
     ;; watch new dirs for notebook changes
-    (watch-dirs! watch make-fn spec)))
+    (watch-dirs! watch make-fn spec)
+    [:watching (mapv #(fs/relativize root %) (watched-dirs))]))
 
 (defn stop!
   "Stop all directory watchers."
@@ -105,3 +113,8 @@
   (stop-watching-dirs! (watched-dirs))
   (reset! *state empty-state))
 
+(defn toggle!
+  [make-fn spec source-paths]
+  (if (empty? (get @*state :watchers))
+    (start! make-fn spec source-paths)
+    (stop!)))
