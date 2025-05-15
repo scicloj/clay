@@ -2,13 +2,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## Pending
-- new option `:flatten-targets` may be set to false to preserve namespace folders.
-- new option `:sync-as-subdirs` may be set to false to remove the subdir itself (example "notebooks")
+- new option `:flatten-targets` (default true) do not create namespace folders.
+- new option `:sync-as-subdirs` (default true) includes the subdir itself (example "notebooks")
 - syncing no longer creates empty directories
-- `make!` will build all files when given options `:base-source-path "notebooks"`, `:source-path nil`, and `:render true`
-- added `snippets/make-all!`
+- `make!` builds all files when given options `:base-source-path "notebooks"`, `:source-path nil`, and `:render true`
+- added `snippets/make-all!` to illustrate that pattern.
 - the CLI will now make all when given the `-r` render flag without any other arguments.
-- added `:sync`
 - added a `:live-reload :toggle` option and changed the `snippets/watch!` to toggle.
 - The `:info` returned by `make!` is flatter and only reports things that happened.
 
