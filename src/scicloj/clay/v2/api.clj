@@ -40,7 +40,7 @@
              :show false)
       make/make!
       :info
-      first first first))
+      first first))
 
 (defn browse! []
   (server/browse!))

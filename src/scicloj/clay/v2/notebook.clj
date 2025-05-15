@@ -25,20 +25,18 @@
     'extend-protocol 'extend
     'require})
 
-(defn info-line [absolute-file-path]
-  (let [relative-file-path (path/path-relative-to-repo
-                            absolute-file-path)]
+(defn info-line [{:keys [full-source-path
+                         remote-repo]}]
+  (let [relative-file-path (path/path-relative-to-repo full-source-path)]
     (item/info-line {:path relative-file-path
-                     :url (some-> (config/config)
-                                  :remote-repo
-                                  (path/file-git-url relative-file-path))})))
+                     :url (some-> remote-repo (path/file-git-url relative-file-path))})))
 
 (defn narrowed? [code]
-  (some-> code 
+  (some-> code
           (str/includes? ",,")))
 
 (defn narrower? [code]
-  (some-> code 
+  (some-> code
           (str/includes? ",,,")))
 
 (defn complete [{:as note
@@ -137,10 +135,10 @@
             :else
             (into [code-item] value-items)))))
 
-(defn add-info-line [items {:keys [full-source-path hide-info-line]}]
+(defn add-info-line [items {:as spec :keys [hide-info-line]}]
   (if hide-info-line
     items
-    (let [il (info-line full-source-path)]
+    (let [il (info-line spec)]
       (concat items
               [item/separator il]))))
 

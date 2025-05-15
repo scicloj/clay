@@ -7,8 +7,7 @@
   "Make a given Clojure form in a given format."
   ([form file format options]
    (println "Clay make current form as " (pr-str format) file form)
-   (api/make! (merge {:base-source-path nil
-                      :source-path      file
+   (api/make! (merge {:source-path      file
                       :single-form      form
                       :format format}
                      (when (:ide options)
@@ -35,8 +34,7 @@
   "Make a given Clojure file in a given format."
   [file format options]
   (println "Clay make current namespace as " (pr-str format) file)
-  (api/make! (merge {:base-source-path nil
-                     :source-path      file
+  (api/make! (merge {:source-path      file
                      :format           format}
                     options)))
 
@@ -60,6 +58,8 @@
   (api/browse!))
 
 (defn watch! [options]
-  (api/make! (merge {:live-reload true
-                     :watch-dirs ["notebooks"]}
+  (api/make! (merge {:live-reload :toggle}
                     options)))
+
+(defn make-all! []
+  (api/make! {:render true}))

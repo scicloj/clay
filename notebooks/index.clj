@@ -365,6 +365,11 @@
                              "notebooks/index.clj"]
                :live-reload true}))
 
+;; Evaluate and render all files in base-source-path
+(comment
+  (clay/make! {:base-source-path "notebooks"
+               :render true}))
+
 
 ;; Evaluate and render a single form
 ;; in the context of the namespace in `"notebooks/index.clj"`
@@ -574,8 +579,6 @@
 ;; Clay will watch the `notebooks` directory in live-reload mode,
 ;; as described in the [Live reload section](index.html#live-reload).
 
-scicloj.clay.v2.main/default-options
-
 ;; Add a `:clay` alias to your `deps.edn` to make it easier to launch:
 
 ;; ```clojure
@@ -607,13 +610,16 @@ scicloj.clay.v2.main/default-options
 ;; The `-r` or `--render` argument cancels the `live-reload` behaviour
 ;; and can be used for rendering files as a batch task.
 
-scicloj.clay.v2.main/render-options
-
 ;; For example:
 
 ;; Immediately render `my-namespace` and exit:
 ;; ```sh
-;; clojure -m scicloj.clay.v2.main notebooks/my_namespace.clj -r
+;; clojure -M -m scicloj.clay.v2.main notebooks/my_namespace.clj -r
+;; ```
+
+;; Immediately render all notebooks found in base-source-path and exit:
+;; ```sh
+;; clojure -M:clay -r
 ;; ```
 
 ;;
@@ -652,7 +658,11 @@ scicloj.clay.v2.main/render-options
 ;; | `:hide-ui-header` | hiding the ui info at the top | `true` |
 ;; | `:pprint-margin` | result rendering will try to wrap anything going beyond this value | `nil` or `72` |
 ;; | `:post-process` | post-processing the resulting HTML | `#(str/replace "#3" "4")` |
-;; | `:live-reload` | whether to make and live reload the HTML automatically after its source file is changed | `true` |
+;; | `:live-reload` | make automatically after its source file is changed | `true` or `:toggle` |
+;; | `:flatten-targets` | (experimental) whether to place the output in a subdirectory or not | `false` |
+;; | `:sync-subdirs` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
+;; | `:sync-as-subdirs` | (experimental) keep the subdir prefix | `false` |
+;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.

@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## Pending
+- new option `:flatten-targets` (default true) do not create namespace folders.
+- new option `:sync-as-subdirs` (default true) includes the subdir itself (example "notebooks")
+- syncing no longer creates empty directories
+- `make!` builds all files when given options `:base-source-path "notebooks"`, `:source-path nil`, and `:render true`
+- added `snippets/make-all!` to illustrate that pattern.
+- the CLI will now make all when given the `-r` render flag without any other arguments.
+- added a `:live-reload :toggle` option and changed the `snippets/watch!` to toggle.
+- The `:info` returned by `make!` is flatter and only reports things that happened.
+
 ## [2-beta44 - 2025-05-08]
 - updated deps (tools.cli, Charred, Hiccup, Kindly, Kindly-advice, tools.reader, babashka.fs, clojure-plus)
 
