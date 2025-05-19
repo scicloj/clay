@@ -15,25 +15,10 @@
           (.toRealPath (into-array LinkOption []))
           str))))
 
-(defn path->filename [path]
-  (-> path
-      io/file
-      (.getName)))
-
-(defn path->ext [path]
-  (-> path
-      (string/split #"\.")
-      last))
-
 (defn path->parent [file-path]
   (-> file-path
       io/file
       (.getParent)))
-
-(defn current-directory []
-  (-> "."
-      io/file
-      (.getCanonicalPath)))
 
 (defn git-directory? [path]
   (let [dot-git-path (str path "/" ".git")]
@@ -69,12 +54,3 @@
           git-url
           branch
           file-path))
-
-(defn ns->target-path
-  ([base the-ns ext]
-   (str base
-        "/"
-        (-> the-ns
-            str
-            (string/replace #"-" "_"))
-        ext)))

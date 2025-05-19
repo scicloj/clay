@@ -1,5 +1,7 @@
 {:base-target-path "docs"
  :subdirs-to-sync ["src" "notebooks"]
+ :sync-as-subdirs true
+ :flatten-targets true
  :format [:html]
  :show true
  :browse true
