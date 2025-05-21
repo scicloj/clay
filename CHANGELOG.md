@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## Pending
 - new option `:flatten-targets` (default true) do not create namespace folders.
-- new option `:sync-as-subdirs` (default true) includes the subdir itself (example "notebooks")
+- new option `:keep-sync-root` (default true) includes the subdir itself (example "notebooks")
 - syncing no longer creates empty directories
 - `make!` builds all files when given options `:base-source-path "notebooks"`, `:source-path nil`, and `:render true`
 - added `snippets/make-all!` to illustrate that pattern.

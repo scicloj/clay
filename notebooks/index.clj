@@ -549,8 +549,6 @@
                :clean-up-target-dir true}))
 
 
-
-
 (comment
   (clay/make! {:format [:quarto :html]
                :base-source-path "notebooks"
@@ -683,7 +681,7 @@
 ;; | `:live-reload` | make automatically after its source file is changed | `true` or `:toggle` |
 ;; | `:flatten-targets` | (experimental) whether to place the output in a subdirectory or not | `false` |
 ;; | `:subdirs-to-sync` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
-;; | `:sync-as-subdirs` | (experimental) keep the subdir prefix | `false` |
+;; | `:keep-sync-root` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.

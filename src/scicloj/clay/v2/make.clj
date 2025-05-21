@@ -78,7 +78,7 @@
            ns-form
            single-form
            single-value
-           sync-as-subdirs]}]
+           keep-sync-root]}]
   (cond
     ;; temporary target
     (or single-value single-form (nil? source-type))
@@ -90,7 +90,7 @@
       (str
        (case source-type
          ("md" "Rmd" "ipynb") (fs/path base-target-path
-                                       (if sync-as-subdirs
+                                       (if keep-sync-root
                                          full-source-path
                                          relative-source))
          "clj" (cond-> (str/replace relative-source
@@ -402,13 +402,13 @@
 
 (defn sync-resources! [{:keys [base-target-path
                                subdirs-to-sync
-                               sync-as-subdirs]}]
+                               keep-sync-root]}]
   (doseq [subdir subdirs-to-sync]
     (when (fs/exists? subdir)
-      (let [target (if sync-as-subdirs
+      (let [target (if keep-sync-root
                      (str base-target-path "/" subdir)
                      base-target-path)]
-        (when (and sync-as-subdirs (fs/exists? target))
+        (when (and keep-sync-root (fs/exists? target))
           (fs/delete-tree target))
         (util.fs/copy-tree-no-clj subdir target)))))
 
