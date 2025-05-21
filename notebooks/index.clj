@@ -548,6 +548,20 @@
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
 
+
+
+
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path "demo.clj"
+               :base-target-path "notebooks"}))
+
+
+
+
+
+
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
 
@@ -668,7 +682,7 @@
 ;; | `:post-process` | post-processing the resulting HTML | `#(str/replace "#3" "4")` |
 ;; | `:live-reload` | make automatically after its source file is changed | `true` or `:toggle` |
 ;; | `:flatten-targets` | (experimental) whether to place the output in a subdirectory or not | `false` |
-;; | `:sync-subdirs` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
+;; | `:subdirs-to-sync` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
 ;; | `:sync-as-subdirs` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 
