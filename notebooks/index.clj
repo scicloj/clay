@@ -548,6 +548,14 @@
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
 
+;; Override the default behaviour syncing files, so that the target path
+;; will not include the root that the files were synced from.
+
+(comment
+  (clay/make! {:source-path "notebooks/demo.clj"
+               :keep-sync-root false}))
+
+;; Demonstrate that we can use the same source and target paths.
 
 (comment
   (clay/make! {:format [:quarto :html]
@@ -555,10 +563,17 @@
                :source-path "demo.clj"
                :base-target-path "notebooks"}))
 
+;; Demonstrate that we can use the same source and target paths --
+;; another variation with `:keep-sync-root false` --
+;; in this case, no syncing will take place,
+;; because the relevant files already exist in place.
 
-
-
-
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path "demo.clj"
+               :base-target-path "notebooks"
+               :keep-sync-root false}))
 
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
@@ -823,8 +838,20 @@
 ;; ## Referring to files
 
 ;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`. By default, all files except of these directories, except for Clojure files, are copied alongside the HTML target.
-;;
+
 ;; This default can be overridden using the `:subdirs-to-sync` config option. E.g., `:subdirs-to-sync ["notebooks" "data"]` will copy files from the `"notebooks"` and `"data"` directories, but not from `"src"`. Clojure source files (`.clj`, etc.) are not synched.
+
+;; Note that the URLs we use below need to include the root directory from which
+;; files are synced, which is `"notebooks"` in these cases.
+;; This is because, by default, a file like `"notebooks/images/Clay.svg.png"`
+;; will be copied to something like `"target/notebooks/images/Clay.svg.png"
+;; in the sync step, assuming `:base-target-path` is `"target"`.
+
+;; To override this behaviour, one may set `:keep-sync-root` to `false`.
+;; Then,a file like `"notebooks/images/Clay.svg.png"`
+;; will be copied to something like `"target/images/Clay.svg.png"
+;; in the sync step, and it will not be necessary to include
+;; the `"notebooks"` prefix in the code.
 
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])
