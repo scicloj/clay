@@ -408,7 +408,7 @@
       (let [target (if keep-sync-root
                      (str base-target-path "/" subdir)
                      base-target-path)]
-        (if (= (fs/canonicalize base-target-path)
+        (if (= (fs/canonicalize target)
                (fs/canonicalize subdir))
           (println (format "Clay sync: not syncing \"%s\" to itself." subdir))
           (do (when (and keep-sync-root (fs/exists? target))
