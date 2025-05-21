@@ -408,9 +408,12 @@
       (let [target (if keep-sync-root
                      (str base-target-path "/" subdir)
                      base-target-path)]
-        (when (and keep-sync-root (fs/exists? target))
-          (fs/delete-tree target))
-        (util.fs/copy-tree-no-clj subdir target)))))
+        (if (= (fs/canonicalize base-target-path)
+               (fs/canonicalize subdir))
+          (println (format "Clay sync: not syncing \"%s\" to itself." subdir))
+          (do (when (and keep-sync-root (fs/exists? target))
+                (fs/delete-tree target))
+              (util.fs/copy-tree-no-clj subdir target)))))))
 
 (defn make! [spec]
   (let [config (config/config)
@@ -425,10 +428,10 @@
     (when show
       (server/loading!))
     (let [info (cond-> (mapv handle-single-source-spec! single-ns-specs)
-                       book (conj (make-book! main-spec))
-                       live-reload (conj (if (#{:toggle} live-reload)
-                                           (live-reload/toggle! make! main-spec source-paths)
-                                           (live-reload/start! make! main-spec source-paths))))
+                 book (conj (make-book! main-spec))
+                 live-reload (conj (if (#{:toggle} live-reload)
+                                     (live-reload/toggle! make! main-spec source-paths)
+                                     (live-reload/start! make! main-spec source-paths))))
           summary {:url     (server/url)
                    :key     "clay"
                    :title   "Clay"

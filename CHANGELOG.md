@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This change
 - added a `:live-reload :toggle` option and changed the `snippets/watch!` to toggle.
 - The `:info` returned by `make!` is flatter and only reports things that happened.
 - Refactored the calls to Quarto, improved printing. Throw an error on Quaro failure (fixes #42).
+- Avoid syncing files when the source and target are the same.
 
 ## [2-beta44 - 2025-05-08]
 - updated deps (tools.cli, Charred, Hiccup, Kindly, Kindly-advice, tools.reader, babashka.fs, clojure-plus)
