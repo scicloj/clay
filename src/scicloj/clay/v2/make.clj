@@ -250,6 +250,25 @@
           [:wrote main-index-path])
       [:ok])))
 
+(defn quarto-render! [{:keys [base-target-path
+                              qmd-path]}]
+  (let [cmd (cond-> ["quarto" "render"]
+              qmd-path (conj qmd-path))
+        {:keys [out err exit]} (if base-target-path
+                                 (shell/with-sh-dir base-target-path
+                                   (apply shell/sh cmd))
+                                 (apply shell/sh cmd))]
+    (when-not (str/blank? out)
+      (println "Clay Quarto:" out))
+    (when-not (str/blank? err)
+      (binding [*out* *err*]
+        (println "Clay Quarto:" err)))
+    (when-not (zero? exit)
+      (throw (ex-info (str "Clay Quarto failed.")
+                      {:base-target-path base-target-path
+                       :qmd-path qmd-path})))))
+
+
 (defn make-book! [{:as   spec
                    :keys [base-target-path
                           run-quarto
@@ -262,10 +281,7 @@
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
-     (->> (shell/sh "quarto" "render")
-          (shell/with-sh-dir base-target-path)
-          ((juxt :err :out))
-          (mapv (partial println "Clay Quarto:")))
+     (quarto-render! {:base-target-path base-target-path})
      (fs/copy-tree (str base-target-path "/_book")
                    base-target-path
                    {:replace-existing true})
@@ -344,15 +360,13 @@
                            (update-in [:quarto :format (second format)]
                                       assoc :output-file output-file)
                            (cond-> book
-                                   (update :quarto dissoc :title))
+                             (update :quarto dissoc :title))
                            page/md
                            (->> (spit qmd-path)))
                        (println "Clay:" [:wrote qmd-path (time/now)])
                        (when-not book
                          (if run-quarto
-                           (do (->> (shell/sh "quarto" "render" qmd-path)
-                                    ((juxt :err :out))
-                                    (mapv (partial println "Clay Quarto:")))
+                           (do (quarto-render! {:qmd-path qmd-path})
                                (println "Clay:" [:created full-target-path (time/now)])
                                (when post-process
                                  (->> full-target-path
@@ -367,9 +381,9 @@
                                (assoc :full-target-path qmd-path)
                                server/update-page!)))
                        (vec
-                         (concat [:wrote qmd-path]
-                                 (when run-quarto
-                                   [full-target-path])))))
+                        (concat [:wrote qmd-path]
+                                (when run-quarto
+                                  [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))]))
       (catch Throwable e
