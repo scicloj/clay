@@ -374,11 +374,6 @@
                              "notebooks/index.clj"]
                :live-reload :toggle}))
 
-;; Evaluate and render all files in base-source-path
-(comment
-  (clay/make! {:base-source-path "notebooks"
-               :render true}))
-
 ;; Evaluate and render a single form
 ;; in the context of the namespace in `"notebooks/index.clj"`
 ;; as HTML
@@ -503,6 +498,11 @@
 (comment
   (clay/make! {:base-source-path "notebooks/"
                :source-path "index.clj"}))
+
+;; Evaluate and render all files in base-source-path:
+(comment
+  (clay/make! {:base-source-path "other_notebooks"
+               :render true}))
 
 ;; Create a Quarto book
 ;; with a default generated index page:
