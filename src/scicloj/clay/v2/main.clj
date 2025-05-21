@@ -12,14 +12,15 @@
   [["-h" "--help"]
    ["-r" "--render"]
    ["-t" "--base-target-path DIR" :default-desc "docs"]
-   ["-c" "--config CONFIG" :parse-fn edn/read-string :validate [map? "Must be a map"]]
-   ["-a" "--aliases ALIASES" :parse-fn edn/read-string :validate [vector? "Must be a vector"]]])
+   ["-c" "--config-file CONFIG-FILE" :default-desc "clay.edn"]
+   ["-m" "--config-map CONFIG" :parse-fn edn/read-string :validate [map? "Must be a map"]]
+   ["-a" "--reset-aliases ALIASES" :parse-fn edn/read-string :validate [vector? "Must be a vector"]]])
 
 (defn -main
   "Invoke Clay from the command line. See https://scicloj.github.io/clay/#cli ."
   [& args]
   (let [{:keys [options summary arguments errors]} (cli/parse-opts args cli-options)
-        {:keys [help config aliases]} options
+        {:keys [help config-map config-file]} options
         arg-opts (when (seq arguments)
                    (when-let [x (first (filter (complement fs/exists?) arguments))]
                      (println "Clay error:" x "does not exist")
@@ -29,11 +30,15 @@
                      (cond-> {}
                              (seq files) (assoc :source-path (vec files))
                              (seq dirs) (assoc :watch-dirs (vec dirs)))))
-        opts (merge/deep-merge config
-                               (select-keys options [:render :base-target-path])
-                               arg-opts
-                               (when aliases
-                                 {:reset-aliases aliases}))]
+        file-opts (when config-file
+                    (when (not (fs/exists? config-file))
+                      (println "Clay error:" config-file "does not exist")
+                      (System/exit -1))
+                    (edn/read-string (slurp config-file)))
+        opts (merge/deep-merge file-opts
+                               config-map
+                               (select-keys options [:render :base-target-path :reset-aliases])
+                               arg-opts)]
     (println "Clay options:" (pr-str opts))
     (cond help (do (println "Clay")
                    (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")

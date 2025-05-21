@@ -7,7 +7,7 @@
  :browse true
  :live-reload false
  :run-quarto true
- #_#_:quarto {:format {:html {:toc true
+ :quarto {:format {:html {:toc true
                           :toc-depth 4
                           :theme :cosmo}
                    :revealjs {:theme :solarized
