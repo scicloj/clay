@@ -548,11 +548,25 @@
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
 
-;; Override the default behaviour syncing files, so that the target path
-;; will not include the root that the files were synced from.
+;; Render an expression that includes a path to a file.
+;; The file is automatically synced, since is under `"notebooks"`,
+;; which is one of the directories synced by default (`:subdirs-to-sync`).
+;; Note that, by default, the root `"notebooks"` is included in the
+;; target file path.
 
 (comment
-  (clay/make! {:source-path "notebooks/demo.clj"
+  (clay/make! {:single-value (kind/hiccup
+                              [:img {:src "notebooks/images/Clay.svg.png"}])}))
+
+;; Render an expression that includes a path to a file.
+;; The file is automatically synced, since is under `"notebooks"`,
+;; which is one of the directories synced by default (`:subdirs-to-sync`).
+;; Here, we override the default behaviour, so the root `"notebooks"`
+;; is not included in the target file path
+
+(comment
+  (clay/make! {:single-value (kind/hiccup
+                              [:img {:src "images/Clay.svg.png"}])
                :keep-sync-root false}))
 
 ;; Demonstrate that we can use the same source and target paths.
@@ -589,6 +603,14 @@
 (comment
   (clay/make! {:source-path "notebooks/subdir/another_demo.clj"
                :flatten-targets false}))
+
+;; Demonstrate a combination of `:flatten-targets false`
+;; and `:keep-sync-root false`.
+
+(comment
+  (clay/make! {:source-path "notebooks/demo.clj"
+               :flatten-targets false
+               :keep-sync-root false}))
 
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
