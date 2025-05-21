@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## Pending
+## [2-beta45 - 2025-05-22]
 - new option `:flatten-targets` (default true) do not create namespace folders.
 - new option `:keep-sync-root` (default true) includes the subdir itself (example "notebooks")
 - syncing no longer creates empty directories
