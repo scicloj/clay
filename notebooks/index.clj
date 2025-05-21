@@ -365,11 +365,19 @@
                              "notebooks/index.clj"]
                :live-reload true}))
 
+;; Evaluate and render
+;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
+;; as HTML
+;; and toggle the live reload option:
+(comment
+  (clay/make! {:source-path ["notebooks/slides.clj"
+                             "notebooks/index.clj"]
+               :live-reload :toggle}))
+
 ;; Evaluate and render all files in base-source-path
 (comment
   (clay/make! {:base-source-path "notebooks"
                :render true}))
-
 
 ;; Evaluate and render a single form
 ;; in the context of the namespace in `"notebooks/index.clj"`
