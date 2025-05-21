@@ -122,19 +122,7 @@
       (config/add-field :full-target-path spec->full-target-path)))
 
 (defn extract-specs [config spec]
-  (let [{:as config-and-spec :keys [source-path base-source-path render]}
-        (merge/deep-merge config spec)                      ; prioritize spec over global config
-        config-and-spec (cond-> config-and-spec
-                                render (merge {:show        false
-                                               :serve       false
-                                               :browse      false
-                                               :live-reload false}))
-        render-all (and base-source-path (or (nil? source-path) (#{:all} source-path)) render)
-        ;;
-        source-paths (cond
-                       render-all (util.fs/find-notebooks base-source-path)
-                       (sequential? source-path) source-path
-                       :else [source-path])
+  (let [{:keys [source-paths]} config
         ;; collect specs for single namespaces,
         ;; keeping the book parts structure, if any
         single-ns-specs-w-book-struct (->> source-paths
@@ -143,9 +131,7 @@
                                                     ;; just a path or no path
                                                     (or (string? path)
                                                         (nil? path))
-                                                    (->single-ns-spec spec
-                                                                      config-and-spec
-                                                                      path)
+                                                    (->single-ns-spec spec config path)
                                                     ;; a book part
                                                     (:part path)
                                                     (-> path
@@ -153,14 +139,12 @@
                                                                 (partial
                                                                   map
                                                                   (fn [chapter-path]
-                                                                    (->single-ns-spec spec
-                                                                                      config-and-spec
-                                                                                      chapter-path)))))
+                                                                    (->single-ns-spec spec config chapter-path)))))
                                                     ;; else
                                                     :else
                                                     (throw (ex-info (str "Invalid source path: " (pr-str path))
                                                                     {:path path}))))))]
-    {:main-spec       (-> config-and-spec
+    {:main-spec       (-> config
                           (assoc :full-target-paths-w-book-struct
                                  (->> single-ns-specs-w-book-struct
                                       (map (fn [ns-spec]
@@ -292,13 +276,13 @@
 
 
 (defn handle-single-source-spec! [{:as   spec
-                                   :keys [source-type
+                                   :keys [source-paths
+                                          source-type
                                           single-form
                                           single-value
                                           format
                                           full-source-path
                                           full-target-path
-                                          show
                                           run-quarto
                                           book
                                           post-process
@@ -372,7 +356,10 @@
                              (assoc :items [(item/print-throwable-v2 e)])
                              page/html))
             server/update-page!)
-        (throw e))
+        (if (and source-paths (> (count source-paths) 1))
+          (do (println "Clay FAILED:" full-source-path)
+              (println e))
+          (throw e)))
       (finally (files/init-target! full-target-path)))))
 
 
@@ -389,7 +376,7 @@
         (util.fs/copy-tree-no-clj subdir target)))))
 
 (defn make! [spec]
-  (let [config (config/config)
+  (let [config (config/config spec)
         {:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec

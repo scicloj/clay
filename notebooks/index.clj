@@ -663,6 +663,9 @@
 ;; | `:sync-subdirs` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
 ;; | `:sync-as-subdirs` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
+;; | `:aliases` | (experimental) a map of alias names to configuration | `{:markdown {:format [:quarto :html]}` |
+;; | `:merge-aliases | (experimental) a vector of aliases to merge | `[:markdown]` |
+;; | `:reset-aliases | (experimental) mutably sets aliases to use | `[:markdown]` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
@@ -670,7 +673,19 @@
 ;; in your call to `clay/make!`.
 ;; Creating a dev namespace is a good way to invoke a different configuration for publishing.
 
-;; Rendering a result is based on `clojure.pprint/pprint` behaviour. By default it will wrap anything beyond `clojure.pprint/*print-right-margin*` (default: 72) number of chars in the single line. For example `(range 100)` will be rendered as long vertical list of numbers. You can overwrite it by setting `:pprint-margin` option. When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
+;; Rendering a result is based on `clojure.pprint/pprint` behaviour.
+;; By default, it will wrap anything beyond `clojure.pprint/*print-right-margin*` (default: 72) number of chars in the single line.
+;; For example `(range 100)` will be rendered as long vertical list of numbers.
+;; You can overwrite it by setting `:pprint-margin` option.
+;; When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
+
+;; Aliases let you define reusable config fragments and selectively apply them.
+;; Add an :aliases map to your config with named configurations,
+;; then activate them using :merge-aliases (for one-time use) or :reset-aliases (to persist across invocations).
+;; For example, you might use :merge-aliases [:markdown] to generate Quarto-friendly Markdown from the REPL,
+;; or :reset-aliases [:html] in your IDE to default to full HTML rendering.
+;; Alternatively you can `(reset! scicloj.clay.v2.config/*current-aliases aliases)`.
+;; Aliases are deeply merged into the base config in order.
 
 ;; ### Namespace configuration and front matter
 
