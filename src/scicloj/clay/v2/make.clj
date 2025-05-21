@@ -84,14 +84,20 @@
 
     ;; simply a path
     (string? source-path)
-    (let [relative-source (relative-source-path spec)
-          target (str (fs/path base-target-path relative-source))]
-      (case source-type
-        ("md" "Rmd" "ipynb") target
-        "clj" (cond-> (str/replace target #"\.clj[cs]?$"
-                                   (str (some-> format second #{:revealjs} (and "-revealjs"))
-                                        ".html"))
-                      flatten-targets (str/replace #"[\\/]+" "."))))
+    (let [relative-source (relative-source-path spec)]
+      (str
+       (case source-type
+         ("md" "Rmd" "ipynb") (fs/path base-target-path
+                                       relative-source)
+         "clj" (cond-> (str/replace relative-source
+                                    #"\.clj[cs]?$"
+                                    (str (some-> format
+                                                 second
+                                                 #{:revealjs}
+                                                 (and "-revealjs"))
+                                         ".html"))
+                 flatten-targets (str/replace #"[\\/]+" ".")
+                 true (#(fs/path base-target-path %))))))
 
     :else
     (throw (ex-info "Invalid source-path"
