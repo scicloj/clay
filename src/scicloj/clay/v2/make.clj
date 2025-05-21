@@ -70,13 +70,15 @@
   "Returns the target-path relative to the current working directory (project root)."
   [{:as   spec
     :keys [source-path
+           full-source-path
            source-type
            base-target-path
            flatten-targets
            format
            ns-form
            single-form
-           single-value]}]
+           single-value
+           sync-as-subdirs]}]
   (cond
     ;; temporary target
     (or single-value single-form (nil? source-type))
@@ -88,7 +90,9 @@
       (str
        (case source-type
          ("md" "Rmd" "ipynb") (fs/path base-target-path
-                                       relative-source)
+                                       (if sync-as-subdirs
+                                         full-source-path
+                                         relative-source))
          "clj" (cond-> (str/replace relative-source
                                     #"\.clj[cs]?$"
                                     (str (some-> format
@@ -213,7 +217,7 @@
                                   (partial map ->chapter-qmd-path)))
                       (->chapter-qmd-path path)))))
         (cond->> (not index-included?)
-                 (cons "index.qmd")))))
+          (cons "index.qmd")))))
 
 (defn spec->quarto-book-config [{:as   spec
                                  :keys [book
