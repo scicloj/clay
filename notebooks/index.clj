@@ -575,6 +575,21 @@
                :base-target-path "notebooks"
                :keep-sync-root false}))
 
+;; Render a notebook in a nested source path.
+;; By default, the target path is flattened.
+;; E.g., `"temp/notebooks.subdir.another_demo.html"`.
+
+(comment
+  (clay/make! {:source-path "notebooks/subdir/another_demo.clj"}))
+
+;; Render a notebook but avoid the flattening default behaviour,
+;; so that thee target path is not flattened.
+;; E.g., `"temp/notebooks/subdir/another_demo.html"`.
+
+(comment
+  (clay/make! {:source-path "notebooks/subdir/another_demo.clj"
+               :flatten-targets false}))
+
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
 
