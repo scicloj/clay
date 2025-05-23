@@ -49,7 +49,7 @@
 (defn watch-files! [files spec]
   (swap! *state update :file-specs into
          (for [file files]
-           [file spec])))
+           [file (dissoc spec :reset-aliases)])))
 
 (defn watch-dirs!
   "Start watching file changes in `dirs` with make."
