@@ -1,19 +1,19 @@
 (ns scicloj.clay.v2.page
   (:require
-    [clj-yaml.core :as yaml]
-    [clojure.java.io :as io]
-    [clojure.java.shell :as shell]
-    [clojure.string :as string]
-    [hiccup.core :as hiccup]
-    [hiccup.page]
-    [scicloj.clay.v2.prepare :as prepare]
-    [scicloj.clay.v2.styles :as styles]
-    [scicloj.clay.v2.util.merge :as merge]
-    [scicloj.clay.v2.util.meta :as meta]
-    [scicloj.clay.v2.util.portal :as portal]
-    [scicloj.clay.v2.util.resource :as resource]
-    [scicloj.clay.v2.files :as files]
-    [scicloj.clay.v2.item :as item]))
+   [clj-yaml.core :as yaml]
+   [clojure.java.io :as io]
+   [clojure.java.shell :as shell]
+   [clojure.string :as string]
+   [hiccup.core :as hiccup]
+   [hiccup.page]
+   [scicloj.clay.v2.prepare :as prepare]
+   [scicloj.clay.v2.styles :as styles]
+   [scicloj.clay.v2.util.merge :as merge]
+   [scicloj.clay.v2.util.meta :as meta]
+   [scicloj.clay.v2.util.portal :as portal]
+   [scicloj.clay.v2.util.resource :as resource]
+   [scicloj.clay.v2.files :as files]
+   [scicloj.clay.v2.item :as item]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
