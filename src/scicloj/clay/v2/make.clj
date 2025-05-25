@@ -280,6 +280,7 @@
                                           source-type
                                           single-form
                                           single-value
+                                          flatten-targets
                                           format
                                           full-source-path
                                           full-target-path
@@ -319,8 +320,9 @@
                        (-> spec-with-items
                            (update-in [:quarto :format]
                                       select-keys [(second format)])
-                           (update-in [:quarto :format (second format)]
-                                      assoc :output-file output-file)
+                           (cond-> flatten-targets
+                                   (update-in [:quarto :format (second format)]
+                                              assoc :output-file output-file))
                            (cond-> book
                                    (update :quarto dissoc :title))
                            page/md

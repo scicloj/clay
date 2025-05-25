@@ -9,6 +9,7 @@
     [scicloj.clay.v2.prepare :as prepare]
     [scicloj.clay.v2.styles :as styles]
     [scicloj.clay.v2.util.merge :as merge]
+    [scicloj.clay.v2.util.meta :as meta]
     [scicloj.clay.v2.util.portal :as portal]
     [scicloj.clay.v2.util.resource :as resource]
     [scicloj.clay.v2.files :as files]
@@ -270,21 +271,27 @@
                "hljs.highlightAll();"]]]
     (hiccup.page/html5 head body)))
 
-(defn md [{:as spec
-           :keys [items title favicon quarto format]}]
-  (let [deps (items->deps items)
-        quarto-target (if (=  format [:quarto :revealjs])
+(defn front-matter
+  "Returns document metadata suitable for inclusion as front-matter to a Markdown document."
+  [{:as spec
+    :keys [title favicon quarto format quarto/expansions]}]
+  (let [quarto-target (if (= format [:quarto :revealjs])
                         :revealjs
                         :html)]
+    (cond-> (merge/prune-nils quarto)
+            expansions (meta/expand expansions)
+            ;; Users may provide non-quarto specific configuration (see also html),
+            ;; if so this will be added to the quarto front-matter to make them behave the same way
+            title (assoc-in [:format quarto-target :title] title)
+            favicon (update-in [:format quarto-target :include-in-header :text]
+                               str "<link rel = \"icon\" href = \"" favicon "\" />"))))
+
+(defn md [{:as spec
+           :keys [items]}]
+  (let [deps (items->deps items)]
     (str
      "---\n"
-     (yaml/generate-string
-      (cond-> (merge/prune-nils quarto)
-        ;; Users may provide non-quarto specific configuration (see also html),
-        ;; if so this will be added to the quarto front-matter to make them behave the same way
-        title (assoc-in [:format :html :title] title)
-        favicon (update-in [:format quarto-target :include-in-header :text]
-                           str "<link rel = \"icon\" href = \"" favicon "\" />")))
+     (yaml/generate-string (front-matter spec))
      "\n---\n"
      (hiccup/html
       [:style (styles/main :table)]
