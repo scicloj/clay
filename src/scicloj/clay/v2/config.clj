@@ -29,7 +29,7 @@
   (-> config
       (assoc kw (compute config))))
 
-(defn many-configs [config]
+(defn expanding-configs [config]
   (cond-> config
           (:render config) (merge {:show        false
                                    :serve       false
@@ -60,7 +60,7 @@
 
 (defn apply-conditionals [config]
   (apply-alias-state! config)
-  (-> config (merge-aliases) (many-configs) (source-paths)))
+  (-> config (merge-aliases) (expanding-configs) (source-paths)))
 
 (defn config
   "Gathers configuration from the default, a clay.edn, and a spec if provided"
