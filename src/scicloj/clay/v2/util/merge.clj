@@ -1,15 +1,11 @@
 (ns scicloj.clay.v2.util.merge
-  (:require [clojure.walk :as walk]))
+  (:require [clojure.walk :as walk]
+            [scicloj.kindly.v4.api :as kindly]))
 
 (defn deep-merge
-  "Recursively merges maps.
-  See https://dnaeon.github.io/recursively-merging-maps-in-clojure/. "
+  "Recursively merges maps"
   [& maps]
-  (letfn [(m [& xs]
-            (if (some #(and (map? %) (not (record? %))) xs)
-              (apply merge-with m xs)
-              (last xs)))]
-    (reduce m maps)))
+  (apply kindly/deep-merge maps))
 
 (defn dissoc-nils
   "Removes entries with nil values from a map"
