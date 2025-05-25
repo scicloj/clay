@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## Pending
+- new option `:quarto/expansions`. When processing quarto frontmatter,
+  Clay will identify matching fields and replace keyword values with a lookup value.
+  Example: `:quarto/expansions {:author {:daslu {:name "Daniel Slutsky"}}}`
+  will expand frontmatter `{:clay {:quarto {:author :daslu}}}` to `{:clay {:quarto {:author {:name "Daniel Slutsky"}}}}`
+  by matching `:author :daslu` to the replacement `{:name "Daniel Slutsky"}`.
+  Matches inside vectors, and on pluralized keywords.
+- new option `:aliases` similar to deps.edn, an alias is merged into configuration when active
+- new option `:merge-aliases` a vector of aliases to merge into the configuration
+- new option `:reset-aliases` similar to `:merge-aliases` but remains in effect, allowing you to switch between aliases
+- nils in configuration will now remove configuration.
+  Example `:quarto nil` will remove the default quarto configuration of theme and toc
+
+## Pending
 - new option `:flatten-targets` (default true) do not create namespace folders.
 - new option `:sync-as-subdirs` (default true) includes the subdir itself (example "notebooks")
 - syncing no longer creates empty directories
