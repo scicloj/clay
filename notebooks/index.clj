@@ -365,11 +365,14 @@
                              "notebooks/index.clj"]
                :live-reload true}))
 
-;; Evaluate and render all files in base-source-path
+;; Evaluate and render
+;; the namespaces in `"notebooks/slides.clj"` `"notebooks/index.clj"`
+;; as HTML
+;; and toggle the live reload option:
 (comment
-  (clay/make! {:base-source-path "notebooks"
-               :render true}))
-
+  (clay/make! {:source-path ["notebooks/slides.clj"
+                             "notebooks/index.clj"]
+               :live-reload :toggle}))
 
 ;; Evaluate and render a single form
 ;; in the context of the namespace in `"notebooks/index.clj"`
@@ -496,6 +499,11 @@
   (clay/make! {:base-source-path "notebooks/"
                :source-path "index.clj"}))
 
+;; Evaluate and render all files in base-source-path:
+(comment
+  (clay/make! {:base-source-path "other_notebooks"
+               :render true}))
+
 ;; Create a Quarto book
 ;; with a default generated index page:
 (comment
@@ -539,6 +547,70 @@
                :book {:title "Book Example"}
                ;; Empty the target directory first:
                :clean-up-target-dir true}))
+
+;; Render an expression that includes a path to a file.
+;; The file is automatically synced, since is under `"notebooks"`,
+;; which is one of the directories synced by default (`:subdirs-to-sync`).
+;; Note that, by default, the root `"notebooks"` is included in the
+;; target file path.
+
+(comment
+  (clay/make! {:single-value (kind/hiccup
+                              [:img {:src "notebooks/images/Clay.svg.png"}])}))
+
+;; Render an expression that includes a path to a file.
+;; The file is automatically synced, since is under `"notebooks"`,
+;; which is one of the directories synced by default (`:subdirs-to-sync`).
+;; Here, we override the default behaviour, so the root `"notebooks"`
+;; is not included in the target file path
+
+(comment
+  (clay/make! {:single-value (kind/hiccup
+                              [:img {:src "images/Clay.svg.png"}])
+               :keep-sync-root false}))
+
+;; Demonstrate that we can use the same source and target paths.
+
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path "demo.clj"
+               :base-target-path "notebooks"}))
+
+;; Demonstrate that we can use the same source and target paths --
+;; another variation with `:keep-sync-root false` --
+;; in this case, no syncing will take place,
+;; because the relevant files already exist in place.
+
+(comment
+  (clay/make! {:format [:quarto :html]
+               :base-source-path "notebooks"
+               :source-path "demo.clj"
+               :base-target-path "notebooks"
+               :keep-sync-root false}))
+
+;; Render a notebook in a nested source path.
+;; By default, the target path is flattened.
+;; E.g., `"temp/notebooks.subdir.another_demo.html"`.
+
+(comment
+  (clay/make! {:source-path "notebooks/subdir/another_demo.clj"}))
+
+;; Render a notebook but avoid the flattening default behaviour,
+;; so that thee target path is not flattened.
+;; E.g., `"temp/notebooks/subdir/another_demo.html"`.
+
+(comment
+  (clay/make! {:source-path "notebooks/subdir/another_demo.clj"
+               :flatten-targets false}))
+
+;; Demonstrate a combination of `:flatten-targets false`
+;; and `:keep-sync-root false`.
+
+(comment
+  (clay/make! {:source-path "notebooks/demo.clj"
+               :flatten-targets false
+               :keep-sync-root false}))
 
 ;; Reopen the Clay view in the browser
 ;; (in case you closed the browser tab previously opened):
@@ -661,8 +733,8 @@
 ;; | `:post-process` | post-processing the resulting HTML | `#(str/replace "#3" "4")` |
 ;; | `:live-reload` | make automatically after its source file is changed | `true` or `:toggle` |
 ;; | `:flatten-targets` | (experimental) whether to place the output in a subdirectory or not | `false` |
-;; | `:sync-subdirs` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
-;; | `:sync-as-subdirs` | (experimental) keep the subdir prefix | `false` |
+;; | `:subdirs-to-sync` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
+;; | `:keep-sync-root` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 ;; | `:aliases` | (experimental) a map of alias names to configuration | `{:markdown {:format [:quarto :html]}` |
 ;; | `:merge-aliases | (experimental) a vector of aliases to merge | `[:markdown]` |
@@ -819,8 +891,20 @@
 ;; ## Referring to files
 
 ;; In data visualizations, one can directly refrer to files places under `"notebooks/"` or `"src/"`. By default, all files except of these directories, except for Clojure files, are copied alongside the HTML target.
-;;
+
 ;; This default can be overridden using the `:subdirs-to-sync` config option. E.g., `:subdirs-to-sync ["notebooks" "data"]` will copy files from the `"notebooks"` and `"data"` directories, but not from `"src"`. Clojure source files (`.clj`, etc.) are not synched.
+
+;; Note that the URLs we use below need to include the root directory from which
+;; files are synced, which is `"notebooks"` in these cases.
+;; This is because, by default, a file like `"notebooks/images/Clay.svg.png"`
+;; will be copied to something like `"target/notebooks/images/Clay.svg.png"
+;; in the sync step, assuming `:base-target-path` is `"target"`.
+
+;; To override this behaviour, one may set `:keep-sync-root` to `false`.
+;; Then,a file like `"notebooks/images/Clay.svg.png"`
+;; will be copied to something like `"target/images/Clay.svg.png"
+;; in the sync step, and it will not be necessary to include
+;; the `"notebooks"` prefix in the code.
 
 (kind/hiccup
  [:img {:src "notebooks/images/Clay.svg.png"}])

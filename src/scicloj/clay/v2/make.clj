@@ -70,13 +70,15 @@
   "Returns the target-path relative to the current working directory (project root)."
   [{:as   spec
     :keys [source-path
+           full-source-path
            source-type
            base-target-path
            flatten-targets
            format
            ns-form
            single-form
-           single-value]}]
+           single-value
+           keep-sync-root]}]
   (cond
     ;; temporary target
     (or single-value single-form (nil? source-type))
@@ -84,14 +86,22 @@
 
     ;; simply a path
     (string? source-path)
-    (let [relative-source (relative-source-path spec)
-          target (str (fs/path base-target-path relative-source))]
-      (case source-type
-        ("md" "Rmd" "ipynb") target
-        "clj" (cond-> (str/replace target #"\.clj[cs]?$"
-                                   (str (some-> format second #{:revealjs} (and "-revealjs"))
-                                        ".html"))
-                      flatten-targets (str/replace #"[\\/]+" "."))))
+    (let [relative-source (relative-source-path spec)]
+      (str
+       (case source-type
+         ("md" "Rmd" "ipynb") (fs/path base-target-path
+                                       (if keep-sync-root
+                                         full-source-path
+                                         relative-source))
+         "clj" (cond-> (str/replace relative-source
+                                    #"\.clj[cs]?$"
+                                    (str (some-> format
+                                                 second
+                                                 #{:revealjs}
+                                                 (and "-revealjs"))
+                                         ".html"))
+                 flatten-targets (str/replace #"[\\/]+" ".")
+                 true (#(fs/path base-target-path %))))))
 
     :else
     (throw (ex-info "Invalid source-path"
@@ -191,7 +201,7 @@
                                   (partial map ->chapter-qmd-path)))
                       (->chapter-qmd-path path)))))
         (cond->> (not index-included?)
-                 (cons "index.qmd")))))
+          (cons "index.qmd")))))
 
 (defn spec->quarto-book-config [{:as   spec
                                  :keys [book
@@ -228,6 +238,25 @@
           [:wrote main-index-path])
       [:ok])))
 
+(defn quarto-render! [{:keys [base-target-path
+                              qmd-path]}]
+  (let [cmd (cond-> ["quarto" "render"]
+              qmd-path (conj qmd-path))
+        {:keys [out err exit]} (if base-target-path
+                                 (shell/with-sh-dir base-target-path
+                                   (apply shell/sh cmd))
+                                 (apply shell/sh cmd))]
+    (when-not (str/blank? out)
+      (println "Clay Quarto:" out))
+    (when-not (str/blank? err)
+      (binding [*out* *err*]
+        (println "Clay Quarto:" err)))
+    (when-not (zero? exit)
+      (throw (ex-info (str "Clay Quarto failed.")
+                      {:base-target-path base-target-path
+                       :qmd-path qmd-path})))))
+
+
 (defn make-book! [{:as   spec
                    :keys [base-target-path
                           run-quarto
@@ -240,10 +269,7 @@
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
-     (->> (shell/sh "quarto" "render")
-          (shell/with-sh-dir base-target-path)
-          ((juxt :err :out))
-          (mapv (partial println "Clay Quarto:")))
+     (quarto-render! {:base-target-path base-target-path})
      (fs/copy-tree (str base-target-path "/_book")
                    base-target-path
                    {:replace-existing true})
@@ -324,15 +350,13 @@
                                    (update-in [:quarto :format (second format)]
                                               assoc :output-file output-file))
                            (cond-> book
-                                   (update :quarto dissoc :title))
+                             (update :quarto dissoc :title))
                            page/md
                            (->> (spit qmd-path)))
                        (println "Clay:" [:wrote qmd-path (time/now)])
                        (when-not book
                          (if run-quarto
-                           (do (->> (shell/sh "quarto" "render" qmd-path)
-                                    ((juxt :err :out))
-                                    (mapv (partial println "Clay Quarto:")))
+                           (do (quarto-render! {:qmd-path qmd-path})
                                (println "Clay:" [:created full-target-path (time/now)])
                                (when post-process
                                  (->> full-target-path
@@ -347,9 +371,9 @@
                                (assoc :full-target-path qmd-path)
                                server/update-page!)))
                        (vec
-                         (concat [:wrote qmd-path]
-                                 (when run-quarto
-                                   [full-target-path])))))
+                        (concat [:wrote qmd-path]
+                                (when run-quarto
+                                  [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))]))
       (catch Throwable e
@@ -367,15 +391,18 @@
 
 (defn sync-resources! [{:keys [base-target-path
                                subdirs-to-sync
-                               sync-as-subdirs]}]
+                               keep-sync-root]}]
   (doseq [subdir subdirs-to-sync]
     (when (fs/exists? subdir)
-      (let [target (if sync-as-subdirs
+      (let [target (if keep-sync-root
                      (str base-target-path "/" subdir)
                      base-target-path)]
-        (when (and sync-as-subdirs (fs/exists? target))
-          (fs/delete-tree target))
-        (util.fs/copy-tree-no-clj subdir target)))))
+        (if (= (fs/canonicalize target)
+               (fs/canonicalize subdir))
+          (println (format "Clay sync: not syncing \"%s\" to itself." subdir))
+          (do (when (and keep-sync-root (fs/exists? target))
+                (fs/delete-tree target))
+              (util.fs/copy-tree-no-clj subdir target)))))))
 
 (defn make! [spec]
   (let [config (config/config spec)
@@ -390,10 +417,10 @@
     (when show
       (server/loading!))
     (let [info (cond-> (mapv handle-single-source-spec! single-ns-specs)
-                       book (conj (make-book! main-spec))
-                       live-reload (conj (if (#{:toggle} live-reload)
-                                           (live-reload/toggle! make! main-spec source-paths)
-                                           (live-reload/start! make! main-spec source-paths))))
+                 book (conj (make-book! main-spec))
+                 live-reload (conj (if (#{:toggle} live-reload)
+                                     (live-reload/toggle! make! main-spec source-paths)
+                                     (live-reload/start! make! main-spec source-paths))))
           summary {:url     (server/url)
                    :key     "clay"
                    :title   "Clay"

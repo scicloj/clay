@@ -70,9 +70,9 @@
       (fs/create-dirs (fs/parent file1))
       (lr/start! mock-make-fn
                  {:live-reload true
-                  :source-path file1}
-                 [file1]
-                 [])
+                  :source-path file1
+                  :watch-dirs []}
+                 [file1])
       (is (= #{file1}
              (lr/watched-files))
           "watch first file")
@@ -87,9 +87,9 @@
       ;; do it again
       (lr/start! mock-make-fn
                  {:live-reload true
-                  :source-path file1}
-                 [file1]
-                 [])
+                  :source-path file1
+                  :watch-dirs []}
+                 [file1])
       (is (= #{(str (fs/parent file1))}
              (lr/watched-dirs))
           "watch first dir")
@@ -100,9 +100,9 @@
         (create-dirs (map fs/parent files))
         (lr/start! mock-make-fn
                    {:live-reload true
-                    :source-path files}
-                   files
-                   [])
+                    :source-path files
+                    :watch-dirs []}
+                   files)
         (is (= (set (apply vector file1 files))
                (lr/watched-files))
             "watch files twice")
