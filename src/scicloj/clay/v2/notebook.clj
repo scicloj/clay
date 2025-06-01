@@ -5,13 +5,13 @@
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
-            [scicloj.clay.v2.config :as config]
             [scicloj.clay.v2.util.merge :as merge]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
             [scicloj.kindly-advice.v1.api :as kindly-advice]
             [clojure.string :as str]
-            [clojure.pprint :as pp]))
+            [clojure.pprint :as pp])
+  (:import (java.io StringWriter)))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -39,20 +39,37 @@
   (some-> code
           (str/includes? ",,,")))
 
+(defn read-eval-capture
+  [{:as note
+    :keys [code form]}]
+  (let [out (new StringWriter)
+        err (new StringWriter)
+        note (try
+               (let [x (binding [*out* out
+                                 *err* err]
+                         (cond code (-> code
+                                        read-string
+                                        eval
+                                        deref-if-needed)
+                               form (-> form
+                                        eval
+                                        deref-if-needed)))]
+                 (assoc note :value x))
+               (catch Throwable ex
+                 (assoc note :exception ex)))
+        out-str (str out)
+        err-str (str err)]
+    (cond-> note
+            (seq out-str) (assoc :out out-str)
+            (seq err-str) (assoc :err err-str))))
+
 (defn complete [{:as note
-                 :keys [comment? code form value]}]
-  (-> (if (or value comment?)
-        note
-        (assoc note
-               :value (cond code (-> code
-                                     read-string
-                                     eval
-                                     deref-if-needed)
-                            form (-> form
-                                     eval
-                                     deref-if-needed))))
-      (cond-> (not comment?)
-        kindly-advice/advise)))
+                 :keys [comment?]}]
+  (cond-> note
+          (not (or comment? (contains? note :value)))
+          (read-eval-capture)
+          (not (or comment? (not (contains? note :value))))
+          (kindly-advice/advise)))
 
 (defn comment->item [comment]
   (-> comment
@@ -104,22 +121,26 @@
       :deps   (set (mapcat :deps value-items))}]))
 
 (defn note-to-items [{:as   note
-                      :keys [comment? code
+                      :keys [comment?
+                             code
+                             exception
+                             err
+                             out
                              kindly/options]}
                      {:as   opts}]
   (if (and comment? code)
     [(comment->item code)]
     (let [code-item (when-not (hide-code? note opts)
                       (item/source-clojure code))
-          value-items (when-not (hide-value? note opts)
-                        (-> note
-                            (select-keys [:value :code :form
-                                          :base-target-path
-                                          :full-target-path
-                                          :kindly/options
-                                          :format])
-                            (update :value deref-if-needed)
-                            prepare/prepare-or-pprint))]
+          value-items (cond-> []
+                              err (conj (item/print-output "ERR:" err))
+                              out (conj (item/print-output "OUT:" out))
+                              exception (conj (item/print-throwable exception))
+                              (and (contains? note :value)
+                                   (not (hide-value? note opts)))
+                              (-> note
+                                  (update :value deref-if-needed)
+                                  prepare/prepare-or-pprint))]
       (cond (and (not code-item) (empty? value-items))
             []
 
@@ -129,7 +150,8 @@
             (empty? value-items)
             [code-item]
 
-            (= :horizontal (or (:code-and-value opts) (:code-and-value options)))
+            (= :horizontal (or (:code-and-value opts)
+                               (:code-and-value options)))
             (side-by-side-items opts code-item value-items)
 
             :else
@@ -223,14 +245,8 @@
 (defn items-and-test-forms
   ([{:as options
      :keys [full-source-path
-            hide-info-line
-            hide-code hide-nils hide-vars
-            title toc?
-            base-target-path
-            full-target-path
             single-form
             single-value
-            format
             smart-sync
             pprint-margin]
      :or {pprint-margin pp/*print-right-margin*}}]

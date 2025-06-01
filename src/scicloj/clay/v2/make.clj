@@ -355,7 +355,7 @@
       (catch Throwable e
         (-> spec
             (assoc :page (-> spec
-                             (assoc :items [(item/print-throwable-v2 e)])
+                             (assoc :items [(item/print-throwable e)])
                              page/html))
             server/update-page!)
         (if (and source-paths (> (count source-paths) 1))
