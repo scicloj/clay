@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. This change
 - new option `:reset-aliases` similar to `:merge-aliases` but remains in effect, allowing you to switch between aliases
 - nils in configuration will now remove configuration.
   Example `:quarto nil` will remove the default quarto configuration of theme and toc
+- show and continue for exceptions
 
 ## Pending
 - new option `:flatten-targets` (default true) do not create namespace folders.
