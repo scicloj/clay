@@ -238,7 +238,7 @@
 
 ;; ### Neovim Conjure
 
-;; See [Integrating with Clay and data visualisation tools](https://github.com/Olical/conjure/wiki/Integrating-with-Clay-and-data-visualisation-tools) at the Conjure Wiki.
+;; See the [clay.nvim](https://github.com/radovanne/clay.nvim) plugin. 
 
 ;; ### IntelliJ Cursive
 ;;
