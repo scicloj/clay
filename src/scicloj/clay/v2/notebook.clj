@@ -5,13 +5,13 @@
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
-            [scicloj.clay.v2.config :as config]
             [scicloj.clay.v2.util.merge :as merge]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
             [scicloj.kindly-advice.v1.api :as kindly-advice]
             [clojure.string :as str]
-            [clojure.pprint :as pp]))
+            [clojure.pprint :as pp])
+  (:import (java.io StringWriter)))
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -29,7 +29,7 @@
                          remote-repo]}]
   (let [relative-file-path (path/path-relative-to-repo full-source-path)]
     (item/info-line {:path relative-file-path
-                     :url (some-> remote-repo (path/file-git-url relative-file-path))})))
+                     :url  (some-> remote-repo (path/file-git-url relative-file-path))})))
 
 (defn narrowed? [code]
   (some-> code
@@ -39,29 +39,46 @@
   (some-> code
           (str/includes? ",,,")))
 
-(defn complete [{:as note
-                 :keys [comment? code form value]}]
-  (-> (if (or value comment?)
-        note
-        (assoc note
-               :value (cond code (-> code
-                                     read-string
-                                     eval
-                                     deref-if-needed)
-                            form (-> form
-                                     eval
-                                     deref-if-needed))))
-      (cond-> (not comment?)
-        kindly-advice/advise)))
+(defn read-eval-capture
+  [{:as   note
+    :keys [code form]}]
+  (let [out (new StringWriter)
+        err (new StringWriter)
+        note (try
+               (let [x (binding [*out* out
+                                 *err* err]
+                         (cond code (-> code
+                                        read-string
+                                        eval
+                                        deref-if-needed)
+                               form (-> form
+                                        eval
+                                        deref-if-needed)))]
+                 (assoc note :value x))
+               (catch Throwable ex
+                 (assoc note :exception ex)))
+        out-str (str out)
+        err-str (str err)]
+    (cond-> note
+            (seq out-str) (assoc :out out-str)
+            (seq err-str) (assoc :err err-str))))
+
+(defn complete [{:as   note
+                 :keys [comment?]}]
+  (cond-> note
+          (not (or comment? (contains? note :value)))
+          (read-eval-capture)
+          (not (or comment? (not (contains? note :value))))
+          (kindly-advice/advise)))
 
 (defn comment->item [comment]
   (-> comment
       (string/split #"\n")
       (->> (map #(-> %
                      (string/replace
-                      #"^;+\s?" "")
+                       #"^;+\s?" "")
                      (string/replace
-                      #"^#" "\n#")))
+                       #"^#" "\n#")))
            (string/join "\n"))
       item/md))
 
@@ -104,22 +121,26 @@
       :deps   (set (mapcat :deps value-items))}]))
 
 (defn note-to-items [{:as   note
-                      :keys [comment? code
+                      :keys [comment?
+                             code
+                             exception
+                             err
+                             out
                              kindly/options]}
-                     {:as   opts}]
+                     {:as opts}]
   (if (and comment? code)
     [(comment->item code)]
     (let [code-item (when-not (hide-code? note opts)
                       (item/source-clojure code))
-          value-items (when-not (hide-value? note opts)
-                        (-> note
-                            (select-keys [:value :code :form
-                                          :base-target-path
-                                          :full-target-path
-                                          :kindly/options
-                                          :format])
-                            (update :value deref-if-needed)
-                            prepare/prepare-or-pprint))]
+          value-items (cond-> []
+                              err (conj (item/print-output "ERR:" err))
+                              out (conj (item/print-output "OUT:" out))
+                              exception (conj (item/print-throwable exception))
+                              (and (contains? note :value)
+                                   (not (hide-value? note opts)))
+                              (into (-> note
+                                        (update :value deref-if-needed)
+                                        (prepare/prepare-or-pprint))))]
       (cond (and (not code-item) (empty? value-items))
             []
 
@@ -129,7 +150,8 @@
             (empty? value-items)
             [code-item]
 
-            (= :horizontal (or (:code-and-value opts) (:code-and-value options)))
+            (= :horizontal (or (:code-and-value opts)
+                               (:code-and-value options)))
             (side-by-side-items opts code-item value-items)
 
             :else
@@ -215,25 +237,19 @@
          path
          (fn [{:keys [code]}]
            (let [new-code (slurp path)]
-             {:code new-code
+             {:code                 new-code
               :first-line-of-change (first-line-of-change
-                                     code new-code)})))
+                                      code new-code)})))
   (@*path->last path))
 
 (defn items-and-test-forms
-  ([{:as options
+  ([{:as   options
      :keys [full-source-path
-            hide-info-line
-            hide-code hide-nils hide-vars
-            title toc?
-            base-target-path
-            full-target-path
             single-form
             single-value
-            format
             smart-sync
             pprint-margin]
-     :or {pprint-margin pp/*print-right-margin*}}]
+     :or   {pprint-margin pp/*print-right-margin*}}]
    (binding [*ns* *ns*
              *warn-on-reflection* *warn-on-reflection*
              *unchecked-math* *unchecked-math*
@@ -248,7 +264,7 @@
                                                 [{:form (read/read-ns-form code)}])
                                               {:form single-form})
                             :else (read/->notes code))
-                      (map-indexed (fn [i {:as note
+                      (map-indexed (fn [i {:as   note
                                            :keys [code]}]
                                      (merge note
                                             {:i i}
@@ -279,7 +295,7 @@
                                            (or (ns-form? form)
                                                (>= i first-narrowed-index)
                                                (-> region
-                                                   (nth 2) ;last region line
+                                                   (nth 2)  ;last region line
                                                    (> first-line-of-change))))))
                             ;;
                             :else
@@ -298,15 +314,15 @@
                                             (when-not test-note
                                               (-> complete-note
                                                   (merge/deep-merge
-                                                   (-> options
-                                                       (select-keys [:base-target-path
-                                                                     :full-target-path
-                                                                     :kindly/options
-                                                                     :format])))
+                                                    (-> options
+                                                        (select-keys [:base-target-path
+                                                                      :full-target-path
+                                                                      :kindly/options
+                                                                      :format])))
                                                   (note-to-items
-                                                   (merge options
-                                                          (when narrowed
-                                                            {:hide-code true}))))))
+                                                    (merge options
+                                                           (when narrowed
+                                                             {:hide-code true}))))))
                                 line-number (first region)
                                 varname (->var-name i line-number)
                                 test-form (cond
@@ -323,11 +339,11 @@
                                             :else (def-form
                                                     varname
                                                     form))]
-                            {:i              (inc i)
-                             :items          (concat items new-items)
-                             :test-forms     (if test-form
-                                               (conj test-forms test-form)
-                                               test-forms)
+                            {:i                    (inc i)
+                             :items                (concat items new-items)
+                             :test-forms           (if test-form
+                                                     (conj test-forms test-form)
+                                                     test-forms)
                              :last-nontest-varname (if (or comment
                                                            test-note)
                                                      last-nontest-varname
@@ -361,4 +377,4 @@
 
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
-                       :single-form '(+ 1 2)})))
+                       :single-form      '(+ 1 2)})))
