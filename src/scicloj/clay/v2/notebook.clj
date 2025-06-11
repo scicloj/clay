@@ -322,7 +322,7 @@
                         :last-nontest-varname (if (or comment test-note)
                                                 last-nontest-varname
                                                 varname)}]
-              (if (and exception (:exception-continue options))
+              (if (and exception (not (:exception-continue options)))
                 (reduced step)
                 step)))
           ;; initial value

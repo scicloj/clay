@@ -16,8 +16,8 @@ All notable changes to this project will be documented in this file. This change
   Example `:quarto nil` will remove the default quarto configuration of theme and toc
   TODO: still thinking about this
 - stdout and stderr are now captured and displayed in the notebook
-- exceptions are now shown where they are encountered
-- show and continue for exceptions can be set in options
+- Exceptions are now shown in the output page where they are encountered
+- `:exception-continue` option for exceptions
 
 ## [2-beta45 - 2025-05-22]
 - new option `:flatten-targets` (default true) do not create namespace folders.
