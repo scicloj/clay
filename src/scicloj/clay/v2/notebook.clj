@@ -100,8 +100,9 @@
            (str/join "\n"))
       item/md))
 
-(defn hide-code? [{:as note :keys [code form value kind]} {:as opts :keys [hide-code]}]
+(defn hide-code? [{:as note :keys [code form value kind narrowed]} {:as opts :keys [hide-code]}]
   (or hide-code
+      narrowed
       (-> form meta :kindly/hide-code)
       (-> form meta :kindly/hide-code?)                     ; legacy convention
       (-> value meta :kindly/hide-code)
@@ -283,9 +284,8 @@
                                        test-forms
                                        last-nontest-varname]}
                note]
-            (let [{:as complete-note :keys [form kind region narrowed exception]} (complete note)
+            (let [{:as complete-note :keys [form region narrowed exception comment?]} (complete note)
                   test-note (test-last? complete-note)
-                  comment (:comment? complete-note)
                   new-items (when (or (not some-narrowed)
                                       narrowed)
                               (when-not test-note
@@ -296,10 +296,7 @@
                                                         :full-target-path
                                                         :kindly/options
                                                         :format])))
-                                    (note-to-items
-                                      (merge options
-                                             (when narrowed
-                                               {:hide-code true}))))))
+                                    (note-to-items options))))
                   line-number (first region)
                   varname (->var-name i line-number)
                   test-form (cond
@@ -311,7 +308,7 @@
                               ;; the test ns form
                               (ns-form? form) (test-ns-form form)
                               ;; a comment
-                              comment nil
+                              comment? nil
                               ;; the regular case, just a def
                               :else (def-form varname form))
                   step {:i                    (inc i)
@@ -319,7 +316,7 @@
                         :test-forms           (if test-form
                                                 (conj test-forms test-form)
                                                 test-forms)
-                        :last-nontest-varname (if (or comment test-note)
+                        :last-nontest-varname (if (or comment? test-note)
                                                 last-nontest-varname
                                                 varname)}]
               (if (and exception (not (:exception-continue options)))
