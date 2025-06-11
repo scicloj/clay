@@ -327,8 +327,10 @@
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
           [:wrote-with-kindly-render full-target-path])
-        (let [{:keys [items test-forms]} (notebook/items-and-test-forms spec)
-              spec-with-items (assoc spec :items items)]
+        (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms spec)
+              spec-with-items (assoc spec
+                                :items items
+                                :exception exception)]
           [(case (first format)
              :hiccup (page/hiccup spec-with-items)
              :html (do (-> spec-with-items

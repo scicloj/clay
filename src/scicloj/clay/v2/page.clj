@@ -208,7 +208,7 @@
        distinct))
 
 (defn html [{:as spec
-             :keys [items title toc? favicon]}]
+             :keys [items title toc? favicon exception]}]
   (let [deps (items->deps items)
         special-libs (concat [:html-default :katex] deps)
         head [:head
@@ -234,7 +234,8 @@
                 [:style (styles/main :bootstrap-toc-customization)])
               (include-libs spec [:css] special-libs)
               [:title (or title "Clay")]]
-        body [:body  {:style {:margin "auto"}
+        body [:body  {:style {:margin "auto"
+                              :border (when exception "2px solid red")}
                       :data-spy "scroll"
                       :data-target "#toc"}
               (when toc?

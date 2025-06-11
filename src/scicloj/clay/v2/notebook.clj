@@ -320,7 +320,7 @@
                                                 last-nontest-varname
                                                 varname)}]
               (if (and exception (not (:exception-continue options)))
-                (reduced step)
+                (reduced (assoc step :exception exception))
                 step)))
           ;; initial value
           {:i              0
