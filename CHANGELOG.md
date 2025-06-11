@@ -11,9 +11,13 @@ All notable changes to this project will be documented in this file. This change
 - new option `:aliases` similar to deps.edn, an alias is merged into configuration when active
 - new option `:merge-aliases` a vector of aliases to merge into the configuration
 - new option `:reset-aliases` similar to `:merge-aliases` but remains in effect, allowing you to switch between aliases
+- CLI now accepts `-A:myalias` to activate an alias
 - nils in configuration will now remove configuration.
   Example `:quarto nil` will remove the default quarto configuration of theme and toc
-- show and continue for exceptions
+  TODO: still thinking about this
+- stdout and stderr are now captured and displayed in the notebook
+- exceptions are now shown where they are encountered
+- show and continue for exceptions can be set in options
 
 ## [2-beta45 - 2025-05-22]
 - new option `:flatten-targets` (default true) do not create namespace folders.

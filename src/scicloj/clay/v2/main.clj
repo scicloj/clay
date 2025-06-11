@@ -3,10 +3,16 @@
   (:gen-class)
   (:require [babashka.fs :as fs]
             [clojure.edn :as edn]
+            [clojure.string :as str]
             [clojure.tools.cli :as cli]
             [scicloj.clay.v2.api :as api]
             [nrepl.cmdline]
             [scicloj.clay.v2.util.merge :as merge]))
+
+(defn parse-aliases [s]
+  (->> (str/split s #":")
+       (into [] (comp (remove str/blank?)
+                      (map keyword)))))
 
 (def cli-options
   [["-h" "--help"]
@@ -14,7 +20,7 @@
    ["-t" "--base-target-path DIR" :default-desc "docs"]
    ["-c" "--config-file CONFIG-FILE" :default-desc "clay.edn"]
    ["-m" "--config-map CONFIG" :parse-fn edn/read-string :validate [map? "Must be a map"]]
-   ["-a" "--reset-aliases ALIASES" :parse-fn edn/read-string :validate [vector? "Must be a vector"]]])
+   ["-A" "--reset-aliases ALIASES" :parse-fn parse-aliases]])
 
 (defn -main
   "Invoke Clay from the command line. See https://scicloj.github.io/clay/#cli ."
