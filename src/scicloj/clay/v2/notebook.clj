@@ -3,7 +3,6 @@
             [clojure.pprint :as pp]
             [scicloj.clay.v2.util.merge :as merge]
             [scicloj.clay.v2.util.path :as path]
-            [scicloj.clay.v2.util.threads :as threads]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
