@@ -82,7 +82,8 @@
 (defn start!
   "Watch directories of a spec"
   [make-fn {:as spec :keys [base-source-path watch-dirs]} source-paths]
-  (let [files (set (map (comp str fs/canonicalize)
+  (let [spec (dissoc spec :live-reload)                     ;; don't need to re-watch on triggered makes
+        files (set (map (comp str fs/canonicalize)
                         (remove (some-fn nil? fs/directory?)
                                 source-paths)))
         ;; when nothing was specified to watch, watch the base-source-path
@@ -111,7 +112,8 @@
   "Stop all directory watchers."
   []
   (stop-watching-dirs! (watched-dirs))
-  (reset! *state empty-state))
+  (reset! *state empty-state)
+  [:watching nil])
 
 (defn toggle!
   [make-fn spec source-paths]

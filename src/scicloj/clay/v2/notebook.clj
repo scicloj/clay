@@ -1,17 +1,18 @@
 (ns scicloj.clay.v2.notebook
-  (:require [clojure.string :as string]
-            [scicloj.clay.v2.item :as item]
+  (:require [clojure.string :as str]
+            [clojure.pprint :as pp]
+            [scicloj.clay.v2.util.merge :as merge]
             [scicloj.clay.v2.util.path :as path]
+            [scicloj.clay.v2.util.threads :as threads]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
-            [scicloj.clay.v2.util.merge :as merge]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly-advice.v1.api :as kindly-advice]
-            [clojure.string :as str]
-            [clojure.pprint :as pp])
+            [scicloj.kindly-advice.v1.api :as kindly-advice])
   (:import (java.io StringWriter)))
+
+(set! *warn-on-reflection* true)
 
 (defn deref-if-needed [v]
   (if (delay? v)
@@ -39,11 +40,23 @@
   (some-> code
           (str/includes? ",,,")))
 
+(defn ns-form? [form]
+  (and (sequential? form)
+       (-> form first (= 'ns))))
+
+(defn str-and-reset! [w]
+  (when (instance? StringWriter *out*)
+    (locking w
+      (let [s (str w)]
+        (.setLength (.getBuffer ^StringWriter w) 0)
+        s))))
+
 (defn read-eval-capture
+  "Captures stdout and stderr while evaluating a note"
   [{:as   note
     :keys [code form]}]
-  (let [out (new StringWriter)
-        err (new StringWriter)
+  (let [out (StringWriter.)
+        err (StringWriter.)
         note (try
                (let [x (binding [*out* out
                                  *err* err]
@@ -57,11 +70,17 @@
                  (assoc note :value x))
                (catch Throwable ex
                  (assoc note :exception ex)))
-        out-str (str out)
-        err-str (str err)]
+        out-str (when (not (ns-form? form)) (str out))
+        err-str (when (not (ns-form? form)) (str err))
+        ;; A notebook may have also printed from a thread,
+        ;; *out* and *err* are replaced with StringWriters in with-out-err-capture
+        global-out (str-and-reset! *out*)
+        global-err (str-and-reset! *err*)]
     (cond-> note
             (seq out-str) (assoc :out out-str)
-            (seq err-str) (assoc :err err-str))))
+            (seq err-str) (assoc :err err-str)
+            (seq global-out) (assoc :global-out global-out)
+            (seq global-err) (assoc :global-err global-err))))
 
 (defn complete [{:as   note
                  :keys [comment?]}]
@@ -73,13 +92,13 @@
 
 (defn comment->item [comment]
   (-> comment
-      (string/split #"\n")
+      (str/split #"\n")
       (->> (map #(-> %
-                     (string/replace
+                     (str/replace
                        #"^;+\s?" "")
-                     (string/replace
+                     (str/replace
                        #"^#" "\n#")))
-           (string/join "\n"))
+           (str/join "\n"))
       item/md))
 
 (defn hide-code? [{:as note :keys [code form value kind]} {:as opts :keys [hide-code]}]
@@ -126,6 +145,8 @@
                              exception
                              err
                              out
+                             global-err
+                             global-out
                              kindly/options]}
                      {:as opts}]
   (if (and comment? code)
@@ -135,6 +156,8 @@
           value-items (cond-> []
                               err (conj (item/print-output "ERR:" err))
                               out (conj (item/print-output "OUT:" out))
+                              global-err (conj (item/print-output "THREAD ERR:" global-err))
+                              global-out (conj (item/print-output "THREAD OUT:" global-out))
                               exception (conj (item/print-throwable exception))
                               (and (contains? note :value)
                                    (not (hide-value? note opts)))
@@ -161,8 +184,7 @@
   (if hide-info-line
     items
     (let [il (info-line spec)]
-      (concat items
-              [item/separator il]))))
+      (into items [item/separator il]))))
 
 (defn ->var-name [i line-number]
   (symbol (str "var" i
@@ -203,10 +225,6 @@
                                         var-name)
                                   args)))))))
 
-(defn ns-form? [form]
-  (and (sequential? form)
-       (-> form first (= 'ns))))
-
 (defn test-ns-form [[_ ns-symbol & rest-ns-form]]
   (concat (list 'ns
                 (-> ns-symbol
@@ -241,6 +259,80 @@
               :first-line-of-change (first-line-of-change
                                       code new-code)})))
   (@*path->last path))
+
+(defmacro with-out-err-captured
+  "Evaluates and computes the items for a notebook of notes"
+  [& body]
+  ;; For a notebook, we capture output globally, and per note.
+  ;; see read-eval-capture for why this is relevant.
+  `(let [out# (StringWriter.)
+         err# (StringWriter.)]
+     ;; Threads may inherit only the root binding
+     (with-redefs [*out* out#
+                   *err* err#]
+       ;; Futures will inherit the current binding,
+       ;; which was not affected by altering the root.
+       (binding [*out* out#
+                 *err* err#]
+         ~@body))))
+
+(defn complete-notes
+  "Evaluates and computes the items for a notebook of notes"
+  [relevant-notes some-narrowed options]
+  (reduce (fn [{:as aggregation :keys [i
+                                       items
+                                       test-forms
+                                       last-nontest-varname]}
+               note]
+            (let [{:as complete-note :keys [form kind region narrowed exception]} (complete note)
+                  test-note (test-last? complete-note)
+                  comment (:comment? complete-note)
+                  new-items (when (or (not some-narrowed)
+                                      narrowed)
+                              (when-not test-note
+                                (-> complete-note
+                                    (merge/deep-merge
+                                      (-> options
+                                          (select-keys [:base-target-path
+                                                        :full-target-path
+                                                        :kindly/options
+                                                        :format])))
+                                    (note-to-items
+                                      (merge options
+                                             (when narrowed
+                                               {:hide-code true}))))))
+                  line-number (first region)
+                  varname (->var-name i line-number)
+                  test-form (cond
+                              ;; a deftest form
+                              test-note (deftest-form
+                                          (->test-name i line-number)
+                                          last-nontest-varname
+                                          form)
+                              ;; the test ns form
+                              (ns-form? form) (test-ns-form form)
+                              ;; a comment
+                              comment nil
+                              ;; the regular case, just a def
+                              :else (def-form varname form))
+                  step {:i                    (inc i)
+                        :items                (into items (remove nil?) new-items)
+                        :test-forms           (if test-form
+                                                (conj test-forms test-form)
+                                                test-forms)
+                        :last-nontest-varname (if (or comment test-note)
+                                                last-nontest-varname
+                                                varname)}]
+              (if (and exception (:exception-continue options))
+                (reduced step)
+                step)))
+          ;; initial value
+          {:i              0
+           :items          []
+           :test-forms     []
+           :last-nontest-i nil}
+          ;; sequence
+          relevant-notes))
 
 (defn items-and-test-forms
   ([{:as   options
@@ -300,66 +392,10 @@
                             ;;
                             :else
                             notes)]
-       (-> (->> relevant-notes
-                (reduce (fn [{:as aggregation :keys [i
-                                                     items
-                                                     test-forms
-                                                     last-nontest-varname]}
-                             note]
-                          (let [{:as complete-note :keys [form kind region narrowed]} (complete note)
-                                test-note (test-last? complete-note)
-                                comment (:comment? complete-note)
-                                new-items (when (or (not some-narrowed)
-                                                    narrowed)
-                                            (when-not test-note
-                                              (-> complete-note
-                                                  (merge/deep-merge
-                                                    (-> options
-                                                        (select-keys [:base-target-path
-                                                                      :full-target-path
-                                                                      :kindly/options
-                                                                      :format])))
-                                                  (note-to-items
-                                                    (merge options
-                                                           (when narrowed
-                                                             {:hide-code true}))))))
-                                line-number (first region)
-                                varname (->var-name i line-number)
-                                test-form (cond
-                                            ;; a deftest form
-                                            test-note (deftest-form
-                                                        (->test-name i line-number)
-                                                        last-nontest-varname
-                                                        form)
-                                            ;; the test ns form
-                                            (ns-form? form) (test-ns-form form)
-                                            ;; a comment
-                                            comment nil
-                                            ;; the regular case, just a def
-                                            :else (def-form
-                                                    varname
-                                                    form))]
-                            {:i                    (inc i)
-                             :items                (concat items new-items)
-                             :test-forms           (if test-form
-                                                     (conj test-forms test-form)
-                                                     test-forms)
-                             :last-nontest-varname (if (or comment
-                                                           test-note)
-                                                     last-nontest-varname
-                                                     varname)}))
-                        ;; initial value
-                        {:i              0
-                         :items          []
-                         :test-forms     []
-                         :last-nontest-i nil}))
-           (update :items
-                   ;; final processing of items
-                   (fn [items]
-                     (-> items
-                         (->> (remove nil?))
-                         (add-info-line options)
-                         doall)))
+       (-> relevant-notes
+           (complete-notes some-narrowed options)
+           (with-out-err-captured)
+           (update :items add-info-line options)
            (update :test-forms
                    ;; Leave the test-form only when
                    ;; at least one of them is a `deftest`.
