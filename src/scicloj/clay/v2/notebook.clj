@@ -69,17 +69,21 @@
                  (assoc note :value x))
                (catch Throwable ex
                  (assoc note :exception ex)))
-        out-str (when (not (ns-form? form)) (str out))
-        err-str (when (not (ns-form? form)) (str err))
+        out-str (str out)
+        err-str (str err)
         ;; A notebook may have also printed from a thread,
         ;; *out* and *err* are replaced with StringWriters in with-out-err-capture
         global-out (str-and-reset! *out*)
-        global-err (str-and-reset! *err*)]
-    (cond-> note
-            (seq out-str) (assoc :out out-str)
-            (seq err-str) (assoc :err err-str)
-            (seq global-out) (assoc :global-out global-out)
-            (seq global-err) (assoc :global-err global-err))))
+        global-err (str-and-reset! *err*)
+        ;; Don't show output from requiring other namespaces
+        show (not (ns-form? form))]
+    (if show
+      (cond-> note
+              (seq out-str) (assoc :out out-str)
+              (seq err-str) (assoc :err err-str)
+              (seq global-out) (assoc :global-out global-out)
+              (seq global-err) (assoc :global-err global-err))
+      note)))
 
 (defn complete [{:as   note
                  :keys [comment?]}]
