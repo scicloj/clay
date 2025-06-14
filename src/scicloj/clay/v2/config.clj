@@ -4,9 +4,6 @@
             [scicloj.clay.v2.util.fs :as util.fs]
             [scicloj.clay.v2.util.merge :as merge]))
 
-(defonce *current-aliases
-  (atom nil))
-
 (defn slurp-when-exists [path]
   (when (-> path
             io/file
@@ -29,7 +26,7 @@
   (-> config
       (assoc kw (compute config))))
 
-(defn expanding-configs [config]
+(defn implied-configs [config]
   (cond-> config
           (:render config) (merge {:show        false
                                    :serve       false
@@ -44,23 +41,18 @@
           (string? source-path)
           (assoc :source-paths [source-path])))
 
-(defn apply-alias-state! [config]
-  (when (contains? config :reset-aliases)
-    (reset! *current-aliases (:reset-aliases config))))
-
-(defn merge-aliases [{:as config :keys [aliases merge-aliases]}]
+(defn merge-aliases [{:as config :keys [aliases]}]
   (reduce
     (fn [acc alias]
-      (if-let [c (get aliases alias)]
+      (if-let [c (get acc alias)]
         (merge/deep-merge acc c)
-        (do (println "Clay warning: alias" (pr-str alias) "not found in :aliases" (keys aliases))
+        (do (println "Clay warning: alias" (pr-str alias) "not found")
             acc)))
     config
-    (or merge-aliases @*current-aliases)))
+    aliases))
 
 (defn apply-conditionals [config]
-  (apply-alias-state! config)
-  (-> config (merge-aliases) (expanding-configs) (source-paths)))
+  (-> config (merge-aliases) (implied-configs) (source-paths)))
 
 (defn config
   "Gathers configuration from the default, a clay.edn, and a spec if provided"

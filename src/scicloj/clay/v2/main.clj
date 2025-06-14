@@ -20,13 +20,13 @@
    ["-t" "--base-target-path DIR" :default-desc "docs"]
    ["-c" "--config-file CONFIG-FILE" :default-desc "clay.edn"]
    ["-m" "--config-map CONFIG" :parse-fn edn/read-string :validate [map? "Must be a map"]]
-   ["-A" "--reset-aliases ALIASES" :parse-fn parse-aliases]])
+   ["-A" "--aliases ALIASES" :parse-fn parse-aliases]])
 
 (defn -main
   "Invoke Clay from the command line. See https://scicloj.github.io/clay/#cli ."
   [& args]
   (let [{:keys [options summary arguments errors]} (cli/parse-opts args cli-options)
-        {:keys [help config-map config-file]} options
+        {:keys [help config-map config-file aliases]} options
         arg-opts (when (seq arguments)
                    (when-let [x (first (filter (complement fs/exists?) arguments))]
                      (println "Clay error:" x "does not exist")
@@ -43,7 +43,7 @@
                     (edn/read-string (slurp config-file)))
         opts (merge/deep-merge file-opts
                                config-map
-                               (select-keys options [:render :base-target-path :reset-aliases])
+                               (select-keys options [:render :base-target-path :aliases])
                                arg-opts)]
     (println "Clay options:" (pr-str opts))
     (cond help (do (println "Clay")
