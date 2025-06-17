@@ -14,8 +14,7 @@
                               :navigation-mode :vertical
                               :transition :slide
                               :background-transition :fade
-                              :incremental true}}
-          :code-block-background true}
+                              :incremental true}}}
  :kindly/options {:datatables {:paging false
                                :scrollY 400
                                :sPaginationType "full_numbers"

@@ -722,7 +722,7 @@
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
-;; | `:quarto/expansions` | (experimental) replace keyword references with maps | `{:author {:daslu {:name "Daniel Slutsky"}}}` |
+;; | `:quarto/expand` | (experimental) replace id with more detail | `{:daslu {:name "Daniel Slutsky"}}` |
 ;; | `:base-target-path` | the output directory |  `"temp"` |
 ;; | `:base-source-path` | where to find `:source-path` | `"notebooks"` |
 ;; | `:clean-up-target-dir` | delete (!) target directory before repopulating it  | `true` |

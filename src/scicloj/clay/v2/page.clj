@@ -275,11 +275,12 @@
 (defn front-matter
   "Returns document metadata suitable for inclusion as front-matter to a Markdown document."
   [{:as spec
-    :keys [title favicon quarto format]}]
+    :keys [title favicon quarto format quarto/expand]}]
   (let [quarto-target (if (= format [:quarto :revealjs])
                         :revealjs
                         :html)]
     (cond-> quarto
+            expand (merge/expand expand)
             ;; Users may provide non-quarto specific configuration (see also html),
             ;; if so this will be added to the quarto front-matter to make them behave the same way
             title (assoc-in [:format quarto-target :title] title)
