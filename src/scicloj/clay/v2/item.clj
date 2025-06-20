@@ -92,7 +92,7 @@
                        [:summary [:strong {:style "color: red;"} ex-type-name]]
                        [:pre [:code ex-str]]]
      :md              (format "
-::: {.callout-important}
+::: {.callout-important collapse=true}
 ## %s
 ```
 %s

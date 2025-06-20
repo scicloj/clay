@@ -34,12 +34,14 @@
                                    :live-reload false})))
 
 (defn source-paths [{:as config :keys [base-source-path source-path render]}]
-  (cond-> config
-          (and base-source-path (or (nil? source-path) (#{:all} source-path)) render)
-          (assoc :source-paths (util.fs/find-notebooks base-source-path))
-
-          (string? source-path)
-          (assoc :source-paths [source-path])))
+  (cond (string? source-path)
+        (assoc config :source-paths [source-path])
+        (sequential? source-path)
+        (assoc config :source-paths source-path)
+        (and render base-source-path (or (nil? source-path)
+                                         (= source-path :all)))
+        (assoc config :source-paths (util.fs/find-notebooks base-source-path))
+        :else config))
 
 (defn merge-aliases [{:as config :keys [aliases]}]
   (reduce

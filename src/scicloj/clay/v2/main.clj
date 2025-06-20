@@ -26,11 +26,8 @@
   "Invoke Clay from the command line. See https://scicloj.github.io/clay/#cli ."
   [& args]
   (let [{:keys [options summary arguments errors]} (cli/parse-opts args cli-options)
-        {:keys [help config-map config-file aliases]} options
+        {:keys [help config-map config-file]} options
         arg-opts (when (seq arguments)
-                   (when-let [x (first (filter (complement fs/exists?) arguments))]
-                     (println "Clay error:" x "does not exist")
-                     (System/exit -1))
                    (let [dirs (filter fs/directory? arguments)
                          files (remove fs/directory? arguments)]
                      (cond-> {}
