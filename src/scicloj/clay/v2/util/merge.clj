@@ -1,23 +1,6 @@
 (ns scicloj.clay.v2.util.merge
   (:require [clojure.walk :as walk]))
 
-(defn expand
-  "Walks the data structure `x`, replacing any value found in the `expansions` map.
-  Useful for expanding identifiers into larger values.
-
-  Example:
-    (expand [:a :b]
-            {:a {:name \"Alice\"},
-             :b {:name \"Bob\"}})
-    => [{:name \"Alice\"}
-        {:name \"Bob\"}]"
-  [x expansions]
-  (walk/prewalk (fn [node]
-                  (if (contains? expansions node)
-                    (get expansions node)
-                    node))
-                x))
-
 (defn deep-merge
   "Recursively merges values with support for control metadata.
 

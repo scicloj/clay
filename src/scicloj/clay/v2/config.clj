@@ -20,9 +20,7 @@
 (defn maybe-user-config []
   (some-> "clay.edn"
           slurp-when-exists
-          edn/read-string
-          ;; allow code execution in configuration
-          eval))
+          edn/read-string))
 
 (defn add-field [config kw compute]
   (-> config

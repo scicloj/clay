@@ -699,15 +699,12 @@
 
 ;; Calls to the `make!` function are affected by various parameters
 ;; which collected as one nested map.
-;; This map is the result of deep-merging four sources:
+;; This map is the result of deep-merging configuration sources:
 ;;
-;; - the default configuration: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
-;;
-;; - the user configuration: `clay.edn` at the top
-;;
-;; - the namespace configuration: the `:clay` member of the namespace metadata
-;;
-;; - the call configuration: the argument to `make!`
+;; - default: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
+;; - user: `clay.edn` in project root
+;; - namespace: `:clay` metadata found on the ns form
+;; - call: the argument to `make!`
 ;;
 ;; Here are some of the parameters worth knowing about:
 ;;
@@ -722,7 +719,6 @@
 ;; | `:single-form` | render just one form | `(inc 1)` |
 ;; | `:format` | output quarto markdown and/or html | `[:quarto :html]` |
 ;; | `:quarto` | adds configuration for Quarto | `{:highlight-style :solarized}` |
-;; | `:quarto/expand` | (experimental) replace id with more detail | `{:daslu {:name "Daniel Slutsky"}}` |
 ;; | `:base-target-path` | the output directory |  `"temp"` |
 ;; | `:base-source-path` | where to find `:source-path` | `"notebooks"` |
 ;; | `:clean-up-target-dir` | delete (!) target directory before repopulating it  | `true` |
@@ -736,9 +732,8 @@
 ;; | `:subdirs-to-sync` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
 ;; | `:keep-sync-root` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
-;; | `:aliases` | (experimental) a map of alias names to configuration | `{:markdown {:format [:quarto :html]}` |
-;; | `:merge-aliases | (experimental) a vector of aliases to merge | `[:markdown]` |
-;; | `:reset-aliases | (experimental) mutably sets aliases to use | `[:markdown]` |
+;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
+;; | `:ns-config-transform` | (experimental) hook to update config per namespace | `:ns-config-transform my.ns/my-fn` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.

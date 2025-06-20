@@ -118,10 +118,15 @@
     spec
     (spec->ns-config spec)))
 
+(defn maybe-user-hook [{:as spec :keys [ns-config-transform]}]
+  (if ns-config-transform
+    ((requiring-resolve ns-config-transform) spec)
+    spec))
+
 (defn ->single-ns-spec [spec
-                        config-and-spec
+                        config
                         source-path]
-  (-> config-and-spec
+  (-> config
       (assoc :source-path source-path)
       (config/add-field :full-source-path spec->full-source-path)
       (config/add-field :source-type spec->source-type)
@@ -129,7 +134,8 @@
       merge-ns-config
       (merge/deep-merge
         (dissoc spec :source-path))                         ; prioritize spec over the ns config
-      (config/add-field :full-target-path spec->full-target-path)))
+      (config/add-field :full-target-path spec->full-target-path)
+      (maybe-user-hook)))
 
 (defn extract-specs [config spec]
   (let [{:keys [source-paths]} config
