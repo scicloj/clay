@@ -98,7 +98,7 @@
 %s
 ```
 :::
-" ex-type-name (str/join "\n" ex-str))}))
+" ex-type-name ex-str)}))
 
 (defn print-output [label s]
   {:hiccup [:div

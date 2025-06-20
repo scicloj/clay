@@ -733,7 +733,7 @@
 ;; | `:keep-sync-root` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 ;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
-;; | `:ns-config-transform` | (experimental) hook to update config per namespace | `:ns-config-transform my.ns/my-fn` |
+;; | `:config/transform` | (experimental) hook to update config per namespace | `:config/transform my.ns/my-fn` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.

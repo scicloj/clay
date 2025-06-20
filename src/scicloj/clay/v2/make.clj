@@ -118,9 +118,9 @@
     spec
     (spec->ns-config spec)))
 
-(defn maybe-user-hook [{:as spec :keys [ns-config-transform]}]
-  (if ns-config-transform
-    ((requiring-resolve ns-config-transform) spec)
+(defn maybe-user-hook [{:as spec :keys [config/transform]}]
+  (if transform
+    ((requiring-resolve transform) spec)
     spec))
 
 (defn ->single-ns-spec [spec

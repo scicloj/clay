@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## Pending
-- new option `:ns-config-transform my.ns/my-fn` hook for per namespace config transformation
+- new option `:config/transform my.ns/my-fn` hook for per namespace config transformation
 - new option `:aliases` a vector of aliases to merge into the configuration
 - CLI now accepts `-A:myalias:anotheralias` to activate aliases
 - nils in configuration will now remove configuration.
