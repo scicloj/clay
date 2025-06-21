@@ -8,8 +8,6 @@
    [hiccup.page]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
-   [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.clay.v2.util.meta :as meta]
    [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]
    [scicloj.clay.v2.files :as files]

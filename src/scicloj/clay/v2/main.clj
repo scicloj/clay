@@ -7,7 +7,7 @@
             [clojure.tools.cli :as cli]
             [scicloj.clay.v2.api :as api]
             [nrepl.cmdline]
-            [scicloj.clay.v2.util.merge :as merge]))
+            [scicloj.kindly.v4.api :as kindly]))
 
 (defn parse-aliases [s]
   (->> (str/split s #":")
@@ -38,10 +38,10 @@
                       (println "Clay error:" config-file "does not exist")
                       (System/exit -1))
                     (edn/read-string (slurp config-file)))
-        opts (merge/deep-merge file-opts
-                               config-map
-                               (select-keys options [:render :base-target-path :aliases])
-                               arg-opts)]
+        opts (kindly/deep-merge file-opts
+                                config-map
+                                (select-keys options [:render :base-target-path :aliases])
+                                arg-opts)]
     (println "Clay options:" (pr-str opts))
     (cond help (do (println "Clay")
                    (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")

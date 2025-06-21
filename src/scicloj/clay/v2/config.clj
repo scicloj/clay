@@ -2,7 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
             [scicloj.clay.v2.util.fs :as util.fs]
-            [scicloj.clay.v2.util.merge :as merge]))
+                    [scicloj.kindly.v4.api :as kindly]))
 
 (defn slurp-when-exists [path]
   (when (-> path
@@ -47,7 +47,7 @@
   (reduce
     (fn [acc alias]
       (if-let [c (get acc alias)]
-        (merge/deep-merge acc c)
+        (kindly/deep-merge acc c)
         (do (println "Clay warning: alias" (pr-str alias) "not found")
             acc)))
     config
@@ -59,8 +59,8 @@
 (defn config
   "Gathers configuration from the default, a clay.edn, and a spec if provided"
   ([]
-   (-> (merge/deep-merge (default-config) (maybe-user-config))
+   (-> (kindly/deep-merge (default-config) (maybe-user-config))
        (apply-conditionals)))
   ([spec]
-   (-> (merge/deep-merge (default-config) (maybe-user-config) spec)
+   (-> (kindly/deep-merge (default-config) (maybe-user-config) spec)
        (apply-conditionals))))

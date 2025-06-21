@@ -1,7 +1,6 @@
 (ns scicloj.clay.v2.notebook
   (:require [clojure.string :as str]
             [clojure.pprint :as pp]
-            [scicloj.clay.v2.util.merge :as merge]
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
@@ -294,7 +293,7 @@
                                       narrowed)
                               (when-not test-note
                                 (-> complete-note
-                                    (merge/deep-merge
+                                    (kindly/deep-merge
                                       (-> options
                                           (select-keys [:base-target-path
                                                         :full-target-path

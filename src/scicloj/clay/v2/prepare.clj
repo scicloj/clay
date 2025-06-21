@@ -1,18 +1,18 @@
 (ns scicloj.clay.v2.prepare
   (:require
-   [clojure.string :as string]
-   [clojure.test :as test]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.table :as table]
-   [scicloj.clay.v2.util.walk :as claywalk]
-   [scicloj.kindly-advice.v1.api :as kindly-advice]
-   [nextjournal.markdown :as md]
-   [nextjournal.markdown.transform :as mdt]
-   [clojure.walk]
-   [hiccup.core :as hiccup]
-   [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.kind :as kind]
-   [scicloj.kindly-render.shared.jso :as jso]))
+    [clojure.string :as string]
+    [clojure.test :as test]
+    [scicloj.clay.v2.item :as item]
+    [scicloj.clay.v2.table :as table]
+    [scicloj.clay.v2.util.walk :as claywalk]
+    [scicloj.kindly-advice.v1.api :as kindly-advice]
+    [nextjournal.markdown :as md]
+    [nextjournal.markdown.transform :as mdt]
+    [clojure.walk]
+    [hiccup.core :as hiccup]
+    [scicloj.kindly.v4.api :as kindly]
+    [scicloj.kindly.v4.kind :as kind]
+    [scicloj.kindly-render.shared.jso :as jso]))
 
 (def *kind->preparer
   (atom {}))
@@ -51,7 +51,7 @@
 (defn merge-attrs [hiccup x]
   (if (and x (vector? hiccup))
     (if (-> hiccup second map?)
-      (update-in hiccup [1] merge/deep-merge x)
+      (update-in hiccup [1] kindly/deep-merge x)
       (into [(first hiccup) x] (rest hiccup)))
     hiccup))
 

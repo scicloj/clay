@@ -13,11 +13,11 @@
             [clojure.java.io :as io]
             [scicloj.clay.v2.util.fs :as util.fs]
             [clojure.string :as str]
-            [scicloj.clay.v2.util.merge :as merge]
-            [scicloj.clay.v2.files :as files]
+                    [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly-render.notes.to-html-page :as to-html-page]
-            [hashp.preload]))
+            [hashp.preload]
+            [scicloj.kindly.v4.api :as kindly]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path (fs/extension)))
@@ -114,7 +114,7 @@
           :clay))
 
 (defn merge-ns-config [spec]
-  (merge/deep-merge
+  (kindly/deep-merge
     spec
     (spec->ns-config spec)))
 
@@ -132,7 +132,7 @@
       (config/add-field :source-type spec->source-type)
       (config/add-field :ns-form spec->ns-form)
       merge-ns-config
-      (merge/deep-merge
+      (kindly/deep-merge
         (dissoc spec :source-path))                         ; prioritize spec over the ns config
       (config/add-field :full-target-path spec->full-target-path)
       (maybe-user-hook)))
@@ -214,7 +214,7 @@
                                         quarto]}]
   (-> quarto
       (select-keys [:format])
-      (merge/deep-merge
+      (kindly/deep-merge
         {:project {:type "book"}
          :book    (merge {:chapters (spec->quarto-book-chapters-config spec)}
                          book)})))
