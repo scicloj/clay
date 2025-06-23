@@ -105,8 +105,11 @@
             [:strong label]
             [:pre [:code s]]]
    :md     (format "
-::: {lst-cap=\"%s\"}
+::: {.callout-note}
+## %s
+```
 %s
+```
 :::
 " label s)})
 
