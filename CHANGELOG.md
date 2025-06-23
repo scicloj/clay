@@ -5,9 +5,6 @@ All notable changes to this project will be documented in this file. This change
 - new option `:config/transform my.ns/my-fn` hook for per namespace config transformation
 - new option `:aliases` a vector of aliases to merge into the configuration
 - CLI now accepts `-A:myalias:anotheralias` to activate aliases
-- nils in configuration will now remove configuration.
-  Example `:quarto nil` will remove the default quarto configuration of theme and toc
-  TODO: still thinking about this
 - stdout and stderr are now captured and displayed in the notebook
 - Exceptions are now shown in the output page where they are encountered
 - `:exception-continue` option for exceptions
