@@ -1,17 +1,18 @@
 (ns scicloj.clay.v2.page
   (:require
-   [clj-yaml.core :as yaml]
-   [clojure.java.io :as io]
-   [clojure.java.shell :as shell]
-   [clojure.string :as string]
-   [hiccup.core :as hiccup]
-   [hiccup.page]
-   [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.styles :as styles]
-   [scicloj.clay.v2.util.portal :as portal]
-   [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]
-   [scicloj.clay.v2.item :as item]))
+    [babashka.fs :as fs]
+    [clj-yaml.core :as yaml]
+    [clojure.java.io :as io]
+    [clojure.java.shell :as shell]
+    [clojure.string :as string]
+    [hiccup.core :as hiccup]
+    [hiccup.page]
+    [scicloj.clay.v2.prepare :as prepare]
+    [scicloj.clay.v2.styles :as styles]
+    [scicloj.clay.v2.util.portal :as portal]
+    [scicloj.clay.v2.util.resource :as resource]
+    [scicloj.clay.v2.files :as files]
+    [scicloj.clay.v2.item :as item]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -114,12 +115,8 @@
     (->> url
          resource/get
          (spit path))
-    (-> path
-        (string/replace
-         (re-pattern (str "^"
-                          base-target-path
-                          "/"))
-         "")
+    (-> (fs/relativize (fs/parent full-target-path) path)
+        (str)
         ((include js-or-css)))))
 
 (defn clone-repo-if-needed! [gh-repo]
@@ -206,7 +203,7 @@
        distinct))
 
 (defn html [{:as spec
-             :keys [items title toc? favicon]}]
+             :keys [items title toc? favicon exception]}]
   (let [deps (items->deps items)
         special-libs (concat [:html-default :katex] deps)
         head [:head
@@ -232,7 +229,8 @@
                 [:style (styles/main :bootstrap-toc-customization)])
               (include-libs spec [:css] special-libs)
               [:title (or title "Clay")]]
-        body [:body  {:style {:margin "auto"}
+        body [:body  {:style {:margin "auto"
+                              :border (when exception "2px solid red")}
                       :data-spy "scroll"
                       :data-target "#toc"}
               (when toc?
@@ -269,21 +267,26 @@
                "hljs.highlightAll();"]]]
     (hiccup.page/html5 head body)))
 
-(defn md [{:as spec
-           :keys [items title favicon quarto format]}]
-  (let [deps (items->deps items)
-        quarto-target (if (=  format [:quarto :revealjs])
+(defn front-matter
+  "Returns document metadata suitable for inclusion as front-matter to a Markdown document."
+  [{:as spec
+    :keys [title favicon quarto format]}]
+  (let [quarto-target (if (= format [:quarto :revealjs])
                         :revealjs
                         :html)]
+    (cond-> quarto
+            ;; Users may provide non-quarto specific configuration (see also html),
+            ;; if so this will be added to the quarto front-matter to make them behave the same way
+            title (assoc-in [:format quarto-target :title] title)
+            favicon (update-in [:format quarto-target :include-in-header :text]
+                               str "<link rel = \"icon\" href = \"" favicon "\" />"))))
+
+(defn md [{:as spec
+           :keys [items]}]
+  (let [deps (items->deps items)]
     (str
      "---\n"
-     (yaml/generate-string
-      (cond-> quarto
-        ;; Users may provide non-quarto specific configuration (see also html),
-        ;; if so this will be added to the quarto front-matter to make them behave the same way
-        title (assoc-in [:format :html :title] title)
-        favicon (update-in [:format quarto-target :include-in-header :text]
-                           str "<link rel = \"icon\" href = \"" favicon "\" />")))
+     (yaml/generate-string (front-matter spec))
      "\n---\n"
      (hiccup/html
       [:style (styles/main :table)]
