@@ -116,9 +116,7 @@
          (spit path))
     (-> path
         (string/replace
-         (re-pattern (str "^"
-                          base-target-path
-                          "/"))
+         (re-pattern (str "^" base-target-path))
          "")
         ((include js-or-css)))))
 
