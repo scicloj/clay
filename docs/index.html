@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.5.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-de3137cccef0011f9c09df29b18cc2a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -326,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="videos" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="videos"><span class="header-section-number">1.5</span> Videos</h2>
-<table class="caption-top table" data-quarto-postprocess="true">
+<table data-quarto-postprocess="true" class="table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -422,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>With Clay in your classpath, <a href="https://calva.io/">Calva</a> will discover <a href="https://calva.io/custom-commands/">Custom REPL Commands</a>.</p>
 <div class="clay-table">
 <div class="table-responsive">
-<table class="table table-hover clay-table caption-top" data-quarto-postprocess="true">
+<table class="table table-hover clay-table" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th">name</th>
@@ -541,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="clay-dataset">
 <p>my dataset [5 2]:</p>
-<table class="caption-top table">
+<table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: right;">:x</th>
@@ -551,23 +551,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.81268298</td>
+<td style="text-align: right;">0.16674697</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.36544138</td>
+<td style="text-align: right;">0.01142395</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.63810066</td>
+<td style="text-align: right;">0.97566006</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.88468249</td>
+<td style="text-align: right;">0.05423678</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.38763538</td>
+<td style="text-align: right;">0.94050557</td>
 </tr>
 </tbody>
 </table>
@@ -873,15 +873,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="configuration" class="level2" data-number="1.10">
 <h2 data-number="1.10" class="anchored" data-anchor-id="configuration"><span class="header-section-number">1.10</span> Configuration</h2>
-<p>Calls to the <code>make!</code> function are affected by various parameters which collected as one nested map. This map is the result of deep-merging four sources:</p>
+<p>Calls to the <code>make!</code> function are affected by various parameters which collected as one nested map. This map is the result of deep-merging configuration sources:</p>
 <ul>
-<li><p>the default configuration: <a href="https://github.com/scicloj/clay/blob/main/resources/clay-default.edn">clay-default.edn</a> under Clay’s resources</p></li>
-<li><p>the user configuration: <code>clay.edn</code> at the top</p></li>
-<li><p>the namespace configuration: the <code>:clay</code> member of the namespace metadata</p></li>
-<li><p>the call configuration: the argument to <code>make!</code></p></li>
+<li>default: <a href="https://github.com/scicloj/clay/blob/main/resources/clay-default.edn">clay-default.edn</a> under Clay’s resources</li>
+<li>user: <code>clay.edn</code> in project root</li>
+<li>namespace: <code>:clay</code> metadata found on the ns form</li>
+<li>call: the argument to <code>make!</code></li>
 </ul>
 <p>Here are some of the parameters worth knowing about:</p>
-<table class="caption-top table">
+<table class="table">
 <colgroup>
 <col style="width: 21%">
 <col style="width: 39%">
@@ -1005,10 +1005,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>(experimental) overrides <code>:show</code> <code>:serve</code> <code>:browse</code> and <code>:live-reload</code> to <code>false</code></td>
 <td><code>true</code></td>
 </tr>
+<tr class="odd">
+<td><code>:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge |</code>[:markdown]<code>| |</code>:config/transform<code>| (experimental) hook to update config per namespace |</code>:config/transform my.ns/my-fn`</td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <p>When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded. For example: you may set <code>:base-target-path "temp"</code> at your <code>clay.edn</code> file. When publishing a static page, you may wish to target a <code>docs</code> directory by setting <code>:base-target-path "docs"</code> in your call to <code>clay/make!</code>. Creating a dev namespace is a good way to invoke a different configuration for publishing.</p>
-<p>Rendering a result is based on <code>clojure.pprint/pprint</code> behaviour. By default it will wrap anything beyond <code>clojure.pprint/*print-right-margin*</code> (default: 72) number of chars in the single line. For example <code>(range 100)</code> will be rendered as long vertical list of numbers. You can overwrite it by setting <code>:pprint-margin</code> option. When set to <code>nil</code> there won’t be wrapping at all and <code>(range 100)</code> will be rendered in one horizontal list of numbers.</p>
+<p>Rendering a result is based on <code>clojure.pprint/pprint</code> behaviour. By default, it will wrap anything beyond <code>clojure.pprint/*print-right-margin*</code> (default: 72) number of chars in the single line. For example <code>(range 100)</code> will be rendered as long vertical list of numbers. You can overwrite it by setting <code>:pprint-margin</code> option. When set to <code>nil</code> there won’t be wrapping at all and <code>(range 100)</code> will be rendered in one horizontal list of numbers.</p>
+<p>Aliases let you define reusable config fragments and selectively apply them. Add an <code>:aliases</code> map to your config with named configurations, then activate them using <code>:merge-aliases</code> (for one-time use) or <code>:reset-aliases</code> (to persist across invocations). For example, you might use <code>:merge-aliases [:markdown]</code> to generate Quarto-friendly Markdown from the REPL, or <code>:reset-aliases [:html]</code> in your IDE to default to full HTML rendering. Alternatively you can <code>(reset! scicloj.clay.v2.config/*current-aliases aliases)</code>. Aliases are deeply merged into the base config in order.</p>
 <section id="namespace-configuration-and-front-matter" class="level3" data-number="1.10.1">
 <h3 data-number="1.10.1" class="anchored" data-anchor-id="namespace-configuration-and-front-matter"><span class="header-section-number">1.10.1</span> Namespace configuration and front matter</h3>
 <p>Configuration is discovered as metadata under the <code>:clay</code> key on the namespace form:</p>
@@ -1121,7 +1127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="clay-dataset">
 <p>_unnamed [3 2]:</p>
-<table class="caption-top table">
+<table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: right;">:x</th>
@@ -1131,15 +1137,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.50740446</td>
+<td style="text-align: right;">0.38173678</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.56586039</td>
+<td style="text-align: right;">0.25372334</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.79988325</td>
+<td style="text-align: right;">0.29848152</td>
 </tr>
 </tbody>
 </table>
@@ -1152,7 +1158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="clay-dataset">
 <p>_unnamed [3 2]:</p>
-<table class="caption-top table">
+<table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: right;">:x</th>
@@ -1162,15 +1168,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.74986571</td>
+<td style="text-align: right;">0.92321596</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.03575435</td>
+<td style="text-align: right;">0.32916230</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.07476988</td>
+<td style="text-align: right;">0.81962233</td>
 </tr>
 </tbody>
 </table>
@@ -1183,7 +1189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="clay-dataset">
 <p>_unnamed [3 2]:</p>
-<table class="caption-top table">
+<table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: right;">:x</th>
@@ -1193,15 +1199,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.06708183</td>
+<td style="text-align: right;">0.30257474</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.78766653</td>
+<td style="text-align: right;">0.91687118</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.79321025</td>
+<td style="text-align: right;">0.61989455</td>
 </tr>
 </tbody>
 </table>
@@ -1321,7 +1327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="clay-table">
 <div class="table-responsive">
-<table class="caption-top table" data-quarto-postprocess="true">
+<table data-quarto-postprocess="true" class="table">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th">A</th>
@@ -1356,7 +1362,7 @@ Example alert
 <p>Example alert</p>
 </div>
 <div class="table-responsive">
-<table class="caption-top table">
+<table class="table">
 <caption>This table is responsive</caption>
 <thead>
 <tr class="header">
@@ -1451,7 +1457,7 @@ Example alert
 </div>
 <div class="clay-dataset">
 <p>_unnamed [3 1]:</p>
-<table class="caption-top table">
+<table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: right;">:x</th>
@@ -1477,7 +1483,7 @@ Example alert
 <span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  (tc/dataset {<span class="at">:x</span> (<span class="kw">range</span> <span class="dv">3</span>)})])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div style="background-color:#ccddee;"><div class="clay-dataset" style="background-color:#ccddee;"><p>_unnamed [3 1]:</p>
-<table class="table caption-top" data-quarto-postprocess="true">
+<table class="table" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">:x</th>
@@ -1598,6 +1604,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1708,6 +1716,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
+      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
