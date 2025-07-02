@@ -335,8 +335,8 @@
           [:wrote-with-kindly-render full-target-path])
         (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms spec)
               spec-with-items (assoc spec
-                                :items items
-                                :exception exception)]
+                                     :items items
+                                     :exception exception)]
           [(case (first format)
              :hiccup (page/hiccup spec-with-items)
              :html (do (-> spec-with-items
@@ -355,8 +355,8 @@
                            (update-in [:quarto :format]
                                       select-keys [(second format)])
                            (cond-> flatten-targets
-                                   (update-in [:quarto :format (second format)]
-                                              assoc :output-file output-file))
+                             (update-in [:quarto :format (second format)]
+                                        assoc :output-file output-file))
                            (cond-> book
                              (update :quarto dissoc :title))
                            page/md
@@ -384,21 +384,23 @@
                                   [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))
-
            #_(when exception
-             (throw exception))]))
+               (throw (ex-info "Notebook FAILED."
+                               {:notebook-exception exception})))]))
       (catch Throwable e
-        (-> spec
-            (assoc :page (-> spec
-                             (assoc :items [(item/print-throwable e)])
-                             page/html))
-            server/update-page!)
-        (if (and source-paths (> (count source-paths) 1))
-          (do (println "Clay FAILED:" full-source-path)
-              (println e))
-          (throw e)))
+        (when-not (-> e
+                      ex-data
+                      :notebook-exception)
+          (-> spec
+              (assoc :page (-> spec
+                               (assoc :items [(item/print-throwable e)])
+                               page/html))
+              server/update-page!)
+          (if (and source-paths (> (count source-paths) 1))
+            (do (println "Clay FAILED:" full-source-path)
+                (println e))))
+        (throw e))
       (finally (files/init-target! full-target-path)))))
-
 
 (defn sync-resources! [{:keys [base-target-path
                                subdirs-to-sync
