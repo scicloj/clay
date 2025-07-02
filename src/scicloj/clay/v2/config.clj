@@ -41,7 +41,8 @@
         (and render base-source-path (or (nil? source-path)
                                          (= source-path :all)))
         (assoc config :source-paths (util.fs/find-notebooks base-source-path))
-        :else config))
+        ;; nil source-path for single forms
+        :else (assoc config :source-paths [nil])))
 
 (defn merge-aliases [{:as config :keys [aliases]}]
   (reduce
