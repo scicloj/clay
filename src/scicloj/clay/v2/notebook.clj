@@ -78,19 +78,20 @@
         show (not (ns-form? form))]
     (if show
       (cond-> note
-              (seq out-str) (assoc :out out-str)
-              (seq err-str) (assoc :err err-str)
-              (seq global-out) (assoc :global-out global-out)
-              (seq global-err) (assoc :global-err global-err))
+        (seq out-str) (assoc :out out-str)
+        (seq err-str) (assoc :err err-str)
+        (seq global-out) (assoc :global-out global-out)
+        (seq global-err) (assoc :global-err global-err))
       note)))
 
 (defn complete [{:as   note
                  :keys [comment?]}]
-  (cond-> note
-          (not (or comment? (contains? note :value)))
-          (read-eval-capture)
-          (not (or comment? (not (contains? note :value))))
-          (kindly-advice/advise)))
+  (let [completed (cond-> note
+                    (not (or comment? (contains? note :value)))
+                    (read-eval-capture))]
+    (cond-> completed
+      (and (not comment?) (contains? completed :value))
+      (kindly-advice/advise))))
 
 (defn comment->item [comment]
   (-> comment
