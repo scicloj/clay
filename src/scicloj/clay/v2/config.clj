@@ -1,7 +1,8 @@
 (ns scicloj.clay.v2.config
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [scicloj.clay.v2.util.merge :as merge]))
+            [scicloj.clay.v2.util.fs :as util.fs]
+                    [scicloj.kindly.v4.api :as kindly]))
 
 (defn slurp-when-exists [path]
   (when (-> path
@@ -25,6 +26,42 @@
   (-> config
       (assoc kw (compute config))))
 
-(defn config []
-  (-> (default-config)
-      (merge/deep-merge (maybe-user-config))))
+(defn implied-configs [config]
+  (cond-> config
+          (:render config) (merge {:show        false
+                                   :serve       false
+                                   :browse      false
+                                   :live-reload false})))
+
+(defn source-paths [{:as config :keys [base-source-path source-path render]}]
+  (cond (string? source-path)
+        (assoc config :source-paths [source-path])
+        (sequential? source-path)
+        (assoc config :source-paths source-path)
+        (and render base-source-path (or (nil? source-path)
+                                         (= source-path :all)))
+        (assoc config :source-paths (util.fs/find-notebooks base-source-path))
+        ;; nil source-path for single forms
+        :else (assoc config :source-paths [nil])))
+
+(defn merge-aliases [{:as config :keys [aliases]}]
+  (reduce
+    (fn [acc alias]
+      (if-let [c (get acc alias)]
+        (kindly/deep-merge acc c)
+        (do (println "Clay warning: alias" (pr-str alias) "not found")
+            acc)))
+    config
+    aliases))
+
+(defn apply-conditionals [config]
+  (-> config (merge-aliases) (implied-configs) (source-paths)))
+
+(defn config
+  "Gathers configuration from the default, a clay.edn, and a spec if provided"
+  ([]
+   (-> (kindly/deep-merge (default-config) (maybe-user-config))
+       (apply-conditionals)))
+  ([spec]
+   (-> (kindly/deep-merge (default-config) (maybe-user-config) spec)
+       (apply-conditionals))))

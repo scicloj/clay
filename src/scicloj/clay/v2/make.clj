@@ -13,11 +13,11 @@
             [clojure.java.io :as io]
             [scicloj.clay.v2.util.fs :as util.fs]
             [clojure.string :as str]
-            [scicloj.clay.v2.util.merge :as merge]
-            [scicloj.clay.v2.files :as files]
+                    [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly-render.notes.to-html-page :as to-html-page]
-            [hashp.preload]))
+            [hashp.preload]
+            [scicloj.kindly.v4.api :as kindly]))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path (fs/extension)))
@@ -114,37 +114,31 @@
           :clay))
 
 (defn merge-ns-config [spec]
-  (merge/deep-merge
+  (kindly/deep-merge
     spec
     (spec->ns-config spec)))
 
+(defn maybe-user-hook [{:as spec :keys [config/transform]}]
+  (if transform
+    ((requiring-resolve transform) spec)
+    spec))
+
 (defn ->single-ns-spec [spec
-                        config-and-spec
+                        config
                         source-path]
-  (-> config-and-spec
+  (-> config
       (assoc :source-path source-path)
       (config/add-field :full-source-path spec->full-source-path)
       (config/add-field :source-type spec->source-type)
       (config/add-field :ns-form spec->ns-form)
       merge-ns-config
-      (merge/deep-merge
+      (kindly/deep-merge
         (dissoc spec :source-path))                         ; prioritize spec over the ns config
-      (config/add-field :full-target-path spec->full-target-path)))
+      (config/add-field :full-target-path spec->full-target-path)
+      (maybe-user-hook)))
 
 (defn extract-specs [config spec]
-  (let [{:as config-and-spec :keys [source-path base-source-path render]}
-        (merge/deep-merge config spec)                      ; prioritize spec over global config
-        config-and-spec (cond-> config-and-spec
-                                render (merge {:show        false
-                                               :serve       false
-                                               :browse      false
-                                               :live-reload false}))
-        render-all (and base-source-path (or (nil? source-path) (#{:all} source-path)) render)
-        ;;
-        source-paths (cond
-                       render-all (util.fs/find-notebooks base-source-path)
-                       (sequential? source-path) source-path
-                       :else [source-path])
+  (let [{:keys [source-paths]} config
         ;; collect specs for single namespaces,
         ;; keeping the book parts structure, if any
         single-ns-specs-w-book-struct (->> source-paths
@@ -153,9 +147,7 @@
                                                     ;; just a path or no path
                                                     (or (string? path)
                                                         (nil? path))
-                                                    (->single-ns-spec spec
-                                                                      config-and-spec
-                                                                      path)
+                                                    (->single-ns-spec spec config path)
                                                     ;; a book part
                                                     (:part path)
                                                     (-> path
@@ -163,14 +155,12 @@
                                                                 (partial
                                                                   map
                                                                   (fn [chapter-path]
-                                                                    (->single-ns-spec spec
-                                                                                      config-and-spec
-                                                                                      chapter-path)))))
+                                                                    (->single-ns-spec spec config chapter-path)))))
                                                     ;; else
                                                     :else
                                                     (throw (ex-info (str "Invalid source path: " (pr-str path))
                                                                     {:path path}))))))]
-    {:main-spec       (-> config-and-spec
+    {:main-spec       (-> config
                           (assoc :full-target-paths-w-book-struct
                                  (->> single-ns-specs-w-book-struct
                                       (map (fn [ns-spec]
@@ -224,7 +214,7 @@
                                         quarto]}]
   (-> quarto
       (select-keys [:format])
-      (merge/deep-merge
+      (kindly/deep-merge
         {:project {:type "book"}
          :book    (merge {:chapters (spec->quarto-book-chapters-config spec)}
                          book)})))
@@ -318,13 +308,14 @@
 
 
 (defn handle-single-source-spec! [{:as   spec
-                                   :keys [source-type
+                                   :keys [source-paths
+                                          source-type
                                           single-form
                                           single-value
+                                          flatten-targets
                                           format
                                           full-source-path
                                           full-target-path
-                                          show
                                           run-quarto
                                           book
                                           post-process
@@ -342,8 +333,10 @@
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
           [:wrote-with-kindly-render full-target-path])
-        (let [{:keys [items test-forms]} (notebook/items-and-test-forms spec)
-              spec-with-items (assoc spec :items items)]
+        (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms spec)
+              spec-with-items (assoc spec
+                                     :items items
+                                     :exception exception)]
           [(case (first format)
              :hiccup (page/hiccup spec-with-items)
              :html (do (-> spec-with-items
@@ -361,8 +354,9 @@
                        (-> spec-with-items
                            (update-in [:quarto :format]
                                       select-keys [(second format)])
-                           (update-in [:quarto :format (second format)]
-                                      assoc :output-file output-file)
+                           (cond-> flatten-targets
+                             (update-in [:quarto :format (second format)]
+                                        assoc :output-file output-file))
                            (cond-> book
                              (update :quarto dissoc :title))
                            page/md
@@ -389,16 +383,24 @@
                                 (when run-quarto
                                   [full-target-path])))))
            (when test-forms
-             (write-test-forms-as-ns test-forms))]))
+             (write-test-forms-as-ns test-forms))
+           #_(when exception
+               (throw (ex-info "Notebook FAILED."
+                               {:notebook-exception exception})))]))
       (catch Throwable e
-        (-> spec
-            (assoc :page (-> spec
-                             (assoc :items [(item/print-throwable-v2 e)])
-                             page/html))
-            server/update-page!)
+        (when-not (-> e
+                      ex-data
+                      :notebook-exception)
+          (-> spec
+              (assoc :page (-> spec
+                               (assoc :items [(item/print-throwable e)])
+                               page/html))
+              server/update-page!)
+          (if (and source-paths (> (count source-paths) 1))
+            (do (println "Clay FAILED:" full-source-path)
+                (println e))))
         (throw e))
       (finally (files/init-target! full-target-path)))))
-
 
 (defn sync-resources! [{:keys [base-target-path
                                subdirs-to-sync
@@ -416,7 +418,7 @@
               (util.fs/copy-tree-no-clj subdir target)))))))
 
 (defn make! [spec]
-  (let [config (config/config)
+  (let [config (config/config spec)
         {:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec

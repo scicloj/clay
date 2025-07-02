@@ -1,19 +1,17 @@
 (ns scicloj.clay.v2.prepare
-  (:require
-   [clojure.string :as string]
-   [clojure.test :as test]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.table :as table]
-   [scicloj.clay.v2.util.walk :as claywalk]
-   [scicloj.kindly-advice.v1.api :as kindly-advice]
-   [nextjournal.markdown :as md]
-   [nextjournal.markdown.transform :as mdt]
-   [clojure.walk]
-   [hiccup.core :as hiccup]
-   [charred.api :as charred]
-   [scicloj.clay.v2.util.merge :as merge]
-   [scicloj.kindly.v4.kind :as kind]
-   [scicloj.kindly-render.shared.jso :as jso]))
+  (:require [clojure.string :as string]
+            [clojure.test :as test]
+            [scicloj.clay.v2.item :as item]
+            [scicloj.clay.v2.table :as table]
+            [scicloj.clay.v2.util.walk :as claywalk]
+            [scicloj.kindly-advice.v1.api :as kindly-advice]
+            [nextjournal.markdown :as md]
+            [nextjournal.markdown.transform :as mdt]
+            [clojure.walk]
+            [hiccup.core :as hiccup]
+            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v4.kind :as kind]
+            [scicloj.kindly-render.shared.jso :as jso]))
 
 (def *kind->preparer
   (atom {}))
@@ -52,7 +50,7 @@
 (defn merge-attrs [hiccup x]
   (if (and x (vector? hiccup))
     (if (-> hiccup second map?)
-      (update-in hiccup [1] merge/deep-merge x)
+      (update-in hiccup [1] kindly/deep-merge x)
       (into [(first hiccup) x] (rest hiccup)))
     hiccup))
 
@@ -195,6 +193,7 @@
              (update :hiccup limit-hiccup-height context)
              (update :md limit-md-height context)
              ;; items need the options from the context
+             ;; TODO: shouldn't this at least be a merge? context-with-advice should have options from the context
              (assoc :kindly/options (:kindly/options context)))]))))
 
 
@@ -386,18 +385,15 @@
 (defn view-sequentially [{:as context
                           :keys [value]}
                          open-mark close-mark]
-  (if (->> value
-           (some has-preparable-kind?))
-    (let [*deps (atom []) ; TODO: implement without mutable state
-          prepared-parts (->> value
+  (if (some has-preparable-kind? value)
+    (let [prepared-parts (->> value
                               (mapcat (fn [subvalue]
                                         (-> context
                                             (dissoc :form :kind :advice)
                                             (update :kindly/options dissoc :element/max-height)
                                             (assoc :value subvalue)
                                             prepare-or-pprint))))]
-      (if (->> prepared-parts
-               not-all-plain-values?)
+      (if (not-all-plain-values? prepared-parts)
         ;; some parts are not just plain Clojure values - handle recursively
         {:hiccup [:div
                   (structure-mark-hiccup open-mark)
@@ -474,7 +470,7 @@
                         (let [subform-for-context (cond
                                                     (scittle-form? subform)
                                                     (kind/scittle subform)
-                                                    ,                                                    
+                                                    ,
                                                     (reagent-form? subform)
                                                     (kind/reagent subform)
                                                     ,

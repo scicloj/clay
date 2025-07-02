@@ -8,7 +8,8 @@
             [hiccup.page]
             [clojure.string :as str]
             [clojure.datafy]
-            [clojure+.error]))
+            [clojure+.error])
+  (:import (java.io StringWriter)))
 
 (def *id (atom 0))
 
@@ -81,38 +82,36 @@
                    println
                    with-out-str))))))
 
-(defn print-throwable [value]
-  (with-open [w (java.io.StringWriter.)]
-    (clojure+.error/print-readably w value)
-    (-> w
-        str
-        printed-clojure)))
-
-(defn print-throwable-v2 [value]
-  (let [dv (clojure.datafy/datafy value)
-        safe-str (comp escape str)
-        ex-summary (first (:via dv))]
-    (with-open [w (java.io.StringWriter.)]
-      (clojure+.error/print-readably w value)
-      (let [ex-trace (str w)]
-        {:printed-clojure true
-         :hiccup [:details
-                  [:summary
-                   [:strong {:style "color: red;"} "An Exception Occurred!"]
-                   [:ul
-                    [:li (safe-str "Message: " (:message ex-summary))]
-                    [:li (safe-str "Type: " (:type ex-summary))]
-                    [:li (safe-str "Thrown at: " (:at ex-summary))]]
-                   [:p "[+] " [:em "Expand for stacktrace."]]]
-                  [:pre [:code.sourceCode.language-clojure.printed-clojure
-                         ex-trace]]]
-         :md (format "
-::: {.%s}
-```clojure
+(defn print-throwable [ex]
+  (let [ex-type-name (.getSimpleName (type ex))
+        ex-str (with-open [w (StringWriter.)]
+                 (clojure+.error/print-readably w ex)
+                 (str w))]
+    {:printed-clojure true
+     :hiccup          [:details
+                       [:summary [:strong {:style "color: red;"} ex-type-name]]
+                       [:pre [:code ex-str]]]
+     :md              (format "
+::: {.callout-important collapse=true}
+## %s
+```
 %s
 ```
 :::
-" (name :printedClojure) (str/join "\n" ex-trace))}))))
+" ex-type-name ex-str)}))
+
+(defn print-output [label s]
+  {:hiccup [:div
+            [:strong label]
+            [:pre [:code s]]]
+   :md     (format "
+::: {.callout-note}
+## %s
+```
+%s
+```
+:::
+" label s)})
 
 (defn md [text]
   {:md (->> text

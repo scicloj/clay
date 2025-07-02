@@ -699,15 +699,12 @@
 
 ;; Calls to the `make!` function are affected by various parameters
 ;; which collected as one nested map.
-;; This map is the result of deep-merging four sources:
+;; This map is the result of deep-merging configuration sources:
 ;;
-;; - the default configuration: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
-;;
-;; - the user configuration: `clay.edn` at the top
-;;
-;; - the namespace configuration: the `:clay` member of the namespace metadata
-;;
-;; - the call configuration: the argument to `make!`
+;; - default: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
+;; - user: `clay.edn` in project root
+;; - namespace: `:clay` metadata found on the ns form
+;; - call: the argument to `make!`
 ;;
 ;; Here are some of the parameters worth knowing about:
 ;;
@@ -735,6 +732,8 @@
 ;; | `:subdirs-to-sync` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
 ;; | `:keep-sync-root` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
+;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
+;; | `:config/transform` | (experimental) hook to update config per namespace | `:config/transform my.ns/my-fn` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
@@ -742,7 +741,19 @@
 ;; in your call to `clay/make!`.
 ;; Creating a dev namespace is a good way to invoke a different configuration for publishing.
 
-;; Rendering a result is based on `clojure.pprint/pprint` behaviour. By default it will wrap anything beyond `clojure.pprint/*print-right-margin*` (default: 72) number of chars in the single line. For example `(range 100)` will be rendered as long vertical list of numbers. You can overwrite it by setting `:pprint-margin` option. When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
+;; Rendering a result is based on `clojure.pprint/pprint` behaviour.
+;; By default, it will wrap anything beyond `clojure.pprint/*print-right-margin*` (default: 72) number of chars in the single line.
+;; For example `(range 100)` will be rendered as long vertical list of numbers.
+;; You can overwrite it by setting `:pprint-margin` option.
+;; When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
+
+;; Aliases let you define reusable config fragments and selectively apply them.
+;; Add an `:aliases` map to your config with named configurations,
+;; then activate them using `:merge-aliases` (for one-time use) or `:reset-aliases` (to persist across invocations).
+;; For example, you might use `:merge-aliases [:markdown]` to generate Quarto-friendly Markdown from the REPL,
+;; or `:reset-aliases [:html]` in your IDE to default to full HTML rendering.
+;; Alternatively you can `(reset! scicloj.clay.v2.config/*current-aliases aliases)`.
+;; Aliases are deeply merged into the base config in order.
 
 ;; ### Namespace configuration and front matter
 

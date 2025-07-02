@@ -51,5 +51,7 @@
 (defn url []
   (server/url))
 
-(defn config []
-  (config/config))
+(defn config
+  "Gathers configuration from the default, a clay.edn, and a spec if provided"
+  ([] (config/config))
+  ([spec] (config/config spec)))

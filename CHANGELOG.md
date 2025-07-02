@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta46 - 2025-07-03]
+- new option `:config/transform my.ns/my-fn` hook for per namespace config transformation
+- new option `:aliases` a vector of aliases to merge into the configuration
+- CLI now accepts `-A:myalias:anotheralias` to activate aliases
+- stdout and stderr are now captured and displayed in the notebook
+- Exceptions are now shown in the output page where they are encountered
+- `:exception-continue` option for exceptions
+
 ## [2-beta45 - 2025-05-22]
 - new option `:flatten-targets` (default true) do not create namespace folders.
 - new option `:keep-sync-root` (default true) includes the subdir itself (example "notebooks")

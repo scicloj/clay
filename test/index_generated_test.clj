@@ -393,7 +393,7 @@
 
 
 (def
- var88_line782
+ var88_line793
  (->>
   ["purple" "darkgreen" "brown"]
   (mapcat
@@ -407,16 +407,16 @@
   kind/fragment))
 
 
-(def var89_line790 (->> (range 3) kind/fragment))
+(def var89_line801 (->> (range 3) kind/fragment))
 
 
 (def
- var91_line802
+ var91_line813
  (kind/fn {:x 1, :y 2} #:kindly{:f (fn [{:keys [x y]}] (+ x y))}))
 
 
 (def
- var92_line807
+ var92_line818
  (kind/fn
   {:my-video-src
    "https://file-examples.com/storage/fe58a1f07d66f447a9512f1/2017/04/file_example_MP4_480_1_5MG.mp4"}
@@ -426,33 +426,33 @@
             (kind/video {:src my-video-src}))}))
 
 
-(def var94_line814 (kind/fn [+ 1 2]))
+(def var94_line825 (kind/fn [+ 1 2]))
 
 
 (def
- var96_line819
+ var96_line830
  (kind/fn {:kindly/f (fn [{:keys [x y]}] (+ x y)), :x 1, :y 2}))
 
 
 (def
- var98_line828
+ var98_line839
  (kind/fn
   {:x (range 3), :y (repeatedly 3 rand)}
   #:kindly{:f tc/dataset}))
 
 
 (def
- var99_line833
+ var99_line844
  (kind/fn [tc/dataset {:x (range 3), :y (repeatedly 3 rand)}]))
 
 
 (def
- var100_line838
+ var100_line849
  (kind/fn {:kindly/f tc/dataset, :x (range 3), :y (repeatedly 3 rand)}))
 
 
 (def
- var102_line851
+ var102_line862
  (kind/echarts
   {:title {:text "Echarts Example"},
    :tooltip {:formatter #"(params) => 'hello: ' + params.name"},
@@ -463,19 +463,19 @@
    :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}))
 
 
-(def var104_line871 (delay (Thread/sleep 500) (+ 1 2)))
+(def var104_line882 (delay (Thread/sleep 500) (+ 1 2)))
 
 
 (def
- var106_line893
+ var106_line904
  (kind/hiccup [:img {:src "notebooks/images/Clay.svg.png"}]))
 
 
-(def var107_line896 (kind/image {:src "notebooks/images/Clay.svg.png"}))
+(def var107_line907 (kind/image {:src "notebooks/images/Clay.svg.png"}))
 
 
 (def
- var108_line899
+ var108_line910
  (kind/vega-lite
   {:data {:url "notebooks/datasets/iris.csv"},
    :mark "rule",
@@ -490,79 +490,79 @@
    :background "floralwhite"}))
 
 
-(def var110_line924 (+ 1 2))
+(def var110_line935 (+ 1 2))
 
 
-(deftest test111_line926 (is (> var110_line924 2.9)))
+(deftest test111_line937 (is (> var110_line935 2.9)))
 
 
-(deftest test112_line929 (is (> var110_line924 2.9)))
+(deftest test112_line940 (is (> var110_line935 2.9)))
 
 
-(deftest test113_line931 (is (> var110_line924 2.9)))
+(deftest test113_line942 (is (> var110_line935 2.9)))
 
 
 (def
- var115_line940
+ var115_line951
  (kindly/hide-code
   (kind/code
    "(kind/test-last [> 2.9])\n\n^kind/test-last\n[> 2.9]\n\n(kindly/check > 2.9)")))
 
 
 (def
- var117_line959
+ var117_line970
  (kind/table
   {:column-names ["A" "B" "C"], :row-vectors [[1 2 3] [4 5 6]]}
   {:class "table-responsive", :style {:background "#f8fff8"}}))
 
 
 (def
- var119_line995
+ var119_line1006
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :horizontal})
   false))
 
 
-(def var120_line999 (+ 1 2))
+(def var120_line1010 (+ 1 2))
 
 
-(def var121_line1001 (+ 3 4))
+(def var121_line1012 (+ 3 4))
 
 
 (def
- var123_line1005
+ var123_line1016
  (kindly/hide-code
   (kindly/merge-options! {:code-and-value :vertical})
   false))
 
 
-(def var124_line1009 (+ 1 2))
+(def var124_line1020 (+ 1 2))
 
 
-(def var125_line1011 (+ 3 4))
+(def var125_line1022 (+ 3 4))
 
 
 (def
- var127_line1015
+ var127_line1026
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color "#ccddee"}})
   false))
 
 
-(def var128_line1019 (kind/hiccup [:div [:p "hello"]]))
+(def var128_line1030 (kind/hiccup [:div [:p "hello"]]))
 
 
-(def var130_line1026 (tc/dataset {:x (range 3)}))
+(def var130_line1037 (tc/dataset {:x (range 3)}))
 
 
-(def var132_line1030 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
+(def var132_line1041 (kind/hiccup [:div (tc/dataset {:x (range 3)})]))
 
 
 (def
- var134_line1036
+ var134_line1047
  (kindly/hide-code
   (kindly/merge-options! {:style {:background-color nil}})
   false))
 
 
-(def var135_line1040 (kind/hiccup [:div [:p "hello"]]))
+(def var135_line1051 (kind/hiccup [:div [:p "hello"]]))
