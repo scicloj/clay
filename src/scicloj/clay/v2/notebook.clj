@@ -321,9 +321,10 @@
                                                 test-forms)
                         :last-nontest-varname (if (or comment? test-note)
                                                 last-nontest-varname
-                                                varname)}]
+                                                varname)
+                        :exception exception}]
               (if (and exception (not (:exception-continue options)))
-                (reduced (assoc step :exception exception))
+                (reduced step)
                 step)))
           ;; initial value
           {:i              0

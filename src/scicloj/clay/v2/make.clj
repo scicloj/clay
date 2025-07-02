@@ -383,7 +383,10 @@
                                 (when run-quarto
                                   [full-target-path])))))
            (when test-forms
-             (write-test-forms-as-ns test-forms))]))
+             (write-test-forms-as-ns test-forms))
+
+           #_(when exception
+             (throw exception))]))
       (catch Throwable e
         (-> spec
             (assoc :page (-> spec
