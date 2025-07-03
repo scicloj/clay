@@ -3,10 +3,9 @@
 
 (defn f [x] (+ x 3))
 
-(range (f 2))
+(f 2)
 
-(kind/test-last [(fn [v]
-                   (= (count v) 5))])
+(kind/test-last [pos?])
 
 (+ 5 4)
 

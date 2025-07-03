@@ -8,13 +8,13 @@
 (def var1_line4 (defn f [x] (+ x 3)))
 
 
-(def var2_line6 (range (f 2)))
+(def var2_line6 (f 2))
 
 
-(deftest test3_line8 (is ((fn [v] (= (count v) 5)) var2_line6)))
+(deftest test3_line8 (is (pos? var2_line6)))
 
 
-(def var4_line11 (+ 5 4))
+(def var4_line10 (+ 5 4))
 
 
-(deftest test5_line13 (is (= var4_line11 9)))
+(deftest test5_line12 (is (= var4_line10 9)))
