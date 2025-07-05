@@ -37,6 +37,11 @@
                        ;; (map escape)
                        )]
       {tag true
+       :code (str
+              (case md-class
+                :printedClojure ";; =>\n"
+                :sourceClojure "")
+              (str/join "\n" strings))
        :hiccup (->> strings
                     (map (fn [s]
                            [:pre

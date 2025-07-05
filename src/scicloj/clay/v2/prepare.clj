@@ -124,6 +124,13 @@
       (cond-> item-class
         (#(format "::: {.%s}\n%s\n:::\n" item-class %)))))
 
+(defn item->gfm [{:as item
+                  :keys [hiccup html md code
+                         script
+                         item-class]}]
+  (or (some->> code (format "```{clj}\n%s\n```\n"))
+      md))
+
 (defn limit-hiccup-height [hiccup context]
   (when hiccup
     (if-let [max-element-height (-> context
