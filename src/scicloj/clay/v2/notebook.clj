@@ -191,12 +191,12 @@
       (into items [item/separator il]))))
 
 (defn ->var-name [i line-number]
-  (symbol (str "var" i
-               "_line" line-number)))
+  (symbol (str "v" i
+               "_l" line-number)))
 
 (defn ->test-name [i line-number]
-  (symbol (str "test" i
-               "_line" line-number)))
+  (symbol (str "t" i
+               "_l" line-number)))
 
 (defn test-last? [complete-note]
   (and (-> complete-note
