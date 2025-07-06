@@ -419,6 +419,12 @@
   (clay/make! {:source-path "notebooks/index.clj"
                :hide-info-line true}))
 
+;; Render a namespace
+;; as GitHub Flavoured Markdown.
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :format [:gfm]}))
+
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
