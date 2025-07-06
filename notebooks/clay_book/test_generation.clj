@@ -53,7 +53,7 @@
 
 ;; ## The idea
 
-;; Sometimes, we have some expetations from the forms we have in our
+;; Sometimes, we have some expectations regargings the forms we have in our
 ;; notebook.
 ;; For example, we know that `(rand)` should result in a number between zero and one,
 ;; and we know that `(filter pos? (range -4 4))` should result in a nonempty sequence.
@@ -78,7 +78,7 @@
 ;; infoking the `>` function with the additional argument `100`,
 ;; and making sure the result is truthy.
 
-;; This can be expressed in one of a few equivalent ways:
+;; This can be expressed in any one of a few equivalent ways:
 
 ;; * `(kind/test-last [> 100])`
 ;; * `^kind/test-last [> 100]`
@@ -88,7 +88,6 @@
 ;; However, as a side effect of rendering, we will get a test namespace
 ;; with something like the following:
 
-;; In the resulting test namespace, we may expect something like:
 ;; ```clj
 ;; (def v1_l4 (def x 11))
 ;; (def v3_l8 (* x x))
@@ -96,7 +95,7 @@
 ;; ```
 
 ;; Here, the forms of the notebook are added as `def` forms,
-;; except fot the `test-last` form, which is converted to a `deftest`.
+;; except fot the test itself which is added as a `deftest`.
 
 ;; ## The different test modes
 
@@ -111,8 +110,8 @@
 ;; notebook one by one, and interlace the `deftest` forms between them.
 
 ;; The idea of `:simple` test generation is that sometimes, the situation
-;; is simpler. The tests are standalone invocations of certain library
-;; functions, and their correctness does not rely on anything else in
+;; is simpler. The tests can be standalone invocations of certain library
+;; functions, so their correctness wuold not rely on anything else in
 ;; the namespace. This allows us to write tests which are more readable.
 ;; If all tests are simple, it makes the whole test namespace much simpler.
 
@@ -126,13 +125,15 @@
 ;; ### Sequential tests
 
 ;; Here is a namespace with a few sequential tests, that depend
-;; on the namespace state (e.g., on vars being defined).
+;; on the state evolving throughout the notebook.
 
 (make-notebook-and-show-tests
  "notebooks/test_gen/sequential.clj")
 
 ;; ### Mixed sequential and simple tests
-;; Here is a namespace that involves both sequential and simple tests:
+;; Here is a namespace that involves both sequential and simple tests.
+;; This is expressed through `:test-mode :simple` in the kindly options
+;; part of the call to `kind/test-last`.
 
 (make-notebook-and-show-tests
  "notebooks/test_gen/sequential_and_simple.clj")
