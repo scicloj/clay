@@ -420,7 +420,8 @@
                :hide-info-line true}))
 
 ;; Render a namespace
-;; as GitHub Flavoured Markdown.
+;; as GitHub Flavoured Markdown
+;; (partial support, work-in-progress).
 (comment
   (clay/make! {:source-path "notebooks/index.clj"
                :format [:gfm]}))
