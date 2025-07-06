@@ -310,9 +310,7 @@
 (defn gfm [{:as spec
             :keys [items]}]
   (->> items
-       (map-indexed
-        (fn [i item]
-          (prepare/item->gfm item)))
+       prepare/items->gfm
        (remove nil?)
        (mapcat #(str/split % #"\n"))
        (remove #(re-matches #":::.*" %))

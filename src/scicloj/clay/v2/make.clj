@@ -467,8 +467,10 @@
           :use-kindly-render :md})
   ,
   (make! {:source-path       ["notebooks/scratch.clj"]
-          :format [:gfm]})
+          :format [:gfm]
+          :show false})
   ,
   (make! {:source-path       ["notebooks/index.clj"]
-          :format [:gfm]}))
+          :format [:gfm]
+          :show false}))
 
