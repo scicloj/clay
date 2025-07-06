@@ -214,7 +214,9 @@
 (defn clean-test-last-form [form]
   (case (str (first form))
     "kind/test-last" (second form)
-    "kindly/check" (rest form)))
+    "kindly/check" (rest form)
+    ;; else
+    form))
 
 (defn var-based-deftest-form [test-name var-name form]
   (let [[f-symbol & args] form]
