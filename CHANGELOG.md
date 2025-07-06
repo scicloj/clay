@@ -1,8 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unlreleased]
+## [2-beta47-SNAPSHOT]
 - initial support for GitHub Flavoured Markdown target
+- added support for a `:simple` mode in generating tests alongside the default `:sequential` mode- 
+- shortened names in generated tests
 
 ## [2-beta46 - 2025-07-03]
 - new option `:config/transform my.ns/my-fn` hook for per namespace config transformation

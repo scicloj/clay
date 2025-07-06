@@ -191,12 +191,12 @@
       (into items [item/separator il]))))
 
 (defn ->var-name [i line-number]
-  (symbol (str "var" i
-               "_line" line-number)))
+  (symbol (str "v" i
+               "_l" line-number)))
 
 (defn ->test-name [i line-number]
-  (symbol (str "test" i
-               "_line" line-number)))
+  (symbol (str "t" i
+               "_l" line-number)))
 
 (defn test-last? [complete-note]
   (and (-> complete-note
@@ -211,23 +211,28 @@
         var-name
         form))
 
-(defn deftest-form [test-name var-name form]
-  (cond
-    ;;
-    (-> form first (= 'kind/test-last))
-    (deftest-form test-name var-name (second form))
-    ;;
-    (-> form first (= 'kindly/check))
-    (deftest-form test-name var-name (rest form))
-    ;;
-    :else
-    (let [[f-symbol & args] form]
-      (list 'deftest
-            test-name
-            (concat (list 'is
-                          (concat (list f-symbol
-                                        var-name)
-                                  args)))))))
+(defn clean-test-last-form [form]
+  (case (str (first form))
+    "kind/test-last" (second form)
+    "kindly/check" (rest form)))
+
+(defn var-based-deftest-form [test-name var-name form]
+  (let [[f-symbol & args] form]
+    (list 'deftest
+          test-name
+          (concat (list 'is
+                        (concat (list f-symbol
+                                      var-name)
+                                args))))))
+
+(defn simple-deftest-form [test-name last-form form]
+  (let [[f-symbol & args] form]
+    (list 'deftest
+          test-name
+          (concat (list 'is
+                        (concat (list f-symbol
+                                      last-form)
+                                args))))))
 
 (defn test-ns-form [[_ ns-symbol & rest-ns-form]]
   (concat (list 'ns
@@ -286,29 +291,41 @@
   (reduce (fn [{:as aggregation :keys [i
                                        items
                                        test-forms
-                                       last-nontest-varname]}
+                                       last-nontest-varname
+                                       last-nontest-form]}
                note]
-            (let [{:as complete-note :keys [form region narrowed exception comment?]} (complete note)
+            (let [{:as complete-note
+                   :keys [form region narrowed exception comment?]} (complete(kindly/deep-merge (select-keys options
+                                                                                                             [:base-target-path
+                                                                                                              :full-target-path
+                                                                                                              :kindly/options
+                                                                                                              :format])
+                                                                                                note))
+                  {:keys [test-mode]} (:kindly/options complete-note)
+                  _ (spit "/tmp/a.txt" (str (pr-str (:kindly/options complete-note))
+                                            "\n\n"))
                   test-note (test-last? complete-note)
                   new-items (when (or (not some-narrowed)
                                       narrowed)
                               (when-not test-note
-                                (-> complete-note
-                                    (kindly/deep-merge
-                                      (-> options
-                                          (select-keys [:base-target-path
-                                                        :full-target-path
-                                                        :kindly/options
-                                                        :format])))
-                                    (note-to-items options))))
+                                (note-to-items complete-note options)))
                   line-number (first region)
                   varname (->var-name i line-number)
                   test-form (cond
                               ;; a deftest form
-                              test-note (deftest-form
-                                          (->test-name i line-number)
-                                          last-nontest-varname
-                                          form)
+                              test-note (vary-meta
+                                         (let [test-name (->test-name i line-number)
+                                               ctlf (clean-test-last-form form)]
+                                           (case test-mode
+                                             :sequential (var-based-deftest-form
+                                                          test-name
+                                                          last-nontest-varname
+                                                          ctlf)
+                                             :simple (simple-deftest-form
+                                                      test-name
+                                                      last-nontest-form
+                                                      ctlf)))
+                                         assoc :test-mode test-mode)
                               ;; the test ns form
                               (ns-form? form) (test-ns-form form)
                               ;; a comment
@@ -323,6 +340,9 @@
                         :last-nontest-varname (if (or comment? test-note)
                                                 last-nontest-varname
                                                 varname)
+                        :last-nontest-form    (if (or comment? test-note)
+                                                last-nontest-form
+                                                form)
                         :exception exception}]
               (if (and exception (not (:exception-continue options)))
                 (reduced step)
@@ -403,9 +423,26 @@
                    (if some-narrowed
                      (constantly nil)
                      (fn [test-forms]
-                       (when (->> test-forms
-                                  (some #(-> % first (= 'deftest))))
-                         test-forms)))))))))
+                       (let [deftest-forms (->> test-forms
+                                                (filter #(-> % first (= 'deftest))))] 
+                         (when ;; there are some actual test forms
+                             (seq deftest-forms)
+                           #_(prn [:test-forms test-forms
+                                   :deftest-forms deftest-forms
+                                   :check (->> deftest-forms
+                                               (map (comp :test-mode meta))
+                                               (some #(= % :sequential)))])
+                           (if (->> deftest-forms
+                                    (map (comp :test-mode meta))
+                                    (some #(= % :sequential)))
+                             ;; Some tests are of `:sequential` mode,
+                             ;; so we need all the intermidiate `def` forms,
+                             ;; not just the `deftest` forms.
+                             test-forms
+                             ;; Else - all tests are of `:simple` mode,
+                             ;; so we only need the `ns` definition and the `deftest` forms.
+                             (cons (first test-forms)
+                                   deftest-forms))))))))))))
 
 
 (comment
