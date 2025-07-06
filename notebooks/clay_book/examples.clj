@@ -1,6 +1,6 @@
 ;; # Examples
 
-;; This namespace lists various usage examples of Clay.
+;; This chapter lists various usage examples of Clay.
 ;; Most of the behaviours demonstrated here are defined
 ;; by the [Kindly](https://scicloj.github.io/kindly-noted/)
 ;; specification.
