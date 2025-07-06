@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [unlreleased]
+- initial support for GitHub Flavoured Markdown target
+
 ## [2-beta46 - 2025-07-03]
 - new option `:config/transform my.ns/my-fn` hook for per namespace config transformation
 - new option `:aliases` a vector of aliases to merge into the configuration
