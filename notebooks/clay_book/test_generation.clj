@@ -9,11 +9,11 @@
 ;; This can also be seen as a literate way to create tests for a library.
 
 ^:kindly/hide-code
-(ns clay-book.test-generation)
-
-^:kindly/hide-code
-(require '[scicloj.clay.v2.api :as clay]
-         '[clojure.string :as str])
+(ns clay-book.test-generation
+  (:require [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v4.kind :as kind]
+            [scicloj.clay.v2.api :as clay]
+            [clojure.string :as str]))
 
 ^:kindly/hide-code
 (defn make-notebook-and-show-tests
