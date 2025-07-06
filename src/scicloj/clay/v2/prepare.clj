@@ -124,6 +124,21 @@
       (cond-> item-class
         (#(format "::: {.%s}\n%s\n:::\n" item-class %)))))
 
+(defn items->gfm [items]
+  (->> items
+       (partition-by (comp some? :code))
+       (map (fn [sub-items]
+              (if (-> sub-items
+                      first
+                      :code)
+                (->> sub-items
+                     (map :code)
+                     (string/join "\n\n")
+                     (format "```{clj}\n%s\n```\n"))
+                (->> sub-items
+                     (map :md)
+                     (string/join "\n\n")))))))
+
 (defn limit-hiccup-height [hiccup context]
   (when hiccup
     (if-let [max-element-height (-> context

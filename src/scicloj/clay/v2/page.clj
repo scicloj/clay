@@ -1,18 +1,19 @@
 (ns scicloj.clay.v2.page
   (:require
-    [babashka.fs :as fs]
-    [clj-yaml.core :as yaml]
-    [clojure.java.io :as io]
-    [clojure.java.shell :as shell]
-    [clojure.string :as string]
-    [hiccup.core :as hiccup]
-    [hiccup.page]
-    [scicloj.clay.v2.prepare :as prepare]
-    [scicloj.clay.v2.styles :as styles]
-    [scicloj.clay.v2.util.portal :as portal]
-    [scicloj.clay.v2.util.resource :as resource]
-    [scicloj.clay.v2.files :as files]
-    [scicloj.clay.v2.item :as item]))
+   [babashka.fs :as fs]
+   [clj-yaml.core :as yaml]
+   [clojure.java.io :as io]
+   [clojure.java.shell :as shell]
+   [clojure.string :as string]
+   [hiccup.core :as hiccup]
+   [hiccup.page]
+   [scicloj.clay.v2.prepare :as prepare]
+   [scicloj.clay.v2.styles :as styles]
+   [scicloj.clay.v2.util.portal :as portal]
+   [scicloj.clay.v2.util.resource :as resource]
+   [scicloj.clay.v2.files :as files]
+   [scicloj.clay.v2.item :as item]
+   [clojure.string :as str]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -305,6 +306,15 @@
              (prepare/item->md item)))
           (string/join "\n\n")))))
 
+
+(defn gfm [{:as spec
+            :keys [items]}]
+  (->> items
+       prepare/items->gfm
+       (remove nil?)
+       (mapcat #(str/split % #"\n"))
+       (remove #(re-matches #":::.*" %))
+       (string/join "\n")))
 
 (defn hiccup [{:as spec
                :keys [items title quarto]}]

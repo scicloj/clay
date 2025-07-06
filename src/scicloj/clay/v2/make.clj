@@ -346,6 +346,19 @@
                            server/update-page!)
                        (println "Clay wrote: " full-target-path)
                        [:wrote full-target-path])
+             :gfm (let [md-path (-> full-target-path
+                                    (str/replace #"\.html$" ".md"))
+                        output-file (-> full-target-path
+                                        (str/split #"/")
+                                        last)]
+                    (-> spec-with-items
+                        page/gfm
+                        (->> (spit md-path)))
+                    (println "Clay:" [:wrote md-path (time/now)])
+                    (-> spec
+                        (assoc :full-target-path md-path)
+                        server/update-page!)
+                    [:wrote md-path])
              :quarto (let [qmd-path (-> full-target-path
                                         (str/replace #"\.html$" ".qmd"))
                            output-file (-> full-target-path
@@ -448,4 +461,16 @@
 
 (comment
   (make! {:source-path       ["notebooks/scratch.clj"]
-          :use-kindly-render true}))
+          :use-kindly-render :html})
+  ,
+  (make! {:source-path       ["notebooks/scratch.clj"]
+          :use-kindly-render :md})
+  ,
+  (make! {:source-path       ["notebooks/scratch.clj"]
+          :format [:gfm]
+          :show false})
+  ,
+  (make! {:source-path       ["notebooks/index.clj"]
+          :format [:gfm]
+          :show false}))
+
