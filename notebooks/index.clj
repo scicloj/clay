@@ -419,6 +419,13 @@
   (clay/make! {:source-path "notebooks/index.clj"
                :hide-info-line true}))
 
+;; Render a namespace
+;; as GitHub Flavoured Markdown
+;; (partial support, work-in-progress).
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :format [:gfm]}))
+
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
@@ -929,37 +936,9 @@
 ;; 3. Globally define certain kinds (e.g., `:kind/md`, `:kind/hiccup`) to always hide code (on project level or namespace level) by adding theme as a set to the project config or namespace config, e.g., `:kindly/options {:kinds-that-hide-code #{:kind/md :kind/hiccup}}`.
 
 ;; ## Test generation
-
 ;; (experimental 🛠)
 
-(+ 1 2)
-
-(kind/test-last [> 2.9])
-
-^kind/test-last
-[> 2.9]
-
-(kindly/check > 2.9)
-
-;; We generate tests checking whether
-;; this last value is greater than 2.9.
-;; We can do it in a few ways.
-
-;; We include the test annotations in the markdown text,
-;; since the annotations themselves are invisible.
-
-(kindly/hide-code
- (kind/code
-  "(kind/test-last [> 2.9])
-
-^kind/test-last
-[> 2.9]
-
-(kindly/check > 2.9)"))
-
-;; See the generated [test/index_generated_test.clj](https://github.com/scicloj/clay/blob/main/test/index_generated_test.clj).
-
-;; For a detailed example using this mechanism, see [the source](https://github.com/scicloj/clojisr/blob/master/notebooks/clojisr/v1/tutorials/main.clj) of the [ClojisR tutorial](https://scicloj.github.io/clojisr/clojisr.v1.tutorials.main.html).
+;; See the dedicated 📖 [Test generation chapter](./clay_book.test_generation.html) 📖 of this book.
 
 ;; ## CSS classes and styles
 ;; ### Styling HTML visualizations
