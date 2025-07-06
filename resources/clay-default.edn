@@ -18,4 +18,5 @@
  :kindly/options {:datatables {:paging false
                                :scrollY 400
                                :sPaginationType "full_numbers"
-                               :order []}}}
+                               :order []}
+                  :test-mode :sequential}}
