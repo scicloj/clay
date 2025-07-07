@@ -331,7 +331,7 @@
                                    slurp
                                    read/->notes)
                         :kindly/options (kindly/deep-merge
-                                          {:deps #{:kindly :clay}
+                                          {:deps #{:kindly :clay :highlightjs}
                                            ;;:package ""
                                            }
                                           (:kindly/options spec))}]
@@ -479,4 +479,3 @@
   (make! {:source-path       ["notebooks/index.clj"]
           :format [:gfm]
           :show false}))
-
