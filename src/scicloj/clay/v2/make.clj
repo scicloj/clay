@@ -326,9 +326,15 @@
     (try
       (files/init-target! full-target-path)
       (if use-kindly-render
+        ;; TODO: what about a single form?
         (let [notebook {:notes (-> full-source-path
                                    slurp
-                                   read/->notes)}]
+                                   read/->notes)
+                        :kindly/options (kindly/deep-merge
+                                          {:deps #{:kindly :clay}
+                                           ;;:package ""
+                                           }
+                                          (:kindly/options spec))}]
           (-> spec
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
