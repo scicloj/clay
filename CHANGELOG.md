@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [unreleased]
-- a minor fix to the way code is annotated in `:gfm` target
+- bugfix: a minor fix to the way code is annotated in `:gfm` target
 
 ## [2-beta47 - 2025-07-07]
 - initial support for GitHub Flavoured Markdown target
