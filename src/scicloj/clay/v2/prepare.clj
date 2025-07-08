@@ -134,7 +134,7 @@
                 (->> sub-items
                      (map :code)
                      (string/join "\n\n")
-                     (format "```{clj}\n%s\n```\n"))
+                     (format "```clj\n%s\n```\n"))
                 (->> sub-items
                      (map :md)
                      (string/join "\n\n")))))))
