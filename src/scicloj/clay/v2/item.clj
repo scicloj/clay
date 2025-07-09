@@ -1,5 +1,6 @@
 (ns scicloj.clay.v2.item
-  (:require [clojure.pprint :as pp]
+  (:require [clojure.pprint :as pprint]
+            [clojure.pprint :as pp]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
@@ -9,7 +10,7 @@
             [clojure.string :as str]
             [clojure.datafy]
             [clojure+.error])
-  (:import (java.io StringWriter)))
+  (:import (java.io StringWriter Writer)))
 
 (def *id (atom 0))
 
@@ -88,22 +89,16 @@
                    with-out-str))))))
 
 (defn print-throwable [ex]
-  (let [ex-type-name (.getSimpleName (type ex))
-        ex-str (with-open [w (StringWriter.)]
-                 (clojure+.error/print-readably w ex)
-                 (str w))]
+  (let [{:keys [via]} (Throwable->map ex)
+        {:keys [message type]} (first via)
+        ex-summary (or message type)]
     {:printed-clojure true
-     :hiccup          [:details
-                       [:summary [:strong {:style "color: red;"} ex-type-name]]
-                       [:pre [:code ex-str]]]
+     :hiccup          [:strong {:style "color: red;"} ex-summary]
      :md              (format "
-::: {.callout-important collapse=true}
+::: {.callout-important}
 ## %s
-```
-%s
-```
 :::
-" ex-type-name ex-str)}))
+" ex-summary)}))
 
 (defn print-output [label s]
   {:hiccup [:div
