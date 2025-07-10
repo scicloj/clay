@@ -1,0 +1,45 @@
+.sourceCode:has(.printedClojure) {
+  background-color: transparent;
+  border-style: none;
+}
+
+.kind-map {
+  background:            lightgreen;
+  display:               grid;
+  grid-template-columns: repeat(2, auto);
+  justify-content:       center;
+  text-align:            right;
+  border: solid 1px black;
+  border-radius: 10px;
+}
+
+.kind-vector {
+  background:            lightblue;
+  display:               grid;
+  grid-template-columns: repeat(1, auto);
+  align-items:           center;
+  justify-content:       center;
+  text-align:            center;
+  border:                solid 2px black;
+  padding:               10px;
+}
+
+.kind-set {
+  background:            lightyellow;
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, max-content));
+  align-items:           center;
+  justify-content:       center;
+  text-align:            center;
+  border:                solid 1px black;
+}
+
+.kind-seq {
+  background:            bisque;
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, max-content));
+  align-items:           center;
+  justify-content:       center;
+  text-align:            center;
+  border:                solid 1px black;
+}
