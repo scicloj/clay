@@ -296,16 +296,14 @@
                                        last-nontest-varname
                                        last-nontest-form]}
                note]
-            (let [{:as complete-note
-                   :keys [form region narrowed exception comment?]} (complete(kindly/deep-merge (select-keys options
-                                                                                                             [:base-target-path
-                                                                                                              :full-target-path
-                                                                                                              :kindly/options
-                                                                                                              :format])
-                                                                                                note))
+            (let [complete-note (complete (kindly/deep-merge (select-keys options
+                                                                          [:base-target-path
+                                                                           :full-target-path
+                                                                           :kindly/options
+                                                                           :format])
+                                                             note))
+                  {:keys [form region narrowed exception comment?]} complete-note
                   {:keys [test-mode]} (:kindly/options complete-note)
-                  _ (spit "/tmp/a.txt" (str (pr-str (:kindly/options complete-note))
-                                            "\n\n"))
                   test-note (test-last? complete-note)
                   new-items (when (or (not some-narrowed)
                                       narrowed)
@@ -344,10 +342,9 @@
                                                 varname)
                         :last-nontest-form    (if (or comment? test-note)
                                                 last-nontest-form
-                                                form)
-                        :exception exception}]
+                                                form)}]
               (if (and exception (not (:exception-continue options)))
-                (reduced step)
+                (reduced (assoc step :exception exception))
                 step)))
           ;; initial value
           {:i              0
@@ -426,7 +423,7 @@
                      (constantly nil)
                      (fn [test-forms]
                        (let [deftest-forms (->> test-forms
-                                                (filter #(-> % first (= 'deftest))))] 
+                                                (filter #(-> % first (= 'deftest))))]
                          (when ;; there are some actual test forms
                              (seq deftest-forms)
                            #_(prn [:test-forms test-forms

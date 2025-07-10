@@ -414,11 +414,11 @@
               (assoc :page (-> spec
                                (assoc :items [(item/print-throwable e)])
                                page/html))
-              server/update-page!)
-          (if (and source-paths (> (count source-paths) 1))
-            (do (println "Clay FAILED:" full-source-path)
-                (println e))))
-        (throw e))
+              server/update-page!))
+        (if (and source-paths (> (count source-paths) 1))
+          (do (println "Clay FAILED:" full-source-path)
+              (println e))
+          (throw e)))
       (finally (files/init-target! full-target-path)))))
 
 (defn sync-resources! [{:keys [base-target-path

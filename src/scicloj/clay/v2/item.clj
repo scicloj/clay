@@ -91,14 +91,23 @@
 (defn print-throwable [ex]
   (let [{:keys [via]} (Throwable->map ex)
         {:keys [message type]} (first via)
-        ex-summary (or message type)]
+        ex-summary (or message type)
+        ex-detail (with-open [w (StringWriter.)]
+                    (clojure+.error/print-readably w ex)
+                    (str w))]
     {:printed-clojure true
-     :hiccup          [:strong {:style "color: red;"} ex-summary]
+     :hiccup          [:div.callout.callout-style-default.callout-important.callout-titled
+                       [:div.callout-header.d-flex.align-content-center
+                        [:div.callout-icon-container [:i.callout-icon]]
+                        [:div.callout-title-container.flex-fill ex-summary]]]
      :md              (format "
 ::: {.callout-important}
 ## %s
+```
+%s
+```
 :::
-" ex-summary)}))
+" ex-summary ex-detail)}))
 
 (defn print-output [label s]
   {:hiccup [:div
