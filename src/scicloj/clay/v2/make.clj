@@ -327,9 +327,7 @@
       (files/init-target! full-target-path)
       (if use-kindly-render
         ;; TODO: what about a single form?
-        (let [notebook {:notes (-> full-source-path
-                                   slurp
-                                   read/->notes)
+        (let [notebook {:notes (notebook/spec-notes spec)
                         :kindly/options (kindly/deep-merge
                                           {:deps #{:kindly :clay :highlightjs}
                                            ;;:package ""
@@ -339,7 +337,8 @@
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
           [:wrote-with-kindly-render full-target-path])
-        (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms spec)
+        (let [notes (notebook/spec-notes spec)
+              {:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
               spec-with-items (assoc spec
                                      :items items
                                      :exception exception)]

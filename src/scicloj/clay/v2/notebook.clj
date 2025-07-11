@@ -287,7 +287,7 @@
                  *err* err#]
          ~@body))))
 
-(defn complete-notes
+(defn itemize-notes
   "Evaluates and computes the items for a notebook of notes"
   [relevant-notes some-narrowed options]
   (reduce (fn [{:as aggregation :keys [i
@@ -295,14 +295,8 @@
                                        test-forms
                                        last-nontest-varname
                                        last-nontest-form]}
-               note]
-            (let [complete-note (complete (kindly/deep-merge (select-keys options
-                                                                          [:base-target-path
-                                                                           :full-target-path
-                                                                           :kindly/options
-                                                                           :format])
-                                                             note))
-                  {:keys [form region narrowed exception comment?]} complete-note
+               complete-note]
+            (let [{:keys [form region narrowed exception comment?]} complete-note
                   {:keys [test-mode]} (:kindly/options complete-note)
                   test-note (test-last? complete-note)
                   new-items (when (or (not some-narrowed)
@@ -354,94 +348,104 @@
           ;; sequence
           relevant-notes))
 
+(defn complete-notes [notes options]
+  (let [opts (select-keys options
+                          [:base-target-path
+                           :full-target-path
+                           :kindly/options
+                           :format])]
+    (doall
+      (for [note notes]
+        (complete (kindly/deep-merge opts note))))))
+
+(defn relevant-notes [{:keys [full-source-path
+                         single-form
+                         single-value
+                         smart-sync
+                         pprint-margin]
+                  :or        {pprint-margin pp/*print-right-margin*}}]
+  (let [{:keys [code first-line-of-change]} (some-> full-source-path slurp-and-compare)
+        notes (->> (cond single-value (conj (when code
+                                              [{:form (read/read-ns-form code)}])
+                                            {:value single-value})
+                         single-form (conj (when code
+                                             [{:form (read/read-ns-form code)}])
+                                           {:form single-form})
+                         :else (read/->notes code))
+                   (map-indexed (fn [i {:as   note
+                                        :keys [code]}]
+                                  (merge note
+                                         {:i i}
+                                         (when-not (:comment? note)
+                                           {:narrowed (narrowed? code)
+                                            :narrower (narrower? code)})))))
+        some-narrowed (some :narrowed notes)
+        some-narrower (some :narrower notes)
+        narrowed-indices (when some-narrowed
+                           (->> notes
+                                (map (fn [{:keys [i narrowed]}]
+                                       (when narrowed i)))
+                                (remove nil?)))
+        first-narrowed-index (first narrowed-indices)
+        last-narrowed-index (last narrowed-indices)]
+    (cond-> notes
+      some-narrower
+      (->> (filter (fn [{:keys [narrower form]}]
+                     (or narrower
+                         (ns-form? form)))))
+
+      (and some-narrowed smart-sync)
+      (->> (take (inc last-narrowed-index))
+           (filter (fn [{:keys [i code form region]}]
+                     (or (ns-form? form)
+                         (>= i first-narrowed-index)
+                         (-> region
+                             (nth 2)  ;last region line
+                             (> first-line-of-change)))))))))
+
+(defn spec-notes [{:as spec
+                   :keys      [pprint-margin]
+                   :or        {pprint-margin pp/*print-right-margin*}}]
+  (binding [*ns* *ns*
+            *warn-on-reflection* *warn-on-reflection*
+            *unchecked-math* *unchecked-math*
+            pp/*print-right-margin* pprint-margin]
+    (-> (relevant-notes spec)
+        (complete-notes spec)
+        (with-out-err-captured))))
+
 (defn items-and-test-forms
-  ([{:as   options
-     :keys [full-source-path
-            single-form
-            single-value
-            smart-sync
-            pprint-margin]
-     :or   {pprint-margin pp/*print-right-margin*}}]
-   (binding [*ns* *ns*
-             *warn-on-reflection* *warn-on-reflection*
-             *unchecked-math* *unchecked-math*
-             pp/*print-right-margin* pprint-margin]
-     (let [{:keys [code
-                   first-line-of-change]} (some-> full-source-path
-                                                  slurp-and-compare)
-           notes (->> (cond single-value (conj (when code
-                                                 [{:form (read/read-ns-form code)}])
-                                               {:value single-value})
-                            single-form (conj (when code
-                                                [{:form (read/read-ns-form code)}])
-                                              {:form single-form})
-                            :else (read/->notes code))
-                      (map-indexed (fn [i {:as   note
-                                           :keys [code]}]
-                                     (merge note
-                                            {:i i}
-                                            (when-not (:comment? note)
-                                              {:narrowed (narrowed? code)
-                                               :narrower (narrower? code)})))))
-           some-narrowed (some :narrowed notes)
-           some-narrower (some :narrower notes)
-           narrowed-indices (when some-narrowed
-                              (->> notes
-                                   (map (fn [{:keys [i narrowed]}]
-                                          (when narrowed i)))
-                                   (remove nil?)))
-           first-narrowed-index (first narrowed-indices)
-           last-narrowed-index (last narrowed-indices)
-           relevant-notes (cond
-                            ;;
-                            some-narrower
-                            (->> notes
-                                 (filter (fn [{:keys [narrower form]}]
-                                           (or narrower
-                                               (ns-form? form)))))
-                            ;;
-                            (and some-narrowed smart-sync)
-                            (->> notes
-                                 (take (inc last-narrowed-index))
-                                 (filter (fn [{:keys [i code form region]}]
-                                           (or (ns-form? form)
-                                               (>= i first-narrowed-index)
-                                               (-> region
-                                                   (nth 2)  ;last region line
-                                                   (> first-line-of-change))))))
-                            ;;
-                            :else
-                            notes)]
-       (-> relevant-notes
-           (complete-notes some-narrowed options)
-           (with-out-err-captured)
-           (update :items add-info-line options)
-           (update :test-forms
-                   ;; Leave the test-form only when
-                   ;; at least one of them is a `deftest`.
-                   (if some-narrowed
-                     (constantly nil)
-                     (fn [test-forms]
-                       (let [deftest-forms (->> test-forms
-                                                (filter #(-> % first (= 'deftest))))]
-                         (when ;; there are some actual test forms
-                             (seq deftest-forms)
-                           #_(prn [:test-forms test-forms
-                                   :deftest-forms deftest-forms
-                                   :check (->> deftest-forms
-                                               (map (comp :test-mode meta))
-                                               (some #(= % :sequential)))])
-                           (if (->> deftest-forms
-                                    (map (comp :test-mode meta))
-                                    (some #(= % :sequential)))
-                             ;; Some tests are of `:sequential` mode,
-                             ;; so we need all the intermidiate `def` forms,
-                             ;; not just the `deftest` forms.
-                             test-forms
-                             ;; Else - all tests are of `:simple` mode,
-                             ;; so we only need the `ns` definition and the `deftest` forms.
-                             (cons (first test-forms)
-                                   deftest-forms))))))))))))
+  [notes spec]
+  (let [some-narrowed (some :narrowed notes)]
+    (-> notes
+        (itemize-notes some-narrowed spec)
+        (update :items add-info-line spec)
+        (update :test-forms
+                ;; Leave the test-form only when
+                ;; at least one of them is a `deftest`.
+                (if some-narrowed
+                  (constantly nil)
+                  (fn [test-forms]
+                    (let [deftest-forms (->> test-forms
+                                             (filter #(-> % first (= 'deftest))))]
+                      (when                                 ;; there are some actual test forms
+                        (seq deftest-forms)
+                        #_(prn [:test-forms test-forms
+                                :deftest-forms deftest-forms
+                                :check (->> deftest-forms
+                                            (map (comp :test-mode meta))
+                                            (some #(= % :sequential)))])
+                        (if (->> deftest-forms
+                                 (map (comp :test-mode meta))
+                                 (some #(= % :sequential)))
+                          ;; Some tests are of `:sequential` mode,
+                          ;; so we need all the intermediate `def` forms,
+                          ;; not just the `deftest` forms.
+                          test-forms
+                          ;; Else - all tests are of `:simple` mode,
+                          ;; so we only need the `ns` definition and the `deftest` forms.
+                          (cons (first test-forms)
+                                deftest-forms))))))))))
 
 
 (comment
