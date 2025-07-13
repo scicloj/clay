@@ -402,13 +402,12 @@
                                   [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))
-           #_(when exception
+           (when exception
                (throw (ex-info "Notebook FAILED."
-                               {:notebook-exception exception})))]))
+                               {:id ::notebook-exception}
+                               exception)))]))
       (catch Throwable e
-        (when-not (-> e
-                      ex-data
-                      :notebook-exception)
+        (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
               (assoc :page (-> spec
                                (assoc :items [(item/print-throwable e)])
