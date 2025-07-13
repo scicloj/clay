@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta48 - PENDING]
-- Show exception message or type without stacktrace
+- Show exception message or type and truncated stacktrace to remove clay
 
 ## [2-beta47 - 2025-07-07]
 - initial support for GitHub Flavoured Markdown target
