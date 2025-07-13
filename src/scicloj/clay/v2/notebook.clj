@@ -58,11 +58,11 @@
         note (try
                (let [x (binding [*out* out
                                  *err* err]
-                         (cond code (-> code
-                                        read-string
+                         (cond form (-> form
                                         eval
                                         deref-if-needed)
-                               form (-> form
+                               code (-> code
+                                        read-string
                                         eval
                                         deref-if-needed)))]
                  (assoc note :value x))
