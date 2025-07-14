@@ -1,8 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta48 - PENDING]
+## [2-beta49 - PENDING]
 - Show exception message or type and truncated stacktrace to remove clay
+
+## [2-beta48 - 2025-07-08]
+- bugfix: a minor fix to the way code is annotated in `[:gfm]` format
 
 ## [2-beta47 - 2025-07-07]
 - initial support for GitHub Flavoured Markdown target

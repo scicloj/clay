@@ -465,12 +465,6 @@
 
 (comment
   (make! {:source-path       ["notebooks/scratch.clj"]
-          :use-kindly-render :html})
-  ,
-  (make! {:source-path       ["notebooks/scratch.clj"]
-          :use-kindly-render :md})
-  ,
-  (make! {:source-path       ["notebooks/scratch.clj"]
           :format [:gfm]
           :show false})
   ,
