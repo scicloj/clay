@@ -2,7 +2,9 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2-beta49 - PENDING]
-- Show exception message or type and truncated stacktrace to remove clay
+- Show exception message or type and truncated stacktrace to remove clay.
+- refactoring of notebook processing (preparing for Kindly-render integration)
+- minor optimisation of different cases in notebook processing
 
 ## [2-beta48 - 2025-07-08]
 - bugfix: a minor fix to the way code is annotated in `[:gfm]` format
