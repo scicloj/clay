@@ -327,9 +327,7 @@
       (files/init-target! full-target-path)
       (if use-kindly-render
         ;; TODO: what about a single form?
-        (let [notebook {:notes (-> full-source-path
-                                   slurp
-                                   read/->notes)
+        (let [notebook {:notes (notebook/spec-notes spec)
                         :kindly/options (kindly/deep-merge
                                           {:deps #{:kindly :clay :highlightjs}
                                            ;;:package ""
@@ -339,7 +337,8 @@
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
           [:wrote-with-kindly-render full-target-path])
-        (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms spec)
+        (let [notes (notebook/spec-notes spec)
+              {:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
               spec-with-items (assoc spec
                                      :items items
                                      :exception exception)]
@@ -403,22 +402,21 @@
                                   [full-target-path])))))
            (when test-forms
              (write-test-forms-as-ns test-forms))
-           #_(when exception
+           (when exception
                (throw (ex-info "Notebook FAILED."
-                               {:notebook-exception exception})))]))
+                               {:id ::notebook-exception}
+                               exception)))]))
       (catch Throwable e
-        (when-not (-> e
-                      ex-data
-                      :notebook-exception)
+        (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
               (assoc :page (-> spec
                                (assoc :items [(item/print-throwable e)])
                                page/html))
-              server/update-page!)
-          (if (and source-paths (> (count source-paths) 1))
-            (do (println "Clay FAILED:" full-source-path)
-                (println e))))
-        (throw e))
+              server/update-page!))
+        (if (and source-paths (> (count source-paths) 1))
+          (do (println "Clay FAILED:" full-source-path)
+              (println e))
+          (throw e)))
       (finally (files/init-target! full-target-path)))))
 
 (defn sync-resources! [{:keys [base-target-path

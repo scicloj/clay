@@ -5,11 +5,8 @@
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
-            [hiccup.page]
             [clojure.string :as str]
-            [clojure.datafy]
-            [clojure+.error])
-  (:import (java.io StringWriter)))
+            [clj-commons.format.exceptions :as fe]))
 
 (def *id (atom 0))
 
@@ -87,15 +84,32 @@
                    println
                    with-out-str))))))
 
+(defn pprint-throwable [ex]
+  (binding [fe/*fonts* nil
+            fe/*default-frame-rules*
+            (conj fe/*default-frame-rules*
+                  [:name #"scicloj.clay.v2\..*" :terminate])]
+    (fe/format-exception ex))
+  )
+
 (defn print-throwable [ex]
-  (let [ex-type-name (.getSimpleName (type ex))
-        ex-str (with-open [w (StringWriter.)]
-                 (clojure+.error/print-readably w ex)
-                 (str w))]
+  (let [{:keys [via]} (Throwable->map ex)
+        messages (for [{:keys [message type]} via]
+                   (or message type))
+        ex-detail (pprint-throwable ex)]
     {:printed-clojure true
-     :hiccup          [:details
-                       [:summary [:strong {:style "color: red;"} ex-type-name]]
-                       [:pre [:code ex-str]]]
+     :hiccup
+     [:div.callout.callout-style-default.callout-titled.callout-important
+        [:details.callout-header
+         [:summary {:style {:list-style :none}}
+          [:div.d-flex.align-content-center
+           [:div.callout-icon-container [:i.callout-icon]]
+           [:div.callout-title-container.flex-fill
+            (into [:strong] (interpose [:br]) messages)]
+           [:div.callout-btn-toggle.d-inline-block.border-0.py-1.ps-1.pe-0.float-end
+            [:i.callout-toggle]]]]
+         [:div.callout-body-container.callout-body
+          [:pre [:code ex-detail]]]]]
      :md              (format "
 ::: {.callout-important collapse=true}
 ## %s
@@ -103,7 +117,7 @@
 %s
 ```
 :::
-" ex-type-name ex-str)}))
+" (str/join "\n" messages) ex-detail)}))
 
 (defn print-output [label s]
   {:hiccup [:div
@@ -129,31 +143,31 @@
     (->> string
          jso/write-json-str
          (format
-          "katex.render(%s, document.currentScript.parentElement, {throwOnError: false});"))]])
+           "katex.render(%s, document.currentScript.parentElement, {throwOnError: false});"))]])
 
 (defn tex [text]
-  {:md (->> text
-            in-vector
-            (map (partial format "$$%s$$"))
-            (str/join "\n"))
+  {:md     (->> text
+                in-vector
+                (map (partial format "$$%s$$"))
+                (str/join "\n"))
    :hiccup (->> text
                 in-vector
                 (map katex-hiccup)
                 (into [:div]))
-   :deps [:katex]})
+   :deps   [:katex]})
 
 (def separator
   {:hiccup [:div {:style
-                  {:height "2px"
-                   :width "100%"
+                  {:height           "2px"
+                   :width            "100%"
                    :background-color "grey"}}]})
 
 (def hidden
-  {:md ""
+  {:md     ""
    :hiccup ""})
 
 (defn structure-mark [string]
-  {:md string
+  {:md     string
    :hiccup [:p string]})
 
 (def scittle-header-form
