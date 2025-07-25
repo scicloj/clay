@@ -313,13 +313,17 @@
   [source-path target-path]
   (prn "ALREADY_THERE?"
        [source-path (fs/last-modified-time source-path)]
-       [target-path (fs/last-modified-time target-path)]
-       [:exists (fs/exists? target-path)]
-       [:compare (compare (fs/last-modified-time source-path)
-                          (fs/last-modified-time target-path))]
-       [:result (not (pos?
-                       (compare (fs/last-modified-time source-path)
-                                (fs/last-modified-time target-path))))])
+       [target-path
+        (fs/exists? target-path)
+        (and (fs/exists? target-path) (fs/last-modified-time target-path))
+        (and (fs/exists? target-path)
+             [:compare (compare (fs/last-modified-time source-path)
+                                (fs/last-modified-time target-path))])]
+       [:result
+        (and (fs/exists? target-path)
+             (not (pos?
+                    (compare (fs/last-modified-time source-path)
+                             (fs/last-modified-time target-path)))))])
   (and (fs/exists? target-path)
        (not (pos?
              (compare (fs/last-modified-time source-path)
