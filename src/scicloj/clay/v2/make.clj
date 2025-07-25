@@ -348,58 +348,58 @@
               server/update-page!)
           [:wrote-with-kindly-render full-target-path])
         (let [notes (notebook/spec-notes spec)
-              {:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
-              spec-with-items (assoc spec
-                                     :items items
-                                     :exception exception)]
-          [(case (first format)
-             :hiccup (page/hiccup spec-with-items)
-             :html (do (-> spec-with-items
-                           (config/add-field :page (if post-process
-                                                     (comp post-process page/html)
-                                                     page/html))
-                           server/update-page!)
-                       (println "Clay wrote: " full-target-path)
-                       [:wrote full-target-path])
-             :gfm (let [md-path (-> full-target-path
-                                    (str/replace #"\.html$" ".md"))
-                        output-file (-> full-target-path
-                                        (str/split #"/")
-                                        last)]
-                    (-> spec-with-items
-                        page/gfm
-                        (->> (spit md-path)))
-                    (println "Clay:" [:wrote md-path (time/now)])
-                    (-> spec
-                        (assoc :full-target-path md-path)
-                        server/update-page!)
-                    [:wrote md-path])
-             :quarto (let [qmd-path (-> full-target-path
-                                        (str/replace #"\.html$" ".qmd"))
-                           output-file (-> full-target-path
-                                           (str/split #"/")
-                                           last)]
-                       (if (and skip-if-unchanged
-                                (already-there? full-source-path
-                                                qmd-path))
-                         (do (println "Clay:" [:kept-existing qmd-path])
-                             (-> spec
-                                 (assoc :full-target-path full-target-path)
-                                 server/update-page!))
-                         (do (-> spec-with-items
+              fformat (first format)
+              target (case fformat
+                       :quarto (-> full-target-path
+                                   (str/replace #"\.html$" ".qmd"))
+                       :gfm (-> full-target-path
+                                (str/replace #"\.html$" ".md"))
+                       full-target-path)
+              output-file (-> full-target-path
+                              (str/split #"/")
+                              last)]
+          (if (and skip-if-unchanged
+                   (already-there? full-source-path target))
+            (do (println "Clay:" [:kept-existing target])
+                (-> spec
+                    (assoc :full-target-path full-target-path)
+                    server/update-page!))
+            (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
+                  spec-with-items (assoc spec
+                                    :items items
+                                    :exception exception)]
+              [(case fformat
+                 :hiccup (page/hiccup spec-with-items)
+                 :html (do (-> spec-with-items
+                               (config/add-field :page (if post-process
+                                                         (comp post-process page/html)
+                                                         page/html))
+                               server/update-page!)
+                           (println "Clay: " [:wrote full-target-path (time/now)])
+                           [:wrote full-target-path])
+                 :gfm (do
+                        (-> spec-with-items
+                            page/gfm
+                            (->> (spit target)))
+                        (println "Clay:" [:wrote target (time/now)])
+                        (-> spec
+                            (assoc :full-target-path target)
+                            server/update-page!)
+                        [:wrote target])
+                 :quarto (do (-> spec-with-items
                                  (update-in [:quarto :format]
                                             select-keys [(second format)])
                                  (cond-> flatten-targets
-                                   (update-in [:quarto :format (second format)]
-                                              assoc :output-file output-file))
+                                         (update-in [:quarto :format (second format)]
+                                                    assoc :output-file output-file))
                                  (cond-> book
-                                   (update :quarto dissoc :title))
+                                         (update :quarto dissoc :title))
                                  page/md
-                                 (->> (spit qmd-path)))
-                             (println "Clay:" [:wrote qmd-path (time/now)])
+                                 (->> (spit target)))
+                             (println "Clay:" [:wrote target (time/now)])
                              (when-not book
                                (if run-quarto
-                                 (do (quarto-render! {:qmd-path qmd-path})
+                                 (do (quarto-render! {:qmd-path target})
                                      (println "Clay:" [:created full-target-path (time/now)])
                                      (when post-process
                                        (->> full-target-path
@@ -411,18 +411,18 @@
                                          server/update-page!))
                                  ;; else, just show the qmd file
                                  (-> spec
-                                     (assoc :full-target-path qmd-path)
+                                     (assoc :full-target-path target)
                                      server/update-page!)))
                              (vec
-                              (concat [:wrote qmd-path]
-                                      (when run-quarto
-                                        [full-target-path])))))))
-           (when test-forms
-             (write-test-forms-as-ns test-forms))
-           (when exception
-             (throw (ex-info "Notebook FAILED."
-                             {:id ::notebook-exception}
-                             exception)))]))
+                               (concat [:wrote target]
+                                       (when run-quarto
+                                         [full-target-path])))))
+               (when test-forms
+                 (write-test-forms-as-ns test-forms))
+               (when exception
+                 (throw (ex-info "Notebook FAILED."
+                                 {:id ::notebook-exception}
+                                 exception)))]))))
       (catch Throwable e
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
@@ -488,8 +488,3 @@
   (make! {:source-path       ["notebooks/index.clj"]
           :format [:gfm]
           :show false}))
-
-
-
-
-
