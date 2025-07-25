@@ -312,9 +312,9 @@
   from the file at `source-path` given their last-modified times?"
   [source-path target-path]
   (and (fs/exists? target-path)
-       (neg?
-        (compare (fs/last-modified-time source-path)
-                 (fs/last-modified-time target-path)))))
+       (not (pos?
+             (compare (fs/last-modified-time source-path)
+                      (fs/last-modified-time target-path))))))
 
 (defn handle-single-source-spec! [{:as   spec
                                    :keys [source-paths
