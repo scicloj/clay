@@ -347,8 +347,7 @@
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
           [:wrote-with-kindly-render full-target-path])
-        (let [notes (notebook/spec-notes spec)
-              fformat (first format)
+        (let [fformat (first format)
               target (case fformat
                        :quarto (-> full-target-path
                                    (str/replace #"\.html$" ".qmd"))
@@ -364,7 +363,8 @@
                 (-> spec
                     (assoc :full-target-path full-target-path)
                     server/update-page!))
-            (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
+            (let [notes (notebook/spec-notes spec)
+                  {:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
                   spec-with-items (assoc spec
                                     :items items
                                     :exception exception)]
