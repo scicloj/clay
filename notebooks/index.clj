@@ -437,6 +437,17 @@
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
+;; as a Quarto qmd file,
+;; but skip this action if the qmd file
+;; already exists and is not older than the clj file
+;; (currently only supported for Quarto artifacts).
+(comment
+  (clay/make! {:format [:quarto :html]
+               :source-path "notebooks/index.clj"
+               :skip-if-unchanged true}))
+
+;; Evaluate and render
+;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
 ;; and show it at the browser:
 ;; (note the current browser view of this format
@@ -741,6 +752,7 @@
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 ;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
 ;; | `:config/transform` | (experimental) hook to update config per namespace | `:config/transform my.ns/my-fn` |
+;; | `:skip-if-unchanged`| skip generating qmd if it exists and is not older than clj source | `true` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
