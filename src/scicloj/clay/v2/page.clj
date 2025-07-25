@@ -212,7 +212,6 @@
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
               (when favicon
                 [:link {:rel "icon" :href favicon}])
-              font-links
               [:style (styles/main :table)]
               [:style (styles/main :loader)]
               [:style (styles/main :code)]

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - Show exception message or type and truncated stacktrace to remove clay.
 - refactoring of notebook processing (preparing for Kindly-render integration)
 - minor optimisation of different cases in notebook processing
+- cleanup (unused font links)
 
 ## [2-beta48 - 2025-07-08]
 - bugfix: a minor fix to the way code is annotated in `[:gfm]` format
