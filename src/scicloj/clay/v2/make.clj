@@ -13,7 +13,7 @@
             [clojure.java.io :as io]
             [scicloj.clay.v2.util.fs :as util.fs]
             [clojure.string :as str]
-                    [scicloj.clay.v2.files :as files]
+            [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly-render.notes.to-html-page :as to-html-page]
             [hashp.preload]
@@ -307,6 +307,15 @@
     [:wrote path]))
 
 
+(defn already-there?
+  "Do we need to regenerate the file at `target-path`
+  from the file at `source-path` given their last-modified times?"
+  [source-path target-path]
+  (and (fs/exists? target-path)
+       (neg?
+        (compare (fs/last-modified-time source-path)
+                 (fs/last-modified-time target-path)))))
+
 (defn handle-single-source-spec! [{:as   spec
                                    :keys [source-paths
                                           source-type
@@ -319,7 +328,8 @@
                                           run-quarto
                                           book
                                           post-process
-                                          use-kindly-render]}]
+                                          use-kindly-render
+                                          skip-if-unchanged]}]
   (when (or (= source-type "clj")
             single-form
             single-value)
@@ -329,10 +339,10 @@
         ;; TODO: what about a single form?
         (let [notebook {:notes (notebook/spec-notes spec)
                         :kindly/options (kindly/deep-merge
-                                          {:deps #{:kindly :clay :highlightjs}
-                                           ;;:package ""
-                                           }
-                                          (:kindly/options spec))}]
+                                         {:deps #{:kindly :clay :highlightjs}
+                                          ;;:package ""
+                                          }
+                                         (:kindly/options spec))}]
           (-> spec
               (assoc :page (to-html-page/render-notebook notebook))
               server/update-page!)
@@ -369,43 +379,50 @@
                            output-file (-> full-target-path
                                            (str/split #"/")
                                            last)]
-                       (-> spec-with-items
-                           (update-in [:quarto :format]
-                                      select-keys [(second format)])
-                           (cond-> flatten-targets
-                             (update-in [:quarto :format (second format)]
-                                        assoc :output-file output-file))
-                           (cond-> book
-                             (update :quarto dissoc :title))
-                           page/md
-                           (->> (spit qmd-path)))
-                       (println "Clay:" [:wrote qmd-path (time/now)])
-                       (when-not book
-                         (if run-quarto
-                           (do (quarto-render! {:qmd-path qmd-path})
-                               (println "Clay:" [:created full-target-path (time/now)])
-                               (when post-process
-                                 (->> full-target-path
-                                      slurp
-                                      post-process
-                                      (spit full-target-path)))
-                               (-> spec
-                                   (assoc :full-target-path full-target-path)
-                                   server/update-page!))
-                           ;; else, just show the qmd file
-                           (-> spec
-                               (assoc :full-target-path qmd-path)
-                               server/update-page!)))
-                       (vec
-                        (concat [:wrote qmd-path]
-                                (when run-quarto
-                                  [full-target-path])))))
+                       (if (and skip-if-unchanged
+                                (already-there? full-source-path
+                                                qmd-path))
+                         (do (println "Clay:" [:kept-existing qmd-path])
+                             (-> spec
+                                 (assoc :full-target-path full-target-path)
+                                 server/update-page!))
+                         (do (-> spec-with-items
+                                 (update-in [:quarto :format]
+                                            select-keys [(second format)])
+                                 (cond-> flatten-targets
+                                   (update-in [:quarto :format (second format)]
+                                              assoc :output-file output-file))
+                                 (cond-> book
+                                   (update :quarto dissoc :title))
+                                 page/md
+                                 (->> (spit qmd-path)))
+                             (println "Clay:" [:wrote qmd-path (time/now)])
+                             (when-not book
+                               (if run-quarto
+                                 (do (quarto-render! {:qmd-path qmd-path})
+                                     (println "Clay:" [:created full-target-path (time/now)])
+                                     (when post-process
+                                       (->> full-target-path
+                                            slurp
+                                            post-process
+                                            (spit full-target-path)))
+                                     (-> spec
+                                         (assoc :full-target-path full-target-path)
+                                         server/update-page!))
+                                 ;; else, just show the qmd file
+                                 (-> spec
+                                     (assoc :full-target-path qmd-path)
+                                     server/update-page!)))
+                             (vec
+                              (concat [:wrote qmd-path]
+                                      (when run-quarto
+                                        [full-target-path])))))))
            (when test-forms
              (write-test-forms-as-ns test-forms))
            (when exception
-               (throw (ex-info "Notebook FAILED."
-                               {:id ::notebook-exception}
-                               exception)))]))
+             (throw (ex-info "Notebook FAILED."
+                             {:id ::notebook-exception}
+                             exception)))]))
       (catch Throwable e
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
@@ -471,3 +488,8 @@
   (make! {:source-path       ["notebooks/index.clj"]
           :format [:gfm]
           :show false}))
+
+
+
+
+
