@@ -311,21 +311,8 @@
   "Do we need to regenerate the file at `target-path`
   from the file at `source-path` given their last-modified times?"
   [source-path target-path]
-  (prn "ALREADY_THERE?"
-       [source-path (fs/last-modified-time source-path)]
-       [target-path
-        (fs/exists? target-path)
-        (and (fs/exists? target-path) (fs/last-modified-time target-path))
-        (and (fs/exists? target-path)
-             [:compare (compare (fs/last-modified-time source-path)
-                                (fs/last-modified-time target-path))])]
-       [:result
-        (and (fs/exists? target-path)
-             (not (pos?
-                    (compare (fs/last-modified-time source-path)
-                             (fs/last-modified-time target-path)))))])
   (and (fs/exists? target-path)
-       (not (pos?
+       #_(not (pos?
              (compare (fs/last-modified-time source-path)
                       (fs/last-modified-time target-path))))))
 
