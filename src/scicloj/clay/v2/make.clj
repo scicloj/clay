@@ -306,16 +306,6 @@
          (spit path))
     [:wrote path]))
 
-
-(defn already-there?
-  "Do we need to regenerate the file at `target-path`
-  from the file at `source-path` given their last-modified times?"
-  [source-path target-path]
-  (and (fs/exists? target-path)
-       (not (pos?
-             (compare (fs/last-modified-time source-path)
-                      (fs/last-modified-time target-path))))))
-
 (defn handle-single-source-spec! [{:as   spec
                                    :keys [source-paths
                                           source-type
@@ -329,7 +319,7 @@
                                           book
                                           post-process
                                           use-kindly-render
-                                          skip-if-unchanged]}]
+                                          keep-existing]}]
   (when (or (= source-type "clj")
             single-form
             single-value)
@@ -357,8 +347,7 @@
               output-file (-> full-target-path
                               (str/split #"/")
                               last)]
-          (if (and skip-if-unchanged
-                   (already-there? full-source-path target))
+          (if (and keep-existing (fs/exists? target))
             (do (println "Clay:" [:kept-existing target])
                 (-> spec
                     (assoc :full-target-path full-target-path)

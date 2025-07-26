@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - refactoring of notebook processing (preparing for Kindly-render integration)
 - minor optimisation of different cases in notebook processing
 - cleanup (unused font links)
-- added `:skip-if-unchanged` option - skip generating qmd if it exists and is not older than clj source.
+- added `:keep-existing` option - skip generating target if it exists
 
 ## [2-beta48 - 2025-07-08]
 - bugfix: a minor fix to the way code is annotated in `[:gfm]` format
