@@ -440,9 +440,9 @@
 ;; as a Quarto qmd file,
 ;; but skip this action if the target file already exists
 (comment
-  (clay/make! {:format [:quarto :html]
-               :source-path "notebooks/index.clj"
-               :skip-if-unchanged true}))
+  (clay/make! {:format        [:quarto :html]
+               :source-path   "notebooks/index.clj"
+               :keep-existing true}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
@@ -750,7 +750,7 @@
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 ;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
 ;; | `:config/transform` | (experimental) hook to update config per namespace | `:config/transform my.ns/my-fn` |
-;; | `:skip-if-unchanged`| skip generating target if it exists | `true` |
+;; | `:keep-existing`| skip generating target if it exists | `true` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
