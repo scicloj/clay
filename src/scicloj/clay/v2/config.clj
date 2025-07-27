@@ -2,7 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
             [scicloj.clay.v2.util.fs :as util.fs]
-                    [scicloj.kindly.v4.api :as kindly]))
+            [scicloj.kindly.v4.api :as kindly]))
 
 (defn slurp-when-exists [path]
   (when (-> path
@@ -57,7 +57,7 @@
     aliases))
 
 (defn apply-conditionals [config]
-  (-> config (merge-aliases) (implied-configs) (source-paths)))
+  (-> config (merge-aliases) (source-paths) (implied-configs)))
 
 (defn config
   "Gathers configuration from the default, a clay.edn, and a spec if provided"
