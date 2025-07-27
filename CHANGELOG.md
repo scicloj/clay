@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file. This change
 - refactoring of notebook processing (preparing for Kindly-render integration)
 - minor optimisation of different cases in notebook processing
 - cleanup (unused font links)
-- added `:keep-existing` option - skip generating target if it exists
+- added `:keep-existing` option - defaults to `false` for single targets, `true` for multiple targets
+- added `:external-requirements` option - skip file if both `:external-requirements` and `:keep-existing`
 
 ## [2-beta48 - 2025-07-08]
 - bugfix: a minor fix to the way code is annotated in `[:gfm]` format

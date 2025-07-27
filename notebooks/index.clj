@@ -442,7 +442,8 @@
 (comment
   (clay/make! {:format        [:quarto :html]
                :source-path   "notebooks/index.clj"
-               :keep-existing true}))
+               :keep-existing true
+               :external-requirements ["secret.txt"]}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
@@ -750,7 +751,8 @@
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
 ;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
 ;; | `:config/transform` | (experimental) hook to update config per namespace | `:config/transform my.ns/my-fn` |
-;; | `:keep-existing`| skip generating target if it exists | `true` |
+;; | `:keep-existing` | defaults to `false` for single targets, `true` for multiple targets | `true` |
+;; | `:external-requirements` | skip file if both `:external-requirements` and `:keep-existing` | `["secret.txt"]` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
