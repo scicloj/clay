@@ -247,8 +247,7 @@
       [:ok])))
 
 (defn quarto-render! [input]
-  (let [cmd (cond-> ["quarto" "render" input]
-                    (str/ends-with? input ".qmd") (into ["--output-dir" "."]))
+  (let [cmd ["quarto" "render" input "--output-dir" "." "--metadata" "draft-mode:visible"]
         {:keys [out err exit]} (apply shell/sh cmd)]
     (when-not (str/blank? out)
       (println "Clay Quarto:" out))
@@ -272,10 +271,6 @@
    (when run-quarto
      (prn [:render-book])
      (quarto-render! base-target-path)
-     (fs/copy-tree (str base-target-path "/_book")
-                   base-target-path
-                   {:replace-existing true})
-     (fs/delete-tree (str base-target-path "/_book"))
      (when show
        (-> spec
            (assoc :full-target-path (str base-target-path "/index.html"))
@@ -365,9 +360,7 @@
                               page/gfm
                               (->> (spit full-target-path)))
                           (println "Clay:" [:wrote full-target-path (time/now)])
-                          (-> spec
-                              (assoc :full-target-path full-target-path)
-                              server/update-page!)
+                          (server/update-page! spec)
                           [:wrote full-target-path])
                    :quarto (do (-> spec-with-items
                                    (update-in [:quarto :format]
@@ -380,7 +373,6 @@
                                (when-not book
                                  (if run-quarto
                                    (let [output-path (str/replace full-target-path #"\.qmd$" ".html")]
-                                     ;; TODO: I want _site? or not? it depends? or always just make it a sibling?
                                      (quarto-render! full-target-path)
                                      (println "Clay:" [:quarto-created output-path (time/now)])
                                      (when post-process
@@ -392,9 +384,7 @@
                                          (assoc :full-target-path output-path)
                                          server/update-page!))
                                    ;; else, just show the qmd file
-                                   (-> spec
-                                       (assoc :full-target-path full-target-path)
-                                       server/update-page!)))
+                                   (server/update-page! spec)))
                                (vec
                                  (concat [:wrote full-target-path]
                                          (when run-quarto
