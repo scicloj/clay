@@ -75,7 +75,6 @@
            base-target-path
            flatten-targets
            format
-           ns-form
            single-form
            single-value
            keep-sync-root]}]
@@ -86,22 +85,25 @@
 
     ;; simply a path
     (string? source-path)
-    (let [relative-source (relative-source-path spec)]
+    (let [relative-source (relative-source-path spec)
+          [fformat sformat] format]
       (str
        (case source-type
          ("md" "Rmd" "ipynb") (fs/path base-target-path
                                        (if keep-sync-root
                                          full-source-path
                                          relative-source))
-         "clj" (cond-> (str/replace relative-source
-                                    #"\.clj[cs]?$"
-                                    (str (some-> format
-                                                 second
-                                                 #{:revealjs}
-                                                 (and "-revealjs"))
-                                         ".html"))
-                 flatten-targets (str/replace #"[\\/]+" ".")
-                 true (#(fs/path base-target-path %))))))
+         "clj" (let [target-extension (str (when (= sformat :revealjs)
+                                             "-revealjs")
+                                           (case fformat
+                                             :quarto ".qmd"
+                                             :gfm ".md"
+                                             ".html"))
+                     relative-target (cond-> (str/replace relative-source
+                                                          #"\.clj[cs]?$"
+                                                          target-extension)
+                                             flatten-targets (str/replace #"[\\/]+" "."))]
+                 (fs/path base-target-path relative-target)))))
 
     :else
     (throw (ex-info "Invalid source-path"
@@ -244,14 +246,10 @@
           [:wrote main-index-path])
       [:ok])))
 
-(defn quarto-render! [{:keys [base-target-path
-                              qmd-path]}]
-  (let [cmd (cond-> ["quarto" "render"]
-              qmd-path (conj qmd-path))
-        {:keys [out err exit]} (if base-target-path
-                                 (shell/with-sh-dir base-target-path
-                                   (apply shell/sh cmd))
-                                 (apply shell/sh cmd))]
+(defn quarto-render! [input]
+  (let [cmd (cond-> ["quarto" "render" input]
+                    (str/ends-with? input ".qmd") (into ["--output-dir" "."]))
+        {:keys [out err exit]} (apply shell/sh cmd)]
     (when-not (str/blank? out)
       (println "Clay Quarto:" out))
     (when-not (str/blank? err)
@@ -259,9 +257,7 @@
         (println "Clay Quarto:" err)))
     (when-not (zero? exit)
       (throw (ex-info (str "Clay Quarto failed.")
-                      {:base-target-path base-target-path
-                       :qmd-path qmd-path})))))
-
+                      {:input input})))))
 
 (defn make-book! [{:as   spec
                    :keys [base-target-path
@@ -275,7 +271,7 @@
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
-     (quarto-render! {:base-target-path base-target-path})
+     (quarto-render! base-target-path)
      (fs/copy-tree (str base-target-path "/_book")
                    base-target-path
                    {:replace-existing true})
@@ -319,99 +315,96 @@
                                           book
                                           post-process
                                           use-kindly-render
-                                          keep-existing]}]
+                                          keep-existing
+                                          external-requirements]}]
   (when (or (= source-type "clj")
             single-form
             single-value)
     (try
       (files/init-target! full-target-path)
-      (if use-kindly-render
-        ;; TODO: what about a single form?
-        (let [notebook {:notes (notebook/spec-notes spec)
-                        :kindly/options (kindly/deep-merge
-                                         {:deps #{:kindly :clay :highlightjs}
-                                          ;;:package ""
-                                          }
-                                         (:kindly/options spec))}]
-          (-> spec
-              (assoc :page (to-html-page/render-notebook notebook))
-              server/update-page!)
-          [:wrote-with-kindly-render full-target-path])
-        (let [fformat (first format)
-              target (case fformat
-                       :quarto (-> full-target-path
-                                   (str/replace #"\.html$" ".qmd"))
-                       :gfm (-> full-target-path
-                                (str/replace #"\.html$" ".md"))
-                       full-target-path)
-              output-file (-> full-target-path
-                              (str/split #"/")
-                              last)]
-          (if (and keep-existing (fs/exists? target))
-            (do (println "Clay:" [:kept-existing target])
+      (let [fformat (first format)
+            full-target-path (case fformat
+                     :quarto (-> full-target-path
+                                 (str/replace #"\.html$" ".qmd"))
+                     :gfm (-> full-target-path
+                              (str/replace #"\.html$" ".md"))
+                     full-target-path)]
+        (if (and external-requirements keep-existing (fs/exists? full-target-path))
+          (do (println "Clay:" [:kept-existing full-target-path])
+              (-> spec
+                  (assoc :full-target-path full-target-path)
+                  server/update-page!))
+          (let [notes (notebook/spec-notes spec)]
+            (if use-kindly-render
+              ;; TODO: what about a single form?
+              (let [notebook {:notes          notes
+                              :kindly/options (kindly/deep-merge
+                                                {:deps #{:kindly :clay :highlightjs}
+                                                 ;;:package ""
+                                                 }
+                                                (:kindly/options spec))}]
                 (-> spec
-                    (assoc :full-target-path full-target-path)
-                    server/update-page!))
-            (let [notes (notebook/spec-notes spec)
-                  {:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
-                  spec-with-items (assoc spec
-                                    :items items
-                                    :exception exception)]
-              [(case fformat
-                 :hiccup (page/hiccup spec-with-items)
-                 :html (do (-> spec-with-items
-                               (config/add-field :page (if post-process
-                                                         (comp post-process page/html)
-                                                         page/html))
-                               server/update-page!)
-                           (println "Clay: " [:wrote full-target-path (time/now)])
-                           [:wrote full-target-path])
-                 :gfm (do
-                        (-> spec-with-items
-                            page/gfm
-                            (->> (spit target)))
-                        (println "Clay:" [:wrote target (time/now)])
-                        (-> spec
-                            (assoc :full-target-path target)
-                            server/update-page!)
-                        [:wrote target])
-                 :quarto (do (-> spec-with-items
-                                 (update-in [:quarto :format]
-                                            select-keys [(second format)])
-                                 (cond-> flatten-targets
-                                         (update-in [:quarto :format (second format)]
-                                                    assoc :output-file output-file))
-                                 (cond-> book
-                                         (update :quarto dissoc :title))
-                                 page/md
-                                 (->> (spit target)))
-                             (println "Clay:" [:wrote target (time/now)])
-                             (when-not book
-                               (if run-quarto
-                                 (do (quarto-render! {:qmd-path target})
-                                     (println "Clay:" [:created full-target-path (time/now)])
+                    (assoc :page (to-html-page/render-notebook notebook))
+                    server/update-page!)
+                [:wrote-with-kindly-render full-target-path])
+              (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
+                    spec-with-items (assoc spec
+                                      :items items
+                                      :exception exception)]
+                [(case fformat
+                   :hiccup (page/hiccup spec-with-items)
+                   :html (do (-> spec-with-items
+                                 (config/add-field :page (if post-process
+                                                           (comp post-process page/html)
+                                                           page/html))
+                                 server/update-page!)
+                             (println "Clay: " [:wrote full-target-path (time/now)])
+                             [:wrote full-target-path])
+                   :gfm (do
+                          (-> spec-with-items
+                              page/gfm
+                              (->> (spit full-target-path)))
+                          (println "Clay:" [:wrote full-target-path (time/now)])
+                          (-> spec
+                              (assoc :full-target-path full-target-path)
+                              server/update-page!)
+                          [:wrote full-target-path])
+                   :quarto (do (-> spec-with-items
+                                   (update-in [:quarto :format]
+                                              select-keys [(second format)])
+                                   (cond-> book
+                                           (update :quarto dissoc :title))
+                                   page/md
+                                   (->> (spit full-target-path)))
+                               (println "Clay:" [:wrote full-target-path (time/now)])
+                               (when-not book
+                                 (if run-quarto
+                                   (let [output-path (str/replace full-target-path #"\.qmd$" ".html")]
+                                     ;; TODO: I want _site? or not? it depends? or always just make it a sibling?
+                                     (quarto-render! full-target-path)
+                                     (println "Clay:" [:quarto-created output-path (time/now)])
                                      (when post-process
-                                       (->> full-target-path
+                                       (->> output-path
                                             slurp
                                             post-process
-                                            (spit full-target-path)))
+                                            (spit output-path)))
                                      (-> spec
-                                         (assoc :full-target-path full-target-path)
+                                         (assoc :full-target-path output-path)
                                          server/update-page!))
-                                 ;; else, just show the qmd file
-                                 (-> spec
-                                     (assoc :full-target-path target)
-                                     server/update-page!)))
-                             (vec
-                               (concat [:wrote target]
-                                       (when run-quarto
-                                         [full-target-path])))))
-               (when test-forms
-                 (write-test-forms-as-ns test-forms))
-               (when exception
-                 (throw (ex-info "Notebook FAILED."
-                                 {:id ::notebook-exception}
-                                 exception)))]))))
+                                   ;; else, just show the qmd file
+                                   (-> spec
+                                       (assoc :full-target-path full-target-path)
+                                       server/update-page!)))
+                               (vec
+                                 (concat [:wrote full-target-path]
+                                         (when run-quarto
+                                           [full-target-path])))))
+                 (when test-forms
+                   (write-test-forms-as-ns test-forms))
+                 (when exception
+                   (throw (ex-info "Notebook FAILED."
+                                   {:id ::notebook-exception}
+                                   exception)))])))))
       (catch Throwable e
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec

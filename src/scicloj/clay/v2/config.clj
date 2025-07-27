@@ -26,12 +26,14 @@
   (-> config
       (assoc kw (compute config))))
 
-(defn implied-configs [config]
+(defn implied-configs [{:keys [render source-paths keep-existing] :as config}]
   (cond-> config
-          (:render config) (merge {:show        false
-                                   :serve       false
-                                   :browse      false
-                                   :live-reload false})))
+          render (assoc :show false
+                        :serve false
+                        :browse false
+                        :live-reload false)
+          (and (nil? keep-existing)
+               (> (count source-paths) 1)) (assoc :keep-existing true)))
 
 (defn source-paths [{:as config :keys [base-source-path source-path render]}]
   (cond (string? source-path)
