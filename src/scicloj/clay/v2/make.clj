@@ -251,14 +251,14 @@
           [:wrote main-index-path])
       [:ok])))
 
-(defn quarto-render! [input output-dir output]
-  (let [cmd (into ["quarto" "render" input
-                   "--output-dir" output-dir
-                   "--metadata" "draft-mode:visible"]
-                  (when output
-                    ["--output" (fs/file-name output)]))
+(defn quarto-render! [quarto-project-path output-dir input]
+  (let [cmd (-> ["quarto" "render" ]
+                (cond-> input (into [input]))
+                (into ["--output-dir" output-dir
+                       "--metadata" "draft-mode:visible"]))
         _ (println "Clay sh:" cmd)
-        {:keys [out err exit]} (apply shell/sh cmd)]
+        {:keys [out err exit]} (shell/with-sh-dir quarto-project-path
+                                                  (apply shell/sh cmd))]
     (when-not (str/blank? out)
       (println "Clay Quarto:" out))
     (when-not (str/blank? err)
@@ -280,7 +280,7 @@
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
-     (quarto-render! base-target-path base-target-path nil)
+     (quarto-render! base-target-path "." nil nil)
      (when show
        (-> spec
            (assoc :full-target-path (str base-target-path "/index.html"))
@@ -364,12 +364,19 @@
                                          run-quarto
                                          full-target-path
                                          base-target-path
+                                         quarto-target-path
                                          post-process]}]
   (when-not book
     (let [qmd-target (spec->qmd-target-path spec)]
       (if run-quarto
-        (do
-          (quarto-render! qmd-target base-target-path full-target-path)
+        (let [quarto-project-path (or quarto-target-path base-target-path)
+              output-dir (if quarto-target-path
+                           (str (fs/relativize base-target-path quarto-target-path))
+                           ".")
+              input (str (fs/relativize quarto-project-path qmd-target))]
+          (quarto-render! quarto-project-path
+                          output-dir
+                          input)
           (println "Clay:" [:quarto-rendered full-target-path (time/now)])
           (when post-process
             (->> full-target-path
