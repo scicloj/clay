@@ -251,11 +251,12 @@
           [:wrote main-index-path])
       [:ok])))
 
-(defn quarto-render! [input output]
-  (let [cmd (into ["quarto" "render" input "--metadata" "draft-mode:visible"]
-                  (if output
-                    ["--output" (fs/file-name output)]
-                    ["--output-dir" "."]))
+(defn quarto-render! [input output-dir output]
+  (let [cmd (into ["quarto" "render" input
+                   "--output-dir" output-dir
+                   "--metadata" "draft-mode:visible"]
+                  (when output
+                    ["--output" (fs/file-name output)]))
         _ (println "Clay sh:" cmd)
         {:keys [out err exit]} (apply shell/sh cmd)]
     (when-not (str/blank? out)
@@ -279,7 +280,7 @@
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
-     (quarto-render! base-target-path nil)
+     (quarto-render! base-target-path base-target-path nil)
      (when show
        (-> spec
            (assoc :full-target-path (str base-target-path "/index.html"))
@@ -359,12 +360,16 @@
         server/update-page!)
     [:wrote-with-kindly-render full-target-path]))
 
-(defn maybe-run-quarto [{:as spec :keys [book run-quarto full-target-path post-process]}]
+(defn maybe-run-quarto [{:as spec :keys [book
+                                         run-quarto
+                                         full-target-path
+                                         base-target-path
+                                         post-process]}]
   (when-not book
     (let [qmd-target (spec->qmd-target-path spec)]
       (if run-quarto
         (do
-          (quarto-render! qmd-target full-target-path)
+          (quarto-render! qmd-target base-target-path full-target-path)
           (println "Clay:" [:quarto-rendered full-target-path (time/now)])
           (when post-process
             (->> full-target-path
