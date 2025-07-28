@@ -256,7 +256,7 @@
                 (cond-> input (into [input]))
                 (into ["--output-dir" output-dir
                        "--metadata" "draft-mode:visible"]))
-        _ (println "Clay sh:" cmd)
+        _ (println (str "Clay sh [" quarto-project-path "]:") cmd)
         {:keys [out err exit]} (shell/with-sh-dir quarto-project-path
                                                   (apply shell/sh cmd))]
     (when-not (str/blank? out)
