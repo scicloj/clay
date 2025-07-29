@@ -406,16 +406,21 @@
             single-value)
     (try
       (files/init-target! full-target-path)
-      (let [skip (and external-requirements keep-existing (fs/exists? full-target-path))
-            result (when (not skip)
+      (let [qmd-path (spec->qmd-target-path spec)
+            skip (and external-requirements
+                      keep-existing
+                      ;; TODO: not quite
+                      (fs/exists? qmd-path))
+            result (if skip
+                     (do (println "Clay:" [:kept qmd-path])
+                         [:kept qmd-path])
                      ;; else execute the notebook and render it
                      (let [notes (notebook/spec-notes spec)]
                        (if use-kindly-render
                          (kindly-render-notebook notes spec)
                          (clay-render-notebook notes spec))))]
         (or (maybe-run-quarto spec)
-            result
-            [:skipped full-target-path]))
+            result))
       (catch Throwable e
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
