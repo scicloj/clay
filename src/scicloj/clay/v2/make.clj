@@ -111,7 +111,7 @@
                                               quarto-target-path]}]
   (let [qmd-target (str/replace full-target-path #"\.html$" ".qmd")]
     (if quarto-target-path
-      (let [relative-target (fs/relativize (fs/absolutize base-target-path) full-target-path)]
+      (let [relative-target (fs/relativize base-target-path qmd-target)]
         (str (fs/path quarto-target-path relative-target)))
       qmd-target)))
 
@@ -251,11 +251,9 @@
           [:wrote main-index-path])
       [:ok])))
 
-(defn quarto-render! [quarto-project-path output-dir input]
-  (let [cmd (-> ["quarto" "render" ]
-                (cond-> input (into [input]))
-                (into ["--output-dir" output-dir
-                       "--metadata" "draft-mode:visible"]))
+(defn quarto-render! [quarto-project-path input]
+  (let [cmd (cond-> ["quarto" "render"]
+                    input (into [input "--output-dir" "_clay"]))
         _ (println (str "Clay sh [" quarto-project-path "]:") cmd)
         {:keys [out err exit]} (shell/with-sh-dir quarto-project-path
                                                   (apply shell/sh cmd))]
@@ -280,7 +278,11 @@
        (write-quarto-book-index-if-needed! spec))
    (when run-quarto
      (prn [:render-book])
-     (quarto-render! base-target-path "." nil nil)
+     (quarto-render! base-target-path nil)
+     (fs/copy-tree (fs/path base-target-path "_book")
+                   base-target-path
+                   {:replace-existing true})
+     (fs/delete-tree (fs/path base-target-path "_book"))
      (when show
        (-> spec
            (assoc :full-target-path (str base-target-path "/index.html"))
@@ -360,24 +362,26 @@
         server/update-page!)
     [:wrote-with-kindly-render full-target-path]))
 
-(defn maybe-run-quarto [{:as spec :keys [book
+(defn maybe-run-quarto [{:as spec :keys [format
+                                         book
                                          run-quarto
                                          full-target-path
                                          base-target-path
                                          quarto-target-path
                                          post-process]}]
-  (when-not book
+  (when (and (= (first format) :quarto)
+             (not book))
     (let [qmd-target (spec->qmd-target-path spec)]
       (if run-quarto
         (let [quarto-project-path (or quarto-target-path base-target-path)
-              output-dir (if quarto-target-path
-                           (str (fs/relativize base-target-path quarto-target-path))
-                           ".")
-              input (str (fs/relativize quarto-project-path qmd-target))]
-          (quarto-render! quarto-project-path
-                          output-dir
-                          input)
-          (println "Clay:" [:quarto-rendered full-target-path (time/now)])
+              input (str (fs/relativize quarto-project-path qmd-target))
+              out-dir (str (fs/path quarto-project-path "_clay"))]
+          (quarto-render! quarto-project-path input)
+          (println "Clay:" [:quarto-rendered out-dir (time/now)])
+          (when input
+            (fs/copy-tree out-dir base-target-path {:replace-existing true})
+            (fs/delete-tree out-dir)
+            (println "Clay:" [:moved out-dir base-target-path (time/now)]))
           (when post-process
             (->> full-target-path
                  slurp
