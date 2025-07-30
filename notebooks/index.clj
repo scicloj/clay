@@ -749,7 +749,7 @@
 ;; | `:subdirs-to-sync` | (experimental) subdirs to copy non-clojure files from | `["static"]` |
 ;; | `:keep-sync-root` | (experimental) keep the subdir prefix | `false` |
 ;; | `:render` | (experimental) overrides `:show` `:serve` `:browse` and `:live-reload` to `false` | `true` |
-;; | `:aliases | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
+;; | `:aliases` | (experimental) a vector of aliases (sub maps in configuration) to merge | `[:markdown]` |
 ;; | `:config/transform` | (experimental) hook to update config per namespace | `:config/transform my.ns/my-fn` |
 ;; | `:keep-existing` | defaults to `false` for single targets, `true` for multiple targets | `true` |
 ;; | `:external-requirements` | skip file if both `:external-requirements` and `:keep-existing` | `["secret.txt"]` |
