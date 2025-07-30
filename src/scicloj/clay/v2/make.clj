@@ -106,14 +106,16 @@
                     {:id               ::invalid-source-path
                      :full-source-path source-path}))))
 
-(defn spec->qmd-target-path [{:as spec :keys [base-target-path
+(defn spec->qmd-target-path [{:as spec :keys [format
+                                              base-target-path
                                               full-target-path
                                               quarto-target-path]}]
-  (let [qmd-target (str/replace full-target-path #"\.html$" ".qmd")]
-    (if quarto-target-path
-      (let [relative-target (fs/relativize base-target-path qmd-target)]
-        (str (fs/path quarto-target-path relative-target)))
-      qmd-target)))
+  (when (= (first format) :quarto)
+    (let [qmd-target (str/replace full-target-path #"\.html$" ".qmd")]
+      (if quarto-target-path
+        (let [relative-target (fs/relativize base-target-path qmd-target)]
+          (str (fs/path quarto-target-path relative-target)))
+        qmd-target))))
 
 (defn spec->ns-config [{:keys [ns-form]}]
   (some-> ns-form
@@ -142,6 +144,7 @@
       (kindly/deep-merge
         (dissoc spec :source-path))                         ; prioritize spec over the ns config
       (config/add-field :full-target-path spec->full-target-path)
+      (config/add-field :qmd-target-path spec->qmd-target-path)
       (maybe-user-hook)))
 
 (defn extract-specs [config spec]
@@ -312,7 +315,7 @@
 (defn clay-render-notebook [notes {:as spec
                                    :keys [format
                                           full-target-path
-                                          run-quarto
+                                          qmd-target-path
                                           book
                                           post-process]}]
   (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
@@ -335,14 +338,11 @@
               (println "Clay:" [:wrote gfm-target (time/now)])
               (server/update-page! (assoc spec :full-target-path gfm-target))
               [:wrote gfm-target])
-       :quarto (let [qmd-target (spec->qmd-target-path spec)]
-                 (-> spec-with-items
-                     (update-in [:quarto :format] select-keys [(second format)])
-                     (cond-> book (update :quarto dissoc :title))
-                     page/md
-                     (->> (spit qmd-target)))
-                 (println "Clay:" [:wrote qmd-target (time/now)])
-                 [:wrote qmd-target]))
+       :quarto (-> spec-with-items
+                   (update-in [:quarto :format] select-keys [(second format)])
+                   (cond-> book (update :quarto dissoc :title))
+                   page/md
+                   (->> (spit qmd-target-path))))
      (when test-forms
        (write-test-forms-as-ns test-forms))
      (when exception
@@ -366,30 +366,30 @@
                                          book
                                          run-quarto
                                          full-target-path
+                                         qmd-target-path
                                          base-target-path
                                          quarto-target-path
                                          post-process]}]
   (when (and (= (first format) :quarto)
              (not book))
-    (let [qmd-target (spec->qmd-target-path spec)]
-      (if run-quarto
-        (let [quarto-project-path (or quarto-target-path base-target-path)
-              input (str (fs/relativize quarto-project-path qmd-target))
-              out-dir (str (fs/path quarto-project-path "_clay"))]
-          (quarto-render! quarto-project-path input)
-          (println "Clay:" [:quarto-rendered out-dir (time/now)])
-          (when input
-            (fs/copy-tree out-dir base-target-path {:replace-existing true})
-            (fs/delete-tree out-dir)
-            (println "Clay:" [:moved out-dir base-target-path (time/now)]))
-          (when post-process
-            (->> full-target-path
-                 slurp
-                 post-process
-                 (spit full-target-path)))
-          (server/update-page! spec))
-        ;; else, just show the qmd file
-        (server/update-page! (assoc spec :full-target-path qmd-target))))))
+    (if run-quarto
+      (let [quarto-project-path (or quarto-target-path base-target-path)
+            input (str (fs/relativize quarto-project-path qmd-target-path))
+            out-dir (str (fs/path quarto-project-path "_clay"))]
+        (quarto-render! quarto-project-path input)
+        (println "Clay:" [:quarto-rendered out-dir (time/now)])
+        (when input
+          (fs/copy-tree out-dir base-target-path {:replace-existing true})
+          (fs/delete-tree out-dir)
+          (println "Clay:" [:moved out-dir base-target-path (time/now)]))
+        (when post-process
+          (->> full-target-path
+               slurp
+               post-process
+               (spit full-target-path)))
+        (server/update-page! spec))
+      ;; else, just show the qmd file
+      (server/update-page! (assoc spec :full-target-path qmd-target-path)))))
 
 (defn handle-single-source-spec! [{:as   spec
                                    :keys [source-paths
@@ -398,6 +398,8 @@
                                           single-value
                                           full-source-path
                                           full-target-path
+                                          qmd-target-path
+                                          format
                                           use-kindly-render
                                           keep-existing
                                           external-requirements]}]
@@ -406,14 +408,13 @@
             single-value)
     (try
       (files/init-target! full-target-path)
-      (let [qmd-path (spec->qmd-target-path spec)
-            skip (and external-requirements
+      (let [skip (and external-requirements
                       keep-existing
-                      ;; TODO: not quite
-                      (fs/exists? qmd-path))
+                      qmd-target-path
+                      (fs/exists? qmd-target-path))
             result (if skip
-                     (do (println "Clay:" [:kept qmd-path])
-                         [:kept qmd-path])
+                     (do (println "Clay:" [:kept qmd-target-path])
+                         [:kept qmd-target-path])
                      ;; else execute the notebook and render it
                      (let [notes (notebook/spec-notes spec)]
                        (if use-kindly-render
