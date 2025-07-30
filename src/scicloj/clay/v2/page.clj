@@ -106,7 +106,7 @@
                       (update 1 dissoc :src))))))))
 
 (defn include-from-a-local-file [url custom-name js-or-css
-                                 {:keys [full-target-path base-target-path]}]
+                                 {:keys [full-target-path]}]
   (let [path (files/next-file!
               full-target-path
               custom-name

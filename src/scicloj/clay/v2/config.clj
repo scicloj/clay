@@ -2,7 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
             [scicloj.clay.v2.util.fs :as util.fs]
-                    [scicloj.kindly.v4.api :as kindly]))
+            [scicloj.kindly.v4.api :as kindly]))
 
 (defn slurp-when-exists [path]
   (when (-> path
@@ -26,12 +26,14 @@
   (-> config
       (assoc kw (compute config))))
 
-(defn implied-configs [config]
+(defn implied-configs [{:keys [render source-paths keep-existing] :as config}]
   (cond-> config
-          (:render config) (merge {:show        false
-                                   :serve       false
-                                   :browse      false
-                                   :live-reload false})))
+          render (assoc :show false
+                        :serve false
+                        :browse false
+                        :live-reload false)
+          (and (nil? keep-existing)
+               (> (count source-paths) 1)) (assoc :keep-existing true)))
 
 (defn source-paths [{:as config :keys [base-source-path source-path render]}]
   (cond (string? source-path)
@@ -55,7 +57,7 @@
     aliases))
 
 (defn apply-conditionals [config]
-  (-> config (merge-aliases) (implied-configs) (source-paths)))
+  (-> config (merge-aliases) (source-paths) (implied-configs)))
 
 (defn config
   "Gathers configuration from the default, a clay.edn, and a spec if provided"
