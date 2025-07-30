@@ -438,13 +438,18 @@
       (finally (files/init-target! full-target-path)))))
 
 (defn sync-resources! [{:keys [base-target-path
+                               quarto-target-path
                                subdirs-to-sync
                                keep-sync-root]}]
-  (doseq [subdir subdirs-to-sync]
+  (doseq [subdir subdirs-to-sync
+          target-path (if (and base-target-path quarto-target-path
+                               (not= base-target-path quarto-target-path))
+                        [base-target-path quarto-target-path]
+                        [base-target-path])]
     (when (fs/exists? subdir)
       (let [target (if keep-sync-root
-                     (str base-target-path "/" subdir)
-                     base-target-path)]
+                     (fs/path target-path subdir)
+                     target-path)]
         (if (= (fs/canonicalize target)
                (fs/canonicalize subdir))
           (println (format "Clay sync: not syncing \"%s\" to itself." subdir))
