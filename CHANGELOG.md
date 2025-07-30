@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2-beta49 - PENDING]
+## [2-beta49 - 2025-07-30]
 - Show exception message or type and truncated stacktrace to remove clay.
 - refactoring of notebook processing (preparing for Kindly-render integration)
 - minor optimisation of different cases in notebook processing
