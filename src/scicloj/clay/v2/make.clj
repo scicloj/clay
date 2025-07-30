@@ -338,11 +338,13 @@
               (println "Clay:" [:wrote gfm-target (time/now)])
               (server/update-page! (assoc spec :full-target-path gfm-target))
               [:wrote gfm-target])
-       :quarto (-> spec-with-items
-                   (update-in [:quarto :format] select-keys [(second format)])
-                   (cond-> book (update :quarto dissoc :title))
-                   page/md
-                   (->> (spit qmd-target-path))))
+       :quarto (do (-> spec-with-items
+                       (update-in [:quarto :format] select-keys [(second format)])
+                       (cond-> book (update :quarto dissoc :title))
+                       page/md
+                       (->> (spit qmd-target-path)))
+                   (println "Clay:" [:wrote qmd-target-path (time/now)])
+                   [:wrote qmd-target-path]))
      (when test-forms
        (write-test-forms-as-ns test-forms))
      (when exception
