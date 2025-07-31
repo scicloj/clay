@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [Pending]
+- bugfix: set base when serving pages with `:flatten-target false` so that js loads
+
 ## [2-beta49 - 2025-07-30]
 - Show exception message or type and truncated stacktrace to remove clay.
 - refactoring of notebook processing (preparing for Kindly-render integration)
