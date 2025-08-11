@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Pending]
 - bugfix: set base when serving pages with `:flatten-target false` so that js loads
+- bugfix: quarto make form
 
 ## [2-beta49 - 2025-07-30]
 - Show exception message or type and truncated stacktrace to remove clay.
@@ -18,7 +19,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2-beta47 - 2025-07-07]
 - initial support for GitHub Flavoured Markdown target
-- added support for a `:simple` mode in generating tests alongside the default `:sequential` mode- 
+- added support for a `:simple` mode in generating tests alongside the default `:sequential` mode-
 - shortened names in generated tests
 
 ## [2-beta46 - 2025-07-03]
@@ -55,7 +56,7 @@ All notable changes to this project will be documented in this file. This change
 - updated Calva custom REPL commands:
   - shortened the command names
   - added a few commands from the `snippets` API
-  - switched to using fully qualified `clojure.core/require` 
+  - switched to using fully qualified `clojure.core/require`
 - bugfix: adapted the (experimental) `make-hiccup` API to recent format changes
 - bugfix: fixed a typo in the `snippets/make-form-quarto-html!` function
 
@@ -153,7 +154,7 @@ by @timothyprately
 - tests defined with `deftest` will run and show results
 - updated deps (http-kit, clj-yaml, kindly, kind-portal, babashka/fs)
 - Watch a dir only if all of its ancestor dirs not being watched. (PR #179) by @whatacold
-- refactoring of the live-reload support by @whatacold 
+- refactoring of the live-reload support by @whatacold
 
 ## [2-beta23] - 2024-11-08
 - bugfix: refreshing page appropriately to keep the main URL - by @whatacold
@@ -228,7 +229,7 @@ by @timothyprately
 - pass all relevant options to Quarto book setup (#114)
 - bugfix: correctly include inline JS - thanks, Jarkko Saltiola
 - refactoring of config propagation
-- Quarto book parts support 
+- Quarto book parts support
 
 ## [2-beta11] - 2024-06-15
 - support for handling any sequential of texts (not just vector) in `kind/code`, `kind/md`, `kind/html` (#103)
@@ -395,7 +396,7 @@ by @timothyprately
 
 ## [2-alpha62] - 2024-01-12
 - bugfix: passing `:kindly/options` to the item context
-- cleaned up the default table.css, for now 
+- cleaned up the default table.css, for now
 - limiting the height of output elements by default
 - the subdirectories to synchronize with targets are now configurable through `:subdirs-to-sync`
 
