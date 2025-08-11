@@ -6,6 +6,7 @@
             [clojure.string :as str]
             [clojure.tools.cli :as cli]
             [scicloj.clay.v2.api :as api]
+            [scicloj.clay.v2.config :as config]
             [nrepl.cmdline]
             [scicloj.kindly.v4.api :as kindly]))
 
@@ -38,10 +39,14 @@
                       (println "Clay error:" config-file "does not exist")
                       (System/exit -1))
                     (edn/read-string (slurp config-file)))
-        opts (kindly/deep-merge file-opts
-                                config-map
-                                (select-keys options [:render :base-target-path :aliases])
-                                arg-opts)]
+        base-opts (kindly/deep-merge file-opts
+                                     config-map
+                                     (select-keys options [:render :base-target-path :aliases])
+                                     arg-opts)
+        resolved-config (config/config base-opts)
+        opts (if (:render resolved-config)
+               base-opts
+               (assoc base-opts :live-reload true))]
     (println "Clay options:" (pr-str opts))
     (cond help (do (println "Clay")
                    (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")
