@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [Pending]
 - bugfix: set base when serving pages with `:flatten-target false` so that js loads
 - bugfix: quarto make form
+- revert: when copying files to target, do not skip cljs and cljc files which may be needed for scittle
 
 ## [2-beta49 - 2025-07-30]
 - Show exception message or type and truncated stacktrace to remove clay.

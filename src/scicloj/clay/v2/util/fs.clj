@@ -7,7 +7,7 @@
         to (fs/canonicalize dest {:nofollow-links false})]
     (fs/walk-file-tree from
                        {:visit-file (fn [from-path _attrs]
-                                      (when-not (#{"clj" "cljc" "cljs"} (fs/extension from-path))
+                                      (when (not= "clj" (fs/extension from-path))
                                         (let [rel (fs/relativize from from-path)
                                               to-file (fs/path to rel)]
                                           (fs/create-dirs (fs/parent to-file))
