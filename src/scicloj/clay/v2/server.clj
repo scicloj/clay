@@ -88,14 +88,6 @@
         } else {
           console.warn('Scittle not available for eval-string');
         }
-      } else if (event.data.startsWith('scittle-script ')) {
-        // Create and load a script tag with ClojureScript content
-        const code = event.data.substring('scittle-script '.length);
-        const script = document.createElement('script');
-        script.type = 'application/x-scittle';
-        script.textContent = code;
-        document.head.appendChild(script);
-        console.log('Clay script loaded');
       } else {
         console.log('unknown ws message: ' + event.data);
       }
