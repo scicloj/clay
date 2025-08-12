@@ -340,6 +340,20 @@
          (spit path))
     [:wrote path]))
 
+(defn maybe-run-quarto! [{:as spec
+                          :keys [book
+                                 run-quarto
+                                 qmd-target-path]}]
+  (when (not book)
+    (if run-quarto
+      (let [render-result (quarto-render! spec)]
+        (println "Clay:" [:quarto-rendered render-result (time/now)])
+        (server/update-page! spec)
+        render-result)
+      ;; else, just show the qmd file
+      (server/update-page! (assoc spec :full-target-path qmd-target-path)))))
+
+
 (defn clay-render-notebook [notes {:as spec
                                    :keys [format
                                           full-target-path
@@ -349,8 +363,8 @@
                                           post-process]}]
   (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
         spec-with-items (assoc spec
-                          :items items
-                          :exception exception)]
+                               :items items
+                               :exception exception)]
     [(case (first format)
        :hiccup (page/hiccup spec-with-items)
        :html (do (-> spec-with-items
@@ -373,14 +387,6 @@
                        page/md
                        (->> (spit qmd-target-path)))
                    (println "Clay:" [:wrote qmd-target-path (time/now)])
-                   (when (not book)
-                     (if run-quarto
-                       (let [render-result (quarto-render! spec)]
-                         (println "Clay:" [:quarto-rendered render-result (time/now)])
-                         (server/update-page! spec)
-                         render-result)
-                       ;; else, just show the qmd file
-                       (server/update-page! (assoc spec :full-target-path qmd-target-path))))
                    [:wrote qmd-target-path]))
      (when test-forms
        (write-test-forms-as-ns test-forms))
@@ -420,15 +426,17 @@
       (let [skip (and external-requirements
                       keep-existing
                       qmd-target-path
-                      (fs/exists? qmd-target-path))]
-        (if skip
-          (do (println "Clay:" [:kept qmd-target-path])
-              [:kept qmd-target-path])
-          ;; else execute the notebook and render it
-          (let [notes (notebook/spec-notes spec)]
-            (if use-kindly-render
-              (kindly-render-notebook notes spec)
-              (clay-render-notebook notes spec)))))
+                      (fs/exists? qmd-target-path))
+            result (if skip
+                     (do (println "Clay:" [:kept qmd-target-path])
+                         [:kept qmd-target-path])
+                     ;; else execute the notebook and render it
+                     (let [notes (notebook/spec-notes spec)]
+                       (if use-kindly-render
+                         (kindly-render-notebook notes spec)
+                         (clay-render-notebook notes spec))))]
+        [result
+         (maybe-run-quarto! spec)])
       (catch Throwable e
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
