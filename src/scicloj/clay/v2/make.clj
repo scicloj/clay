@@ -67,7 +67,7 @@
     source-path))
 
 (defn tempory-target? [{:keys [source-type single-form single-value]}]
-  (or single-value single-form (nil? source-type)))
+  (or single-value single-form #_(nil? source-type)))
 
 (defn spec->full-target-path
   "Returns the target-path relative to the current working directory (project root)."
@@ -270,11 +270,12 @@
                         quarto-root
                         (fs/exists? (fs/path quarto-root "_quarto.yml"))
                         "_clay")
-        input (str (if quarto-root
-                     (fs/relativize quarto-root qmd-target-path)
-                     qmd-target-path))
+        input (delay
+                (str (if quarto-root
+                       (fs/relativize quarto-root qmd-target-path)
+                       qmd-target-path)))
         cmd (cond-> ["quarto" "render"]
-              (not book) (conj input)
+              (not book) (conj @input)
               output-dir (into ["--output-dir" output-dir]))
         _ (println (str "Clay sh [" quarto-root "]:") cmd)
         {:keys [out err exit]} (shell/with-sh-dir quarto-root
