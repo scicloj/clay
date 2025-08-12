@@ -343,8 +343,10 @@
 (defn maybe-run-quarto! [{:as spec
                           :keys [book
                                  run-quarto
-                                 qmd-target-path]}]
-  (when (not book)
+                                 qmd-target-path
+                                 format]}]
+  (when (and (not book)
+             (-> format first (= :quarto)))
     (if run-quarto
       (let [render-result (quarto-render! spec)]
         (println "Clay:" [:quarto-rendered render-result (time/now)])
