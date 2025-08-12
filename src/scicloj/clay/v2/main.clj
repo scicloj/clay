@@ -57,5 +57,6 @@
                      (System/exit -1))
           :else (do (println (api/make! opts))
                     (if (:live-reload opts)
-                      (nrepl.cmdline/-main)
+                      (do (nrepl.cmdline/-main)
+                          (println "Clay: Waiting for file changes"))
                       (System/exit 0))))))
