@@ -1,15 +1,16 @@
 (ns scicloj.clay.v2.server
   (:require
-   [clojure.java.browse :as browse]
-   [clojure.java.io :as io]
-   [hiccup.page]
-   [org.httpkit.server :as httpkit]
-   [ring.util.mime-type :as mime-type]
-   [scicloj.clay.v2.server.state :as server.state]
-   [scicloj.clay.v2.util.time :as time]
-   [clojure.string :as str]
-   [cognitect.transit :as transit]
-   [hiccup.core :as hiccup])
+    [babashka.fs :as fs]
+    [clojure.java.browse :as browse]
+    [clojure.java.io :as io]
+    [hiccup.page]
+    [org.httpkit.server :as httpkit]
+    [ring.util.mime-type :as mime-type]
+    [scicloj.clay.v2.server.state :as server.state]
+    [scicloj.clay.v2.util.time :as time]
+    [clojure.string :as str]
+    [cognitect.transit :as transit]
+    [hiccup.core :as hiccup])
   (:import (java.net ServerSocket)))
 
 (def default-port 1971)
@@ -19,6 +20,12 @@
 (defn broadcast! [msg]
   (doseq [ch @*clients]
     (httpkit/send! ch msg)))
+
+(defn scittle-eval-string!
+  "Send ClojureScript code to be evaluated on the Clay page.
+  The code will be executed directly using scittle.core.eval_string."
+  [code]
+  (broadcast! (str "scittle-eval-string " code)))
 
 (defn get-free-port []
   (loop [port default-port]
@@ -68,6 +75,19 @@
       } else if (event.data=='loading') {
         document.body.style.opacity = 0.5;
         document.body.prepend(document.createElement('div', {class: 'loader'}));
+      } else if (event.data.startsWith('scittle-eval-string ')) {
+        // Evaluate ClojureScript code directly
+        const code = event.data.substring('scittle-eval-string '.length);
+        if (window.scittle && window.scittle.core && window.scittle.core.eval_string) {
+          try {
+            const result = window.scittle.core.eval_string(code);
+            console.log('Clay eval result:', result);
+          } catch (e) {
+            console.error('Clay eval error:', e);
+          }
+        } else {
+          console.warn('Scittle not available for eval-string');
+        }
       } else {
         console.log('unknown ws message: ' + event.data);
       }
@@ -113,6 +133,20 @@
            :full-target-path
            slurp)))
 
+(defn wrap-base-url [html {:as state
+                           {:keys [flatten-targets
+                                   full-target-path
+                                   base-target-path]} :last-rendered-spec}]
+  (if (and (false? flatten-targets)
+           base-target-path
+           full-target-path)
+    (str/replace html #"(<\s*head[^>]*>)"
+                 (str "$1"
+                      "<base href=\"/"
+                      (fs/unixify (fs/relativize base-target-path full-target-path))
+                      "\" />\n"))
+    html))
+
 (defn wrap-html [html state]
   (-> html
       (str/replace #"(<\s*body[^>]*>)"
@@ -151,6 +185,7 @@
       (case [request-method uri]
         [:get "/"] {:body (-> state
                               page
+                              (wrap-base-url state)
                               (wrap-html state))
                     :headers {"Content-Type" "text/html"}
                     :status 200}

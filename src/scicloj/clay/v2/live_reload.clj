@@ -2,7 +2,8 @@
   (:require [clojure.set :as set]
             [babashka.fs :as fs]
             [clojure.string :as str]
-            [nextjournal.beholder :as beholder]))
+            [nextjournal.beholder :as beholder]
+            [scicloj.clay.v2.server :as server]))
 
 (def empty-state {:watchers   {}
                   :file-specs {}})
@@ -60,13 +61,18 @@
   (swap! *state update :watchers into
          (for [dir dirs]
            [dir (beholder/watch (fn watch-callback [{:as event :keys [type path]}]
-                                  (let [path (str path)]
+                                  (let [path (str path)
+                                        ext (str/lower-case (fs/extension path))]
                                     (println "Clay file event:" type path)
-                                    (when (and (#{:create :modify} type)
-                                               (str/ends-with? (str/lower-case path) ".clj"))
-                                      ;; TODO: what if the spec is a book?
-                                      (make-fn (-> (or (file-spec path) spec)
-                                                   (assoc :source-path path))))))
+                                    (when (#{:create :modify} type)
+                                      (cond
+                                        (= ext "clj")
+                                        (make-fn (-> (or (file-spec path) spec)
+                                                     (assoc :source-path path)))
+
+                                        (= ext "cljs")
+                                        (do (server/scittle-eval-string! (slurp path))
+                                            (println "Clay scittle:" path))))))
                                 dir)])))
 
 (defn stop-watching-dirs!
