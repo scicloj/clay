@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [Pending]
+- added: `server/scittle-eval-string!` for sending ClojureScript code to Clay pages
+- added live-reload support for `.cljs` files to send file content when modified
 - bugfix: set base when serving pages with `:flatten-target false` so that js loads
 - bugfix: quarto make form
 - revert: when copying files to target, do not skip cljs and cljc files which may be needed for scittle

@@ -21,6 +21,18 @@
   (doseq [ch @*clients]
     (httpkit/send! ch msg)))
 
+(defn scittle-eval-string!
+  "Send ClojureScript code to be evaluated on the Clay page.
+  The code will be executed directly using scittle.core.eval_string."
+  [code]
+  (broadcast! (str "scittle-eval-string " code)))
+
+(defn scittle-script!
+  "Send ClojureScript code to be loaded as a script tag on the Clay page.
+  The code will be added as a <script type='application/x-scittle'> element."
+  [code]
+  (broadcast! (str "scittle-script " code)))
+
 (defn get-free-port []
   (loop [port default-port]
     ;; Check if the port is free:
@@ -69,6 +81,27 @@
       } else if (event.data=='loading') {
         document.body.style.opacity = 0.5;
         document.body.prepend(document.createElement('div', {class: 'loader'}));
+      } else if (event.data.startsWith('scittle-eval-string ')) {
+        // Evaluate ClojureScript code directly
+        const code = event.data.substring('scittle-eval-string '.length);
+        if (window.scittle && window.scittle.core && window.scittle.core.eval_string) {
+          try {
+            const result = window.scittle.core.eval_string(code);
+            console.log('Clay eval result:', result);
+          } catch (e) {
+            console.error('Clay eval error:', e);
+          }
+        } else {
+          console.warn('Scittle not available for eval-string');
+        }
+      } else if (event.data.startsWith('scittle-script ')) {
+        // Create and load a script tag with ClojureScript content
+        const code = event.data.substring('scittle-script '.length);
+        const script = document.createElement('script');
+        script.type = 'application/x-scittle';
+        script.textContent = code;
+        document.head.appendChild(script);
+        console.log('Clay script loaded');
       } else {
         console.log('unknown ws message: ' + event.data);
       }

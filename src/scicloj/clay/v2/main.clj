@@ -46,7 +46,8 @@
         resolved-config (config/config base-opts)
         opts (if (:render resolved-config)
                base-opts
-               (assoc base-opts :live-reload true))]
+               (merge {:live-reload true}
+                      base-opts))]
     (println "Clay options:" (pr-str opts))
     (cond help (do (println "Clay")
                    (println "Description: Clay evaluates Clojure namespaces and renders visualizations as HTML")
