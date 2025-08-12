@@ -27,12 +27,6 @@
   [code]
   (broadcast! (str "scittle-eval-string " code)))
 
-(defn scittle-script!
-  "Send ClojureScript code to be loaded as a script tag on the Clay page.
-  The code will be added as a <script type='application/x-scittle'> element."
-  [code]
-  (broadcast! (str "scittle-script " code)))
-
 (defn get-free-port []
   (loop [port default-port]
     ;; Check if the port is free:
