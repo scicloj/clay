@@ -67,7 +67,7 @@
     source-path))
 
 (defn tempory-target? [{:keys [source-type single-form single-value]}]
-  (or single-value single-form #_(nil? source-type)))
+  (or single-value single-form))
 
 (defn spec->full-target-path
   "Returns the target-path relative to the current working directory (project root)."
@@ -98,12 +98,7 @@
                                                           #"\.clj[cs]?$"
                                                           target-extension)
                                        flatten-targets (str/replace #"[\\/]+" "."))]
-                 (fs/path base-target-path relative-target)))))
-
-    :else
-    (throw (ex-info "Invalid source-path"
-                    {:id               ::invalid-source-path
-                     :full-source-path source-path}))))
+                 (fs/path base-target-path relative-target)))))))
 
 (defn spec->qmd-target-path [{:as spec
                               :keys [format
