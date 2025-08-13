@@ -439,7 +439,7 @@
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
               (assoc :page (-> spec
-                               (assoc :items [(item/print-throwable e)])
+                               (assoc :items [(item/print-throwable e false)])
                                page/html))
               server/update-page!))
         (if (and source-paths (> (count source-paths) 1))

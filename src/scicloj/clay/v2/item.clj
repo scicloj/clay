@@ -89,10 +89,9 @@
             fe/*default-frame-rules*
             (conj fe/*default-frame-rules*
                   [:name #"scicloj.clay.v2\..*" :terminate])]
-    (fe/format-exception ex))
-  )
+    (fe/format-exception ex)))
 
-(defn print-throwable [ex]
+(defn print-throwable [ex collapsed]
   (let [{:keys [via]} (Throwable->map ex)
         messages (for [{:keys [message type]} via]
                    (or message type))
@@ -100,24 +99,24 @@
     {:printed-clojure true
      :hiccup
      [:div.callout.callout-style-default.callout-titled.callout-important
-        [:details.callout-header
-         [:summary {:style {:list-style :none}}
-          [:div.d-flex.align-content-center
-           [:div.callout-icon-container [:i.callout-icon]]
-           [:div.callout-title-container.flex-fill
-            (into [:strong] (interpose [:br]) messages)]
-           [:div.callout-btn-toggle.d-inline-block.border-0.py-1.ps-1.pe-0.float-end
-            [:i.callout-toggle]]]]
-         [:div.callout-body-container.callout-body
-          [:pre [:code ex-detail]]]]]
+      [:details.callout-header {:open (not collapsed)}
+       [:summary {:style {:list-style :none}}
+        [:div.d-flex.align-content-center
+         [:div.callout-icon-container [:i.callout-icon]]
+         [:div.callout-title-container.flex-fill
+          (into [:strong] (interpose [:br]) messages)]
+         [:div.callout-btn-toggle.d-inline-block.border-0.py-1.ps-1.pe-0.float-end
+          [:i.callout-toggle]]]]
+       [:div.callout-body-container.callout-body
+        [:pre [:code ex-detail]]]]]
      :md              (format "
-::: {.callout-important collapse=true}
+::: {.callout-important collapse=%s}
 ## %s
 ```
 %s
 ```
 :::
-" (str/join "\n" messages) ex-detail)}))
+" (str (boolean collapsed)) (str/join "\n" messages) ex-detail)}))
 
 (defn print-output [label s]
   {:hiccup [:div
