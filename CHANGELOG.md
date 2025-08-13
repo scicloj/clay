@@ -1,6 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+- bugfix: make with no source-path (for live-reload)
+
 ## [Pending]
 - added: `server/scittle-eval-string!` for sending ClojureScript code to Clay pages
 - added live-reload support for `.cljs` files to send file content when modified
