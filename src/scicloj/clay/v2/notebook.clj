@@ -157,17 +157,18 @@
     [(comment->item code)]
     (let [code-item (when-not (hide-code? note opts)
                       (item/source-clojure code))
+          {:keys [exception-continue]} opts
           value-items (cond-> []
-                              err (conj (item/print-output "ERR" err))
-                              out (conj (item/print-output "OUT" out))
-                              global-err (conj (item/print-output "THREAD ERR" global-err))
-                              global-out (conj (item/print-output "THREAD OUT" global-out))
-                              exception (conj (item/print-throwable exception))
-                              (and (contains? note :value)
-                                   (not (hide-value? note opts)))
-                              (into (-> note
-                                        (update :value deref-if-needed)
-                                        (prepare/prepare-or-pprint))))]
+                        err (conj (item/print-output "ERR" err))
+                        out (conj (item/print-output "OUT" out))
+                        global-err (conj (item/print-output "THREAD ERR" global-err))
+                        global-out (conj (item/print-output "THREAD OUT" global-out))
+                        exception (conj (item/print-throwable exception exception-continue))
+                        (and (contains? note :value)
+                             (not (hide-value? note opts)))
+                        (into (-> note
+                                  (update :value deref-if-needed)
+                                  (prepare/prepare-or-pprint))))]
       (cond (and (not code-item) (empty? value-items))
             []
 
