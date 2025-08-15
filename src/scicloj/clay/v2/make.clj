@@ -492,6 +492,8 @@
                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
                    :reveal  false
                    :info    info}]
+      ;; Notbooks may create files in src
+      (sync-resources! main-spec)
       (if (and ide (not= browse :browser))
         (tagged-literal 'flare/html summary)
         summary))))
