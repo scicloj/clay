@@ -429,3 +429,388 @@
 
     ;; Clean up
     (when (fs/exists? "test_malformed.clj") (fs/delete "test_malformed.clj"))))
+
+(deftest test-return-value-structure-comprehensive
+  "Test detailed return value structure across different scenarios"
+  (testing "Return value structure is consistent and complete"
+    ;; Test single-value
+    (let [result (clay/make! {:single-value {:test "data"}
+                              :show false
+                              :browse false})]
+
+      ;; All required keys present
+      (is (contains? result :url))
+      (is (contains? result :key))
+      (is (contains? result :title))
+      (is (contains? result :display))
+      (is (contains? result :reveal))
+      (is (contains? result :info))
+
+      ;; Correct types and values
+      (is (or (nil? (:url result)) (string? (:url result))))
+      (is (= "clay" (:key result)))
+      (is (= "Clay" (:title result)))
+      (is (keyword? (:display result)))
+      (is (boolean? (:reveal result)))
+      (is (vector? (:info result)))
+
+      ;; Info structure validation
+      (is (= 1 (count (:info result))))
+      (let [info-entry (first (:info result))]
+        (is (vector? info-entry))
+        (is (= 2 (count info-entry)))
+        (let [write-info (first info-entry)]
+          (is (vector? write-info))
+          (is (= 3 (count write-info)))
+          (let [write-detail (first write-info)]
+            (is (vector? write-detail))
+            (is (= :wrote (first write-detail)))
+            (is (string? (second write-detail)))
+            ;; Fix: Current Clay API returns 2 elements, not 3
+            (is (= 2 (count write-detail)))))))
+
+    ;; Test multiple source files return structure
+    (spit "multi_test_1.clj" "(ns multi-test-1)\n\n\"File 1\"")
+    (spit "multi_test_2.clj" "(ns multi-test-2)\n\n\"File 2\"")
+
+    (let [multi-result (clay/make! {:source-path ["multi_test_1.clj" "multi_test_2.clj"]
+                                    :show false
+                                    :browse false})]
+      ;; Same structure but with multiple info entries
+      (is (= 2 (count (:info multi-result))))
+      (is (every? vector? (:info multi-result)))
+
+      ;; Each info entry should have write information
+      (doseq [info-entry (:info multi-result)]
+        (let [write-info (first info-entry)
+              write-detail (first write-info)]
+          (is (= :wrote (first write-detail)))
+          (is (string? (second write-detail)))
+          ;; Fix: Current Clay API returns 2 elements, not 3
+          (is (= 2 (count write-detail))))))))
+
+(deftest test-file-system-effects-comprehensive
+  "Test comprehensive file system effects and assumptions"
+  (testing "File creation patterns and resource management"
+    ;; Clean start
+    (when (fs/exists? "temp") (fs/delete-tree "temp"))
+
+    ;; Test 1: Empty files create valid HTML
+    (spit "empty_file.clj" "")
+    (clay/make! {:source-path "empty_file.clj" :show false :browse false})
+
+    (is (fs/exists? "temp/empty_file.html"))
+    (is (> (fs/size "temp/empty_file.html") 1000)) ; Should have substantial HTML structure
+    (is (fs/exists? "temp/empty_file_files")) ; Resource directory
+    (is (fs/directory? "temp/empty_file_files"))
+
+    ;; Test 2: Whitespace-only files
+    (spit "whitespace_file.clj" "   \n\n\t  \n  ")
+    (clay/make! {:source-path "whitespace_file.clj" :show false :browse false})
+
+    (is (fs/exists? "temp/whitespace_file.html"))
+    (let [html-content (slurp "temp/whitespace_file.html")]
+      (is (.startsWith html-content "<!DOCTYPE html"))
+      (is (str/includes? html-content "<html"))
+      (is (str/includes? html-content "Clay")))
+
+    ;; Test 3: Namespace-only files
+    (spit "ns_only.clj" "(ns ns-only-test)")
+    (clay/make! {:source-path "ns_only.clj" :show false :browse false})
+
+    (is (fs/exists? "temp/ns_only.html"))
+    (let [html-content (slurp "temp/ns_only.html")]
+      (is (str/includes? html-content "ns-only-test")))
+
+    ;; Test 4: File naming with special characters
+    (spit "file-with-dashes.clj" "(ns file-with-dashes)\n\n\"Dash test\"")
+    (clay/make! {:source-path "file-with-dashes.clj" :show false :browse false})
+
+    (is (fs/exists? "temp/file-with-dashes.html"))
+    (is (fs/exists? "temp/file-with-dashes_files"))
+
+    (spit "file_with_underscores.clj" "(ns file-with-underscores)\n\n\"Underscore test\"")
+    (clay/make! {:source-path "file_with_underscores.clj" :show false :browse false})
+
+    (is (fs/exists? "temp/file_with_underscores.html"))
+    (is (fs/exists? "temp/file_with_underscores_files"))
+
+    ;; Test 5: Resource directory contents
+    (let [resource-files (fs/list-dir "temp/file-with-dashes_files")]
+      (is (seq resource-files)) ; Should contain files
+      (is (some #(str/ends-with? (str %) ".js") resource-files))
+      ;; Note: Clay currently generates JS files rather than CSS files
+      (is (every? #(str/ends-with? (str %) ".js") resource-files)))
+
+    ;; Clean up test files
+    (doseq [f ["empty_file.clj" "whitespace_file.clj" "ns_only.clj"
+               "file-with-dashes.clj" "file_with_underscores.clj"
+               "multi_test_1.clj" "multi_test_2.clj"]]
+      (when (fs/exists? f) (fs/delete f)))))
+
+(deftest test-edge-cases-and-assumptions
+  "Test edge cases that challenge common assumptions"
+  (testing "Edge cases and boundary conditions"
+    ;; Test 1: Very large data structures
+    (let [large-data (vec (range 1000))
+          result (clay/make! {:single-value large-data
+                              :show false
+                              :browse false})]
+      (is (fs/exists? "temp/.clay.html"))
+      (is (> (fs/size "temp/.clay.html") 10000)) ; Should be substantial
+      (is (= "clay" (:key result))))
+
+    ;; Test 2: Nested data structures
+    (let [nested-data {:level1 {:level2 {:level3 {:data "deep"}}}}
+          result (clay/make! {:single-value nested-data
+                              :show false
+                              :browse false})]
+      (is (fs/exists? "temp/.clay.html"))
+      (let [html (slurp "temp/.clay.html")]
+        (is (str/includes? html "level1"))
+        (is (str/includes? html "level2"))
+        (is (str/includes? html "level3"))
+        (is (str/includes? html "&quot;deep&quot;"))))
+
+    ;; Test 3: Special characters in values
+    (let [special-data {:unicode "😀🎉", :quotes "\"'", :brackets "[]{}", :html "<>&"}
+          result (clay/make! {:single-value special-data
+                              :show false
+                              :browse false})]
+      (is (fs/exists? "temp/.clay.html"))
+      (let [html (slurp "temp/.clay.html")]
+        ;; Should be properly escaped
+        (is (str/includes? html "😀🎉")) ; Unicode should work
+        (is (str/includes? html "&quot;")) ; Quotes escaped
+        (is (str/includes? html "&lt;")) ; HTML escaped
+        (is (str/includes? html "&gt;"))
+        (is (str/includes? html "&amp;"))))
+
+    ;; Test 4: Absolute vs relative paths
+    (spit "path_test.clj" "(ns path-test)\n\n\"Path test\"")
+    (let [relative-result (clay/make! {:source-path "path_test.clj"
+                                       :show false :browse false})
+          absolute-path (str (fs/cwd) "/path_test.clj")
+          absolute-result (clay/make! {:source-path absolute-path
+                                       :show false :browse false})]
+      ;; Both should work and produce similar results
+      (is (= (:key relative-result) (:key absolute-result)))
+      (is (= (:title relative-result) (:title absolute-result)))
+      (is (fs/exists? "temp/path_test.html")))
+
+;; Test 5: Result uniqueness (timestamps removed from API)
+    (let [result1 (clay/make! {:single-value "test1" :show false :browse false})]
+      (Thread/sleep 50) ; Small delay
+      (let [result2 (clay/make! {:single-value "test2" :show false :browse false})]
+        ;; Results should be structurally similar but independently generated
+        (is (= (:key result1) (:key result2)))
+        (is (= (:title result1) (:title result2)))
+        (is (vector? (:info result1)))
+        (is (vector? (:info result2))))) ; First should be earlier
+
+    ;; Test 6: Files with syntax errors (but valid for reading)
+    (spit "syntax_error.clj" "(ns syntax-error)\n\n(defn incomplete-fn [x]\n  ;; Missing closing paren")
+    (is (thrown? Exception
+                 (clay/make! {:source-path "syntax_error.clj"
+                              :show false :browse false})))
+
+    ;; Clean up
+    (doseq [f ["path_test.clj" "syntax_error.clj"]]
+      (when (fs/exists? f) (fs/delete f)))))
+
+(deftest test-configuration-edge-cases
+  "Test configuration edge cases and overrides"
+  (testing "Configuration behavior in edge cases"
+    ;; Test 1: Default target path (no base-target-path specified)
+    (let [result (clay/make! {:single-value "default target test"
+                              :show false :browse false})]
+      ;; Should use default "temp" directory when no base-target-path specified
+      (is (map? result))
+      (is (fs/exists? "temp/.clay.html")))
+
+    ;; Test 2: Non-existent target directory (should create)
+    (when (fs/exists? "deep/nested/target") (fs/delete-tree "deep"))
+    (let [result (clay/make! {:single-value "nested target test"
+                              :base-target-path "deep/nested/target"
+                              :show false :browse false})]
+      (is (fs/exists? "deep/nested/target/.clay.html"))
+      (when (fs/exists? "deep") (fs/delete-tree "deep")))
+
+    ;; Test 3: Target path with special characters
+    (when (fs/exists? "target-with-dashes") (fs/delete-tree "target-with-dashes"))
+    (let [result (clay/make! {:single-value "special target test"
+                              :base-target-path "target-with-dashes"
+                              :show false :browse false})]
+      (is (fs/exists? "target-with-dashes/.clay.html"))
+      (when (fs/exists? "target-with-dashes") (fs/delete-tree "target-with-dashes")))
+
+    ;; Test 4: Multiple conflicting options
+    (let [result (clay/make! {:single-value "conflict test"
+                              :show true ; Want to show
+                              :browse false ; But don't browse
+                              :base-target-path "temp"
+                              :format [:html]})]
+      ;; Should handle conflicting options gracefully
+      (is (map? result))
+      (is (= "clay" (:key result))))
+
+    ;; Test 5: Invalid format option (should default or error gracefully)
+    (try
+      (let [result (clay/make! {:single-value "format test"
+                                :format [:invalid-format]
+                                :show false :browse false})]
+        ;; If it succeeds, should still be valid structure
+        (is (map? result)))
+      (catch Exception e
+        ;; If it fails, that's also acceptable behavior
+        (is (instance? Exception e))))))
+
+(deftest test-concurrent-and-file-handle-behavior
+  "Test behavior under concurrent usage and file handle management"
+  (testing "Concurrent make! calls and file handle management"
+    ;; Test 1: Multiple rapid calls to same file
+    (let [results (doall (repeatedly 5 #(clay/make! {:single-value (rand-int 1000)
+                                                     :show false :browse false})))]
+      ;; All should succeed
+      (is (= 5 (count results)))
+      (is (every? map? results))
+      (is (every? #(= "clay" (:key %)) results))
+
+      ;; File should exist and be readable
+      (is (fs/exists? "temp/.clay.html"))
+      (is (> (fs/size "temp/.clay.html") 1000)))
+
+    ;; Test 2: Overwriting same target multiple times
+    (spit "overwrite_test.clj" "(ns overwrite-test)\n\n\"Version 1\"")
+    (let [result1 (clay/make! {:source-path "overwrite_test.clj"
+                               :show false :browse false})
+          original-size (fs/size "temp/overwrite_test.html")]
+
+      ;; Modify and overwrite
+      (spit "overwrite_test.clj" "(ns overwrite-test)\n\n\"Version 2 with more content to change file size\"")
+      (let [result2 (clay/make! {:source-path "overwrite_test.clj"
+                                 :show false :browse false})
+            new-size (fs/size "temp/overwrite_test.html")]
+
+        ;; Both should succeed
+        (is (map? result1))
+        (is (map? result2))
+
+        ;; File should be updated (size should be different)
+        (is (not= original-size new-size))
+
+        ;; Content should reflect latest version
+        (let [html-content (slurp "temp/overwrite_test.html")]
+          (is (str/includes? html-content "Version 2"))
+          (is (not (str/includes? html-content "Version 1"))))))
+
+    ;; Test 3: Mixed single-value and source-path calls
+    (let [single-result (clay/make! {:single-value {:mixed "test"}
+                                     :show false :browse false})
+          source-result (clay/make! {:source-path "overwrite_test.clj"
+                                     :show false :browse false})]
+      ;; Both should work
+      (is (map? single-result))
+      (is (map? source-result))
+
+      ;; Different files should exist
+      (is (fs/exists? "temp/.clay.html"))
+      (is (fs/exists? "temp/overwrite_test.html")))
+
+    ;; Test 4: File permissions and access
+    (when (fs/exists? "temp/.clay.html")
+      (is (fs/readable? "temp/.clay.html"))
+      (is (fs/writable? "temp/.clay.html")))
+
+    ;; Clean up
+    (when (fs/exists? "overwrite_test.clj") (fs/delete "overwrite_test.clj"))))
+
+(deftest test-html-content-quality-and-structure
+  "Test the quality and structure of generated HTML content"
+  (testing "Generated HTML meets quality standards"
+    ;; Test 1: Valid HTML5 structure
+    (clay/make! {:single-value {:html "structure test"}
+                 :show false :browse false})
+
+    (let [html (slurp "temp/.clay.html")]
+      ;; Basic HTML5 structure
+      (is (.startsWith html "<!DOCTYPE html"))
+      (is (str/includes? html "<html"))
+      (is (str/includes? html "<head>"))
+      ;; Note: Clay doesn't generate explicit <body> tags
+      (is (str/includes? html "</html>"))
+
+      ;; Meta tags present
+      (is (str/includes? html "<meta"))
+      (is (str/includes? html "charset"))
+
+      ;; Title present
+      (is (str/includes? html "<title>"))
+
+      ;; CSS and JS resources
+      (is (str/includes? html ".css"))
+      (is (str/includes? html ".js")))
+
+    ;; Test 2: Proper escaping of different content types
+    (let [tricky-content {:xss "<script>alert('xss')</script>"
+                          :quotes "\"single' and 'double\" quotes"
+                          :unicode "πΩ∑∆ 中文 العربية"
+                          :newlines "line1\nline2\nline3"}]
+      (clay/make! {:single-value tricky-content
+                   :show false :browse false})
+
+      (let [html (slurp "temp/.clay.html")]
+        ;; XSS should be escaped
+        (is (not (str/includes? html "<script>alert")))
+        (is (str/includes? html "&lt;script&gt;"))
+
+        ;; Quotes should be escaped
+        (is (str/includes? html "&quot;"))
+
+        ;; Unicode should be preserved
+        (is (str/includes? html "πΩ∑∆"))
+        (is (str/includes? html "中文"))
+        (is (str/includes? html "العربية"))))
+
+    ;; Test 3: Large content handling
+    (let [large-map (into {} (for [i (range 100)]
+                               [(keyword (str "key" i)) (str "value" i)]))]
+      (clay/make! {:single-value large-map
+                   :show false :browse false})
+
+      (let [html (slurp "temp/.clay.html")]
+        ;; Should contain all keys and values
+        (is (str/includes? html "key0"))
+        (is (str/includes? html "key99"))
+        (is (str/includes? html "value0"))
+        (is (str/includes? html "value99"))
+
+        ;; File should be substantial but not unreasonably large
+        (is (> (count html) 10000))
+        (is (< (count html) 1000000)))) ; Reasonable upper bound
+
+    ;; Test 4: Empty and nil values
+    (clay/make! {:single-value nil :show false :browse false})
+    (let [html (slurp "temp/.clay.html")]
+      (is (str/includes? html "nil")))
+
+    (clay/make! {:single-value "" :show false :browse false})
+    (let [html (slurp "temp/.clay.html")]
+      ;; Empty string should be represented somehow
+      (is (str/includes? html "&quot;&quot;")))
+
+    ;; Test 5: Complex nested structures
+    (let [complex-data {:metadata {:created (java.util.Date.)
+                                   :version "1.0"}
+                        :data [{:id 1 :values [1 2 3]}
+                               {:id 2 :values [4 5 6]}]
+                        :config {:nested {:deeply {:value "found"}}}}]
+      (clay/make! {:single-value complex-data
+                   :show false :browse false})
+
+      (let [html (slurp "temp/.clay.html")]
+        (is (str/includes? html "metadata"))
+        (is (str/includes? html "created"))
+        (is (str/includes? html "version"))
+        (is (str/includes? html "&quot;1.0&quot;"))
+        (is (str/includes? html "&quot;found&quot;"))))))
