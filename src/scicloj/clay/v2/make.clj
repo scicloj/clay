@@ -28,18 +28,17 @@
         slurp
         read/read-ns-form)))
 
-
 (defn spec->full-source-path
   "Returns the source-path relative to the current working directory (project root).
   This may be the base-source-path + the source-path when both are relative,
   or if source-path is absolute will be relativized without regard to a base-source-path.
   full-source-path needs to be relative to calculate git links."
-  [{:as   spec
+  [{:as spec
     :keys [base-source-path source-path]}]
   (when source-path
     (when-not (string? source-path)
       (throw (ex-info (str "Invalid source path: " (pr-str source-path))
-                      {:id          ::invalid-source-path
+                      {:id ::invalid-source-path
                        :source-path source-path})))
     (if (fs/absolute? source-path)
       (str (fs/relativize (fs/absolutize ".") source-path))
@@ -50,7 +49,7 @@
 (defn relative-source-path
   "Returns the source-path relative to the base-source-path,
   which is used to calculate the target path."
-  [{:as   spec
+  [{:as spec
     :keys [source-path
            base-source-path
            ns-form]}]
@@ -71,7 +70,7 @@
 
 (defn spec->full-target-path
   "Returns the target-path relative to the current working directory (project root)."
-  [{:as   spec
+  [{:as spec
     :keys [source-path
            full-source-path
            source-type
@@ -120,8 +119,8 @@
 
 (defn merge-ns-config [spec]
   (kindly/deep-merge
-    spec
-    (spec->ns-config spec)))
+   spec
+   (spec->ns-config spec)))
 
 (defn maybe-user-hook [{:as spec :keys [config/transform]}]
   (if transform
@@ -138,7 +137,7 @@
       (config/add-field :ns-form spec->ns-form)
       merge-ns-config
       (kindly/deep-merge
-        (dissoc spec :source-path))                         ; prioritize spec over the ns config
+       (dissoc spec :source-path)) ; prioritize spec over the ns config
       (config/add-field :full-target-path spec->full-target-path)
       (config/add-field :qmd-target-path spec->qmd-target-path)
       (maybe-user-hook)))
@@ -159,36 +158,35 @@
                                                     (-> path
                                                         (update :chapters
                                                                 (partial
-                                                                  map
-                                                                  (fn [chapter-path]
-                                                                    (->single-ns-spec spec config chapter-path)))))
+                                                                 map
+                                                                 (fn [chapter-path]
+                                                                   (->single-ns-spec spec config chapter-path)))))
                                                     ;; else
                                                     :else
                                                     (throw (ex-info (str "Invalid source path: " (pr-str path))
                                                                     {:path path}))))))]
-    {:main-spec       (-> config
-                          (assoc :full-target-paths-w-book-struct
-                                 (->> single-ns-specs-w-book-struct
-                                      (map (fn [ns-spec]
-                                             (if (:part ns-spec)
-                                               (-> ns-spec
-                                                   (update :chapters
-                                                           (partial map :full-target-path)))
-                                               (:full-target-path ns-spec))))))
-                          (config/add-field :full-target-paths
-                                            (fn [{:keys [full-target-paths-w-book-struct]}]
-                                              (->> full-target-paths-w-book-struct
-                                                   (mapcat (fn [path]
-                                                             (if (:part path)
-                                                               (:chapters path)
-                                                               [path])))))))
+    {:main-spec (-> config
+                    (assoc :full-target-paths-w-book-struct
+                           (->> single-ns-specs-w-book-struct
+                                (map (fn [ns-spec]
+                                       (if (:part ns-spec)
+                                         (-> ns-spec
+                                             (update :chapters
+                                                     (partial map :full-target-path)))
+                                         (:full-target-path ns-spec))))))
+                    (config/add-field :full-target-paths
+                                      (fn [{:keys [full-target-paths-w-book-struct]}]
+                                        (->> full-target-paths-w-book-struct
+                                             (mapcat (fn [path]
+                                                       (if (:part path)
+                                                         (:chapters path)
+                                                         [path])))))))
      :single-ns-specs (->> single-ns-specs-w-book-struct
                            ;; flatten book chapters:
                            (mapcat (fn [ns-spec]
                                      (if (:part ns-spec)
                                        (:chapters ns-spec)
                                        [ns-spec]))))}))
-
 
 (defn index-target-path? [path]
   (some-> path
@@ -215,15 +213,15 @@
         (cond->> (not index-included?)
           (cons "index.qmd")))))
 
-(defn spec->quarto-book-config [{:as   spec
+(defn spec->quarto-book-config [{:as spec
                                  :keys [book
                                         quarto]}]
   (-> quarto
       (select-keys [:format])
       (kindly/deep-merge
-        {:project {:type "book"}
-         :book    (merge {:chapters (spec->quarto-book-chapters-config spec)}
-                         book)})))
+       {:project {:type "book"}
+        :book (merge {:chapters (spec->quarto-book-chapters-config spec)}
+                     book)})))
 
 (defn write-quarto-book-config! [quarto-book-config
                                  {:keys [base-target-path]}]
@@ -296,7 +294,7 @@
            (spit full-target-path)))
     [:quarto-rendered full-target-path]))
 
-(defn make-book! [{:as   spec
+(defn make-book! [{:as spec
                    :keys [base-target-path
                           run-quarto
                           show]}]
@@ -316,18 +314,41 @@
            server/update-page!))
      [:made-book])])
 
-
 (defn write-test-forms-as-ns [forms]
-  (let [path (-> forms
-                 (->> (filter notebook/ns-form?))
-                 first
+  (let [;; Get the first namespace form
+        first-ns-form (->> forms
+                           (filter notebook/ns-form?)
+                           first)
+        ;; Remove all namespace forms except the first
+        forms-without-extra-ns (->> forms
+                                    (reduce (fn [{:keys [seen-ns result]} form]
+                                              (cond
+                                                 ;; First ns form - keep it
+                                                (and (notebook/ns-form? form)
+                                                     (not seen-ns))
+                                                {:seen-ns true
+                                                 :result (conj result form)}
+
+                                                 ;; Subsequent ns forms - skip them
+                                                (notebook/ns-form? form)
+                                                {:seen-ns true
+                                                 :result result}
+
+                                                 ;; All other forms - keep them
+                                                :else
+                                                {:seen-ns seen-ns
+                                                 :result (conj result form)}))
+                                            {:seen-ns false
+                                             :result []})
+                                    :result)
+        path (-> first-ns-form
                  second
                  str
                  (str/replace #"\." "/")
                  (str/replace #"-" "_")
                  (->> (format "test/%s.clj")))]
     (io/make-parents path)
-    (->> forms
+    (->> forms-without-extra-ns
          (map (fn [form]
                 (-> form
                     pp/pprint
@@ -350,7 +371,6 @@
         render-result)
       ;; else, just show the qmd file
       (server/update-page! (assoc spec :full-target-path qmd-target-path)))))
-
 
 (defn clay-render-notebook [notes {:as spec
                                    :keys [format
@@ -394,18 +414,18 @@
                        exception)))]))
 
 (defn kindly-render-notebook [notes {:as spec :keys [full-target-path]}]
-  (let [notebook {:notes          notes
+  (let [notebook {:notes notes
                   :kindly/options (kindly/deep-merge
-                                    {:deps #{:kindly :clay :highlightjs}
+                                   {:deps #{:kindly :clay :highlightjs}
                                      ;;:package ""
-                                     }
-                                    (:kindly/options spec))}]
+                                    }
+                                   (:kindly/options spec))}]
     (-> spec
         (assoc :page (to-html-page/render-notebook notebook))
         server/update-page!)
     [:wrote-with-kindly-render full-target-path]))
 
-(defn handle-single-source-spec! [{:as   spec
+(defn handle-single-source-spec! [{:as spec
                                    :keys [source-paths
                                           source-type
                                           single-form
@@ -485,23 +505,22 @@
                  live-reload (conj (if (#{:toggle} live-reload)
                                      (live-reload/toggle! make! main-spec source-paths)
                                      (live-reload/start! make! main-spec source-paths))))
-          summary {:url     (server/url)
-                   :key     "clay"
-                   :title   "Clay"
+          summary {:url (server/url)
+                   :key "clay"
+                   :title "Clay"
                    :display :editor
                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
-                   :reveal  false
-                   :info    info}]
+                   :reveal false
+                   :info info}]
       (if (and ide (not= browse :browser))
         (tagged-literal 'flare/html summary)
         summary))))
 
-
 (comment
-  (make! {:source-path       ["notebooks/scratch.clj"]
+  (make! {:source-path ["notebooks/scratch.clj"]
           :format [:gfm]
           :show false})
   ,
-  (make! {:source-path       ["notebooks/index.clj"]
+  (make! {:source-path ["notebooks/index.clj"]
           :format [:gfm]
           :show false}))
