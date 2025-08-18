@@ -356,7 +356,6 @@
                                    :keys [format
                                           full-target-path
                                           qmd-target-path
-                                          run-quarto
                                           book
                                           post-process]}]
   (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
@@ -379,7 +378,8 @@
               (println "Clay:" [:wrote gfm-target (time/now)])
               (server/update-page! (assoc spec :full-target-path gfm-target))
               [:wrote gfm-target])
-       :quarto (do (-> spec-with-items
+       :quarto (do (io/make-parents (io/file qmd-target-path))
+                   (-> spec-with-items
                        (update-in [:quarto :format] select-keys [(second format)])
                        (cond-> book (update :quarto dissoc :title))
                        page/md
@@ -439,7 +439,7 @@
         (when-not (-> e ex-data :id (= ::notebook-exception))
           (-> spec
               (assoc :page (-> spec
-                               (assoc :items [(item/print-throwable e)])
+                               (assoc :items [(item/print-throwable e false)])
                                page/html))
               server/update-page!))
         (if (and source-paths (> (count source-paths) 1))
