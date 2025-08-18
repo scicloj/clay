@@ -1,12 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [pending]
 - minor: Exceptions collapse only when `:exception-continue` is true
-
 - bugfix: make with no source-path (for live-reload)
+- removed the hashp dependency
 
+## [2-beta51 - 2025-08-14]
+- bugfix: make with no source-path (for live-reload)
+    
 ## [2-beta50 - 2025-08-13]
-
 - added: `server/scittle-eval-string!` for sending ClojureScript code to Clay pages
 - added live-reload support for `.cljs` files to send file content when modified
 - bugfix: set base when serving pages with `:flatten-target false` so that js loads

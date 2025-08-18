@@ -16,7 +16,7 @@
             [scicloj.clay.v2.files :as files]
             [clojure.pprint :as pp]
             [scicloj.kindly-render.notes.to-html-page :as to-html-page]
-            [hashp.preload]
+            ;; [hashp.preload]
             [scicloj.kindly.v4.api :as kindly]))
 
 (defn spec->source-type [{:keys [source-path]}]
