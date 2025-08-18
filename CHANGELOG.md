@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [pending]
+- removed the hashp dependency
+
 ## [2-beta51 - 2025-08-14]
 - bugfix: make with no source-path (for live-reload)
     
