@@ -91,9 +91,10 @@
                                        (if keep-sync-root
                                          full-source-path
                                          relative-source))
-         "clj" (let [target-extension (str (when (= (second format) :revealjs)
-                                             "-revealjs")
-                                           ".html")
+         "clj" (let [target-extension (case (second format)
+                                        :revealjs "-revealjs.html"
+                                        :pdf ".pdf"
+                                        ".html")
                      relative-target (cond-> (str/replace relative-source
                                                           #"\.clj[cs]?$"
                                                           target-extension)
@@ -106,7 +107,7 @@
                                      full-target-path
                                      quarto-target-path]}]
   (when (= (first format) :quarto)
-    (let [qmd-target (str/replace full-target-path #"\.html$" ".qmd")]
+    (let [qmd-target (str/replace full-target-path #"\.(html|pdf)$" ".qmd")]
       (if (and quarto-target-path
                (not (tempory-target? spec)))
         (let [relative-target (fs/relativize base-target-path qmd-target)]

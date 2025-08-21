@@ -19,7 +19,8 @@
         babashka/fs {:mvn/version "0.5.25"}
         org.scicloj/kindly-render {:mvn/version "0.1.5-alpha"}
         io.github.tonsky/clojure-plus {:mvn/version "1.4.0"}
-        org.clj-commons/pretty {:mvn/version "3.5.0"}}
+        org.clj-commons/pretty {:mvn/version "3.5.0"}
+        clj-python/libpython-clj {:mvn/version "2.026"}}
  :aliases {:dev {:extra-paths ["dev" "notebooks"]
                  :extra-deps {org.scicloj/noj {:mvn/version "2-beta10.1"}
                               org.mentat/emmy {:mvn/version "0.31.0"

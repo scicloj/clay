@@ -353,6 +353,7 @@
   (let [opts (select-keys options
                           [:base-target-path
                            :full-target-path
+                           :qmd-target-path
                            :kindly/options
                            :format])]
     (doall
