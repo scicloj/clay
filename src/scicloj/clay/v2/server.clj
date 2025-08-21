@@ -1,16 +1,16 @@
 (ns scicloj.clay.v2.server
-  (:require
-    [babashka.fs :as fs]
-    [clojure.java.browse :as browse]
-    [clojure.java.io :as io]
-    [hiccup.page]
-    [org.httpkit.server :as httpkit]
-    [ring.util.mime-type :as mime-type]
-    [scicloj.clay.v2.server.state :as server.state]
-    [scicloj.clay.v2.util.time :as time]
-    [clojure.string :as str]
-    [cognitect.transit :as transit]
-    [hiccup.core :as hiccup])
+  (:require [babashka.fs :as fs]
+            [clojure.java.browse :as browse]
+            [clojure.java.io :as io]
+            [clojure.pprint :as pprint]
+            [hiccup.page]
+            [org.httpkit.server :as httpkit]
+            [ring.util.mime-type :as mime-type]
+            [scicloj.clay.v2.server.state :as server.state]
+            [scicloj.clay.v2.util.time :as time]
+            [clojure.string :as str]
+            [cognitect.transit :as transit]
+            [hiccup.core :as hiccup])
   (:import (java.net ServerSocket)))
 
 (def default-port 1971)
@@ -104,7 +104,7 @@
 </script>"))))
 
 (defn header [state]
-  (hiccup.core/html
+  (hiccup/html
    [:div
     [:div
      [:img
@@ -128,10 +128,34 @@
   ([]
    (page @server.state/*state))
   ([state]
-   (some-> state
-           :last-rendered-spec
-           :full-target-path
-           slurp)))
+   (let [{:keys [last-rendered-spec live-reload]} state
+         path (some-> last-rendered-spec :full-target-path)]
+     (cond
+       (and path (str/ends-with? path ".pdf"))
+       (hiccup/html
+        [:html
+         [:head [:title "PDF Viewer"]]
+         [:body
+          [:div {:style {:height "70px" :background-color "#eee"}}
+           (header state)]
+          [:embed {:src (str "/" (fs/unixify (fs/relativize (:base-target-path last-rendered-spec) path)))
+                   :type "application/pdf"
+                   :width "100%"
+                   :height "900px"}]]])
+
+       (fs/exists? path)
+       (slurp path)
+
+       :else
+       (hiccup/html
+        [:html
+         [:head [:title "Clay Server State"]]
+         [:body
+          [:div {:style {:height "70px" :background-color "#eee"}}
+           (header state)]
+          [:h2 "No file to display"]
+          [:p "Create or edit source files"]
+          [:pre (with-out-str (pprint/pprint state))]]])))))
 
 (defn wrap-base-url [html {:as state
                            {:keys [flatten-targets
