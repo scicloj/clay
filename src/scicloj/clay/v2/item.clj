@@ -289,11 +289,12 @@
    :deps [:echarts]})
 
 (defn plotly [{:as context
-               :keys [full-target-path qmd-target-path]
+               :keys [full-target-path qmd-target-path kindly/options]
                {:keys [data layout config]
                 :or {layout {}
                      config {}}} :value}]
-  (if (= (second (:format context)) :pdf)
+  (if (or (= (second (:format context)) :pdf)
+          (:static options))
     (let [filename (str "ploty-chart-" (next-id!) ".png")
           path (str (fs/path (fs/parent (or qmd-target-path full-target-path)) filename))]
       ;; Only loading libpython-plotly if we use it
