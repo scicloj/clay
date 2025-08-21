@@ -295,11 +295,10 @@
                      config {}}} :value}]
   (if (= (second format) :pdf)
     (do
-      ;; Only loading libpython-plotly if we use it
-      (require '[scicloj.clay.v2.libpython-plotly])
       (let [filename (str "ploty-chart-" (next-id!) ".png")
             path (str (fs/path (fs/parent (or qmd-target-path full-target-path)) filename))]
-        (scicloj.clay.v2.libpython-plotly/plotly-export (:value context) path)
+        ;; Only loading libpython-plotly if we use it
+        ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) (:value context) path)
         (println "Clay plotly-export:" [:wrote path])
         {:md (str "![](" filename ")")}))
     {:hiccup
