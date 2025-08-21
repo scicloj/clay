@@ -289,18 +289,17 @@
    :deps [:echarts]})
 
 (defn plotly [{:as context
-               :keys [full-target-path qmd-target-path format]
+               :keys [full-target-path qmd-target-path]
                {:keys [data layout config]
                 :or {layout {}
                      config {}}} :value}]
-  (if (= (second format) :pdf)
-    (do
-      (let [filename (str "ploty-chart-" (next-id!) ".png")
-            path (str (fs/path (fs/parent (or qmd-target-path full-target-path)) filename))]
-        ;; Only loading libpython-plotly if we use it
-        ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) (:value context) path)
-        (println "Clay plotly-export:" [:wrote path])
-        {:md (str "![](" filename ")")}))
+  (if (= (second (:format context)) :pdf)
+    (let [filename (str "ploty-chart-" (next-id!) ".png")
+          path (str (fs/path (fs/parent (or qmd-target-path full-target-path)) filename))]
+      ;; Only loading libpython-plotly if we use it
+      ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) (:value context) path)
+      (println "Clay plotly-export:" [:wrote path])
+      {:md (str "![](" filename ")")})
     {:hiccup
      [:div
       {:style (-> context
