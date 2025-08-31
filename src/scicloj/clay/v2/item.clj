@@ -1,11 +1,12 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
+            [clojure.string :as str]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
-            [clojure.string :as str]
+            [babashka.fs :as fs]
             [clj-commons.format.exceptions :as fe]))
 
 (def *id (atom 0))
@@ -142,7 +143,7 @@
     (->> string
          jso/write-json-str
          (format
-           "katex.render(%s, document.currentScript.parentElement, {throwOnError: false});"))]])
+          "katex.render(%s, document.currentScript.parentElement, {throwOnError: false});"))]])
 
 (defn tex [text]
   {:md     (->> text
@@ -172,17 +173,17 @@
 (def scittle-header-form
   '(defn kindly-compute [input callback]
      (ajax.core/POST
-      "/kindly-compute"
-      {:headers       {"Accept" "application/json"}
-       :params        (pr-str input)
-       :handler       (fn [response]
-                        (-> response
-                            read-string
-                            callback))
-       :error-handler (fn [e]
-                        (.log
-                         js/console
-                         (str "error on compute: " e)))})))
+       "/kindly-compute"
+       {:headers       {"Accept" "application/json"}
+        :params        (pr-str input)
+        :handler       (fn [response]
+                         (-> response
+                             read-string
+                             callback))
+        :error-handler (fn [e]
+                         (.log
+                          js/console
+                          (str "error on compute: " e)))})))
 
 (defn scittle-tag [cljs-form]
   [:script {:type "application/x-scittle"}
@@ -288,23 +289,31 @@
    :deps [:echarts]})
 
 (defn plotly [{:as context
+               :keys [full-target-path qmd-target-path kindly/options]
                {:keys [data layout config]
                 :or {layout {}
                      config {}}} :value}]
-  {:hiccup [:div
-            {:style (-> context
-                        :kindly/options
-                        :element/style
-                        (or {:height "auto"
-                             :width "100%"}))}
-            [:script
-             (format
-              "Plotly.newPlot(document.currentScript.parentElement,
-               %s, %s, %s);"
-              (jso/write-json-str data)
-              (jso/write-json-str layout)
-              (jso/write-json-str config))]]
-   :deps [:plotly]})
+  (if (or (= (second (:format context)) :pdf)
+          (:static options))
+    (let [filename (str "ploty-chart-" (next-id!) ".png")
+          path (str (fs/path (fs/parent (or qmd-target-path full-target-path)) filename))]
+      ;; Only loading libpython-plotly if we use it
+      ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) (:value context) path)
+      (println "Clay plotly-export:" [:wrote path])
+      {:md (str "![](" filename ")")})
+    {:hiccup
+     [:div
+      {:style (-> context
+                  :kindly/options
+                  :element/style
+                  (or {:height "auto"
+                       :width "100%"}))}
+      [:script
+       (format "Plotly.newPlot(document.currentScript.parentElement, %s, %s, %s);"
+               (jso/write-json-str data)
+               (jso/write-json-str layout)
+               (jso/write-json-str config))]]
+     :deps [:plotly]}))
 
 (defn portal [value]
   {:hiccup [:div
@@ -362,8 +371,7 @@
                        ""
                        value
                        ".png")]
-         (when-not
-             (util.image/write! value "png" png-path)
+         (when-not (util.image/write! value "png" png-path)
            (throw (ex-message "Failed to save image as PNG.")))
          {:hiccup [:img {:src (-> png-path
                                   (str/replace
@@ -447,14 +455,14 @@
                     :style "width:100%;height:400px;"}
               [:script {:type "application/htmlwidget-sizing"
                         :data-for id}
-               (jso/write-json-str {:viewer      {:width  "100%"
-                                                 :height  400
-                                                 :padding "0"
-                                                 :fille   true}
-                                        :browser {:width "100%"
-                                                  :height 400
-                                                  :padding "0"
-                                                  :fille true}})]
+               (jso/write-json-str {:viewer  {:width  "100%"
+                                              :height  400
+                                              :padding "0"
+                                              :fille   true}
+                                    :browser {:width "100%"
+                                              :height 400
+                                              :padding "0"
+                                              :fille true}})]
               [:script {:type "application/json"
                         :data-for id}
                (jso/write-json-str spec)]]

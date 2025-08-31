@@ -271,9 +271,7 @@
   "Returns document metadata suitable for inclusion as front-matter to a Markdown document."
   [{:as spec
     :keys [title favicon quarto format]}]
-  (let [quarto-target (if (= format [:quarto :revealjs])
-                        :revealjs
-                        :html)]
+  (let [quarto-target (or (second format) :html)]
     (cond-> quarto
             ;; Users may provide non-quarto specific configuration (see also html),
             ;; if so this will be added to the quarto front-matter to make them behave the same way

@@ -87,8 +87,8 @@
 ;; source-paths and base-source-path may come from configuration rather than the spec
 (defn start!
   "Watch directories of a spec"
-  [make-fn {:as spec :keys [base-source-path watch-dirs]} source-paths]
-  (let [spec (dissoc spec :live-reload)                     ;; don't need to re-watch on triggered makes
+  [make-fn {:as orig-spec :keys [base-source-path watch-dirs]} source-paths]
+  (let [spec (dissoc orig-spec :live-reload)                     ;; don't need to re-watch on triggered makes
         files (set (map (comp str fs/canonicalize)
                         (remove (some-fn nil? fs/directory?)
                                 source-paths)))
@@ -112,6 +112,7 @@
     (stop-watching-dirs! (subdirs (watched-dirs) watch))
     ;; watch new dirs for notebook changes
     (watch-dirs! watch make-fn spec)
+    (server/update-page! orig-spec)
     [:watching (mapv #(fs/relativize root %) (watched-dirs))]))
 
 (defn stop!
