@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2-beta52 - 2025-08-18]
+- minor: Exceptions collapse only when `:exception-continue` is true
+- bugfix: make with no source-path (for live-reload)
+- removed the hashp dependency
+
 ## [2-beta51 - 2025-08-14]
 - bugfix: make with no source-path (for live-reload)
     
