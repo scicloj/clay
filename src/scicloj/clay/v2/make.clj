@@ -315,40 +315,16 @@
      [:made-book])])
 
 (defn write-test-forms-as-ns [forms]
-  (let [;; Get the first namespace form
-        first-ns-form (->> forms
-                           (filter notebook/ns-form?)
-                           first)
-        ;; Remove all namespace forms except the first
-        forms-without-extra-ns (->> forms
-                                    (reduce (fn [{:keys [seen-ns result]} form]
-                                              (cond
-                                                 ;; First ns form - keep it
-                                                (and (notebook/ns-form? form)
-                                                     (not seen-ns))
-                                                {:seen-ns true
-                                                 :result (conj result form)}
-
-                                                 ;; Subsequent ns forms - skip them
-                                                (notebook/ns-form? form)
-                                                {:seen-ns true
-                                                 :result result}
-
-                                                 ;; All other forms - keep them
-                                                :else
-                                                {:seen-ns seen-ns
-                                                 :result (conj result form)}))
-                                            {:seen-ns false
-                                             :result []})
-                                    :result)
-        path (-> first-ns-form
+  (let [path (-> forms
+                 (->> (filter notebook/ns-form?))
+                 first
                  second
                  str
                  (str/replace #"\." "/")
                  (str/replace #"-" "_")
                  (->> (format "test/%s.clj")))]
     (io/make-parents path)
-    (->> forms-without-extra-ns
+    (->> forms
          (map (fn [form]
                 (-> form
                     pp/pprint
