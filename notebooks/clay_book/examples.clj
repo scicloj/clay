@@ -11,7 +11,8 @@
    [scicloj.kindly.v4.kind :as kind]
    [tablecloth.api :as tc]
    [scicloj.metamorph.ml.toydata :as toydata]
-   [scicloj.tableplot.v1.hanami :as hanami]))
+   [scicloj.tableplot.v1.hanami :as hanami]
+   [clojure.java.io :as io]))
 
 ;; ## Plain values
 
@@ -205,8 +206,8 @@ scittle.core.eval_string('(.log js/console 123)')
         java.net.URL)
 
 (defonce clay-image
-  (->  "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"
-       (URL.)
+  (->  "notebooks/clojure-logo-120b.png"
+       io/file
        (ImageIO/read)))
 
 clay-image
