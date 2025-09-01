@@ -24,6 +24,8 @@
                      ["https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"]}
                 :css {:from-the-web
                       ["https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"]}}
+   :mermaid {:js {:from-the-web
+                  ["https://cdn.jsdelivr.net/npm/mermaid@11.10.1/dist/mermaid.min.js"]}}
    :echarts {:js {:from-local-copy
                   ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
    :cytoscape {:js {:from-local-copy
