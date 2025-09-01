@@ -121,10 +121,6 @@
 ;; - the [Macroexpand 2025](https://scicloj.github.io/macroexpand-2025/) conferences
 
 
-
-
-
-
 ;; ## Videos
 
 ^{:kindly/hide-code true
