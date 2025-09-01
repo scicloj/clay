@@ -57,6 +57,7 @@ Please reach out to add your project to this list.
 
 The best places to discuss this project are:
 * a topic thread under the [#clay-dev channel](https://clojurians.zulipchat.com/#narrow/stream/422115-clay-dev) at the Clojurians Zulip (more about chat channels [here](https://scicloj.github.io/docs/community/chat/)) 
+  * It is highly recommended to create separate [topics](https://zulip.com/help/introduction-to-topics) for separate questions.
 * a [github issue](https://github.com/scicloj/clay/issues)
 
 ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
