@@ -102,6 +102,7 @@
 ;;
 ;; ## Projects using Clay
 
+;; - [Clojure Civitas](https://clojurecivitas.github.io/)
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 ;; - [Wolframite documentation](https://scicloj.github.io/wolframite)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
@@ -117,6 +118,12 @@
 ;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 ;; - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
 ;; - the [SciNoj Light](https://scicloj.github.io/docs/community/groups/scinoj-light/) conference
+;; - the [Macroexpand 2025](https://clojurecivitas.github.io/) conferences
+
+
+
+
+
 
 ;; ## Videos
 
