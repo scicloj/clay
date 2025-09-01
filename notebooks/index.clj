@@ -118,7 +118,7 @@
 ;; - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 ;; - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
 ;; - the [SciNoj Light](https://scicloj.github.io/docs/community/groups/scinoj-light/) conference
-;; - the [Macroexpand 2025](https://clojurecivitas.github.io/) conferences
+;; - the [Macroexpand 2025](https://scicloj.github.io/macroexpand-2025/) conferences
 
 
 

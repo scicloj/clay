@@ -53,11 +53,11 @@ Please reach out to add your project to this list.
 - [LLMs tutorial](https://kpassapk.github.io/llama.clj/llama.html) (in spanish) by Kyle Passarelli
 - [Statistical Computing in Clojure: Functional Approaches to Unsupervised Learning](https://github.com/adabwana/f24-cs7300-final-project/) by Jaryt Salvo
 - the [SciNoj Light](https://scicloj.github.io/docs/community/groups/scinoj-light/) conference
-- the [Macroexpand 2025](https://clojurecivitas.github.io/) conferences
+- the [Macroexpand 2025](https://scicloj.github.io/macroexpand-2025/) conferences
 
 ## Discussion
 
-The best places to discuss this project are:
+    The best places to discuss this project are:
 * a topic thread under the [#clay-dev channel](https://clojurians.zulipchat.com/#narrow/stream/422115-clay-dev) at the Clojurians Zulip (more about chat channels [here](https://scicloj.github.io/docs/community/chat/)) 
   * It is highly recommended to create separate [topics](https://zulip.com/help/introduction-to-topics) for separate questions.
 * a [github issue](https://github.com/scicloj/clay/issues)
