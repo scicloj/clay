@@ -6,7 +6,6 @@
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly.v4.kind :as kind]
             [scicloj.kindly-advice.v1.api :as kindly-advice])
   (:import (java.io StringWriter)))
 
@@ -49,6 +48,13 @@
         (.setLength (.getBuffer ^StringWriter w) 0)
         s))))
 
+(def ^:dynamic *out-orig* *out*)
+
+(defn maybe-println-orig [s]
+  (when (seq s)
+    (binding [*out* *out-orig*]
+      (print s))))
+
 (defn read-eval-capture
   "Captures stdout and stderr while evaluating a note"
   [{:as   note
@@ -76,6 +82,10 @@
         global-err (str-and-reset! *err*)
         ;; Don't show output from requiring other namespaces
         show (not (ns-form? form))]
+    (maybe-println-orig out-str)
+    (maybe-println-orig err-str)
+    (maybe-println-orig global-out)
+    (maybe-println-orig global-err)
     (if show
       (cond-> note
         (seq out-str) (assoc :out out-str)
