@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Pending]
 - added support for `[:format :pdf]`
+- output is now reported in the REPL (as well as being captured in the page)
 
 ## [2-beta52 - 2025-08-18]
 - minor: Exceptions collapse only when `:exception-continue` is true
