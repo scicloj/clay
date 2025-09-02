@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [Pending]
 - added support for `[:format :pdf]`
 - simplified live-reload browser view
+- avoided unnecessary call to `update-page!` on the creation of live-reload
 
 ## [2-beta52 - 2025-08-18]
 - minor: Exceptions collapse only when `:exception-continue` is true

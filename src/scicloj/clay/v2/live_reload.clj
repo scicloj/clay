@@ -112,7 +112,8 @@
     (stop-watching-dirs! (subdirs (watched-dirs) watch))
     ;; watch new dirs for notebook changes
     (watch-dirs! watch make-fn spec)
-    (server/update-page! orig-spec)
+    (when (empty? files)
+      (server/update-page! orig-spec))
     [:watching (mapv #(fs/relativize root %) (watched-dirs))]))
 
 (defn stop!
