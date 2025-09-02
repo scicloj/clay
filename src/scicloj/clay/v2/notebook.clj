@@ -53,7 +53,8 @@
 (defn maybe-println-orig [s]
   (when (seq s)
     (binding [*out* *out-orig*]
-      (print s))))
+      (print s)
+      (flush))))
 
 (def ^:dynamic *err-orig* *err*)
 
@@ -62,7 +63,6 @@
     (binding [*out* *err-orig*]
       (print s)
       (flush))))
-
 
 (defn read-eval-capture
   "Captures stdout and stderr while evaluating a note"
