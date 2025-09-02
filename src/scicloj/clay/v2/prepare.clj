@@ -529,6 +529,10 @@
  #'item/echarts)
 
 (add-preparer!
+ :kind/mermaid
+ #'item/mermaid)
+
+(add-preparer!
  :kind/plotly
  #'item/plotly)
 

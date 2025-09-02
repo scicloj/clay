@@ -288,6 +288,12 @@
 };"))]]
    :deps [:echarts]})
 
+(defn mermaid [{:as   _context
+                :keys [value]}]
+  {:hiccup [:div.mermaid
+            (first value)]
+   :deps [:mermaid]})
+
 (defn plotly [{:as context
                :keys [full-target-path qmd-target-path kindly/options]
                {:keys [data layout config]
