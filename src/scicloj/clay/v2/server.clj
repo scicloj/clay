@@ -136,8 +136,6 @@
         [:html
          [:head [:title "PDF Viewer"]]
          [:body
-          [:div {:style {:height "70px" :background-color "#eee"}}
-           (header state)]
           [:embed {:src (str "/" (fs/unixify (fs/relativize (:base-target-path last-rendered-spec) path)))
                    :type "application/pdf"
                    :width "100%"
@@ -151,11 +149,9 @@
         [:html
          [:head [:title "Clay Server State"]]
          [:body
-          [:div {:style {:height "70px" :background-color "#eee"}}
-           (header state)]
           [:h2 "No file to display"]
           [:p "Create or edit source files"]
-          [:pre (with-out-str (pprint/pprint state))]]])))))
+          [:details [:pre (with-out-str (pprint/pprint state))]]]])))))
 
 (defn wrap-base-url [html {:as state
                            {:keys [flatten-targets
