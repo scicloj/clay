@@ -60,7 +60,8 @@
 (defn maybe-err-orig [s]
   (when (seq s)
     (binding [*out* *err-orig*]
-      (print s))))
+      (print s)
+      (flush))))
 
 
 (defn read-eval-capture
