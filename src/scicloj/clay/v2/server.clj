@@ -39,60 +39,41 @@
 (defn communication-script
   "The communication JS script to init a WebSocket to the server."
   [{:keys [port counter]}]
-  (let [reload-regexp ".*/(#[a-zA-Z\\-]+)?\\$"
-        ;; We use this regexp to recognize when to used
-        ;; page reload rather than revert to the original URL,
-        ;; see below.
-        ]
-    (->> [port counter reload-regexp]
-         (apply format "
+  (->> [port counter]
+       (apply format "
 <script type=\"text/javascript\">
-
-    clay_port = %d;
-    clay_server_counter = '%d';
-    reload_regexp = new RegExp('%s');
-
-    clay_refresh = function() {
-      // Check whether we are still in the main page
-      // (but possibly in an anchor (#...) inside it):
-      if(reload_regexp.test(window.location.href)) {
-        // Just reload, keeping the current position:
-        location.reload();
+  clay_port = %d;
+  clay_server_counter = '%d';
+  const clay_socket = new WebSocket('ws://localhost:'+clay_port);
+  clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
+  clay_socket.addEventListener('message', (event)=> {
+    if (event.data.startsWith('refresh')) {
+      const path = event.data.substring('refresh '.length);
+      if (path !== window.location.pathname) {
+        window.location.pathname = path;
       } else {
-         // We might be in a different book to the chapter.
-         // So, reload and force returning to the main page.
-         location.assign('http://localhost:'+clay_port);
+        window.location.reload();
       }
-    }
-
-    const clay_socket = new WebSocket('ws://localhost:'+clay_port);
-
-    clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
-
-    clay_socket.addEventListener('message', (event)=> {
-      if (event.data=='refresh') {
-        clay_refresh();
-      } else if (event.data=='loading') {
-        document.body.style.opacity = 0.5;
-        document.body.prepend(document.createElement('div', {class: 'loader'}));
-      } else if (event.data.startsWith('scittle-eval-string ')) {
-        // Evaluate ClojureScript code directly
-        const code = event.data.substring('scittle-eval-string '.length);
-        if (window.scittle && window.scittle.core && window.scittle.core.eval_string) {
-          try {
-            const result = window.scittle.core.eval_string(code);
-            console.log('Clay eval result:', result);
-          } catch (e) {
-            console.error('Clay eval error:', e);
-          }
-        } else {
-          console.warn('Scittle not available for eval-string');
+    } else if (event.data=='loading') {
+      document.body.style.opacity = 0.5;
+      document.body.prepend(document.createElement('div', {class: 'loader'}));
+    } else if (event.data.startsWith('scittle-eval-string ')) {
+      // Evaluate ClojureScript code directly
+      const code = event.data.substring('scittle-eval-string '.length);
+      if (window.scittle && window.scittle.core && window.scittle.core.eval_string) {
+        try {
+          const result = window.scittle.core.eval_string(code);
+          console.log('Clay eval result:', result);
+        } catch (e) {
+          console.error('Clay eval error:', e);
         }
       } else {
-        console.log('unknown ws message: ' + event.data);
+        console.warn('Scittle not available for eval-string');
       }
-    });
-
+    } else {
+      console.log('unknown ws message: ' + event.data);
+    }
+  });
   async function clay_1 () {
     const response = await fetch('/counter');
     const response_counter = await response.json();
@@ -101,7 +82,7 @@
     }
   };
   clay_1();
-</script>"))))
+</script>")))
 
 (defn header [state]
   (hiccup/html
@@ -300,7 +281,8 @@
       (assoc :full-target-path full-target-path)
       (server.state/reset-last-rendered-spec!))
   (when show
-    (broadcast! "refresh"))
+    (let [path (fs/unixify (fs/relativize base-target-path full-target-path))]
+      (broadcast! (str "refresh /" path))))
   [:ok])
 
 (defn loading! []
