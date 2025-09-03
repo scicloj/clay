@@ -38,22 +38,15 @@
 
 (defn communication-script
   "The communication JS script to init a WebSocket to the server."
-  [{:keys [port counter]}]
-  (->> [port counter]
+  [{:keys [port]}]
+  (->> [port]
        (apply format "
 <script type=\"text/javascript\">
 
     clay_port = %d;
-    clay_server_counter = '%d';
 
     clay_refresh = function() {
-      // Check whether we are still in the main page
-      if(window.location.pathname !== '/') {
-        // Just reload, keeping the current position:
-        location.reload();
-      } else {
-         location.assign('http://localhost:'+clay_port);
-      }
+      location.reload();
     }
 
     const clay_socket = new WebSocket('ws://localhost:'+clay_port);
@@ -83,15 +76,6 @@
         console.log('unknown ws message: ' + event.data);
       }
     });
-
-  async function clay_1 () {
-    const response = await fetch('/counter');
-    const response_counter = await response.json();
-    if (response_counter != clay_server_counter) {
-      clay_refresh();
-    }
-  };
-  clay_1();
 </script>")))
 
 (defn header [state]
