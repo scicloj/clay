@@ -101,7 +101,7 @@
     }
   };
   clay_1();
-</script>")))
+</script>"))))
 
 (defn header [state]
   (hiccup/html
