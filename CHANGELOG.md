@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - avoided unnecessary call to `update-page!` on the creation of live-reload
 - added `:kind/mermaid` support by emil0r
 - output is now reported in the REPL (as well as being captured in the page)
-- When making a book, the first source path will now be treated as index.qmd
+- new flag: `:first-as-index` when making a book, the first source path will now be renamed index.qmd
 
 ## [2-beta52 - 2025-08-18]
 - minor: Exceptions collapse only when `:exception-continue` is true
