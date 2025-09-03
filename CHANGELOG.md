@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 - added `:kind/mermaid` support by emil0r
 - output is now reported in the REPL (as well as being captured in the page)
 - new flag: `:first-as-index` when making a book, the first source path will now be renamed index.qmd
+- fixed: second build not greying out webpage
 
 ## [2-beta52 - 2025-08-18]
 - minor: Exceptions collapse only when `:exception-continue` is true
