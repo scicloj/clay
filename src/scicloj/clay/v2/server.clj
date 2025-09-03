@@ -93,14 +93,14 @@
       }
     });
 
-    async function clay_1 () {
-      const response = await fetch('/counter');
-      const response_counter = await response.json();
-      if (response_counter != clay_server_counter) {
-        clay_refresh();
-      }
-    };
-    clay_1();
+  async function clay_1 () {
+    const response = await fetch('/counter');
+    const response_counter = await response.json();
+    if (response_counter != clay_server_counter) {
+      clay_refresh();
+    }
+  };
+  clay_1();
 </script>")))
 
 (defn header [state]
