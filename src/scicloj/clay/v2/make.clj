@@ -218,7 +218,7 @@
                           (update :chapters
                                   (partial map ->chapter-qmd-path)))
                       (->chapter-qmd-path path)))))
-        (cond->> false #_(not index-included?)
+        (cond->> (not index-included?)
           (cons "index.qmd")))))
 
 (defn spec->quarto-book-config [{:as   spec
