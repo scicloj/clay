@@ -53,7 +53,16 @@
 (defn maybe-println-orig [s]
   (when (seq s)
     (binding [*out* *out-orig*]
-      (print s))))
+      (print s)
+      (flush))))
+
+(def ^:dynamic *err-orig* *err*)
+
+(defn maybe-err-orig [s]
+  (when (seq s)
+    (binding [*out* *err-orig*]
+      (print s)
+      (flush))))
 
 (defn read-eval-capture
   "Captures stdout and stderr while evaluating a note"
@@ -83,9 +92,9 @@
         ;; Don't show output from requiring other namespaces
         show (not (ns-form? form))]
     (maybe-println-orig out-str)
-    (maybe-println-orig err-str)
+    (maybe-err-orig err-str)
     (maybe-println-orig global-out)
-    (maybe-println-orig global-err)
+    (maybe-err-orig global-err)
     (if show
       (cond-> note
         (seq out-str) (assoc :out out-str)
