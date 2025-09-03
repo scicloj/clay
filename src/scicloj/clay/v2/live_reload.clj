@@ -8,7 +8,7 @@
 (def empty-state {:watchers   {}
                   :file-specs {}})
 
-(def *state (atom empty-state))
+(defonce *state (atom empty-state))
 
 (defn subdir? [dir root]
   (and (not= dir root)
@@ -50,7 +50,7 @@
 (defn watch-files! [files spec]
   (swap! *state update :file-specs into
          (for [file files]
-           [file (dissoc spec :reset-aliases)])))
+           [file spec])))
 
 (defn watch-dirs!
   "Start watching file changes in `dirs` with make."
@@ -67,8 +67,8 @@
                                     (when (#{:create :modify} type)
                                       (cond
                                         (= ext "clj")
-                                        (make-fn (-> (or (file-spec path) spec)
-                                                     (assoc :source-path path)))
+                                        (make-fn (-> (or (file-spec path)
+                                                         (assoc spec :source-path path))))
 
                                         (= ext "cljs")
                                         (do (server/scittle-eval-string! (slurp path))

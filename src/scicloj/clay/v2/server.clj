@@ -101,7 +101,7 @@
     }
   };
   clay_1();
-</script>"))))
+</script>")))
 
 (defn header [state]
   (hiccup/html
@@ -199,7 +199,10 @@
     :as req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
-      (httpkit/as-channel req {:on-open (fn [ch] (swap! *clients conj ch))
+      (httpkit/as-channel req {:on-open (fn [ch]
+                                          (swap! *clients conj ch)
+                                          (when (:loading state)
+                                            (httpkit/send! ch "loading")))
                                :on-close (fn [ch _reason] (swap! *clients disj ch))
                                :on-receive (fn [_ch msg])})
       (case [request-method uri]
@@ -300,10 +303,12 @@
       (assoc :full-target-path full-target-path)
       (server.state/reset-last-rendered-spec!))
   (when show
+    (swap! server.state/*state dissoc :loading)
     (broadcast! "refresh"))
   [:ok])
 
 (defn loading! []
+  (swap! server.state/*state assoc :loading true)
   (broadcast! "loading"))
 
 (defn close! []
