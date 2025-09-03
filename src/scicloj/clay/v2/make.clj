@@ -85,7 +85,9 @@
     (tempory-target? spec)
     (str (fs/path base-target-path ".clay.html"))
 
-    (and book (= (second format) :html) (= source-path (first source-paths)))
+    (and book
+         (= (second format) :html)
+         (= source-path (first source-paths)))
     (str (fs/path base-target-path "index.html"))
 
     (string? source-path)

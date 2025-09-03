@@ -771,11 +771,7 @@
 ;; When set to `nil` there won't be wrapping at all and `(range 100)` will be rendered in one horizontal list of numbers.
 
 ;; Aliases let you define reusable config fragments and selectively apply them.
-;; Add an `:aliases` map to your config with named configurations,
-;; then activate them using `:merge-aliases` (for one-time use) or `:reset-aliases` (to persist across invocations).
-;; For example, you might use `:merge-aliases [:markdown]` to generate Quarto-friendly Markdown from the REPL,
-;; or `:reset-aliases [:html]` in your IDE to default to full HTML rendering.
-;; Alternatively you can `(reset! scicloj.clay.v2.config/*current-aliases aliases)`.
+;; `:aliases` should be a vector of keys pointing to sub maps in configuration to merge into the main configuration.
 ;; Aliases are deeply merged into the base config in order.
 
 ;; ### Namespace configuration and front matter
