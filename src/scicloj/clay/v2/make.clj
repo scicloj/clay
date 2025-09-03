@@ -73,15 +73,20 @@
   "Returns the target-path relative to the current working directory (project root)."
   [{:as   spec
     :keys [source-path
+           source-paths
            full-source-path
            source-type
            base-target-path
            flatten-targets
            format
-           keep-sync-root]}]
+           keep-sync-root
+           book]}]
   (cond
     (tempory-target? spec)
-    (str base-target-path "/.clay.html")
+    (str (fs/path base-target-path ".clay.html"))
+
+    (and book (= (second format) :html) (= source-path (first source-paths)))
+    (str (fs/path base-target-path "index.html"))
 
     (string? source-path)
     (let [relative-source (relative-source-path spec)]
@@ -213,7 +218,7 @@
                           (update :chapters
                                   (partial map ->chapter-qmd-path)))
                       (->chapter-qmd-path path)))))
-        (cond->> (not index-included?)
+        (cond->> false #_(not index-included?)
           (cons "index.qmd")))))
 
 (defn spec->quarto-book-config [{:as   spec
