@@ -39,28 +39,19 @@
 (defn communication-script
   "The communication JS script to init a WebSocket to the server."
   [{:keys [port counter]}]
-  (let [reload-regexp ".*/(#[a-zA-Z\\-]+)?\\$"
-        ;; We use this regexp to recognize when to used
-        ;; page reload rather than revert to the original URL,
-        ;; see below.
-        ]
-    (->> [port counter reload-regexp]
-         (apply format "
+  (->> [port counter]
+       (apply format "
 <script type=\"text/javascript\">
 
     clay_port = %d;
     clay_server_counter = '%d';
-    reload_regexp = new RegExp('%s');
 
     clay_refresh = function() {
       // Check whether we are still in the main page
-      // (but possibly in an anchor (#...) inside it):
-      if(reload_regexp.test(window.location.href)) {
+      if(window.location.pathname !== '/') {
         // Just reload, keeping the current position:
         location.reload();
       } else {
-         // We might be in a different book to the chapter.
-         // So, reload and force returning to the main page.
          location.assign('http://localhost:'+clay_port);
       }
     }
@@ -101,7 +92,7 @@
     }
   };
   clay_1();
-</script>"))))
+</script>")))
 
 (defn header [state]
   (hiccup/html
