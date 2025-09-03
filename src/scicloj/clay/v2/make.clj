@@ -80,12 +80,14 @@
            flatten-targets
            format
            keep-sync-root
-           book]}]
+           book
+           first-as-index]}]
   (cond
     (tempory-target? spec)
     (str (fs/path base-target-path ".clay.html"))
 
     (and book
+         first-as-index
          (= (second format) :html)
          (= source-path (first source-paths)))
     (str (fs/path base-target-path "index.html"))
