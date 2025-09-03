@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [Pending]
+## [2-beta53 - 2025-09-04]
 - added support for `:format [:quarto :pdf]` (experimental)
 - simplified live-reload browser view
 - avoided unnecessary call to `update-page!` on the creation of live-reload
