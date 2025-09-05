@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [unreleased]
+- updated Kindly version
+
 ## [2-beta53 - 2025-09-04]
 - added support for `:format [:quarto :pdf]` (experimental)
 - simplified live-reload browser view
