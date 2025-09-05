@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2-beta54 - 2025-09-05]
 - updated Kindly version
 
 ## [2-beta53 - 2025-09-04]
