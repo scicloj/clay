@@ -294,6 +294,25 @@
             (first value)]
    :deps [:mermaid]})
 
+(defn graphviz [{:as   _context
+                :keys [value]}]
+  {:hiccup [:div
+            ;; create a local closure and then execute it immediately
+            [:script {:type "text/javascript"}
+             (format "(function() {
+  const el = document.currentScript.parentElement
+  Viz.instance().then(viz => {
+    try {
+      const svg = viz.renderSVGElement(`%s`);
+
+      el.appendChild(svg);
+   } catch (e) {
+     console.error(e);
+   }
+  })})
+();" (first value))]]
+   :deps   [:graphviz]})
+
 (defn plotly [{:as context
                :keys [full-target-path qmd-target-path kindly/options]
                {:keys [data layout config]

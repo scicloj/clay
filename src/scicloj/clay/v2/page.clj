@@ -4,16 +4,15 @@
    [clj-yaml.core :as yaml]
    [clojure.java.io :as io]
    [clojure.java.shell :as shell]
-   [clojure.string :as string]
+   [clojure.string :as str]
    [hiccup.core :as hiccup]
    [hiccup.page]
+   [scicloj.clay.v2.files :as files]
+   [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
    [scicloj.clay.v2.util.portal :as portal]
-   [scicloj.clay.v2.util.resource :as resource]
-   [scicloj.clay.v2.files :as files]
-   [scicloj.clay.v2.item :as item]
-   [clojure.string :as str]))
+   [scicloj.clay.v2.util.resource :as resource]))
 
 (def special-lib-resources
   {:vega {:js {:from-local-copy
@@ -26,6 +25,8 @@
                       ["https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"]}}
    :mermaid {:js {:from-the-web
                   ["https://cdn.jsdelivr.net/npm/mermaid@11.10.1/dist/mermaid.min.js"]}}
+   :graphviz {:js {:from-the-web
+                   ["https://cdn.jsdelivr.net/npm/@viz-js/viz@3.17.0/dist/viz-global.min.js"]}}
    :echarts {:js {:from-local-copy
                   ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
    :cytoscape {:js {:from-local-copy
@@ -303,7 +304,7 @@
           (map-indexed
            (fn [i item]
              (prepare/item->md item)))
-          (string/join "\n\n")))))
+          (str/join "\n\n")))))
 
 
 (defn gfm [{:as spec
@@ -313,7 +314,7 @@
        (remove nil?)
        (mapcat #(str/split % #"\n"))
        (remove #(re-matches #":::.*" %))
-       (string/join "\n")))
+       (str/join "\n")))
 
 (defn hiccup [{:as spec
                :keys [items title quarto]}]
