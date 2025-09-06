@@ -195,6 +195,20 @@ flowchart TD
     C -->|Three| F[fa:fa-car Car]
   ")
 
+;; ## graphviz
+
+(kind/graphviz "digraph D {
+
+  A [shape=diamond]
+  B [shape=box]
+  C [shape=circle]
+
+  A -> B [style=dashed, color=grey]
+  A -> C [color=\"black:invis:black\"]
+  A -> D [penwidth=5, arrowhead=none]
+
+}")
+
 ;; ## Code
 
 ;; Clojure code can be annotated with `kind/code`.
