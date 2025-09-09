@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.files
   (:require [clojure.string :as string]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [babashka.fs :as fs]))
 
 (def *target-path->files (atom {}))
 
@@ -38,3 +39,9 @@
                            (get value))]
           (io/make-parents new-file)
           new-file))))
+
+(defn relative-url [full-target-path file]
+  (-> (fs/relativize (fs/parent full-target-path)
+                     file)
+      (fs/unixify)
+      (str)))

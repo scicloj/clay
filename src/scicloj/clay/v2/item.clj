@@ -355,8 +355,7 @@
               (str/join "\n"))})
 
 (defn image [{:keys [value
-                     full-target-path
-                     base-target-path]
+                     full-target-path]
               :as context}]
   (if (sequential? value)
     ;; If value is sequential, just handle the first element.
@@ -374,19 +373,16 @@
        (util.image/buffered-image? value)
        (let [png-path (files/next-file!
                        full-target-path
-                       ""
+                       "image"
                        value
                        ".png")]
          (when-not (util.image/write! value "png" png-path)
            (throw (ex-message "Failed to save image as PNG.")))
-         {:hiccup [:img {:src (-> png-path
-                                  (str/replace
-                                   (re-pattern (str "^"
-                                                    base-target-path
-                                                    "/"))
-                                   ""))}]})
+         {:hiccup [:img {:src (files/relative-url full-target-path png-path)}]})
        :else
        {:hiccup [:p "unsupported image format"]}))))
+(str/replace "temp/games/repl_runner/level1_files/image0.png" #"^temp/" "")
+(fs/relativize "temp/games/repl_runner" "temp/games/repl_runner/level1_files/image0.png")
 
 (defn vega-embed [{:keys [value
                           full-target-path
@@ -397,16 +393,11 @@
                           (when (some-> format :type name (= "csv"))
                             (let [csv-path (files/next-file!
                                             full-target-path
-                                            ""
+                                            "data"
                                             values
                                             ".csv")]
                               (spit csv-path values)
-                              {:url (-> csv-path
-                                        (str/replace
-                                         (re-pattern (str "^"
-                                                          base-target-path
-                                                          "/"))
-                                         ""))
+                              {:url (files/relative-url full-target-path csv-path)
                                :format format})))
                         data)]
     {:hiccup [:div
