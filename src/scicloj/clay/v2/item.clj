@@ -295,18 +295,18 @@
    :deps [:mermaid]})
 
 (defn plotly [{:as context
-               :keys [full-target-path qmd-target-path kindly/options]
+               :keys [kindly/options value]
                {:keys [data layout config]
                 :or {layout {}
                      config {}}} :value}]
   (if (or (= (second (:format context)) :pdf)
           (:static options))
-    (let [filename (str "ploty-chart-" (next-id!) ".png")
-          path (str (fs/path (fs/parent (or qmd-target-path full-target-path)) filename))]
+    (let [[plot-path relative-path]
+          (files/next-file! context "plotly-chart" value ".png")]
       ;; Only loading libpython-plotly if we use it
-      ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) (:value context) path)
-      (println "Clay plotly-export:" [:wrote path])
-      {:md (str "![](" filename ")")})
+      ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) value plot-path)
+      (println "Clay plotly-export:" [:wrote plot-path])
+      {:md (str "![" (:caption options) "](" relative-path ")")})
     {:hiccup
      [:div
       {:style (-> context
@@ -354,8 +354,7 @@
               in-vector
               (str/join "\n"))})
 
-(defn image [{:keys [value
-                     full-target-path]
+(defn image [{:keys [value kindly/options]
               :as context}]
   (if (sequential? value)
     ;; If value is sequential, just handle the first element.
@@ -371,33 +370,25 @@
        {:hiccup [:img value]}
        ;; A BufferedImage object:
        (util.image/buffered-image? value)
-       (let [png-path (files/next-file!
-                       full-target-path
-                       "image"
-                       value
-                       ".png")]
+       (let [[png-path relative-path]
+             (files/next-file! context "image" value ".png")]
          (when-not (util.image/write! value "png" png-path)
            (throw (ex-message "Failed to save image as PNG.")))
-         {:hiccup [:img {:src (files/relative-url full-target-path png-path)}]})
+         {:md (str "![" (:caption options) "](" relative-path ")")})
        :else
-       {:hiccup [:p "unsupported image format"]}))))
+       {:md (str "unsupported image format: " (type value))}))))
 (str/replace "temp/games/repl_runner/level1_files/image0.png" #"^temp/" "")
 (fs/relativize "temp/games/repl_runner" "temp/games/repl_runner/level1_files/image0.png")
 
-(defn vega-embed [{:keys [value
-                          full-target-path
-                          base-target-path]
+(defn vega-embed [{:keys [value]
                    :as context}]
   (let [{:keys [data]} value
         data-to-use (or (when-let [{:keys [values format]} data]
                           (when (some-> format :type name (= "csv"))
-                            (let [csv-path (files/next-file!
-                                            full-target-path
-                                            "data"
-                                            values
-                                            ".csv")]
+                            (let [[csv-path relative-path]
+                                  (files/next-file! context "data" values ".csv")]
                               (spit csv-path values)
-                              {:url (files/relative-url full-target-path csv-path)
+                              {:url relative-path
                                :format format})))
                         data)]
     {:hiccup [:div

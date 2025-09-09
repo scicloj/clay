@@ -480,17 +480,12 @@
                 (:static options))
             (vector? value)
             (= :svg (first value)))
-     (let [{:keys [full-target-path]} context
-           {:keys [caption]} options
-           svg-path (files/next-file!
-                     full-target-path
-                     "image"
-                     value
-                     ".svg")]
+     (let [[svg-path relative-path]
+           (files/next-file! context "image" value ".svg")]
        (->> (merge-attrs value {:xmlns "http://www.w3.org/2000/svg"})
             (hiccup/html {:mode :xml})
             (spit svg-path))
-       {:md (str "![" caption "](" (files/relative-url full-target-path svg-path) ")")})
+       {:md (str "![" (:caption options) "](" relative-path ")")})
      (let [*deps (atom
                   (-> context
                       :kindly/options
