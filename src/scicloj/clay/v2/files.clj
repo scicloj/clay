@@ -18,7 +18,10 @@
       (fs/unixify)
       (str)))
 
-(defn next-file! [context custom-name value ext]
+(defn next-file!
+  "Returns a pair of [file relative-path] such that one can write to file,
+   and include it in a document using the relative path."
+  [context custom-name value ext]
   (let [{:keys [full-target-path qmd-target-path]} context
         target-path (or qmd-target-path full-target-path)]
     (if-let [file (-> @*target-path->files
