@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.prepare
   (:require [clojure.string :as string]
             [clojure.test :as test]
+            [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.table :as table]
             [scicloj.clay.v2.util.walk :as claywalk]
@@ -474,40 +475,55 @@
 (add-preparer!
  :kind/hiccup
  (fn [{:as context
-       :keys [value]}]
-   (let [*deps (atom
-                (-> context
-                    :kindly/options
-                    :html/deps)) ; TODO: implement without mutable state
-         hiccup (->> value
-                     (claywalk/prewalk
-                      (fn [subform]
-                        (let [subform-for-context (cond
-                                                    (scittle-form? subform)
-                                                    (kind/scittle subform)
-                                                    ,
-                                                    (reagent-form? subform)
-                                                    (kind/reagent subform)
-                                                    ,
-                                                    :else
-                                                    subform)
-                              subcontext (-> context
-                                             (dissoc :form :kind :advice)
-                                             (update :kindly/options dissoc :element/max-height)
-                                             (assoc :value subform-for-context))]
-                          (if (some-> subcontext
-                                      kindly-advice/advise
-                                      :kind
-                                      non-hiccup-kind?)
-                            (let [items (prepare-or-pprint
-                                         subcontext)]
-                              (swap! *deps concat (mapcat :deps items))
-                              (->> items
-                                   (map #(item->hiccup % context))
-                                   wrap-with-div-if-many))
-                            subform)))))]
-     {:hiccup hiccup
-      :deps (distinct @*deps)})))
+       :keys [value kindly/options]}]
+   (if (and (or (= (second (:format context)) :pdf)
+                (:static options))
+            (vector? value)
+            (= :svg (first value)))
+     (let [{:keys [full-target-path]} context
+           {:keys [caption]} options
+           svg-path (files/next-file!
+                     full-target-path
+                     "image"
+                     value
+                     ".svg")]
+       (->> (merge-attrs value {:xmlns "http://www.w3.org/2000/svg"})
+            (hiccup/html {:mode :xml})
+            (spit svg-path))
+       {:md (str "![" caption "](" (files/relative-url full-target-path svg-path) ")")})
+     (let [*deps (atom
+                  (-> context
+                      :kindly/options
+                      :html/deps)) ; TODO: implement without mutable state
+           hiccup (->> value
+                       (claywalk/prewalk
+                        (fn [subform]
+                          (let [subform-for-context (cond
+                                                      (scittle-form? subform)
+                                                      (kind/scittle subform)
+                                                      ,
+                                                      (reagent-form? subform)
+                                                      (kind/reagent subform)
+                                                      ,
+                                                      :else
+                                                      subform)
+                                subcontext (-> context
+                                               (dissoc :form :kind :advice)
+                                               (update :kindly/options dissoc :element/max-height)
+                                               (assoc :value subform-for-context))]
+                            (if (some-> subcontext
+                                        kindly-advice/advise
+                                        :kind
+                                        non-hiccup-kind?)
+                              (let [items (prepare-or-pprint
+                                           subcontext)]
+                                (swap! *deps concat (mapcat :deps items))
+                                (->> items
+                                     (map #(item->hiccup % context))
+                                     wrap-with-div-if-many))
+                              subform)))))]
+       {:hiccup hiccup
+        :deps (distinct @*deps)}))))
 
 (add-preparer-from-value-fn!
  :kind/html
