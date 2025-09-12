@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 - fixing the CLI live-reload when specifying a file to watch
 - svg support (when represented as `kind/hiccup`) in static targets
 - added a kindly option for caption in images
+- a minor update to IntelliJ `repl-commands.xml`
 
 ## [2-beta54 - 2025-09-05]
 - updated Kindly version
