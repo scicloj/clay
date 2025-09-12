@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - added a kindly option for caption in images
 - a minor update to IntelliJ `repl-commands.xml`
 - updated Kindly version
+- graphviz (js) support by @emil0r
 
 ## [2-beta54 - 2025-09-05]
 - updated Kindly version
