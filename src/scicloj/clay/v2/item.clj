@@ -377,8 +377,6 @@
          {:md (str "![" (:caption options) "](" relative-path ")")})
        :else
        {:md (str "unsupported image format: " (type value))}))))
-(str/replace "temp/games/repl_runner/level1_files/image0.png" #"^temp/" "")
-(fs/relativize "temp/games/repl_runner" "temp/games/repl_runner/level1_files/image0.png")
 
 (defn vega-embed [{:keys [value]
                    :as context}]
