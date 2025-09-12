@@ -238,6 +238,12 @@ flowchart TD
 
 clay-image
 
+;; With Kindly options specifying caption
+;; (works when rendered throuth Quarto):
+(kind/image
+ clay-image
+ {:caption "Clojure logo"})
+
 ;; Urls to images can be annotated as images as well.
 
 (kind/image
