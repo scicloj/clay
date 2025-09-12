@@ -544,6 +544,10 @@
  #'item/mermaid)
 
 (add-preparer!
+ :kind/graphviz
+ #'item/graphviz)
+
+(add-preparer!
  :kind/plotly
  #'item/plotly)
 
