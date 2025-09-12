@@ -66,7 +66,7 @@
     :else
     source-path))
 
-(defn tempory-target? [{:keys [source-type single-form single-value]}]
+(defn tempory-target? [{:keys [single-form single-value]}]
   (or single-value single-form))
 
 (defn spec->full-target-path
@@ -483,7 +483,7 @@
         {:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec
-        source-paths (set (map :source-path single-ns-specs))]
+        full-source-paths (set (map :full-source-path single-ns-specs))]
     (when (and clean-up-target-dir
                (not (or single-form single-value)))
       (fs/delete-tree base-target-path))
@@ -493,8 +493,8 @@
     (let [info (cond-> (mapv handle-single-source-spec! single-ns-specs)
                  book (conj (make-book! main-spec))
                  live-reload (conj (if (#{:toggle} live-reload)
-                                     (live-reload/toggle! make! main-spec source-paths)
-                                     (live-reload/start! make! main-spec source-paths))))
+                                     (live-reload/toggle! make! main-spec full-source-paths)
+                                     (live-reload/start! make! main-spec full-source-paths))))
           summary {:url     (server/url)
                    :key     "clay"
                    :title   "Clay"

@@ -107,20 +107,12 @@
                       (conj (slurp src))
                       (update 1 dissoc :src))))))))
 
-(defn include-from-a-local-file [url custom-name js-or-css
-                                 {:keys [full-target-path]}]
-  (let [path (files/next-file!
-              full-target-path
-              custom-name
-              url
-              (str "." (name js-or-css)))]
+(defn include-from-a-local-file [url custom-name js-or-css context]
+  (let [[path relative-path]
+        (files/next-file! context custom-name url (str "." (name js-or-css)))]
     (io/make-parents path)
-    (->> url
-         resource/get
-         (spit path))
-    (-> (fs/relativize (fs/parent full-target-path) path)
-        (str)
-        ((include js-or-css)))))
+    (->> url (resource/get) (spit path))
+    ((include js-or-css) relative-path)))
 
 (defn clone-repo-if-needed! [gh-repo]
   (let [target-path (str "/tmp/.clay/clones/" gh-repo)]
