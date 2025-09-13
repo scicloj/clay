@@ -2,6 +2,14 @@
   (:require [scicloj.kindly-render.shared.jso :as jso]
             [clojure.java.shell :as shell]))
 
+;; Make sure you have installed plotly and kaleido in your Python environment:
+;;     pip install plotly kaleido
+
+;; If you prefer to use a virtual environment:
+;;     python3 -m venv .venv
+;;     source .venv/bin/activate
+;;     pip install plotly kaleido
+
 (def python-script
   "import sys, json, plotly.graph_objects as go
 payload = json.load(sys.stdin)
