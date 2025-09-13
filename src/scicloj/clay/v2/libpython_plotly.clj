@@ -1,4 +1,4 @@
-(ns ^:no-docs scicloj.clay.v2.libpython-plotly
+(ns ^:no-doc scicloj.clay.v2.libpython-plotly
   (:require [libpython-clj2.require :refer [require-python]]
             [libpython-clj2.python :as py]))
 
