@@ -1,6 +1,5 @@
 (ns scicloj.clay.v2.files
-  (:require [clojure.string :as string]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [babashka.fs :as fs]))
 
 (def *target-path->files (atom {}))

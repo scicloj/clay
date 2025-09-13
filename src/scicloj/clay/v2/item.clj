@@ -1,12 +1,12 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as str]
+            [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
+            [scicloj.clay.v2.plotly-export :as plotly-export]
             [scicloj.clay.v2.util.image :as util.image]
-            [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.clay.v2.util.meta :as meta]
-            [babashka.fs :as fs]
             [clj-commons.format.exceptions :as fe]))
 
 (def *id (atom 0))
@@ -322,8 +322,7 @@
           (:static options))
     (let [[plot-path relative-path]
           (files/next-file! context "plotly-chart" value ".png")]
-      ;; Only loading libpython-plotly if we use it
-      ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) value plot-path)
+      (plotly-export/export-plot! plot-path data layout config)
       (println "Clay plotly-export:" [:wrote plot-path])
       {:md (str "![" (:caption options) "](" relative-path ")")})
     {:hiccup
