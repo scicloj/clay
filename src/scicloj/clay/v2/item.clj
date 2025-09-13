@@ -314,22 +314,31 @@
    :deps   [:graphviz]})
 
 (defn plotly [{:as context
+               :keys [kindly/options value]
                {:keys [data layout config]
                 :or {layout {}
                      config {}}} :value}]
-  {:hiccup
-   [:div
-    {:style (-> context
-                :kindly/options
-                :element/style
-                (or {:height "auto"
-                     :width "100%"}))}
-    [:script
-     (format "Plotly.newPlot(document.currentScript.parentElement, %s, %s, %s);"
-             (jso/write-json-str data)
-             (jso/write-json-str layout)
-             (jso/write-json-str config))]]
-   :deps [:plotly]})
+  (if (or (= (second (:format context)) :pdf)
+          (:static options))
+    (let [[plot-path relative-path]
+          (files/next-file! context "plotly-chart" value ".png")]
+      ;; Only loading libpython-plotly if we use it
+      ((requiring-resolve 'scicloj.clay.v2.libpython-plotly/plotly-export) value plot-path)
+      (println "Clay plotly-export:" [:wrote plot-path])
+      {:md (str "![" (:caption options) "](" relative-path ")")})
+    {:hiccup
+     [:div
+      {:style (-> context
+                  :kindly/options
+                  :element/style
+                  (or {:height "auto"
+                       :width "100%"}))}
+      [:script
+       (format "Plotly.newPlot(document.currentScript.parentElement, %s, %s, %s);"
+               (jso/write-json-str data)
+               (jso/write-json-str layout)
+               (jso/write-json-str config))]]
+     :deps [:plotly]}))
 
 (defn portal [value]
   {:hiccup [:div
