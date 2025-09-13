@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.libpython-plotly
+(ns ^:no-docs scicloj.clay.v2.libpython-plotly
   (:require [libpython-clj2.require :refer [require-python]]
             [libpython-clj2.python :as py]))
 
@@ -25,4 +25,3 @@
                           (dissoc layout :automargin)
                           config)]
     (py/call-attr fig "write_image" filename)))
-
