@@ -67,7 +67,13 @@
     (b/jar opts))
   opts)
 
+(defn tag [_]
+  (b/git-process {:git-args ["tag" "-a" (str "v" version)
+                             "-m" (str "Release version v" version)]})
+  (b/git-process {:git-args ["push" "origin" (str "v" version)]}))
+
 (defn deploy "Deploy the JAR to Clojars." [opts]
+  (tag nil)
   (let [{:keys [jar-file] :as opts} (jar-opts opts)]
     (dd/deploy {:installer :remote :artifact (b/resolve-path jar-file)
                 :pom-file (b/pom-path (select-keys opts [:lib :class-dir]))}))
