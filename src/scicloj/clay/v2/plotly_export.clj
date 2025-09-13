@@ -1,6 +1,6 @@
 (ns scicloj.clay.v2.plotly-export
   (:require [scicloj.kindly-render.shared.jso :as jso]
-               [clojure.java.shell :as shell]))
+            [clojure.java.shell :as shell]))
 
 (def python-script
   "import sys, json, plotly.graph_objects as go
