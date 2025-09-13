@@ -1,4 +1,4 @@
-(ns ^:no-docs scicloj.clay.v2.libpython-plotly
+(ns scicloj.clay.v2.libpython-plotly
   (:require [libpython-clj2.require :refer [require-python]]
             [libpython-clj2.python :as py]))
 
@@ -10,16 +10,16 @@
 ;;     source .venv/bin/activate
 ;;     pip install plotly kaleido
 
-(py/initialize!)
-
-(require-python 'plotly.graph_objects)
-(require-python 'kaleido)
-
-(def go (py/import-module "plotly.graph_objects"))
+(defn init! []
+  (py/initialize!)
+  (require-python 'plotly.graph_objects)
+  (require-python 'kaleido))
 
 (defn plotly-export
   [{:keys [data layout config]} filename]
-  (let [fig (py/call-attr go "Figure"
+  (init!)
+  (let [go (py/import-module "plotly.graph_objects")
+        fig (py/call-attr go "Figure"
                           ;; TODO: should figure out why these invalid properties are on data
                           (update data 0 dissoc :r :fill :mode :theta :z :lon :lat :width)
                           (dissoc layout :automargin)
