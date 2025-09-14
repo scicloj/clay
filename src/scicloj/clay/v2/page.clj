@@ -141,6 +141,14 @@
                      (str target-repo-path "/")
                      ((include js-or-css))))))))
 
+(defn resolve-deps [lib js-or-css]
+  (cond (keyword? lib) (->> lib
+                            special-lib-resources
+                            js-or-css)
+        (map? lib) (some->> lib
+                            js-or-css
+                            (hash-map :from-the-web))))
+
 (defn include-libs-hiccup [{:as spec :keys [inline-js-and-css]}
                            deps-types libs]
   (->> deps-types
@@ -148,36 +156,39 @@
                  (->> libs
                       (mapcat
                        (fn [lib]
-                         (->> lib
-                              special-lib-resources
-                              js-or-css
-                              ((fn [{:keys [from-the-web
-                                            from-local-copy
-                                            from-local-copy-of-repo]}]
-                                 (if inline-js-and-css
-                                   (->> (concat from-the-web
-                                                from-local-copy
-                                                from-local-copy-of-repo)
-                                        (map (include-inline js-or-css)))
-                                   ;; else
-                                   (concat
-                                    (some->> from-the-web
-                                             (apply (include js-or-css))
-                                             vector)
-                                    (some->> from-local-copy
-                                             (map (fn [url]
-                                                    (include-from-a-local-file
-                                                     url
-                                                     lib
-                                                     js-or-css
-                                                     spec))))
-                                    (some->> from-local-copy-of-repo
-                                             (map (fn [details]
-                                                    (include-from-a-local-copy-of-repo
-                                                     details
-                                                     lib
-                                                     js-or-css
-                                                     spec))))))))))))))
+                         (let [deps (resolve-deps lib js-or-css)
+                               {:keys [from-the-web
+                                       from-local-copy
+                                       from-local-copy-of-repo]} (resolve-deps lib
+                                                                               js-or-css)]
+                           (prn [:js-or-css js-or-css
+                                 :lib lib
+                                 :deps deps
+                                 :from-the-web from-the-web])
+                           (if inline-js-and-css
+                             (->> (concat from-the-web
+                                          from-local-copy
+                                          from-local-copy-of-repo)
+                                  (map (include-inline js-or-css)))
+                             ;; else
+                             (concat
+                              (some->> from-the-web
+                                       (apply (include js-or-css))
+                                       vector)
+                              (some->> from-local-copy
+                                       (map (fn [url]
+                                              (include-from-a-local-file
+                                               url
+                                               lib
+                                               js-or-css
+                                               spec))))
+                              (some->> from-local-copy-of-repo
+                                       (map (fn [details]
+                                              (include-from-a-local-copy-of-repo
+                                               details
+                                               lib
+                                               js-or-css
+                                               spec))))))))))))
        (apply concat)))
 
 (defn include-libs [spec deps-types libs]

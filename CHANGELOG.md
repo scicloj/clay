@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - turning most JS and CSS dependencies to be consumed `:from-the-web` in the generated HTML
 - avoiding starting a Portal server, which is not needed anymore for standalone Portal embedded in the browser (PR #289)
 - improved SVG support in `[:gfm]` target format
+- added support for user-defined JS & CSS dependencies
 
 ## [2-beta55 - 2025-09-13]
 - fixing buffered images for `:flatten false`
