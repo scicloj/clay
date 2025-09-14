@@ -232,7 +232,7 @@ flowchart TD
         java.net.URL)
 
 (defonce clay-image
-  (->  "notebooks/clojure-logo-120b.png"
+  (->  "notebooks/images/Clay.svg.png"
        io/file
        (ImageIO/read)))
 
