@@ -24,6 +24,7 @@
                  :extra-deps {org.scicloj/noj {:mvn/version "2-beta18"}
                               org.mentat/emmy {:mvn/version "0.31.0"
                                                :exclusions [org.babashka/sci]}
+                              thi.ng/geom {:mvn/version "1.0.1"}
                               org.slf4j/slf4j-nop {:mvn/version "1.7.36"}}}
            ;; `clojure -T:build ci` to create a jar
            ;; `clojure -T:build deploy` to release a new version
@@ -37,15 +38,15 @@
                                org.scicloj/noj {:mvn/version "2-beta18"}
                                org.mentat/emmy {:mvn/version "0.31.0"
                                                 :exclusions [org.babashka/sci]}}}
-           ;; for testing cljdocs process `clojure -M:cljdocs`
            ;; run `clojure -T:build ci` first to make the jar file, and update to the version you want to test
-           :cljdocs {:extra-deps {cljdoc/cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer"
-                                                          :git/sha "f83f0f6ff53c52b96a625790abbee3a69ccdfdad"}}
-                     :main-opts ["-m" "cljdoc-analyzer.cljdoc-main"
-                                 {:project "org.scicloj/clay"
-                                  :version "2-beta54"
-                                  :jarpath "target/org.scicloj/clay-2-beta54.jar"
-                                  :pompath "target/classes/META-INF/maven/org.scicloj/clay/pom.xml"}]}
+           ;; for testing cljdoc process `clojure -M:cljdoc`
+           :cljdoc {:extra-deps {cljdoc/cljdoc-analyzer {:git/url "https://github.com/cljdoc/cljdoc-analyzer"
+                                                         :git/sha "f83f0f6ff53c52b96a625790abbee3a69ccdfdad"}}
+                    :main-opts ["-m" "cljdoc-analyzer.cljdoc-main"
+                                {:project "org.scicloj/clay"
+                                 :version "2-beta54"
+                                 :jarpath "target/org.scicloj/clay-2-beta54.jar"
+                                 :pompath "target/classes/META-INF/maven/org.scicloj/clay/pom.xml"}]}
            :nrepl {:extra-paths ["test"]
                    :extra-deps {nrepl/nrepl {:mvn/version "1.3.1"}}
                    ;; this allows nrepl to interrupt runaway repl evals

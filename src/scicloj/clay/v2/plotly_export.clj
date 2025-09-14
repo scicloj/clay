@@ -15,18 +15,22 @@
 payload = json.load(sys.stdin)
 data = payload.get('data', [])
 layout = payload.get('layout', {})
-config = payload.get('config', {})
 filename = payload['filename']
-fig = go.Figure(data=data, layout=layout, config=config)
+fig = go.Figure(data=data, layout=layout)
 fig.write_image(filename)
 ")
 
-(defn export-plot! [filename data layout config]
+(defn export-plot! [filename data layout]
   ;; TODO: should figure out why these invalid properties are on data
   (let [data (update data 0 dissoc :r :fill :mode :theta :z :lon :lat :width)
         layout (dissoc layout :automargin)
         payload (jso/write-json-str {:data data
                                      :layout layout
-                                     :config config
-                                     :filename filename})]
-    (shell/sh "python3" "-c" python-script :in payload)))
+                                     :filename filename})
+        {:keys [err out exit] :as res} (shell/sh "python3" "-c" python-script :in payload)]
+    (when (seq out)
+      (println out))
+    (when (seq err)
+      (binding [*out* *err*]
+        (println err)))
+    exit))

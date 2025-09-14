@@ -319,11 +319,14 @@
                 :or {layout {}
                      config {}}} :value}]
   (if (or (= (second (:format context)) :pdf)
+          (= (first (:format context)) :gfm)
           (:static options))
     (let [[plot-path relative-path]
-          (files/next-file! context "plotly-chart" value ".png")]
-      (plotly-export/export-plot! plot-path data layout config)
-      (println "Clay plotly-export:" [:wrote plot-path])
+          (files/next-file! context "plotly-chart" value ".png")
+          exit (plotly-export/export-plot! plot-path data layout)]
+      (if (zero? exit)
+        (println "Clay plotly-export:" [:wrote plot-path])
+        (println "Clay plotly-export failed."))
       {:md (str "![" (:caption options) "](" relative-path ")")})
     {:hiccup
      [:div
