@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2-beta55 - 2025-09-13]
 - fixing buffered images for `:flatten false`
 - fixing the CLI live-reload when specifying a file to watch
 - svg support (when represented as `kind/hiccup`) in static targets
