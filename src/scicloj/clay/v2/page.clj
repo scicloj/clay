@@ -161,10 +161,6 @@
                                        from-local-copy
                                        from-local-copy-of-repo]} (resolve-deps lib
                                                                                js-or-css)]
-                           (prn [:js-or-css js-or-css
-                                 :lib lib
-                                 :deps deps
-                                 :from-the-web from-the-web])
                            (if inline-js-and-css
                              (->> (concat from-the-web
                                           from-local-copy
