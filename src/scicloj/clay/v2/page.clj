@@ -14,7 +14,7 @@
    [scicloj.clay.v2.util.resource :as resource]))
 
 (def special-lib-resources
-  {:vega {:js {:from-local-copy
+  {:vega {:js {:from-the-web
                ["https://cdn.jsdelivr.net/npm/vega@5.25.0"
                 "https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"
                 "https://cdn.jsdelivr.net/npm/vega-embed@6.22.2"]}}
@@ -26,13 +26,13 @@
                   ["https://cdn.jsdelivr.net/npm/mermaid@11.10.1/dist/mermaid.min.js"]}}
    :graphviz {:js {:from-the-web
                    ["https://cdn.jsdelivr.net/npm/@viz-js/viz@3.17.0/dist/viz-global.min.js"]}}
-   :echarts {:js {:from-local-copy
+   :echarts {:js {:from-the-web
                   ["https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"]}}
-   :cytoscape {:js {:from-local-copy
+   :cytoscape {:js {:from-the-web
                     ["https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"]}}
-   :plotly {:js {:from-local-copy
+   :plotly {:js {:from-the-web
                  ["https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.20.0/plotly.min.js"]}}
-   :katex {:js {:from-local-copy
+   :katex {:js {:from-the-web
                 ["https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"]}
            :css {:from-the-web
                  ;; fetching the KaTeX css from the web
@@ -50,45 +50,45 @@
                    "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]}
              :css {:from-the-web
                    ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}}
-   :reagent {:js {:from-local-copy
+   :reagent {:js {:from-the-web
                   ["https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"
                    "https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"
                    "https://daslu.github.io/scittle/js/scittle.js"
                    "https://daslu.github.io/scittle/js/scittle.cljs-ajax.js"
                    "https://daslu.github.io/scittle/js/scittle.reagent.js"
                    "https://cdn.jsdelivr.net/npm/d3-require@1"]}}
-   ;; :tmdjs {:js {:from-local-copy
+   ;; :tmdjs {:js {:from-the-web
    ;;              ["https://daslu.github.io/scittle/js/scittle.tmdjs.js"]}}
-   :emmy {:js {:from-local-copy
+   :emmy {:js {:from-the-web
                ["https://daslu.github.io/scittle/js/scittle.emmy.js"]}}
-   :emmy-viewers {:js {:from-local-copy
+   :emmy-viewers {:js {:from-the-web
                        ["https://daslu.github.io/scittle/js/scittle.emmy.js"
                         "https://daslu.github.io/scittle/js/scittle.emmy-viewers.js"]}
-                  :css {:from-local-copy
+                  :css {:from-the-web
                         ["https://unpkg.com/mafs@0.18.8/core.css"
                          "https://unpkg.com/mafs@0.18.8/font.css"
                          "https://unpkg.com/mathbox@2.3.1/build/mathbox.css"
                          "https://unpkg.com/mathlive@0.85.1/dist/mathlive-static.css"
                          "https://unpkg.com/mathlive@0.85.1/dist/mathlive-fonts.css"]}}
-   ;; :mathbox {:js {:from-local-copy
+   ;; :mathbox {:js {:from-the-web
    ;;                ["https://daslu.github.io/scittle/js/scittle.mathbox.js"]}}
    :portal {:js {:from-the-web ["https://djblue.github.io/portal/main.js"]}}
-   :d3 {:js {:from-local-copy
+   :d3 {:js {:from-the-web
              ["https://cdn.jsdelivr.net/npm/d3@7"]}}
-   :html-default {:js {:from-local-copy
+   :html-default {:js {:from-the-web
                        ["https://code.jquery.com/jquery-3.6.0.min.js"
                         "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
-   :md-default {:js {:from-local-copy
+   :md-default {:js {:from-the-web
                      ["https://code.jquery.com/jquery-3.6.0.min.js"
                       "https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"]}}
-   :htmlwidgets-ggplotly {:js {:from-local-copy
+   :htmlwidgets-ggplotly {:js {:from-the-web
                                ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/htmlwidgets-1.6.2/htmlwidgets.js"
                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-binding-4.10.4.9000/plotly.js"
                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/typedarray-0.1/typedarray.min.js"
                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/jquery-3.5.1/jquery.min.js"
                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/js/crosstalk.min.js"
                                 "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-main-2.11.1/plotly-latest.min.js"]}
-                          :css {:from-local-copy
+                          :css {:from-the-web
                                 ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/css/crosstalk.min.css"
                                  "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css"]}}
    :highcharts {:js {:from-the-web ["https://code.highcharts.com/highcharts.js"]}}})

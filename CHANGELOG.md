@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## unreleased
+- turning most JS and CSS dependencies to be consumed `:from-the-web` in the generated HTML
 - avoiding starting a Portal server, which is not needed anymore for standalone Portal embedded in the browser (PR #289)
 - improved SVG support in `[:gfm]` target format
 
