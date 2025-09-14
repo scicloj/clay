@@ -11,7 +11,6 @@
    [scicloj.clay.v2.item :as item]
    [scicloj.clay.v2.prepare :as prepare]
    [scicloj.clay.v2.styles :as styles]
-   [scicloj.clay.v2.util.portal :as portal]
    [scicloj.clay.v2.util.resource :as resource]))
 
 (def special-lib-resources
@@ -73,7 +72,7 @@
                          "https://unpkg.com/mathlive@0.85.1/dist/mathlive-fonts.css"]}}
    ;; :mathbox {:js {:from-local-copy
    ;;                ["https://daslu.github.io/scittle/js/scittle.mathbox.js"]}}
-   :portal {:js {:from-local-copy [portal/url]}}
+   :portal {:js {:from-the-web ["https://djblue.github.io/portal/main.js"]}}
    :d3 {:js {:from-local-copy
              ["https://cdn.jsdelivr.net/npm/d3@7"]}}
    :html-default {:js {:from-local-copy
