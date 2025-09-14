@@ -472,17 +472,28 @@
   (and (vector? form)
        (-> form first scittle-form?)))
 
+(defn ensure-svg-xmlns [hiccup]
+  (if (vector? hiccup)
+    (if (-> hiccup second map?)
+      (if (or (contains? (second hiccup) "xmlns")
+              (contains? (second hiccup) :xmlns))
+        hiccup
+        (update-in hiccup [1] assoc :xmlns "http://www.w3.org/2000/svg"))
+      (into [(first hiccup) {:xlmns "http://www.w3.org/2000/svg"}] (rest hiccup)))
+    hiccup))
+
 (add-preparer!
  :kind/hiccup
  (fn [{:as context
        :keys [value kindly/options]}]
    (if (and (or (= (second (:format context)) :pdf)
+                (= (first (:format context)) :gfm)
                 (:static options))
             (vector? value)
             (= :svg (first value)))
      (let [[svg-path relative-path]
            (files/next-file! context "image" value ".svg")]
-       (->> (merge-attrs value {:xmlns "http://www.w3.org/2000/svg"})
+       (->> (ensure-svg-xmlns value)
             (hiccup/html {:mode :xml})
             (spit svg-path))
        {:md (str "![" (:caption options) "](" relative-path ")")})
