@@ -822,8 +822,8 @@
 
 ;; ## Kindly options
 
-;; The second argument to the kind function specifies so-called
-;; kindly options, that can affect the way things are rendered.
+;; The optional second argument to the kind function specifies so-called
+;; Kindly options, that can affect the way things are rendered.
 
 ;; Here, for example, our value is just `[:div]`, but the kindly
 ;; options determine its styling.
@@ -1018,7 +1018,7 @@
 
 ;; Markdown styling is not currently handled when rendering direct to HTML.
 
-;; ## Varying kindly options
+;; ## Varying Kindly options
 
 ;; (experimental)
 
@@ -1078,21 +1078,38 @@
 
 ;; ## JS & CSS dependencies
 
-(def leaflet-js-code
+;; Using Kindly options (the optional second argument to `kind` function),
+;; it is possible to specify JS and CSS dependencies that might be
+;; necessary to render the value. Clay takes care of including the
+;; dependencies only once in the page.
+
+;; For example, leat us write some Javascript code to render a
+;; [Leaflet](https://leafletjs.com/) map.
+
+(def leaflet-js-example
   "var map = L.map(document.currentScript.parentElement).setView([51.505, -0.09], 13);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                                                                attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'
                                                                }).addTo(map);")
 
-(kind/hiccup
- [:div {:style {:height "200px"}}
-  [:script leaflet-js-code]]
- {:html/deps [:leaflet]})
+;; We can use it as follows by adding the `:leaflet` dependency.
 
 (kind/hiccup
  [:div {:style {:height "200px"}}
-  [:script leaflet-js-code]]
+  [:script leaflet-js-example]]
+ {:html/deps [:leaflet]})
+
+;; Clay offers quite a few such predefined builtin dependencies:
+
+^:kindly/hide-code
+(sort (keys scicloj.clay.v2.page/special-lib-resources))
+
+;; However, it is possible to also specify CDN links for JS & CSS dependencies explicitly. For example:
+
+(kind/hiccup
+ [:div {:style {:height "200px"}}
+  [:script leaflet-js-example]]
  {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
                     "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
                :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
