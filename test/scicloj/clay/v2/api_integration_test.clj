@@ -213,10 +213,7 @@
       (let [html-content (slurp "temp/test_nested.subdir.nested_notebook.html")]
         (is (str/includes? html-content "Nested notebook content"))
         (is (str/includes? html-content ":level"))
-        (is (str/includes? html-content "&quot;deep&quot;")))
-
-      ;; Also check that resource directory is created with flattened name
-      (is (fs/exists? "temp/test_nested.subdir.nested_notebook_files")))
+        (is (str/includes? html-content "&quot;deep&quot;"))))
 
     ;; Clean up
     (fs/delete-tree "test_nested")
@@ -338,20 +335,6 @@
         (is (str/includes? html-b "Content from file B"))
         (is (str/includes? html-b "12")) ; result of (* 3 4)
         ))))
-
-(deftest test-resource-directory-creation
-  "Test that Clay creates associated _files directories for resources"
-  (testing "Clay creates resource directories alongside HTML files"
-    (spit "test_resources.clj" "(ns test-resources)\n\n\"Testing resource creation\"")
-
-    (clay/make! {:source-path "test_resources.clj"
-                 :show false
-                 :browse false})
-
-    ;; Should create both HTML file and corresponding _files directory
-    (is (fs/exists? "temp/test_resources.html"))
-    (is (fs/exists? "temp/test_resources_files"))
-    (is (fs/directory? "temp/test_resources_files"))))
 
 (deftest test-hiccup-format-differences
   "Test differences between make! and make-hiccup functions"
@@ -501,8 +484,6 @@
 
     (is (fs/exists? "temp/empty_file.html"))
     (is (> (fs/size "temp/empty_file.html") 1000)) ; Should have substantial HTML structure
-    (is (fs/exists? "temp/empty_file_files")) ; Resource directory
-    (is (fs/directory? "temp/empty_file_files"))
 
     ;; Test 2: Whitespace-only files
     (spit "whitespace_file.clj" "   \n\n\t  \n  ")
@@ -527,20 +508,11 @@
     (clay/make! {:source-path "file-with-dashes.clj" :show false :browse false})
 
     (is (fs/exists? "temp/file-with-dashes.html"))
-    (is (fs/exists? "temp/file-with-dashes_files"))
 
     (spit "file_with_underscores.clj" "(ns file-with-underscores)\n\n\"Underscore test\"")
     (clay/make! {:source-path "file_with_underscores.clj" :show false :browse false})
 
     (is (fs/exists? "temp/file_with_underscores.html"))
-    (is (fs/exists? "temp/file_with_underscores_files"))
-
-    ;; Test 5: Resource directory contents
-    (let [resource-files (fs/list-dir "temp/file-with-dashes_files")]
-      (is (seq resource-files)) ; Should contain files
-      (is (some #(str/ends-with? (str %) ".js") resource-files))
-      ;; Note: Clay currently generates JS files rather than CSS files
-      (is (every? #(str/ends-with? (str %) ".js") resource-files)))
 
     ;; Clean up test files
     (doseq [f ["empty_file.clj" "whitespace_file.clj" "ns_only.clj"
