@@ -810,11 +810,29 @@
 ;; Kindly advises tools (like Clay) about the kind of way a given context
 ;; should be displayed, by assigning to it a so-called kind.
 
-;; Please refer to the Kindly documentation for details about specifying
-;; and using kinds.
+;; Value can be annotated with kinds to specify how they should be visualied. For example, let us annotate a vector as `kind/hiccup`, thus interpreting it as Hiccup and converting it to HTML:
+
+(kind/hiccup
+ [:div {:style {:height "50px"
+                :width "100px"
+                :background-color "#997788"}}])
 
 ;; In this documentation we demonstrate Kindly's default advice.
 ;; [User-defined](https://scicloj.github.io/kindly-noted/kindly_advice.html#extending) Kindly [advices](https://scicloj.github.io/kindly-noted/kindly_advice.html) should work as well.
+
+;; ## Kindly options
+
+;; The second argument to the kind function specifies so-called
+;; kindly options, that can affect the way things are rendered.
+
+;; Here, for example, our value is just `[:div]`, but the kindly
+;; options determine its styling.
+
+(kind/hiccup
+ [:div]
+ {:style {:height "50px"
+          :width "100px"
+          :background-color "#997788"}})
 
 ;; ## Examples
 
@@ -1057,3 +1075,25 @@
 (kind/hiccup
  [:div
   [:p "hello"]])
+
+;; ## JS & CSS dependencies
+
+(def leaflet-js-code
+  "var map = L.map(document.currentScript.parentElement).setView([51.505, -0.09], 13);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                               attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'
+                                                               }).addTo(map);")
+
+(kind/hiccup
+ [:div {:style {:height "200px"}}
+  [:script leaflet-js-code]]
+ {:html/deps [:leaflet]})
+
+(kind/hiccup
+ [:div {:style {:height "200px"}}
+  [:script leaflet-js-code]]
+ {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
+                    "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
+               :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
+
