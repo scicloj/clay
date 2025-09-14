@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## unreleased
 - avoiding starting a Portal server, which is not needed anymore for standalone Portal embedded in the browser (PR #289)
-
+- improved SVG support in `[:gfm]` target format
 
 ## [2-beta55 - 2025-09-13]
 - fixing buffered images for `:flatten false`
