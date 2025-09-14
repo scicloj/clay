@@ -484,6 +484,7 @@
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec
         full-source-paths (set (map :full-source-path single-ns-specs))]
+    (println "Clay make started: " full-source-paths)
     (when show
       (server/open! spec)
       (server/loading!))
