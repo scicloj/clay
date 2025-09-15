@@ -736,7 +736,8 @@
 ;; This map is the result of deep-merging configuration sources:
 ;;
 ;; - default: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
-;; - user: `clay.edn` in project root
+;; - user: `$XDG_CONFIG_HOME/scicloj-clay/config.edn` or `~/config/scicloj-clay/config.edn`
+;; - project: `clay.edn` in project root (working directory)
 ;; - namespace: `:clay` metadata found on the ns form
 ;; - call: the argument to `make!`
 ;;
@@ -1113,4 +1114,3 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
  {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
                     "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
                :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
-
