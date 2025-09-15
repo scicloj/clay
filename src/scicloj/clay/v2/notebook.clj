@@ -425,25 +425,27 @@
                              (nth 2)  ;last region line
                              (> first-line-of-change)))))))))
 
-(defn now []
-  (System/currentTimeMillis))
+(defmacro log-time [expr msg]
+  `(let [start# (System/currentTimeMillis)
+         result# ~expr]
+     (println "Clay: " ~msg
+              "in" (/ (- (System/currentTimeMillis) start#) 1000.0)
+              "seconds")
+     result#))
 
 (defn spec-notes [{:as spec
                    :keys      [pprint-margin ns-form full-source-path]
                    :or        {pprint-margin pp/*print-right-margin*}}]
-  (let [start (now)
-        result (binding [*ns* *ns*
-                         *warn-on-reflection* *warn-on-reflection*
-                         *unchecked-math* *unchecked-math*
-                         pp/*print-right-margin* pprint-margin]
-                 (-> (relevant-notes spec)
-                     (complete-notes spec)
-                     (with-out-err-captured)))]
-    (println "Clay:  Evaluated" (or (some-> ns-form second name)
-                                    (fs/file-name full-source-path))
-             "in" (/ (- (now) start) 1000.0)
-             "seconds")
-    result))
+  (binding [*ns* *ns*
+            *warn-on-reflection* *warn-on-reflection*
+            *unchecked-math* *unchecked-math*
+            pp/*print-right-margin* pprint-margin]
+    (-> (relevant-notes spec)
+        (complete-notes spec)
+        (with-out-err-captured)
+        (log-time (str "Evaluated"
+                       (or (some-> ns-form second name)
+                           (fs/file-name full-source-path)))))))
 
 (defn items-and-test-forms
   [notes spec]
