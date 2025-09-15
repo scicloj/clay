@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.notebook
   (:require [clojure.string :as str]
             [clojure.pprint :as pp]
+            [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
@@ -430,7 +431,8 @@
   (binding [*ns* *ns*
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
-            pp/*print-right-margin* pprint-margin]
+            pp/*print-right-margin* pprint-margin
+            files/*context* spec]
     (-> (relevant-notes spec)
         (complete-notes spec)
         (with-out-err-captured))))
