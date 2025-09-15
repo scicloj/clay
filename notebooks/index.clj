@@ -239,6 +239,26 @@
 
 ;; See the [clay.el](https://github.com/scicloj/clay.el) package for the relevant interactive functions.
 
+;; If you prefer not to install a package, you can always create your own commands:
+
+;; ```elisp
+;; (defun clay-show ()
+;;   (interactive)
+;;   (when-let
+;;    ((filename
+;;      (buffer-file-name)))
+;;     (save-buffer)
+;;     (cider-interactive-eval
+;;      (concat "(do (require '[scicloj.clay.v2.snippets])
+;;                   (scicloj.clay.v2.snippets/make-ns-html!
+;;                     \"" filename "\" {}))"))))
+;;
+;; (define-key clojure-mode-map (kbd "<M-return>") 'clay-show)
+;; ```
+
+;; The `scicloj.clay.v2.snippets` contains helpers for common usecases.
+;; See the API and Configuration sections for how to customize behavior.
+
 ;; ### Neovim Conjure
 
 ;; See the [clay.nvim](https://github.com/radovanne/clay.nvim) plugin.
@@ -258,6 +278,17 @@
 ;; You can then add keybindings under Preferences -> Keymap for the new commands.
 ;;
 ;; For more information about commands, see the Cursive documentation on [REPL commands and substitutions](https://cursive-ide.com/userguide/repl.html#repl-commands).
+
+;; ### Generic
+
+;; Editor integrations create commands to invoke Clay.
+;; These commands are not complicated, and if you prefer you can set up your own custom commands.
+;; The goal of all the integrations is essentially to perform:
+
+;; ```clojure
+;; (do (require '[scicloj.clay.v2.snippets])
+;;     (scicloj.clay.v2.snippets/make-ns-html! FILENAME {}))
+;; ```
 
 ;; ## Example notebook namespace
 
@@ -1113,4 +1144,3 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
  {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
                     "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
                :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
-
