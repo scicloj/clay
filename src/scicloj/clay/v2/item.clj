@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as str]
-            [scicloj.kind-portal.v1.api :as kind-portal]
+            [scicloj.kind-portal.v1.prepare :as kind-portal]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.plotly-export :as plotly-export]
