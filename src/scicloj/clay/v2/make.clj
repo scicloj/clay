@@ -432,7 +432,7 @@
                                           use-kindly-render
                                           keep-existing
                                           external-requirements]}]
-  (when (or (= source-type "clj")
+  (when (or (#{"clj" "cljc"} source-type)
             single-form
             single-value)
     (try
