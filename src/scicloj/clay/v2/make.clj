@@ -23,7 +23,7 @@
   (some-> source-path (fs/extension)))
 
 (defn spec->ns-form [{:keys [source-type full-source-path]}]
-  (when (= source-type "clj")
+  (when (#{"clj" "cljc"} source-type)
     (-> full-source-path
         slurp
         read/read-ns-form)))
@@ -58,7 +58,7 @@
     (cond
       ;; Absolute within base-source-path
       (and absolute (some-> base-source-path (util.fs/child? source-path)))
-      (fs/relativize (fs/absolutize base-source-path) source-path)
+      (str (fs/relativize (fs/absolutize base-source-path) source-path))
 
       ;; Relative already
       (and (not absolute) base-source-path)
@@ -101,19 +101,20 @@
     (let [relative-source (relative-source-path spec)]
       (str
        (case source-type
-         ("md" "Rmd" "ipynb") (fs/path base-target-path
-                                       (if keep-sync-root
-                                         full-source-path
-                                         relative-source))
-         "clj" (let [target-extension (case (second format)
-                                        :revealjs "-revealjs.html"
-                                        :pdf ".pdf"
-                                        ".html")
-                     relative-target (cond-> (str/replace relative-source
-                                                          #"\.clj[cs]?$"
-                                                          target-extension)
-                                       flatten-targets (str/replace #"[\\/]+" "."))]
-                 (fs/path base-target-path relative-target)))))))
+         ("md" "Rmd" "ipynb")
+         (fs/path base-target-path
+                  (if keep-sync-root
+                    full-source-path
+                    relative-source))
+         ("clj" "cljc")
+         (let [target-extension (case (second format)
+                                  :revealjs "-revealjs.html"
+                                  :pdf ".pdf"
+                                  ".html")
+               target (str (fs/strip-ext relative-source) target-extension)
+               target (cond-> target
+                        flatten-targets (str/replace #"[\\/]+" "."))]
+           (fs/path base-target-path target)))))))
 
 (defn spec->qmd-target-path [{:as spec
                               :keys [format
