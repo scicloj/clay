@@ -429,6 +429,14 @@
   (clay/make! {:source-path "notebooks/index.clj"
                :format [:gfm]}))
 
+;; Render a namespace
+;; as Quarto prepared GitHub Flavoured Markdown
+;; (see https://quarto.org/docs/reference/formats/markdown/gfm.html)
+;; (partial support, work-in-progress).
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :format [:quarto :gfm]}))
+
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
 ;; as a Quarto qmd file
@@ -1113,4 +1121,3 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
  {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
                     "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
                :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
-
