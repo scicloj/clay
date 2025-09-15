@@ -56,25 +56,17 @@
   "Returns the source-path relative to the base-source-path,
   which is used to calculate the target path."
   [{:as   spec
-    :keys [source-path
-           base-source-path
+    :keys [base-source-path
+           full-source-path
            ns-form]}]
-  (let [absolute (fs/absolute? source-path)]
-    (cond
-      ;; Absolute within base-source-path
-      (and absolute (some-> base-source-path (util.fs/child? source-path)))
-      (str (fs/relativize (fs/absolutize base-source-path) source-path))
-
-      ;; Relative already
-      (and (not absolute) base-source-path)
-      source-path
-
-      ;; No base-source-path,
-      ;; or absolute outside base-source-path,
-      ;; Prefer ns-implied path when present, or just the filename when not.
-      :else
-      (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_") (str ".clj"))
-          (fs/file-name source-path)))))
+  (if (some-> base-source-path (util.fs/child? full-source-path))
+    ;; Within a base-source-path
+    (str (fs/relativize base-source-path full-source-path))
+    ;; No base-source-path,
+    ;; or outside base-source-path,
+    ;; Prefer ns-implied path when present, or just the filename when not.
+    (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_") (str ".clj"))
+        (fs/file-name full-source-path))))
 
 (defn tempory-target? [{:keys [single-form single-value]}]
   (or single-value single-form))
