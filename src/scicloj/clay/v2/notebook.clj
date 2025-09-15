@@ -443,7 +443,7 @@
     (-> (relevant-notes spec)
         (complete-notes spec)
         (with-out-err-captured)
-        (log-time (str "Evaluated"
+        (log-time (str "Evaluated "
                        (or (some-> ns-form second name)
                            (fs/file-name full-source-path)))))))
 
