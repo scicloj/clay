@@ -44,7 +44,12 @@
     (if (fs/absolute? source-path)
       (str (fs/relativize (fs/absolutize ".") source-path))
       (if base-source-path
-        (str (fs/path base-source-path source-path))
+        (let [relative-source-path (fs/path base-source-path source-path)]
+          (if (fs/exists? relative-source-path)
+            (str relative-source-path)
+            ;; The user might have given a path that includes the base-source-path,
+            ;; so fallback to the source-path without changing it.
+            source-path))
         source-path))))
 
 (defn relative-source-path
