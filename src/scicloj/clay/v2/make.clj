@@ -54,17 +54,22 @@
     :keys [source-path
            base-source-path
            ns-form]}]
-  (cond
-    ;; Absolute paths within base-source-path
-    (and (fs/absolute? source-path)
-         (some-> base-source-path (util.fs/child? source-path)))
-    (fs/relativize (fs/absolutize base-source-path) source-path)
-    ;; Absolute path outside base-source-path
-    (fs/absolute? source-path)
-    (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_") (str ".clj"))
-        (fs/file-name source-path))
-    :else
-    source-path))
+  (let [absolute (fs/absolute? source-path)]
+    (cond
+      ;; Absolute within base-source-path
+      (and absolute (some-> base-source-path (util.fs/child? source-path)))
+      (fs/relativize (fs/absolutize base-source-path) source-path)
+
+      ;; Relative already
+      (and (not absolute) base-source-path)
+      source-path
+
+      ;; No base-source-path,
+      ;; or absolute outside base-source-path,
+      ;; Prefer ns-implied path when present, or just the filename when not.
+      :else
+      (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_") (str ".clj"))
+          (fs/file-name source-path)))))
 
 (defn tempory-target? [{:keys [single-form single-value]}]
   (or single-value single-form))
