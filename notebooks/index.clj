@@ -777,7 +777,7 @@
 ;; - default: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
 ;; - user: `$XDG_CONFIG_HOME/scicloj-clay/config.edn` or `~/config/scicloj-clay/config.edn`
 ;; - project: `clay.edn` in project root (working directory)
-;; - namespace: `:clay` metadata found on the ns form
+;; - namespace: `:clay` metadata found on the ns form, and the ns metadata
 ;; - call: the argument to `make!`
 ;;
 ;; Here are some of the parameters worth knowing about:
