@@ -128,10 +128,10 @@
 
 (defn spec->ns-config [{:keys [ns-form]}]
   (let [form-config (some-> ns-form meta :clay)
-        [_ sym doc? attr?] ns-form
+        [_ sym ?doc ?attr] ns-form
         sym-config (some-> sym meta :clay)
-        map-config (:clay (cond (map? doc?) doc?
-                                (map? attr?) attr?))]
+        map-config (:clay (cond (map? ?doc) ?doc
+                                (map? ?attr) ?attr))]
     (kindly/deep-merge form-config sym-config map-config)))
 
 (defn merge-ns-config [spec]
