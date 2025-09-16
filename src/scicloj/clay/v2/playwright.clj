@@ -45,7 +45,8 @@
               (io/make-parents filename)
               (spit filename svg-content)
               (println "SVG saved to" filename))
-            (throw (ex-info "SVG not found in rendered Plotly chart." {:filename filename}))))
+            (throw (ex-info "SVG not found in rendered Plotly chart."
+                            {:id ::svg-not-found}))))
         (finally
           (when browser
             (.close browser)))))))
