@@ -484,12 +484,14 @@
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec
         full-source-paths (set (map :full-source-path single-ns-specs))]
+    (println "Clay make started: " full-source-paths)
+    (when show
+      (server/open! spec)
+      (server/loading!))
     (when (and clean-up-target-dir
                (not (or single-form single-value)))
       (fs/delete-tree base-target-path))
     (sync-resources! main-spec)
-    (when show
-      (server/loading!))
     (let [info (cond-> (mapv handle-single-source-spec! single-ns-specs)
                  book (conj (make-book! main-spec))
                  live-reload (conj (if (#{:toggle} live-reload)
