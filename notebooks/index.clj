@@ -242,7 +242,7 @@
 ;; If you prefer not to install a package, you can always create your own commands:
 
 ;; ```elisp
-;; (defun clay-show ()
+;; (defun clay-make ()
 ;;   (interactive)
 ;;   (when-let
 ;;    ((filename
@@ -253,7 +253,7 @@
 ;;                   (scicloj.clay.v2.snippets/make-ns-html!
 ;;                     \"" filename "\" {}))"))))
 ;;
-;; (define-key clojure-mode-map (kbd "<M-return>") 'clay-show)
+;; (define-key clojure-mode-map (kbd "<M-return>") 'clay-make)
 ;; ```
 
 ;; The `scicloj.clay.v2.snippets` contains helpers for common usecases.
