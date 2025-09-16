@@ -486,9 +486,7 @@
  :kind/hiccup
  (fn [{:as context
        :keys [value kindly/options]}]
-   (if (and (or (= (second (:format context)) :pdf)
-                (= (first (:format context)) :gfm)
-                (:static options))
+   (if (and (item/static? context)
             (vector? value)
             (= :svg (first value)))
      (let [[svg-path relative-path]

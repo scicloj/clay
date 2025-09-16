@@ -17,7 +17,20 @@
       slurp
       edn/read-string))
 
+(defn xdg-config-home []
+  (let [env-var (System/getenv "XDG_CONFIG_HOME")]
+    (if (and env-var (not (clojure.string/blank? env-var)))
+      env-var
+      (str (System/getProperty "user.home") "/.config"))))
+
 (defn maybe-user-config []
+  (some-> (io/file (xdg-config-home)
+                   "scicloj-clay"
+                   "config.edn")
+          slurp-when-exists
+          edn/read-string))
+
+(defn maybe-project-config []
   (some-> "clay.edn"
           slurp-when-exists
           edn/read-string))
@@ -60,10 +73,13 @@
   (-> config (merge-aliases) (source-paths) (implied-configs)))
 
 (defn config
-  "Gathers configuration from the default, a clay.edn, and a spec if provided"
+  "Gathers configuration from the default,
+  a user ~/.config/scicloj-clay/config.edn if present,
+  a project clay.edn if present in the current directory,
+  and a spec if provided as an argument."
   ([]
-   (-> (kindly/deep-merge (default-config) (maybe-user-config))
+   (-> (kindly/deep-merge (default-config) (maybe-user-config) (maybe-project-config))
        (apply-conditionals)))
   ([spec]
-   (-> (kindly/deep-merge (default-config) (maybe-user-config) spec)
+   (-> (kindly/deep-merge (default-config) (maybe-user-config) (maybe-project-config) spec)
        (apply-conditionals))))

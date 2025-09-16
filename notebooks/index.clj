@@ -239,6 +239,26 @@
 
 ;; See the [clay.el](https://github.com/scicloj/clay.el) package for the relevant interactive functions.
 
+;; If you prefer not to install a package, you can always create your own commands:
+
+;; ```elisp
+;; (defun clay-make ()
+;;   (interactive)
+;;   (when-let
+;;    ((filename
+;;      (buffer-file-name)))
+;;     (save-buffer)
+;;     (cider-interactive-eval
+;;      (concat "(do (require '[scicloj.clay.v2.snippets])
+;;                   (scicloj.clay.v2.snippets/make-ns-html!
+;;                     \"" filename "\" {}))"))))
+;;
+;; (define-key clojure-mode-map (kbd "<M-return>") 'clay-make)
+;; ```
+
+;; The `scicloj.clay.v2.snippets` contains helpers for common usecases.
+;; See the API and Configuration sections for how to customize behavior.
+
 ;; ### Neovim Conjure
 
 ;; See the [clay.nvim](https://github.com/radovanne/clay.nvim) plugin.
@@ -258,6 +278,17 @@
 ;; You can then add keybindings under Preferences -> Keymap for the new commands.
 ;;
 ;; For more information about commands, see the Cursive documentation on [REPL commands and substitutions](https://cursive-ide.com/userguide/repl.html#repl-commands).
+
+;; ### Generic
+
+;; Editor integrations create commands to invoke Clay.
+;; These commands are not complicated, and if you prefer you can set up your own custom commands.
+;; The goal of all the integrations is essentially to perform:
+
+;; ```clojure
+;; (do (require '[scicloj.clay.v2.snippets])
+;;     (scicloj.clay.v2.snippets/make-ns-html! FILENAME {}))
+;; ```
 
 ;; ## Example notebook namespace
 
@@ -428,6 +459,14 @@
 (comment
   (clay/make! {:source-path "notebooks/index.clj"
                :format [:gfm]}))
+
+;; Render a namespace
+;; as Quarto prepared GitHub Flavoured Markdown
+;; (see https://quarto.org/docs/reference/formats/markdown/gfm.html)
+;; (partial support, work-in-progress).
+(comment
+  (clay/make! {:source-path "notebooks/index.clj"
+               :format [:quarto :gfm]}))
 
 ;; Evaluate and render
 ;; the namespace in `"notebooks/index.clj"`
@@ -736,7 +775,8 @@
 ;; This map is the result of deep-merging configuration sources:
 ;;
 ;; - default: [clay-default.edn](https://github.com/scicloj/clay/blob/main/resources/clay-default.edn) under Clay's resources
-;; - user: `clay.edn` in project root
+;; - user: `$XDG_CONFIG_HOME/scicloj-clay/config.edn` or `~/config/scicloj-clay/config.edn`
+;; - project: `clay.edn` in project root (working directory)
 ;; - namespace: `:clay` metadata found on the ns form, and the ns metadata
 ;; - call: the argument to `make!`
 ;;

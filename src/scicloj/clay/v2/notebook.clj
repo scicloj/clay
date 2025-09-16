@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.notebook
   (:require [clojure.string :as str]
             [clojure.pprint :as pp]
+            [babashka.fs :as fs]
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
@@ -424,8 +425,16 @@
                              (nth 2)  ;last region line
                              (> first-line-of-change)))))))))
 
+(defmacro log-time [expr msg]
+  `(let [start# (System/currentTimeMillis)
+         result# ~expr]
+     (println "Clay: " ~msg
+              "in" (/ (- (System/currentTimeMillis) start#) 1000.0)
+              "seconds")
+     result#))
+
 (defn spec-notes [{:as spec
-                   :keys      [pprint-margin]
+                   :keys      [pprint-margin ns-form full-source-path]
                    :or        {pprint-margin pp/*print-right-margin*}}]
   (binding [*ns* *ns*
             *warn-on-reflection* *warn-on-reflection*
@@ -433,7 +442,10 @@
             pp/*print-right-margin* pprint-margin]
     (-> (relevant-notes spec)
         (complete-notes spec)
-        (with-out-err-captured))))
+        (with-out-err-captured)
+        (log-time (str "Evaluated "
+                       (or (some-> ns-form second name)
+                           (fs/file-name full-source-path)))))))
 
 (defn items-and-test-forms
   [notes spec]

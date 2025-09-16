@@ -1,7 +1,7 @@
 (ns scicloj.clay.v2.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as str]
-            [scicloj.kind-portal.v1.api :as kind-portal]
+            [scicloj.kind-portal.v1.prepare :as kind-portal]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.plotly-export :as plotly-export]
@@ -10,6 +10,10 @@
             [clj-commons.format.exceptions :as fe]))
 
 (def *id (atom 0))
+
+(defn static? [context]
+  (or (#{:pdf :gfm} (last (:format context)))
+      (:static (:kindly/options context))))
 
 (defn next-id! []
   (swap! *id inc))
@@ -318,9 +322,7 @@
                {:keys [data layout config]
                 :or {layout {}
                      config {}}} :value}]
-  (if (or (= (second (:format context)) :pdf)
-          (= (first (:format context)) :gfm)
-          (:static options))
+  (if (static? context)
     (let [[plot-path relative-path]
           (files/next-file! context "plotly-chart" value ".png")
           exit (plotly-export/export-plot! plot-path data layout)]
