@@ -3,21 +3,6 @@
             [clojure.java.io :as io])
   (:import (com.microsoft.playwright Playwright Browser Page)))
 
-(defn try-launch [browser-key playwright]
-  (let [browser-type (case browser-key
-                       :chromium (.chromium playwright)
-                       :firefox (.firefox playwright)
-                       :webkit (.webkit playwright))]
-    (try
-      (.launch browser-type)
-      (catch Exception _ nil))))
-
-(defn find-browser [playwright]
-  (or (try-launch :chromium playwright)
-      (try-launch :firefox playwright)
-      (try-launch :webkit playwright)
-      (throw (ex-info "No browser found" {:id ::no-browser}))))
-
 (defn generate-plotly-html [data layout]
   (str "<html><body>"
        "<div id='myDiv' style='width:600px;height:400px;'></div>"
@@ -31,7 +16,7 @@
 
 (defn extract-plotly-svg [filename data layout]
   (with-open [playwright (Playwright/create)]
-    (let [browser (find-browser playwright)
+    (let [browser (.launch (.chromium playwright))
           page (.newPage browser)]
       (try
         (.setContent page (generate-plotly-html data layout))
