@@ -23,7 +23,7 @@
   (some-> source-path (fs/extension)))
 
 (defn spec->ns-form [{:keys [source-type full-source-path]}]
-  (when (= source-type "clj")
+  (when (#{"clj" "cljc"} source-type)
     (-> full-source-path
         slurp
         read/read-ns-form)))
@@ -44,27 +44,29 @@
     (if (fs/absolute? source-path)
       (str (fs/relativize (fs/absolutize ".") source-path))
       (if base-source-path
-        (str (fs/path base-source-path source-path))
+        (let [relative-source-path (fs/path base-source-path source-path)]
+          (if (fs/exists? relative-source-path)
+            (str relative-source-path)
+            ;; The user might have given a path that includes the base-source-path,
+            ;; so fallback to the source-path without changing it.
+            source-path))
         source-path))))
 
 (defn relative-source-path
   "Returns the source-path relative to the base-source-path,
   which is used to calculate the target path."
   [{:as   spec
-    :keys [source-path
-           base-source-path
+    :keys [base-source-path
+           full-source-path
            ns-form]}]
-  (cond
-    ;; Absolute paths within base-source-path
-    (and (fs/absolute? source-path)
-         (some-> base-source-path (util.fs/child? source-path)))
-    (fs/relativize (fs/absolutize base-source-path) source-path)
-    ;; Absolute path outside base-source-path
-    (fs/absolute? source-path)
+  (if (some-> base-source-path (util.fs/child? full-source-path))
+    ;; Within a base-source-path
+    (str (fs/relativize base-source-path full-source-path))
+    ;; No base-source-path,
+    ;; or outside base-source-path,
+    ;; Prefer ns-implied path when present, or just the filename when not.
     (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_") (str ".clj"))
-        (fs/file-name source-path))
-    :else
-    source-path))
+        (fs/file-name full-source-path))))
 
 (defn tempory-target? [{:keys [single-form single-value]}]
   (or single-value single-form))
@@ -96,19 +98,20 @@
     (let [relative-source (relative-source-path spec)]
       (str
        (case source-type
-         ("md" "Rmd" "ipynb") (fs/path base-target-path
-                                       (if keep-sync-root
-                                         full-source-path
-                                         relative-source))
-         "clj" (let [target-extension (case (second format)
-                                        :revealjs "-revealjs.html"
-                                        :pdf ".pdf"
-                                        ".html")
-                     relative-target (cond-> (str/replace relative-source
-                                                          #"\.clj[cs]?$"
-                                                          target-extension)
-                                       flatten-targets (str/replace #"[\\/]+" "."))]
-                 (fs/path base-target-path relative-target)))))))
+         ("md" "Rmd" "ipynb")
+         (fs/path base-target-path
+                  (if keep-sync-root
+                    full-source-path
+                    relative-source))
+         ("clj" "cljc")
+         (let [target-extension (case (second format)
+                                  :revealjs "-revealjs.html"
+                                  :pdf ".pdf"
+                                  ".html")
+               target (str (fs/strip-ext relative-source) target-extension)
+               target (cond-> target
+                        flatten-targets (str/replace #"[\\/]+" "."))]
+           (fs/path base-target-path target)))))))
 
 (defn spec->qmd-target-path [{:as spec
                               :keys [format
@@ -426,7 +429,7 @@
                                           use-kindly-render
                                           keep-existing
                                           external-requirements]}]
-  (when (or (= source-type "clj")
+  (when (or (#{"clj" "cljc"} source-type)
             single-form
             single-value)
     (try
