@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [unreleased]
 - prioritize initial user feedback (PR #292)
+- a more efficient way to require kind-portal
 
 ## [2-beta56 - 2025-09-14]
 - turning most JS and CSS dependencies to be consumed `:from-the-web` in the generated HTML
