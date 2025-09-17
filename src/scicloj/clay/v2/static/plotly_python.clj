@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.plotly-export
+(ns scicloj.clay.v2.static.plotly-python
   (:require [scicloj.kindly-render.shared.jso :as jso]
             [clojure.java.shell :as shell]))
 
@@ -33,4 +33,4 @@ fig.write_image(filename)
     (when (seq err)
       (binding [*out* *err*]
         (println err)))
-    exit))
+    (zero? exit)))
