@@ -138,7 +138,7 @@
   (clay/make! {:base-source-path "notebooks"
                :source-path "gfm_and_cljdoc.clj"
                :base-target-path "docs"
-               :format [:gfm]}))
+               :format [:quarto :gfm]}))
 
 ;; We pass `:format [:gfm]` in our configuration along with the regular options.
 

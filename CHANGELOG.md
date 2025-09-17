@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [unreleased]
+- prioritize initial user feedback (PR #292)
+- a more efficient way to require kind-portal (PR #292)
+- user-level config (PR #294)
+- add support for quarto generated gfm (PR #295)
+- fix path when base-source-path missing (PR #297)
+- check for ns metadata, not just form (PR #298)
+
 ## [2-beta56 - 2025-09-14]
 - turning most JS and CSS dependencies to be consumed `:from-the-web` in the generated HTML
 - avoiding starting a Portal server, which is not needed anymore for standalone Portal embedded in the browser (PR #289)
