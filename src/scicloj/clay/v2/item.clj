@@ -318,11 +318,6 @@
 ();" (first value))]]
    :deps   [:graphviz]})
 
-;; TODO: these are temporary ways to choose the behavior we want,
-;; if we want to keep all options we might allow these to be kindly/options and remove the dynamic vars.
-(def ^:dynamic *playwright* true)
-(def ^:dynamic *svg* true)
-
 (defn plotly [{:as context
                :keys [kindly/options value]
                {:keys [data layout config]
@@ -330,13 +325,14 @@
                      config {}}} :value}]
   (if (static? context)
     (let [[plot-path relative-path]
-          (files/next-file! context "plotly-chart" value (if *svg* ".svg" ".png"))
-          success (if *playwright*
-                    (plotly-playwright/export-plot! context plot-path data layout)
+          (files/next-file! context "plotly-chart" value
+                            (str "." (or (:plotly-ext options) "svg")))
+          success (if (:playwright options)
+                    (plotly-playwright/export-plot! plot-path data layout)
                     (plotly-python/export-plot! plot-path data layout))]
       (if success
-        (println "Clay plotly-export:" [:wrote plot-path])
-        (println "Clay plotly-export failed."))
+        (println "Clay plotly export:" [:wrote plot-path])
+        (println "Clay plotly export failed."))
       {:md (str "![" (:caption options) "](" relative-path ")")})
     {:hiccup
      [:div
