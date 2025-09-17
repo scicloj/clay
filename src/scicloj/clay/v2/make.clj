@@ -52,22 +52,6 @@
             source-path))
         source-path))))
 
-(defn relative-source-path
-  "Returns the source-path relative to the base-source-path,
-  which is used to calculate the target path."
-  [{:as   spec
-    :keys [base-source-path
-           full-source-path
-           ns-form]}]
-  (if (some-> base-source-path (util.fs/child? full-source-path))
-    ;; Within a base-source-path
-    (str (fs/relativize base-source-path full-source-path))
-    ;; No base-source-path,
-    ;; or outside base-source-path,
-    ;; Prefer ns-implied path when present, or just the filename when not.
-    (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_") (str ".clj"))
-        (fs/file-name full-source-path))))
-
 (defn tempory-target? [{:keys [single-form single-value]}]
   (or single-value single-form))
 
@@ -95,23 +79,21 @@
     (str (fs/path base-target-path "index.html"))
 
     (string? source-path)
-    (let [relative-source (relative-source-path spec)]
-      (str
-       (case source-type
-         ("md" "Rmd" "ipynb")
-         (fs/path base-target-path
-                  (if keep-sync-root
-                    full-source-path
-                    relative-source))
-         ("clj" "cljc")
-         (let [target-extension (case (second format)
-                                  :revealjs "-revealjs.html"
-                                  :pdf ".pdf"
-                                  ".html")
-               target (str (fs/strip-ext relative-source) target-extension)
-               target (cond-> target
-                        flatten-targets (str/replace #"[\\/]+" "."))]
-           (fs/path base-target-path target)))))))
+    (str (case source-type
+           ("md" "Rmd" "ipynb")
+           (fs/path base-target-path (fs/file-name full-source-path))
+           ("clj" "cljc")
+           (let [{:keys [ns-form]} spec
+                 ;; the target is determined by the ns symbol when present, or the filename when not
+                 ns-path (or (some-> ns-form second name (str/replace "." "/") (str/replace "-" "_"))
+                             (fs/strip-ext (fs/file-name full-source-path)))
+                 target (str ns-path (case (second format)
+                                       :revealjs "-revealjs.html"
+                                       :pdf ".pdf"
+                                       ".html"))
+                 target (cond-> target
+                          flatten-targets (str/replace #"[\\/]+" "."))]
+             (fs/path base-target-path target))))))
 
 (defn spec->qmd-target-path [{:as spec
                               :keys [format
