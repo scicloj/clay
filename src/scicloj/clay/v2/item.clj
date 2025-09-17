@@ -4,7 +4,8 @@
             [scicloj.kind-portal.v1.api :as kind-portal]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
-            [scicloj.clay.v2.plotly-export :as plotly-export]
+            [scicloj.clay.v2.static.plotly-python :as plotly-python]
+            [scicloj.clay.v2.static.plotly-playwright :as plotly-playwright]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.clay.v2.util.meta :as meta]
             [clj-commons.format.exceptions :as fe]))
@@ -313,6 +314,11 @@
 ();" (first value))]]
    :deps   [:graphviz]})
 
+;; TODO: these are temporary ways to choose the behavior we want,
+;; if we want to keep all options we might allow these to be kindly/options and remove the dynamic vars.
+(def ^:dynamic *playwright* true)
+(def ^:dynamic *svg* true)
+
 (defn plotly [{:as context
                :keys [kindly/options value]
                {:keys [data layout config]
@@ -322,9 +328,11 @@
           (= (first (:format context)) :gfm)
           (:static options))
     (let [[plot-path relative-path]
-          (files/next-file! context "plotly-chart" value ".png")
-          exit (plotly-export/export-plot! plot-path data layout)]
-      (if (zero? exit)
+          (files/next-file! context "plotly-chart" value (if *svg* ".svg" ".png"))
+          success (if *playwright*
+                    (plotly-playwright/export-plot! context plot-path data layout)
+                    (plotly-python/export-plot! plot-path data layout))]
+      (if success
         (println "Clay plotly-export:" [:wrote plot-path])
         (println "Clay plotly-export failed."))
       {:md (str "![" (:caption options) "](" relative-path ")")})
