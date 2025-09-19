@@ -492,7 +492,7 @@
         full-source-paths (set (map :full-source-path single-ns-specs))]
     (println "Clay make started: " full-source-paths)
     (when show
-      (server/open! spec)
+      (server/open! main-spec)
       (server/loading!))
     (when (and clean-up-target-dir
                (not (or single-form single-value)))
