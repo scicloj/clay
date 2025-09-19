@@ -65,7 +65,7 @@
            base-target-path
            flatten-targets
            format
-           keep-sync-root
+           base-source-path
            book
            first-as-index]}]
   (cond
@@ -81,7 +81,10 @@
     (string? source-path)
     (str (case source-type
            ("md" "Rmd" "ipynb")
-           (fs/path base-target-path (fs/file-name full-source-path))
+           (if (some-> base-source-path (util.fs/child? full-source-path))
+             (str (fs/relativize base-source-path full-source-path))
+             (fs/path base-target-path (fs/file-name full-source-path)))
+
            ("clj" "cljc")
            (let [{:keys [ns-form]} spec
                  ;; the target is determined by the ns symbol when present, or the filename when not
