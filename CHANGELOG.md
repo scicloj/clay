@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 - add support for quarto generated gfm (PR #295)
 - fix path when base-source-path missing (PR #297)
 - check for ns metadata, not just form (PR #298)
+- reverting to namespace-based target path and simplifying its logic (PR #301)
 
 ## [2-beta56 - 2025-09-14]
 - turning most JS and CSS dependencies to be consumed `:from-the-web` in the generated HTML
