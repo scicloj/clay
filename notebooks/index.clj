@@ -1058,6 +1058,22 @@
 
 ;; Markdown styling is not currently handled when rendering direct to HTML.
 
+;; ### Markdown Math Equations
+
+;; `$$` at the start of a line is for centered blocks
+
+;; ```
+;; ;; $$e^{i\\pi} + 1 = 0$$
+;; ```
+;; $$e^{i\\pi} + 1 = 0$$
+
+;; `$` anywhere in the comment is for inline
+
+;; ```
+;; ;; Or inline $e^{i\\pi} + 1 = 0$
+;; ```
+;; Or inline  $e^{i\\pi} + 1 = 0$
+
 ;; ## Varying Kindly options
 
 ;; (experimental)

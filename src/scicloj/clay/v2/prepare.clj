@@ -100,7 +100,7 @@
                    (claywalk/postwalk (fn [form]
                                         (cond
                                           (vector-that-starts-with? form :span.formula)
-                                          (item/katex-hiccup (second form))
+                                          (item/katex-hiccup (second form) false)
                                           (vector-that-starts-with? form :figure.formula)
                                           (item/katex-hiccup (second form) true)
                                           :else form)))))))

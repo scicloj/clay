@@ -141,15 +141,13 @@
             in-vector
             (str/join "\n"))})
 
-(defn katex-hiccup
-  ([s] (katex-hiccup s false))
-  ([s displayMode]
-   [:span
-    [:script
-     (format
-       "katex.render(%s, document.currentScript.parentElement, {displayMode: %s, throwOnError: false});"
-       (jso/write-json-str s)
-       (str (boolean displayMode)))]]))
+(defn katex-hiccup [s displayMode]
+  [:span
+   [:script
+    (format
+      "katex.render(%s, document.currentScript.parentElement, {displayMode: %s, throwOnError: false});"
+      (jso/write-json-str s)
+      (str (boolean displayMode)))]])
 
 (defn tex [text]
   {:md     (->> text
