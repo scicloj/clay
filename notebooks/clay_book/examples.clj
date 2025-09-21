@@ -177,7 +177,19 @@ scittle.core.eval_string('(.log js/console 123)')
 ;; LaTeX formulae are supported as well.
 
 (kind/md
- "Let $x=9$. Then $$x+11=20$$")
+ "Let $x=9$. Then $x+11=20$")
+
+;; You can also put them in your comments:
+
+;; ```
+;; ;; $$e^{i\\pi} + 1 = 0$$
+;; ```
+;; $$e^{i\\pi} + 1 = 0$$
+
+;; ```
+;; ;; Or inline $e^{i\\pi} + 1 = 0$
+;; ```
+;; Or inline  $e^{i\\pi} + 1 = 0$
 
 ;; ## TeX
 

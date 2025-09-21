@@ -98,13 +98,12 @@
               (->> (md->hiccup md)
                    (clojure.walk/postwalk-replace {:table :table.table})
                    (claywalk/postwalk (fn [form]
-                                        (if (vector-that-starts-with?
-                                             form
-                                             :span.formula)
-                                          (-> form
-                                              second
-                                              item/katex-hiccup)
-                                          form)))))))
+                                        (cond
+                                          (vector-that-starts-with? form :span.formula)
+                                          (item/katex-hiccup (second form) false)
+                                          (vector-that-starts-with? form :figure.formula)
+                                          (item/katex-hiccup (second form) true)
+                                          :else form)))))))
       (complete-hiccup item)))
 
 (defn item->md [{:as item
