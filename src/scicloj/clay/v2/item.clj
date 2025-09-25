@@ -4,7 +4,8 @@
             [scicloj.kind-portal.v1.prepare :as kind-portal]
             [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
-            [scicloj.clay.v2.plotly-export :as plotly-export]
+            [scicloj.clay.v2.static.plotly-python :as plotly-python]
+            [scicloj.clay.v2.static.plotly-playwright :as plotly-playwright]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.clay.v2.util.meta :as meta]
             [clj-commons.format.exceptions :as fe]))
@@ -324,11 +325,14 @@
                      config {}}} :value}]
   (if (static? context)
     (let [[plot-path relative-path]
-          (files/next-file! context "plotly-chart" value ".png")
-          exit (plotly-export/export-plot! plot-path data layout)]
-      (if (zero? exit)
-        (println "Clay plotly-export:" [:wrote plot-path])
-        (println "Clay plotly-export failed."))
+          (files/next-file! context "plotly-chart" value
+                            (str "." (or (:plotly-ext options) "svg")))
+          success (if (:playwright options)
+                    (plotly-playwright/export-plot! plot-path data layout)
+                    (plotly-python/export-plot! plot-path data layout))]
+      (if success
+        (println "Clay plotly export:" [:wrote plot-path])
+        (println "Clay plotly export failed."))
       {:md (str "![" (:caption options) "](" relative-path ")")})
     {:hiccup
      [:div

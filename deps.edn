@@ -15,6 +15,7 @@
         org.scicloj/tempfiles {:mvn/version "1-beta1"}
         org.scicloj/kind-portal {:mvn/version "1-beta3"}
         org.clojure/tools.reader {:mvn/version "1.5.2"}
+        com.microsoft.playwright/playwright {:mvn/version "1.47.0"}
         com.nextjournal/beholder {:mvn/version "1.0.2"}
         babashka/fs {:mvn/version "0.5.25"}
         org.scicloj/kindly-render {:mvn/version "0.1.5-alpha"}
