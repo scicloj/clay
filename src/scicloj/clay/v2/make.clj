@@ -488,13 +488,15 @@
                  live-reload (conj (if (#{:toggle} live-reload)
                                      (live-reload/toggle! make! main-spec full-source-paths)
                                      (live-reload/start! make! main-spec full-source-paths))))
-          summary {:url     (server/url)
-                   :key     "clay"
-                   :title   "Clay"
-                   :display :editor
-                   ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
-                   :reveal  false
-                   :info    info}]
+          summary (merge
+                   (when show
+                     {:url     (server/url)})
+                   {:key     "clay"
+                    :title   "Clay"
+                    :display :editor
+                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
+                    :reveal  false
+                    :info    info})]
       (if (and ide (not= browse :browser))
         (tagged-literal 'flare/html summary)
         summary))))
