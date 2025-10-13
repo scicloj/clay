@@ -230,20 +230,19 @@
       (fs/delete "temp/test_nested.subdir.nested_notebook.html"))
     (when (fs/exists? "temp/test_nested") (fs/delete-tree "temp/test_nested"))
 
+    
     ;; Create a nested directory structure
     (fs/create-dirs "test_nested/subdir")
     (spit "test_nested/subdir/nested_notebook.clj"
-          "(ns nested-test)\n\n\"Nested notebook content\"")
-
+          "(ns test-nested.subdir.nested-notebook)\n\n\"Nested notebook content\"")
     (let [result (clay/make! {:source-path "test_nested/subdir/nested_notebook.clj"
                               :flatten-targets false
                               :show false
                               :browse false})]
-
       ;; With flattening disabled, should preserve directory structure
       (is (fs/exists? "temp/test_nested/subdir/nested_notebook.html"))
       (is (not (fs/exists? "temp/test_nested.subdir.nested_notebook.html"))))
-
+    
     ;; Clean up
     (fs/delete-tree "test_nested")
     (when (fs/exists? "temp/test_nested.subdir.nested_notebook.html")
