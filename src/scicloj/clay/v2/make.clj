@@ -94,6 +94,7 @@
                  target (str ns-path (case (second format)
                                        :revealjs "-revealjs.html"
                                        :pdf ".pdf"
+                                       :gfm ".md"
                                        ".html"))
                  target (cond-> target
                           flatten-targets (str/replace #"[\\/]+" "."))]
