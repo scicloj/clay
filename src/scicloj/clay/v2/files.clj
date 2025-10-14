@@ -26,7 +26,8 @@
     (if-let [file (-> @*target-path->files
                       (get target-path)
                       (get value))]
-      [file (relative-url target-path file)]
+      (do (io/make-parents file)
+          [file (relative-url target-path file)])
       (do (swap! *target-path->files
                  (fn [target-path->files]
                    (let [files (target-path->files target-path)]

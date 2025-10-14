@@ -445,7 +445,7 @@
         (with-out-err-captured)
         (log-time (str "Evaluated "
                        (or (some-> ns-form second name)
-                           (fs/file-name full-source-path)))))))
+                           (some-> full-source-path fs/file-name)))))))
 
 (defn items-and-test-forms
   [notes spec]

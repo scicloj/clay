@@ -67,7 +67,8 @@
            format
            base-source-path
            book
-           first-as-index]}]
+           first-as-index
+           keep-sync-root]}]
   (cond
     (tempory-target? spec)
     (str (fs/path base-target-path ".clay.html"))
@@ -81,9 +82,9 @@
     (string? source-path)
     (str (case source-type
            ("md" "Rmd" "ipynb")
-           (if (some-> base-source-path (util.fs/child? full-source-path))
-             (str (fs/relativize base-source-path full-source-path))
-             (fs/path base-target-path (fs/file-name full-source-path)))
+           (if keep-sync-root
+             full-source-path
+             (fs/relativize base-source-path full-source-path))
 
            ("clj" "cljc")
            (let [{:keys [ns-form]} spec
@@ -93,6 +94,7 @@
                  target (str ns-path (case (second format)
                                        :revealjs "-revealjs.html"
                                        :pdf ".pdf"
+                                       :gfm ".md"
                                        ".html"))
                  target (cond-> target
                           flatten-targets (str/replace #"[\\/]+" "."))]
@@ -488,13 +490,15 @@
                  live-reload (conj (if (#{:toggle} live-reload)
                                      (live-reload/toggle! make! main-spec full-source-paths)
                                      (live-reload/start! make! main-spec full-source-paths))))
-          summary {:url     (server/url)
-                   :key     "clay"
-                   :title   "Clay"
-                   :display :editor
-                   ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
-                   :reveal  false
-                   :info    info}]
+          summary (merge
+                   (when show
+                     {:url     (server/url)})
+                   {:key     "clay"
+                    :title   "Clay"
+                    :display :editor
+                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
+                    :reveal  false
+                    :info    info})]
       (if (and ide (not= browse :browser))
         (tagged-literal 'flare/html summary)
         summary))))
