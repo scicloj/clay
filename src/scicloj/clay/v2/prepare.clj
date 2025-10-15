@@ -91,9 +91,8 @@
                    (vector :div))
           (when md
             (if (and inside-a-table
-                     (vector-that-starts-with?
-                      format
-                      :quarto))
+                     (vector-that-starts-with? format :quarto)
+                     (not= kind :kind/table))
               [:span {:data-qmd md}]
               (->> (md->hiccup md)
                    (clojure.walk/postwalk-replace {:table :table.table})
