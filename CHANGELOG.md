@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2.0.0]
 - fixing nested tables in Quarto (PR #304)
+- note beta anymore
 
 ## [2-beta57 - 2025-10-14]
 - prioritize initial user feedback (PR #292)
