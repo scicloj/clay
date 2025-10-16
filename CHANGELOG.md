@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2.0.0]
+## [2.0.0 - 2025-10-16]
 - fixing nested tables in Quarto (PR #304)
 - note beta anymore
 
