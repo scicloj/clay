@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2.0.0]
+- fixing nested tables in Quarto (PR #304)
+
 ## [2-beta57 - 2025-10-14]
 - prioritize initial user feedback (PR #292)
 - a more efficient way to require kind-portal (PR #292)
