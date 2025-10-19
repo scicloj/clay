@@ -16,7 +16,7 @@
         org.scicloj/kind-portal {:mvn/version "1-beta3"}
         org.clojure/tools.reader {:mvn/version "1.5.2"}
         com.nextjournal/beholder {:mvn/version "1.0.2"}
-        babashka/fs {:mvn/version "0.5.25"}
+        babashka/fs {:mvn/version "0.5.27"}
         org.scicloj/kindly-render {:mvn/version "0.1.5-alpha"}
         io.github.tonsky/clojure-plus {:mvn/version "1.4.0"}
         org.clj-commons/pretty {:mvn/version "3.5.0"}}
