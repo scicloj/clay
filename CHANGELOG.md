@@ -1,8 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
-- fix: (ClassCastException) at babashka.fs/u+wx by @neuhalje (PR #306)
+## [2.0.1 - 2025-10-26]
+- fix: (ClassCastException) at babashka.fs/u+wx by @neuhalje (PR #306, updating babashka.fs version)
 
 ## [2.0.0 - 2025-10-16]
 - fixing nested tables in Quarto (PR #304)
