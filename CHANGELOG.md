@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2.0.2 - 2025-11-01]
 - added `kind/audio` support (experimental)
 
 ## [2.0.1 - 2025-10-26]
