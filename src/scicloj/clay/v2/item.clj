@@ -7,7 +7,14 @@
             [scicloj.clay.v2.plotly-export :as plotly-export]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.clay.v2.util.meta :as meta]
-            [clj-commons.format.exceptions :as fe]))
+            [clj-commons.format.exceptions :as fe])
+  (:import (javax.sound.sampled AudioFileFormat$Type
+                                AudioFormat
+                                AudioInputStream)
+           (java.io ByteArrayInputStream
+                    File)
+           (java.nio ByteBuffer
+                     ByteOrder)))
 
 (def *id (atom 0))
 
@@ -401,6 +408,51 @@
        :else
        {:md (str "unsupported image format: " (type value))}))))
 
+(defmacro shortify
+  "Takes a floating-point number f in the range [-1.0, 1.0] and scales
+  it to the range of a signed 16-bit integer. Clamps any overflows."
+  ;; taken from: https://github.com/harold/clj-simple-wave-file/blob/main/src/clj_simple_wave_file/core.clj
+  [f]
+  (let [max-short-as-double (double Short/MAX_VALUE)]
+    `(let [clamped# (-> ~f (min 1.0) (max -1.0))]
+       (short (* ~max-short-as-double clamped#)))))
+
+(defn write-samples-to-wav!
+  "Takes float samples between -1 to 1, a sampling rate, and a target path,
+  and writes the corresponding single-channel WAV file to that path."
+  [{:keys [samples sample-rate target-path]}]
+  (let [audio-format (AudioFormat. sample-rate 16 1 true false)
+        ;; inspired by: https://github.com/phronmophobic/whisper.clj/blob/4d44aa68c383297fbf3a56d861e1f306abb44aaf/src/com/phronemophobic/whisper.clj#L73
+        buf (doto (ByteBuffer/allocate (* 2 (count samples)))
+              (.order (ByteOrder/nativeOrder)))
+        sbuf (.asShortBuffer buf)
+        _ (doseq [f samples]
+            (.put sbuf ^short (shortify f)))
+        byte-input-stream (ByteArrayInputStream. (.array buf))
+        audio-input-stream (AudioInputStream. byte-input-stream 
+                                              audio-format 
+                                              (count samples))]
+    (javax.sound.sampled.AudioSystem/write audio-input-stream
+                                           AudioFileFormat$Type/WAVE
+                                           (File. ^String target-path))))
+
+(defn audio [{:keys [value] :as context}]
+  (let [{:keys [src
+                samples sample-rate]} value]
+    (cond
+      ;; A video file
+      src {:hiccup [:audio {:controls ""}
+                    [:source {:src src}]]}
+      ;; Audio samples
+      samples (let [[wav-path relative-path]
+                    (files/next-file! context "audio" value ".wav")]
+                (when-not (write-samples-to-wav! {:samples samples
+                                                  :sample-rate sample-rate
+                                                  :target-path wav-path})
+                  (throw (ex-message "Failed to save audio as WAV.")))
+                {:hiccup [:audio {:controls ""}
+                          [:source {:src relative-path}]]}))))
+
 (defn vega-embed [{:keys [value]
                    :as context}]
   (let [{:keys [data]} value
@@ -446,6 +498,8 @@
                                               (str/join "&")
                                               (str "?")))
                            :allowfullscreen allowfullscreen})]}))
+
+
 
 (defn observable [code]
   {:md (->> code

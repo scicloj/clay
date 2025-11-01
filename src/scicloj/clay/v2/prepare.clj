@@ -563,6 +563,10 @@
  #'item/image)
 
 (add-preparer!
+ :kind/audio
+ #'item/audio)
+
+(add-preparer!
  :kind/vega
  #'item/vega-embed)
 

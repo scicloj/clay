@@ -266,6 +266,49 @@ clay-image
 (kind/image
  "AN IMAGE")
 
+;; ## Audio
+
+;; (experimental)
+
+;; Playable audio can be specified with a sound file:
+
+(kind/audio
+ {:src "notebooks/sine_wave.wav"})
+
+;; It can also be specified as a map containing a sampling rate value
+;; and a sequential of sampels - float values between -1 to 1.
+
+(defn generate-sine-wave [{:keys [sample-rate duration frequency amplitude]
+                           :or {amplitude 0.5}}]
+  (let [num-samples (int (* sample-rate duration))
+        ;; Generate samples as int16 reader
+        samples (for [idx (range num-samples)]
+                  (let [angle (* 2.0 Math/PI idx frequency (/ 1.0 sample-rate))]
+                    (* amplitude (Math/sin angle))))]
+    {:samples samples
+     :sample-rate sample-rate}))
+
+(kind/audio
+ (generate-sine-wave {:sample-rate 44100.0
+                      :duration 3
+                      :frequency 440.0
+                      :amplitude 0.3}))
+
+(kind/audio
+ (let [[c4 e4 g4] (for [freq [261.63 329.63 392.00]]
+                    (-> {:sample-rate 44100.0
+                         :duration 1
+                         :frequency freq
+                         :amplitude 0.3}
+                        generate-sine-wave
+                        :samples))]
+   {:sample-rate 44100.0
+    :samples (->> (concat c4
+                          (map + c4 e4)
+                          (map + c4 e4 g4)
+                          (map + e4 g4)
+                          g4))}))
+
 ;; ## Plain data structures
 
 ;; Plain data structures (lists and sequnces, vectors, sets, maps)

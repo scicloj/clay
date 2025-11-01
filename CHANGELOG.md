@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [unreleased]
+- added `kind/audio` support (experimental)
+
 ## [2.0.1 - 2025-10-26]
 - fix: (ClassCastException) at babashka.fs/u+wx by @neuhalje (PR #306, updating babashka.fs version)
 
