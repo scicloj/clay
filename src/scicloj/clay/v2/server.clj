@@ -195,7 +195,7 @@
 
 (defn routes
   "Web server routes."
-  [{:keys [:body :request-method :uri]
+  [{:keys [body request-method uri]
     :as req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
