@@ -31,8 +31,8 @@
   (loop [port default-port]
     ;; Check if the port is free:
     ;; (https://codereview.stackexchange.com/a/31591)
-    (or (try (do (.close (ServerSocket. port))
-                 port)
+    (or (try (.close (ServerSocket. port))
+             port
              (catch Exception e nil))
         (recur (inc port)))))
 
@@ -231,7 +231,7 @@
                             slurp
                             (wrap-html state))
                         f)
-             :headers (when-let [t (mime-type/ext-mime-type uri)]
+             :headers (when-let [t (mime-type/ext-mime-type uri {"cljs" "text/plain"})]
                         {"Content-Type" t})
              :status  200}
             (case [request-method uri]
