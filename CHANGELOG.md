@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2.0.3 - 2025-11-22]
 - fix content type for cljs files Scittle (PR #308)
 - used symbols in `:keys` desctucturing (PR #309) - by @onbreath
 - adding empty lines before bullet points in qmd generation
