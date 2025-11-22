@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [unreleased]
 - fix content type for cljs files Scittle (PR #308)
 - used symbols in `:keys` desctucturing (PR #309) - by @onbreath
+- adding empty lines before bullet points in qmd generation
 
 ## [2.0.2 - 2025-11-01]
 - added `kind/audio` support (experimental)
