@@ -7,7 +7,8 @@
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly-advice.v1.api :as kindly-advice])
+            [scicloj.kindly-advice.v1.api :as kindly-advice]
+            [nrepl.core :as nrepl])
   (:import (java.io StringWriter)))
 
 (set! *warn-on-reflection* true)
@@ -109,6 +110,29 @@
   (let [completed (cond-> note
                     (not (or comment? (contains? note :value)))
                     (read-eval-capture))]
+    (cond-> completed
+      (and (not comment?) (contains? completed :value))
+      (kindly-advice/advise))))
+
+(defn babashka-eval-capture [{:as   note
+                              :keys [code form
+                                     babashka-nrepl-host
+                                     babashka-nrepl-port]}]
+  (with-open [conn (nrepl/connect :host babashka-nrepl-host
+                                  :port babashka-nrepl-port)]
+    (assoc note :value
+           (-> (nrepl/client conn 1000)    ; message receive timeout required
+               (nrepl/message {:op "eval"
+                               :ns (pr-str (second (:ns-form note)))
+                               :code (cond form (pr-str form)
+                                           code code)})
+               doall))))
+
+(defn complete-babashka [{:as   note
+                          :keys [comment?]}]
+  (let [completed (cond-> note
+                    (not (or comment? (contains? note :value)))
+                    (babashka-eval-capture))]
     (cond-> completed
       (and (not comment?) (contains? completed :value))
       (kindly-advice/advise))))
@@ -375,10 +399,16 @@
                            :full-target-path
                            :qmd-target-path
                            :kindly/options
-                           :format])]
+                           :format
+                           :clojure-dialect
+                           :babashka-nrepl-host
+                           :babashka-nrepl-port
+                           :ns-form])]
     (doall
-      (for [note notes]
-        (complete (kindly/deep-merge opts note))))))
+     (for [note notes]
+       (if (= :babashka (:clojure-dialect opts))
+         (complete-babashka (kindly/deep-merge opts note))
+         (complete (kindly/deep-merge opts note)))))))
 
 (defn relevant-notes [{:keys [full-source-path
                          single-form
