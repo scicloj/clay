@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.read
   (:require [scicloj.read-kinds.notes :as notes]
-            [scicloj.read-kinds.read :as read]))
+            [scicloj.read-kinds.read :as read]
+            [nrepl.core :as nrepl]))
 
 ;; TODO: not sure if generation is necessary???
 
@@ -26,8 +27,33 @@
                       (-> form first (= 'ns)))))
        first))
 
-(defn ->notes [code]
-  (->> (read/read-string-all code)
+;; TODO eval via nrepl for clay clj + clay dialect
+(defn babashka-eval-capture [{:as spec
+                              :keys [code
+                                     babashka-nrepl-host
+                                     babashka-nrepl-port]}]
+  (with-open [^nrepl.transport.FnTransport
+              conn (nrepl/connect :host babashka-nrepl-host
+                                  :port babashka-nrepl-port)]
+    (assoc spec :value
+           (-> (nrepl/client conn 1000)    ; message receive timeout required
+               (nrepl/message {:op "eval"
+                               :code (cond form (pr-str form)
+                                           code code)})
+               doall))))
+
+(defn ->notes [{:keys [single-form
+                       single-value
+                       code]}]
+  ;; TODO infer eval via nrepl from set of :clojure-dialect
+  (->> (cond single-value (conj (when code
+                                  [{:form (read/read-ns-form code)}])
+                                {:value single-value})
+             single-form (conj (when code
+                                 [{:form (read/read-ns-form code)}])
+                               {:form single-form})
+             :else code)
+       (read/read-string-all)
        (into [] notes/notebook-xform)))
 
 ;; TODO: Not needed? read-kinds has a safe-notes wrapper already...

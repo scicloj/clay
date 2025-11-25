@@ -7,8 +7,7 @@
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly-advice.v1.api :as kindly-advice]
-            [nrepl.core :as nrepl])
+            [scicloj.kindly-advice.v1.api :as kindly-advice])
   (:import (java.io StringWriter)))
 
 (set! *warn-on-reflection* true)
@@ -141,30 +140,6 @@
   (let [completed (cond-> note
                     (not (or comment? (contains? note :value)))
                     (read-eval-capture))]
-    (cond-> completed
-      (and (not comment?) (contains? completed :value))
-      (kindly-advice/advise))))
-
-(defn babashka-eval-capture [{:as   note
-                              :keys [code form
-                                     babashka-nrepl-host
-                                     babashka-nrepl-port]}]
-  (with-open [^nrepl.transport.FnTransport
-              conn (nrepl/connect :host babashka-nrepl-host
-                                  :port babashka-nrepl-port)]
-    (assoc note :value
-           (-> (nrepl/client conn 1000)    ; message receive timeout required
-               (nrepl/message {:op "eval"
-                               :ns (pr-str (second (:ns-form note)))
-                               :code (cond form (pr-str form)
-                                           code code)})
-               doall))))
-
-(defn complete-babashka [{:as   note
-                          :keys [comment?]}]
-  (let [completed (cond-> note
-                    (not (or comment? (contains? note :value)))
-                    (babashka-eval-capture))]
     (cond-> completed
       (and (not comment?) (contains? completed :value))
       (kindly-advice/advise))))
@@ -432,30 +407,21 @@
                            :qmd-target-path
                            :kindly/options
                            :format
-                           :clojure-dialect
-                           :babashka-nrepl-host
-                           :babashka-nrepl-port
                            :ns-form])]
     (doall
      (for [note notes]
-       (if (= :babashka (:clojure-dialect opts))
-         (complete-babashka (kindly/deep-merge opts note))
-         (complete (kindly/deep-merge opts note)))))))
+       (complete (kindly/deep-merge opts note))))))
 
 (defn relevant-notes [{:keys [full-source-path
-                         single-form
-                         single-value
-                         smart-sync
-                         pprint-margin]
-                  :or        {pprint-margin pp/*print-right-margin*}}]
-  (let [{:keys [code first-line-of-change]} (some-> full-source-path slurp-and-compare)
-        notes (->> (cond single-value (conj (when code
-                                              [{:form (read/read-ns-form code)}])
-                                            {:value single-value})
-                         single-form (conj (when code
-                                             [{:form (read/read-ns-form code)}])
-                                           {:form single-form})
-                         :else (read/->notes code))
+                              single-form
+                              single-value
+                              smart-sync
+                              pprint-margin]
+                       :or    {pprint-margin pp/*print-right-margin*}
+                       :as    spec}]
+  (let [{:keys [code first-line-of-change]} (some-> full-source-path
+                                                    slurp-and-compare)
+        notes (->> (read/read (assoc spec :code code))
                    (map-indexed (fn [i {:as   note
                                         :keys [code]}]
                                   (merge note
