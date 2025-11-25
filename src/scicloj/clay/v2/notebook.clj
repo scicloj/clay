@@ -118,7 +118,8 @@
                               :keys [code form
                                      babashka-nrepl-host
                                      babashka-nrepl-port]}]
-  (with-open [conn (nrepl/connect :host babashka-nrepl-host
+  (with-open [^nrepl.transport.FnTransport
+              conn (nrepl/connect :host babashka-nrepl-host
                                   :port babashka-nrepl-port)]
     (assoc note :value
            (-> (nrepl/client conn 1000)    ; message receive timeout required
