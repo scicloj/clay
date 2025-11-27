@@ -1,6 +1,9 @@
 (ns scicloj.clay.v2.read
   (:require [scicloj.read-kinds.notes :as notes]
-            [scicloj.read-kinds.read :as read]))
+            [scicloj.read-kinds.read :as read]
+            [nrepl.core :as nrepl]
+            [clojure.tools.reader]
+            [clojure.tools.reader.reader-types]))
 
 ;; TODO: not sure if generation is necessary???
 
@@ -26,9 +29,20 @@
                       (-> form first (= 'ns)))))
        first))
 
-(defn ->notes [code]
-  (->> (read/read-string-all code)
-       (into [] notes/notebook-xform)))
+;; TODO keep this or something like it
+(defn ->notes [{:keys [single-form
+                       single-value
+                       code]}]
+  (cond single-value (conj (when code
+                             [{:form (read-ns-form code)}])
+                           {:value single-value})
+        ;; TODO Doesn't actually eval the form
+        single-form (conj (when code
+                            [{:form (read-ns-form code)}])
+                          {:form single-form})
+        :else (->> code
+                   (read/read-string-all)
+                   (into [] notes/notebook-xform))))
 
 ;; TODO: Not needed? read-kinds has a safe-notes wrapper already...
 (defn ->safe-notes [code]

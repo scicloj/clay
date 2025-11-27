@@ -17,7 +17,9 @@
             [clojure.pprint :as pp]
             [scicloj.kindly-render.notes.to-html-page :as to-html-page]
             ;; [hashp.preload]
-            [scicloj.kindly.v4.api :as kindly]))
+            [scicloj.kindly.v4.api :as kindly])
+  (:import java.time.LocalDateTime
+           java.time.format.DateTimeFormatter))
 
 (defn spec->source-type [{:keys [source-path]}]
   (some-> source-path (fs/extension)))
@@ -471,8 +473,12 @@
                 (fs/delete-tree target))
               (util.fs/copy-tree-no-clj subdir target)))))))
 
+(defn ts []
+  (.format (LocalDateTime/now)
+           (DateTimeFormatter/ofPattern "yyyy-MM-dd-HH-mm-ss~N")))
+
 (defn make! [spec]
-  (let [config (config/config spec)
+  (let [config (config/config (assoc spec :diff/timestamp (ts)))
         {:keys [single-form single-value]} spec
         {:keys [main-spec single-ns-specs]} (extract-specs config spec)
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec

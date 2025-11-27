@@ -34,3 +34,4 @@
 docs/*qmd
 _quarto.yml
 book
+/read-kinds-diffs

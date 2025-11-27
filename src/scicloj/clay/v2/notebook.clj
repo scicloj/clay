@@ -6,8 +6,11 @@
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
             [scicloj.clay.v2.read :as read]
+            [scicloj.clay.v2.read-old :as read-old]
+            [lambdaisland.deep-diff2 :as ddiff]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly-advice.v1.api :as kindly-advice])
+            [scicloj.kindly-advice.v1.api :as kindly-advice]
+            [clojure.pprint :as pprint])
   (:import (java.io StringWriter)))
 
 (set! *warn-on-reflection* true)
@@ -98,8 +101,6 @@
   "Captures stdout and stderr while evaluating a note"
   [{:as   note
     :keys [code form]}]
-  note
-  #_
   (let [out (StringWriter.)
         err (StringWriter.)
         note (try
@@ -138,9 +139,10 @@
 (defn complete [{:as   note
                  :keys [comment?]}]
   (let [completed (cond-> note
-                    (not (or comment? (contains? note :value)))
+                    (not (or comment? (contains? note :value)
+                             (contains? note ::read/read-kinds)))
                     (read-eval-capture))]
-    (cond-> completed
+    (cond-> (dissoc completed ::read/read-kinds)
       (and (not comment?) (contains? completed :value))
       (kindly-advice/advise))))
 
@@ -406,25 +408,24 @@
                            :full-target-path
                            :qmd-target-path
                            :kindly/options
-                           :format])]
+                           :format
+                           ::read/read-kinds])]
     (doall
       (for [note notes]
         (complete (kindly/deep-merge opts note))))))
 
 (defn relevant-notes [{:keys [full-source-path
-                         single-form
-                         single-value
-                         smart-sync
-                         pprint-margin]
-                  :or        {pprint-margin pp/*print-right-margin*}}]
-  (let [{:keys [code first-line-of-change]} (some-> full-source-path slurp-and-compare)
-        notes (->> (cond single-value (conj (when code
-                                              [{:form (read/read-ns-form code)}])
-                                            {:value single-value})
-                         single-form (conj (when code
-                                             [{:form (read/read-ns-form code)}])
-                                           {:form single-form})
-                         :else (read/->notes code))
+                              single-form
+                              single-value
+                              smart-sync
+                              pprint-margin]
+                       :or    {pprint-margin pp/*print-right-margin*}
+                       :as    spec}]
+  (let [{:keys [code first-line-of-change]} (some-> full-source-path
+                                                    slurp-and-compare)
+        notes (->> (if (contains? spec ::read/read-kinds)
+                     (read/->notes (assoc spec :code code))
+                     (read-old/->notes (assoc spec :code code)))
                    (map-indexed (fn [i {:as   note
                                         :keys [code]}]
                                   (merge note
@@ -464,6 +465,71 @@
               "seconds")
      result#))
 
+(defn diff-read-impls [old new & {:diff/keys [to-files
+                                              keep-dirs
+                                              to-repl
+                                              timestamp
+                                              notes]
+                                  :keys [full-source-path]
+                                  :as spec}]
+  (assert (or to-files to-repl) "Please pick an output option")
+  (assert (#{:all :each} notes) "You can diff :all notes or :each individually")
+  (assert timestamp "Should be assoc'd to spec in scicloj.clay.v2.make/make!")
+  (let [diff (case notes
+               :each (mapv #(ddiff/diff %1 %2) old new)
+               :all (ddiff/diff old new))]
+    (when (not-empty (ddiff/minimize diff))
+      (let [diff-print-fn (case to-files
+                            :deep-diff2/full ddiff/pretty-print
+                            :deep-diff2/minimal (comp ddiff/pretty-print
+                                                      ddiff/minimize)
+                            ;; No diff, we write old/new for to-files anyways
+                            (:clojure/pprint nil) nil)
+            repl-print-fn (case to-repl
+                            :deep-diff2/full #(ddiff/pretty-print diff)
+                            :deep-diff2/minimal #(-> diff
+                                                     ddiff/minimize
+                                                     ddiff/pretty-print)
+                            :clojure/pprint
+                            #(do (println "old: ")
+                                 (pprint/pprint old)
+                                 (println "new: ")
+                                 (pprint/pprint new))
+                            nil nil)
+            dir-fn (fn []
+                     (let [diffs-base-path (fs/absolutize "read-kinds-diffs")
+                           diffs-path (-> diffs-base-path
+                                          (fs/path timestamp))
+                           diff-base-file (-> full-source-path
+                                              (str/replace "/" ".")
+                                              (->> (fs/path diffs-path)
+                                                   str))
+                           diff-file (str diff-base-file ".edn")
+                           old-file (str diff-base-file ".old.edn")
+                           new-file (str diff-base-file ".new.edn")
+                           diff-dirs (->> (fs/list-dir diffs-base-path
+                                                       #(fs/directory? % {:nofollow-links true}))
+                                          (sort-by fs/last-modified-time))]
+                       (when (number? keep-dirs)
+                         (doseq [dir (take (max 0 (inc (- (count diff-dirs) keep-dirs)))
+                                           diff-dirs)]
+                           (fs/delete-tree dir)))
+                       (fs/create-dirs diffs-path)
+                       (println "creating diff file " diff-file " & old/new")
+                       (when diff-print-fn
+                         (spit diff-file
+                               (with-out-str
+                                 (println "---------- diff:")
+                                 (diff-print-fn diff)
+                                 (println "---------- spec:")
+                                 (pprint/pprint spec))))
+                       (spit old-file (with-out-str (pprint/pprint old)))
+                       (spit new-file (with-out-str (pprint/pprint new)))))
+            diff-out (apply juxt (cond-> []
+                                   to-files (conj dir-fn)
+                                   to-repl (conj repl-print-fn)))]
+        (diff-out)))))
+
 (defn spec-notes [{:as spec
                    :keys      [pprint-margin ns-form full-source-path]
                    :or        {pprint-margin pp/*print-right-margin*}}]
@@ -471,12 +537,58 @@
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
-    (-> (relevant-notes spec)
-        (complete-notes spec)
-        (with-out-err-captured)
-        (log-time (str "Evaluated "
-                       (or (some-> ns-form second name)
-                           (some-> full-source-path fs/file-name)))))))
+    (let [old (-> (relevant-notes spec)
+                  (complete-notes spec)
+                  (with-out-err-captured)
+                  (log-time (str "Evaluated old read+eval "
+                                 (or (some-> ns-form second name)
+                                     (some-> full-source-path fs/file-name)))))
+          read-kinds-spec (assoc spec ::read/read-kinds true)
+          new (-> (relevant-notes read-kinds-spec)
+                  (complete-notes read-kinds-spec)
+                  (with-out-err-captured)
+                  (log-time (str "Evaluated read-kinds read+eval "
+                                 (or (some-> ns-form second name)
+                                     (some-> full-source-path fs/file-name)))))]
+      ;; We can print the plain new and old structures..
+      #_(diff-read-impls old new
+                         :diff/to-repl :clojure/pprint
+                         :diff/notes :each
+                       spec)
+      ;; ..or only differences
+      (diff-read-impls old new
+                         :diff/to-repl :deep-diff2/minimal
+                         :diff/notes :each
+                         spec)
+      ;; ..or write old and new files
+      #_(diff-read-impls old new
+                         :diff/to-files :clojure/pprint
+                         :diff/notes :each
+                       spec)
+      ;; ..or old, new and full diff files
+      #_(diff-read-impls old new
+                         :diff/to-files :deep-diff2/full
+                         :diff/notes :each
+                       spec)
+      ;; ..or old, new and minimal diffs, keeping only the last three runs
+      #_(diff-read-impls old new
+                         :diff/to-files :deep-diff2/minimal
+                         :diff/keep-dirs 3
+                         :diff/notes :each
+                       spec)
+      ;; ..or any combination of the above
+      #_(diff-read-impls old new
+                       :diff/to-repl :deep-diff2/minimal
+                       :diff/to-files :deep-diff2/full
+                       :diff/keep-dirs 3
+                       :diff/notes :each
+                       spec)
+      ;; For few differences diffing all notes can be ok
+      #_(diff-read-impls old new
+                       :diff/to-repl :deep-diff2/minimal
+                       :diff/notes :all
+                       spec)
+      new)))
 
 (defn items-and-test-forms
   [notes spec]
