@@ -557,6 +557,11 @@
                        spec)
       ;; ..or only differences
       (diff-read-impls old new
+                       :diff/to-repl :deep-diff2/minimal
+                       :diff/notes :each
+                       spec)
+      ;; ..or only one difference
+      #_(diff-read-impls (take 1 old) (take 1 new)
                          :diff/to-repl :deep-diff2/minimal
                          :diff/notes :each
                          spec)
