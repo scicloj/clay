@@ -5,8 +5,8 @@
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
+            [scicloj.clay.v2.notebook-old :as notebook-old]
             [scicloj.clay.v2.read :as read]
-            [scicloj.clay.v2.read-old :as read-old]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly-advice.v1.api :as kindly-advice]
             [scicloj.clay.v2.util.diff :as diff])
@@ -100,7 +100,8 @@
   "Captures stdout and stderr while evaluating a note"
   [{:as   note
     :keys [code form]}]
-  (let [out (StringWriter.)
+  note
+  #_(let [out (StringWriter.)
         err (StringWriter.)
         note (try
                (let [x (binding [*out* out
@@ -138,10 +139,9 @@
 (defn complete [{:as   note
                  :keys [comment?]}]
   (let [completed (cond-> note
-                    (not (or comment? (contains? note :value)
-                             (contains? note ::read/read-kinds)))
+                    (not (or comment? (contains? note :value)))
                     (read-eval-capture))]
-    (cond-> (dissoc completed ::read/read-kinds)
+    (cond-> completed
       (and (not comment?) (contains? completed :value))
       (kindly-advice/advise))))
 
@@ -407,8 +407,7 @@
                            :full-target-path
                            :qmd-target-path
                            :kindly/options
-                           :format
-                           ::read/read-kinds])]
+                           :format])]
     (doall
       (for [note notes]
         (complete (kindly/deep-merge opts note))))))
@@ -422,9 +421,7 @@
                        :as    spec}]
   (let [{:keys [code first-line-of-change]} (some-> full-source-path
                                                     slurp-and-compare)
-        notes (->> (if (contains? spec ::read/read-kinds)
-                     (read/->notes (assoc spec :code code))
-                     (read-old/->notes (assoc spec :code code)))
+        notes (->> (read/->notes (assoc spec :code code))
                    (map-indexed (fn [i {:as   note
                                         :keys [code]}]
                                   (merge note
@@ -471,17 +468,11 @@
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
-    (let [old (-> (relevant-notes spec)
+    (let [old (notebook-old/spec-notes spec)
+          new (-> (relevant-notes spec)
                   (complete-notes spec)
                   (with-out-err-captured)
-                  (log-time (str "Evaluated old read+eval "
-                                 (or (some-> ns-form second name)
-                                     (some-> full-source-path fs/file-name)))))
-          read-kinds-spec (assoc spec ::read/read-kinds true)
-          new (-> (relevant-notes read-kinds-spec)
-                  (complete-notes read-kinds-spec)
-                  (with-out-err-captured)
-                  (log-time (str "Evaluated read-kinds read+eval "
+                  (log-time (str "Evaluated notebook with read-kinds "
                                  (or (some-> ns-form second name)
                                      (some-> full-source-path fs/file-name)))))]
       ;; We can print the plain new and old notes..
