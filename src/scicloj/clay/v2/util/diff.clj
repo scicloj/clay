@@ -32,7 +32,7 @@
         (when (= (fs/parent dir) diffs-base-path)
           (fs/delete-tree dir))))
     (fs/create-dirs diffs-path)
-    (println "creating diff file " diff-file " & old/new")
+    (println "Clay: Creating diff file " diff-file " & old/new")
     (when diff-print-fn
       (spit diff-file
             (with-out-str
@@ -76,4 +76,5 @@
         (when to-files
           (write-diff-files old new note-diffs file-diff-print-fn print-fn spec))
         (when to-repl
+          (println "Clay: Notes diff")
           (repl-print-fn))))))
