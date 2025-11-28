@@ -14,13 +14,13 @@
                           :keys [full-source-path]
                           :as spec}]
   (let [diffs-base-path (fs/absolutize "read-kinds-diffs")
+        source-name (-> full-source-path (str/replace "/" "."))
         diffs-path (-> diffs-base-path
-                       (fs/path timestamp))
-        diff-base-file (-> full-source-path
-                           (str/replace "/" ".")
-                           (->> (fs/path diffs-path)
-                                str))
-        diff-file (str diff-base-file ".edn")
+                       (fs/path (str source-name "~" timestamp)))
+        diff-base-file (->> source-name
+                            (fs/path diffs-path)
+                            str)
+        diff-file (str diff-base-file ".diff.edn")
         old-file (str diff-base-file ".old.edn")
         new-file (str diff-base-file ".new.edn")
         diff-dirs (->> (fs/list-dir diffs-base-path
