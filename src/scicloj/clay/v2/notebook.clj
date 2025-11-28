@@ -463,13 +463,13 @@
 
 (defn notes-dissoc-old [notes]
   (->> notes
-       (into (empty notes)
+       (into []
              (map #(-> %
                        (dissoc :gen))))))
 
 (defn notes-dissoc-new [notes]
   (->> notes
-       (into (empty notes)
+       (into []
              (map #(-> %
                        (dissoc :line :column))))))
 

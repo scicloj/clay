@@ -1,7 +1,6 @@
 (ns scicloj.clay.v2.read
   (:require [scicloj.read-kinds.notes :as notes]
             [scicloj.read-kinds.read :as read]
-            [nrepl.core :as nrepl]
             [clojure.tools.reader]
             [clojure.tools.reader.reader-types]))
 
