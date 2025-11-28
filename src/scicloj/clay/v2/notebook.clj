@@ -484,7 +484,8 @@
                   (notes-dissoc-old))
           new (-> (relevant-notes spec)
                   (complete-notes spec)
-                  (with-out-err-captured)
+                  ;; TODO Read kinds should be doing this
+                  #_(with-out-err-captured)
                   (log-time (str "Evaluated notebook with read-kinds "
                                  (or (some-> ns-form second name)
                                      (some-> full-source-path fs/file-name))))
