@@ -461,6 +461,18 @@
               "seconds")
      result#))
 
+(defn notes-dissoc-old [notes]
+  (->> notes
+       (into (empty notes)
+             (map #(-> %
+                       (dissoc :gen))))))
+
+(defn notes-dissoc-new [notes]
+  (->> notes
+       (into (empty notes)
+             (map #(-> %
+                       (dissoc :line :column))))))
+
 (defn spec-notes [{:as spec
                    :keys      [pprint-margin ns-form full-source-path]
                    :or        {pprint-margin pp/*print-right-margin*}}]
@@ -468,13 +480,15 @@
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
-    (let [old (notebook-old/spec-notes spec)
+    (let [old (-> (notebook-old/spec-notes spec)
+                  (notes-dissoc-old))
           new (-> (relevant-notes spec)
                   (complete-notes spec)
                   (with-out-err-captured)
                   (log-time (str "Evaluated notebook with read-kinds "
                                  (or (some-> ns-form second name)
-                                     (some-> full-source-path fs/file-name)))))]
+                                     (some-> full-source-path fs/file-name))))
+                  (notes-dissoc-new))]
       ;; We can print the plain new and old notes..
       #_(diff/notes old new
                     :diff/to-repl :clojure/pprint
