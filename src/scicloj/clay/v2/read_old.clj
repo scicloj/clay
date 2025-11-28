@@ -100,37 +100,29 @@
               :generated-string)
    :comment? true})
 
-(defn ->notes [{:keys [single-form
-                       single-value
-                       code]}]
-  (cond single-value (conj (when code
-                             [{:form (read-ns-form code)}])
-                           {:value single-value})
-        single-form (conj (when code
-                            [{:form (read-ns-form code)}])
-                          {:form single-form})
-        :else (->> code
-                   ((juxt read-by-tools-reader read-by-parcera))
-                   (apply concat)
-                   (group-by :region)
-                   (map (fn [[region results]]
-                          (if (-> results count (= 1))
-                            (first results)
-                            ;; prefer tools.reader over parcera
-                            (->> results
-                                 (filter #(-> % :method (= :tools-reader)))
-                                 first))))
-                   (sort-by :region)
-                   (map #(dissoc % :method))
-                   (partition-by :comment?)
-                   (mapcat (fn [part]
-                             (if (-> part first :comment?)
-                               [(unified-cleaned-comment-block part)]
-                               part)))
-                   (mapv (let [g (generation)]
-                           (fn [note-data]
-                             (-> note-data
-                                 (assoc :gen g))))))))
+(defn ->notes [code]
+  (->> code
+       ((juxt read-by-tools-reader read-by-parcera))
+       (apply concat)
+       (group-by :region)
+       (map (fn [[region results]]
+              (if (-> results count (= 1))
+                (first results)
+                ;; prefer tools.reader over parcera
+                (->> results
+                     (filter #(-> % :method (= :tools-reader)))
+                     first))))
+       (sort-by :region)
+       (map #(dissoc % :method))
+       (partition-by :comment?)
+       (mapcat (fn [part]
+                 (if (-> part first :comment?)
+                   [(unified-cleaned-comment-block part)]
+                   part)))
+       (mapv (let [g (generation)]
+               (fn [note-data]
+                 (-> note-data
+                     (assoc :gen g)))))))
 
 
 (defn ->safe-notes [code]
