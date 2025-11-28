@@ -28,6 +28,22 @@
                       (-> form first (= 'ns)))))
        first))
 
+(defn collapse-comments-ws [notes]
+  (let [collapse (comp #{:kind/whitespace :kind/comment} :kind)
+        comment? (comp #{:kind/comment} :kind)]
+    (->> notes
+         (partition-by (comp boolean collapse))
+         (mapcat
+          #(if (some collapse %)
+             [(cond-> {:code (str/join (map :code %))
+                       :kind (if (some comment? %)
+                               :kind/comment
+                               :kind/whitespace)}
+                (some comment? %)
+                ;; TODO does :value need :code from whitespace?
+                (assoc :value (str/join (map :value %))))]
+             %)))))
+
 ;; TODO keep this or something like it
 (defn ->notes [{:keys [single-form
                        single-value
@@ -41,6 +57,8 @@
                           {:form single-form})
         :else (->> code
                    (read/read-string-all)
+                   ;; TODO maybe optional for diffing
+                   collapse-comments-ws
                    (into [] notes/notebook-xform))))
 
 ;; TODO: Not needed? read-kinds has a safe-notes wrapper already...
