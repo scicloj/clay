@@ -410,7 +410,7 @@
                            :format])]
     (doall
       (for [note notes]
-        (complete (kindly/deep-merge opts note))))))
+        (kindly/deep-merge opts note)))))
 
 (defn relevant-notes [{:keys [full-source-path
                               single-form
