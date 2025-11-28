@@ -9,10 +9,10 @@
     (diff-print-fn diff)))
 
 (defn- write-diff-files [old new note-diffs diff-print-fn print-fn
-                        {:diff/keys [keep-dirs
-                                     timestamp]
-                         :keys [full-source-path]
-                         :as spec}]
+                         {:diff/keys [keep-dirs
+                                      timestamp]
+                          :keys [full-source-path]
+                          :as spec}]
   (let [diffs-base-path (fs/absolutize "read-kinds-diffs")
         diffs-path (-> diffs-base-path
                        (fs/path timestamp))
@@ -38,7 +38,13 @@
             (with-out-str
               (print-diffs diff-print-fn note-diffs))))
     (spit old-file (with-out-str (print-fn old)))
-    (spit new-file (with-out-str (print-fn new)))))
+    (spit new-file (with-out-str (print-fn new)))
+    (doseq [file (fs/list-dir diffs-base-path
+                              #(fs/regular-file? % {:nofollow-links true}))]
+      (fs/delete file))
+    (doseq [file (fs/list-dir diffs-path
+                              #(fs/regular-file? % {:nofollow-links true}))]
+      (fs/copy file diffs-base-path))))
 
 (defn- pad-notes [old new]
   (let [pad-to #(take (max 0 (- (count %1) (count %2))) (repeat {}))]
@@ -46,9 +52,9 @@
      (into [] (concat new (pad-to old new)))]))
 
 (defn notes [old new & {:diff/keys [to-files
-                                         to-repl
-                                         timestamp]
-                             :as spec}]
+                                    to-repl
+                                    timestamp]
+                        :as spec}]
   (assert (or to-files to-repl) "Please pick an output option")
   (assert timestamp "Should be assoc'd to spec in scicloj.clay.v2.make/make!")
   (let [[old new] (pad-notes old new)
