@@ -63,6 +63,30 @@
     [(into [] (concat old (pad-to new old)))
      (into [] (concat new (pad-to old new)))]))
 
+;; TODO clean up
+(def only-eq-kinds
+  #{:kind/fn
+    :kind/table
+    :kind/dataset})
+
+(defn- only-eq-kind-value [item]
+  (when (only-eq-kinds (:kind item))
+    (:value item)))
+
+(defn- prep-notes [old new]
+  [(mapv (fn [old* new*]
+           (let [old-v (only-eq-kind-value old*)
+                 new-v (only-eq-kind-value new*)
+                 equal-v? (= old-v new-v)]
+             (cond-> old* old-v (assoc :value [(:kind old*) :value :eq equal-v?]))))
+         old new)
+   (mapv (fn [old* new*]
+           (let [old-v (only-eq-kind-value old*)
+                 new-v (only-eq-kind-value new*)
+                 equal-v? (= old-v new-v)]
+             (cond-> new* new-v (assoc :value [(:kind new*) :value :eq equal-v?]))))
+         old new)])
+
 (defn notes [old new & {:diff/keys [to-files
                                     to-repl
                                     timestamp]
@@ -70,6 +94,7 @@
   (assert (or to-files to-repl) "Please pick an output option")
   (assert timestamp "Should be assoc'd to spec in scicloj.clay.v2.make/make!")
   (let [[old new] (pad-notes old new)
+        [old new] (prep-notes old new)
         note-diffs (mapv ddiff/diff old new)
         file-diff-print-fn (case to-files
                              (:deep-diff2/full :deep-diff2/minimal)
