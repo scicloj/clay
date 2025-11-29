@@ -2,7 +2,8 @@
   (:require [scicloj.read-kinds.notes :as notes]
             [scicloj.read-kinds.read :as read]
             [clojure.tools.reader]
-            [clojure.tools.reader.reader-types]))
+            [clojure.tools.reader.reader-types]
+            [clojure.string :as str]))
 
 ;; TODO: not sure if generation is necessary???
 
