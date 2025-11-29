@@ -35,15 +35,12 @@
     (->> notes
          (partition-by (comp boolean collapse))
          (mapcat
-          #(if (some collapse %)
-             [(cond-> {:code (str/join (map :code %))
-                       :kind (if (some comment? %)
-                               :kind/comment
-                               :kind/whitespace)}
-                (some comment? %)
-                ;; TODO does :value need :code from whitespace?
-                (assoc :value (str/join (map :value %))))]
-             %)))))
+          (fn [notes*]
+            (if (some comment? notes*)
+              [{:value (str/join (map :value
+                                      notes*))
+                :kind :kind/comment}]
+              notes*))))))
 
 ;; TODO keep this or something like it
 (defn ->notes [{:keys [single-form
