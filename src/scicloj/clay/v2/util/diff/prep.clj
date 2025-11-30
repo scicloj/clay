@@ -11,8 +11,6 @@
   java.util.Map
   (diffable-base-type? [_] true)
   java.util.List
-  (diffable-base-type? [_] true)
-  clojure.lang.IPersistentVector
   (diffable-base-type? [_] true))
 
 (defn type-str [x]
