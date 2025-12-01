@@ -55,11 +55,11 @@
            "clojure.lang"])))
 
 (defn replace-undiffable* [x]
-  (cond (fn? x) ::fn
-        (and (satisfies? DiffableBaseType x)
-             (diffable-base-type? x)
-             (not (diffable-type? x))) (->ReplacedValue x (describe-type x))
-        :else x))
+  (if (and (satisfies? DiffableBaseType x)
+           (diffable-base-type? x)
+           (not (diffable-type? x)))
+    (->ReplacedValue x (describe-type x))
+    x))
 
 (defn replace-undiffable [notes]
   (walk/prewalk replace-undiffable* notes))
