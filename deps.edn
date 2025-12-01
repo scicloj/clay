@@ -4,7 +4,8 @@
         nrepl/nrepl {:mvn/version "1.3.1"}
         com.cnuernber/charred {:mvn/version "1.037"}
         read-kinds/read-kinds {:local/root "../read-kinds"}
-        lambdaisland/deep-diff2 {:mvn/version "2.12.219"}
+        ;; TODO back to lambdaisland/deep-diff2 once fix merged
+        io.github.onbreath/deep-diff2 {:git/sha "1f969521b68ce9dd9feed9b51a99a4569482b6ad"}
         carocad/parcera {:mvn/version "0.11.6"}
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
         http-kit/http-kit {:mvn/version "2.8.0"}
