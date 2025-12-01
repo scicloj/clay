@@ -32,16 +32,16 @@
         no-diff-file (str diff-base-file ".no-diff")
         diff-file (str diff-base-file ".diff.edn")
         old-file (str diff-base-file ".old.edn")
-        new-file (str diff-base-file ".new.edn")
-        diff-dirs (->> (fs/list-dir diffs-base-path
-                                    #(fs/directory? % {:nofollow-links true}))
-                       (sort-by fs/last-modified-time))]
-    (when (number? keep-dirs)
-      (doseq [dir (take (max 0 (inc (- (count diff-dirs) keep-dirs)))
-                        diff-dirs)]
-        (when (= (fs/parent dir) diffs-base-path)
-          (fs/delete-tree dir))))
+        new-file (str diff-base-file ".new.edn")]
     (fs/create-dirs diffs-path)
+    (when (number? keep-dirs)
+      (let [diff-dirs (->> (fs/list-dir diffs-base-path
+                                        #(fs/directory? % {:nofollow-links true}))
+                           (sort-by fs/last-modified-time))]
+        (doseq [dir (take (max 0 (inc (- (count diff-dirs) keep-dirs)))
+                          diff-dirs)]
+          (when (= (fs/parent dir) diffs-base-path)
+            (fs/delete-tree dir)))))
     (if (some not-empty (ddiff/minimize note-diffs))
       (when diff-print-fn
         (println "Clay:  Creating diff file" diff-file "& old/new")
