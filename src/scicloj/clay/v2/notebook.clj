@@ -461,17 +461,35 @@
               "seconds")
      result#))
 
-(defn notes-dissoc-old [notes]
+(defn ->old-comment [note]
+  (let [comment-item (-> note :code notebook-old/comment->item)]
+    (-> note
+        (assoc :value (str/replace (:md comment-item)
+                                   ;; TODO stripping extra space added
+                                   ;; in front of headline Do we want
+                                   ;; to add this for read-kinds?
+                                   #"\n#" "#")
+               :kind :kind/md)
+        (dissoc :code :comment? :region))))
+
+(defn ->old-notes-approx [notes]
   (->> notes
        (into []
              (map #(-> %
+                       (cond-> (and (:comment? %)
+                                    (:code %))
+                         ->old-comment)
                        (dissoc :gen))))))
 
-(defn notes-dissoc-new [notes]
+(defn ->new-notes-approx [notes]
   (->> notes
        (into []
              (map #(-> %
-                       (dissoc :line :column))))))
+                       (dissoc :line :column)
+                       (cond-> (-> % :narrowed nil?)
+                         (dissoc :narrowed)
+                         (-> % :narrower nil?)
+                         (dissoc :narrower)))))))
 
 (defn spec-notes [{:as spec
                    :keys      [pprint-margin ns-form full-source-path]
@@ -481,15 +499,17 @@
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
     (let [old (-> (notebook-old/spec-notes spec)
-                  (notes-dissoc-old))
-          new (-> (relevant-notes spec)
+                  (->old-notes-approx))
+          ;; TODO Comment blocks equal to old ones
+          new (-> (assoc spec :collapse-comments-ws? true)
+                  (relevant-notes)
                   (complete-notes spec)
+                  (->new-notes-approx)
                   ;; TODO Read kinds should be doing this
                   #_(with-out-err-captured)
                   (log-time (str "Evaluated notebook with read-kinds "
                                  (or (some-> ns-form second name)
-                                     (some-> full-source-path fs/file-name))))
-                  (notes-dissoc-new))]
+                                     (some-> full-source-path fs/file-name)))))]
       ;; We can print the plain new and old notes..
       #_(diff/notes old new
                     :diff/to-repl :clojure/pprint

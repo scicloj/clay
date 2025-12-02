@@ -29,23 +29,32 @@
                       (-> form first (= 'ns)))))
        first))
 
-(defn collapse-comments-ws [notes]
-  (let [collapse (comp #{:kind/whitespace :kind/comment} :kind)
-        comment? (comp #{:kind/comment} :kind)]
-    (->> notes
-         (partition-by (comp boolean collapse))
-         (mapcat
-          (fn [notes*]
-            (if (some comment? notes*)
-              [{:value (str/join (map :value
-                                      notes*))
-                :kind :kind/comment}]
-              notes*))))))
+(defn collapse-comments-ws [collapse-comments-ws? notes]
+  (if collapse-comments-ws?
+    (let [collapse (comp #{:kind/whitespace :kind/comment} :kind)
+          comment? (comp #{:kind/comment} :kind)]
+      (->> notes
+           (partition-by (comp boolean collapse))
+           (mapcat
+            (fn [notes*]
+              (if (some comment? notes*)
+                ;; TODO Pulling in all comments and whitespace
+                ;; This is only done to easily get equality with old comments
+                [{:value (let [comment* (->> notes*
+                                             (map #(get % :value (:code %)))
+                                             str/join)]
+                           (-> comment*
+                               (str/replace #"^\s+" "")
+                               (str/trim-newline)))
+                  :kind :kind/comment}]
+                notes*)))))
+    notes))
 
 ;; TODO keep this or something like it
 (defn ->notes [{:keys [single-form
                        single-value
-                       code]}]
+                       code
+                       collapse-comments-ws?]}]
   (cond single-value (conj (when code
                              [{:form (read-ns-form code)}])
                            {:value single-value})
@@ -55,8 +64,7 @@
                           {:form single-form})
         :else (->> code
                    (read/read-string-all)
-                   ;; TODO maybe optional for diffing
-                   collapse-comments-ws
+                   (collapse-comments-ws collapse-comments-ws?)
                    (into [] notes/notebook-xform))))
 
 ;; TODO: Not needed? read-kinds has a safe-notes wrapper already...
