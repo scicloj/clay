@@ -416,12 +416,13 @@
                               single-form
                               single-value
                               smart-sync
-                              pprint-margin]
+                              pprint-margin
+                              read-fn]
                        :or    {pprint-margin pp/*print-right-margin*}
                        :as    spec}]
   (let [{:keys [code first-line-of-change]} (some-> full-source-path
                                                     slurp-and-compare)
-        notes (->> (read/->notes (assoc spec :code code))
+        notes (->> (read-fn (assoc spec :code code))
                    (map-indexed (fn [i {:as   note
                                         :keys [code]}]
                                   (merge note
@@ -498,10 +499,21 @@
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
-    (let [old (-> (notebook-old/spec-notes spec)
-                  (->old-notes-approx))
-          ;; TODO Comment blocks equal to old ones
-          new (-> (assoc spec :collapse-comments-ws? true)
+    (let [;; old (-> (notebook-old/spec-notes spec)
+          ;;        (->old-notes-approx))
+          ;; what is new is old again
+          old (-> (assoc spec :collapse-comments-ws? true
+                         :read-fn read/->notes)
+                  (relevant-notes)
+                  (complete-notes spec)
+                  (->new-notes-approx)
+                  ;; TODO Read kinds should be doing this
+                  #_(with-out-err-captured)
+                  (log-time (str "Evaluated notebook with read-kinds "
+                                 (or (some-> ns-form second name)
+                                     (some-> full-source-path fs/file-name)))))
+          new (-> (assoc spec :collapse-comments-ws? true
+                         :read-fn read/->jank-notes)
                   (relevant-notes)
                   (complete-notes spec)
                   (->new-notes-approx)
