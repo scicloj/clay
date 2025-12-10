@@ -274,11 +274,26 @@
     :keys [title favicon quarto format]}]
   (let [quarto-target (or (second format) :html)]
     (cond-> quarto
-            ;; Users may provide non-quarto specific configuration (see also html),
-            ;; if so this will be added to the quarto front-matter to make them behave the same way
-            title (assoc-in [:format quarto-target :title] title)
-            favicon (update-in [:format quarto-target :include-in-header :text]
-                               str "<link rel = \"icon\" href = \"" favicon "\" />"))))
+      ;; Users may provide non-quarto specific configuration (see also html),
+      ;; if so this will be added to the quarto front-matter to make them behave the same way
+      title (assoc-in [:format quarto-target :title] title)
+      favicon (update-in [:format quarto-target :include-in-header :text]
+                         str "<link rel = \"icon\" href = \"" favicon "\" />"))))
+
+(defn bullet [line]
+  (re-matches #"^[ \t]*[-*+][ \t]+.*$" line))
+
+(defn add-newlines-before-bullets [code]
+  (->> code
+       str/split-lines
+       (cons "")
+       (partition 2 1)
+       (map (fn [[prev curr]]
+              (str (when (and (not (bullet prev))
+                              (bullet curr))
+                     \newline)
+                   curr)))
+       (str/join \newline)))
 
 (defn md [{:as spec
            :keys [items]}]
@@ -302,7 +317,10 @@
           (map-indexed
            (fn [i item]
              (prepare/item->md item)))
-          (str/join "\n\n")))))
+          (str/join "\n\n")
+          add-newlines-before-bullets))))
+
+
 
 
 (defn gfm [{:as spec
