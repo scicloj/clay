@@ -1,7 +1,7 @@
 {:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
         org.clojure/tools.cli {:mvn/version "1.1.230"}
-        nrepl/nrepl {:mvn/version "1.3.1"}
+        nrepl/nrepl {:mvn/version "1.5.1"}
         com.cnuernber/charred {:mvn/version "1.037"}
         read-kinds/read-kinds {:local/root "../read-kinds"}
         ;; TODO back to lambdaisland/deep-diff2 once fix merged
@@ -56,7 +56,7 @@
                                  :jarpath "target/org.scicloj/clay-2-beta54.jar"
                                  :pompath "target/classes/META-INF/maven/org.scicloj/clay/pom.xml"}]}
            :nrepl {:extra-paths ["test"]
-                   :extra-deps {nrepl/nrepl {:mvn/version "1.3.1"}}
+                   :extra-deps {nrepl/nrepl {:mvn/version "1.5.1"}}
                    ;; this allows nrepl to interrupt runaway repl evals
                    :jvm-opts ["-Djdk.attach.allowAttachSelf"]
                    :main-opts ["-m" "nrepl.cmdline" "--port" "7888"]}}}

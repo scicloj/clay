@@ -15,9 +15,16 @@
 
 ;; (/ 1 0) ; un-comment and evaluate to observe error handling
 
+;; TODO exception message is cut off at space?
+;; Is there something differe in how nrepl client returns this?
+;; or in jank nrepl?
+;;(throw "oh no")
+
 (str "Hello, " "Clay!")
 
 (defn greet [name]
   (str "Hello, " name "!"))
 
 (greet "Clay")
+
+(println (greet "Jank"))

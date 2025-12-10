@@ -3,7 +3,8 @@
             [scicloj.read-kinds.read :as read]
             [clojure.tools.reader]
             [clojure.tools.reader.reader-types]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [scicloj.clay.v2.nrepl :as clay-nrepl]))
 
 ;; TODO: not sure if generation is necessary???
 
@@ -49,6 +50,19 @@
                   :kind :kind/comment}]
                 notes*)))))
     notes))
+
+(defn ->jank-notes [{:keys [single-form
+                            single-value
+                            code
+                            collapse-comments-ws?]}]
+  ;; TODO other forms
+  (-> code
+      (read/read-string-all)
+      (read/eval-jank-ast :jank/eval-fn clay-nrepl/eval-context
+                          :host "localhost" :port 4200)
+      (->> (collapse-comments-ws collapse-comments-ws?)
+           (into [] notes/notebook-xform))))
+
 
 ;; TODO keep this or something like it
 (defn ->notes [{:keys [single-form
