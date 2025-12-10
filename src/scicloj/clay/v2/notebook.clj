@@ -8,9 +8,7 @@
             [scicloj.clay.v2.notebook-old :as notebook-old]
             [scicloj.clay.v2.read :as read]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly-advice.v1.api :as kindly-advice]
-            [scicloj.clay.v2.util.diff :as diff])
-  (:import (java.io StringWriter)))
+            [scicloj.clay.v2.util.diff :as diff]))
 
 (set! *warn-on-reflection* true)
 
@@ -44,29 +42,6 @@
   (and (sequential? form)
        (-> form first (= 'ns))))
 
-(defn str-and-reset! [w]
-  (when (instance? StringWriter *out*)
-    (locking w
-      (let [s (str w)]
-        (.setLength (.getBuffer ^StringWriter w) 0)
-        s))))
-
-(def ^:dynamic *out-orig* *out*)
-
-(defn maybe-println-orig [s]
-  (when (seq s)
-    (binding [*out* *out-orig*]
-      (print s)
-      (flush))))
-
-(def ^:dynamic *err-orig* *err*)
-
-(defn maybe-err-orig [s]
-  (when (seq s)
-    (binding [*out* *err-orig*]
-      (print s)
-      (flush))))
-
 ;; Babashka
 ;; - Make Clay runnable in Babashka
 ;;   - The way Clay reads - dependency of `carocad/parcera`, maybe we just remove it.
@@ -95,55 +70,6 @@
 ;; - We want our nREPL to return the result of `(+ 1 2)` (or exception), and with that stack.
 ;; - Can we frame the stack around eval?
 ;; - Is output being done right?
-
-(defn read-eval-capture
-  "Captures stdout and stderr while evaluating a note"
-  [{:as   note
-    :keys [code form]}]
-  note
-  #_(let [out (StringWriter.)
-        err (StringWriter.)
-        note (try
-               (let [x (binding [*out* out
-                                 *err* err]
-                         (cond form (-> form
-                                        eval
-                                        deref-if-needed)
-                               code (-> code
-                                        read-string
-                                        eval
-                                        deref-if-needed)))]
-                 (assoc note :value x))
-               (catch Throwable ex
-                 (assoc note :exception ex)))
-        out-str (str out)
-        err-str (str err)
-        ;; A notebook may have also printed from a thread,
-        ;; *out* and *err* are replaced with StringWriters in with-out-err-capture
-        global-out (str-and-reset! *out*)
-        global-err (str-and-reset! *err*)
-        ;; Don't show output from requiring other namespaces
-        show (not (ns-form? form))]
-    (maybe-println-orig out-str)
-    (maybe-err-orig err-str)
-    (maybe-println-orig global-out)
-    (maybe-err-orig global-err)
-    (if show
-      (cond-> note
-        (seq out-str) (assoc :out out-str)
-        (seq err-str) (assoc :err err-str)
-        (seq global-out) (assoc :global-out global-out)
-        (seq global-err) (assoc :global-err global-err))
-      note)))
-
-(defn complete [{:as   note
-                 :keys [comment?]}]
-  (let [completed (cond-> note
-                    (not (or comment? (contains? note :value)))
-                    (read-eval-capture))]
-    (cond-> completed
-      (and (not comment?) (contains? completed :value))
-      (kindly-advice/advise))))
 
 (defn comment->item [comment]
   (-> comment
@@ -324,22 +250,6 @@
                                       code new-code)})))
   (@*path->last path))
 
-(defmacro with-out-err-captured
-  "Evaluates and computes the items for a notebook of notes"
-  [& body]
-  ;; For a notebook, we capture output globally, and per note.
-  ;; see read-eval-capture for why this is relevant.
-  `(let [out# (StringWriter.)
-         err# (StringWriter.)]
-     ;; Threads may inherit only the root binding
-     (with-redefs [*out* out#
-                   *err* err#]
-       ;; Futures will inherit the current binding,
-       ;; which was not affected by altering the root.
-       (binding [*out* out#
-                 *err* err#]
-         ~@body))))
-
 (defn itemize-notes
   "Evaluates and computes the items for a notebook of notes"
   [relevant-notes some-narrowed options]
@@ -500,13 +410,10 @@
             pp/*print-right-margin* pprint-margin]
     (let [old (-> (notebook-old/spec-notes spec)
                   (->old-notes-approx))
-          ;; TODO Comment blocks equal to old ones
           new (-> (assoc spec :collapse-comments-ws? true)
                   (relevant-notes)
                   (complete-notes spec)
                   (->new-notes-approx)
-                  ;; TODO Read kinds should be doing this
-                  #_(with-out-err-captured)
                   (log-time (str "Evaluated notebook with read-kinds "
                                  (or (some-> ns-form second name)
                                      (some-> full-source-path fs/file-name)))))]
