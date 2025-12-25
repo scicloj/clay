@@ -368,6 +368,11 @@
                                :items items
                                :exception exception)]
     [(case (first format)
+       :edn {:spec spec
+             :notes notes
+             :items items
+             :test-forms test-forms
+             :exception exception}
        :hiccup (page/hiccup spec-with-items)
        :html (do (-> spec-with-items
                      (config/add-field :page (if post-process
@@ -517,4 +522,8 @@
   ,
   (make! {:source-path       ["notebooks/index.clj"]
           :format [:gfm]
+          :show false})
+
+  (make! {:source-path       ["notebooks/demo.clj"]
+          :format [:edn]
           :show false}))
