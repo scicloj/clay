@@ -1,11 +1,11 @@
-(ns scicloj.clay.v2.notebook
+(ns scicloj.clay.v2.old.notebook
   (:require [clojure.string :as str]
             [clojure.pprint :as pp]
             [babashka.fs :as fs]
-            [scicloj.clay.v2.util.path :as path]
-            [scicloj.clay.v2.item :as item]
-            [scicloj.clay.v2.prepare :as prepare]
-            [scicloj.clay.v2.read :as read]
+            [scicloj.clay.v2.old.util.path :as path]
+            [scicloj.clay.v2.old.item :as item]
+            [scicloj.clay.v2.old.prepare :as prepare]
+            [scicloj.clay.v2.old.read :as read]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly-advice.v1.api :as kindly-advice])
   (:import (java.io StringWriter)))

@@ -12,7 +12,7 @@
 (ns clay-book.test-generation
   (:require [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.clay.v2.api :as clay]
+            [scicloj.clay.v2.old.api :as clay]
             [clojure.string :as str]))
 
 ^:kindly/hide-code
@@ -116,7 +116,7 @@
 ;; If all tests are simple, it makes the whole test namespace much simpler.
 
 ;; The testing mode can be specified in the `:kind/options` of the project-level
-;; configuration or the namespace level configuration. 
+;; configuration or the namespace level configuration.
 ;; It can also be specified for a specific test. We'll see that in the examples
 ;; below.
 
@@ -153,4 +153,3 @@
 ;; For a detailed example using this mechanism,
 ;; see [the source](https://github.com/scicloj/clojisr/blob/master/notebooks/clojisr/v1/tutorials/main.clj)
 ;; of the [ClojisR tutorial](https://scicloj.github.io/clojisr/clojisr.v1.tutorials.main.html).
-

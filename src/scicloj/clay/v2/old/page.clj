@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.page
+(ns scicloj.clay.v2.old.page
   (:require
    [babashka.fs :as fs]
    [clj-yaml.core :as yaml]
@@ -7,11 +7,11 @@
    [clojure.string :as str]
    [hiccup.core :as hiccup]
    [hiccup.page]
-   [scicloj.clay.v2.files :as files]
-   [scicloj.clay.v2.item :as item]
-   [scicloj.clay.v2.prepare :as prepare]
-   [scicloj.clay.v2.styles :as styles]
-   [scicloj.clay.v2.util.resource :as resource]))
+   [scicloj.clay.v2.old.files :as files]
+   [scicloj.clay.v2.old.item :as item]
+   [scicloj.clay.v2.old.prepare :as prepare]
+   [scicloj.clay.v2.old.styles :as styles]
+   [scicloj.clay.v2.old.util.resource :as resource]))
 
 (def special-lib-resources
   {:vega {:js {:from-the-web

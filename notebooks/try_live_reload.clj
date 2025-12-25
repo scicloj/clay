@@ -3,7 +3,7 @@
   (:require [scicloj.kindly.v4.kind :as kind]))
 
 (comment
-  (require '[scicloj.clay.v2.api :as clay])
+  (require '[scicloj.clay.v2.old.api :as clay])
   (clay/make! {:source-path "notebooks/try_live_reload.clj"
                :live-reload true}))
 

@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.util.resource
+(ns scicloj.clay.v2.old.util.resource
   (:refer-clojure :exclude [get])
   (:require [scicloj.tempfiles.api :as tempfiles]))
 

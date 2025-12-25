@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.quarto.highlight-styles)
+(ns scicloj.clay.v2.old.quarto.highlight-styles)
 
 ;; All the [Quarto code highlight styles](https://quarto.org/docs/output-formats/html-code.html):
 (def a11y :a11y)

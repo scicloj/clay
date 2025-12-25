@@ -1,7 +1,7 @@
-(ns scicloj.clay.v2.config
+(ns scicloj.clay.v2.old.config
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [scicloj.clay.v2.util.fs :as util.fs]
+            [scicloj.clay.v2.old.util.fs :as util.fs]
             [scicloj.kindly.v4.api :as kindly]))
 
 (defn slurp-when-exists [path]

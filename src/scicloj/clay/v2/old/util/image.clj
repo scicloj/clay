@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.util.image
+(ns scicloj.clay.v2.old.util.image
   (:require [clojure.java.io :as io])
   (:import java.awt.image.BufferedImage
            java.util.Base64

@@ -1,9 +1,9 @@
-(ns scicloj.clay.v2.live-reload
+(ns scicloj.clay.v2.old.live-reload
   (:require [clojure.set :as set]
             [babashka.fs :as fs]
             [clojure.string :as str]
             [nextjournal.beholder :as beholder]
-            [scicloj.clay.v2.server :as server]))
+            [scicloj.clay.v2.old.server :as server]))
 
 (def empty-state {:watchers   {}
                   :file-specs {}})

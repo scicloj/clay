@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.quarto.themes)
+(ns scicloj.clay.v2.old.quarto.themes)
 
 ;; All the [Quarto themes](https://quarto.org/docs/output-formats/html-themes.html):
 (def default :default)

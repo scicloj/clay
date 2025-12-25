@@ -1,6 +1,6 @@
 (ns gfm-and-cljdoc
   (:require [scicloj.kindly.v4.kind :as kind]
-            [scicloj.clay.v2.config :as config]))
+            [scicloj.clay.v2.old.config :as config]))
 
 ;; This namespace demonstrates the creation of an article intended for [cljdoc](https://cljdoc.org/)
 
@@ -121,7 +121,7 @@
 ;; To illustrate this,
 ;; let's look at a little known feature of clay, checking the default configuration:
 
-(require '[scicloj.clay.v2.config :as config])
+(require '[scicloj.clay.v2.old.config :as config])
 (config/default-config)
 
 ;; Clay draws on config from several places, including a project level clay.edn file if present.
@@ -134,7 +134,7 @@
 ;; How do you build GFM with Clay?
 
 (comment
-  (require '[scicloj.clay.v2.api :as clay])
+  (require '[scicloj.clay.v2.old.api :as clay])
   (clay/make! {:base-source-path "notebooks"
                :source-path "gfm_and_cljdoc.clj"
                :base-target-path "docs"

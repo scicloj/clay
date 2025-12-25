@@ -1,12 +1,12 @@
-(ns scicloj.clay.v2.item
+(ns scicloj.clay.v2.old.item
   (:require [clojure.pprint :as pp]
             [clojure.string :as str]
             [scicloj.kind-portal.v1.prepare :as kind-portal]
             [scicloj.kindly-render.shared.jso :as jso]
-            [scicloj.clay.v2.files :as files]
-            [scicloj.clay.v2.plotly-export :as plotly-export]
-            [scicloj.clay.v2.util.image :as util.image]
-            [scicloj.clay.v2.util.meta :as meta]
+            [scicloj.clay.v2.old.files :as files]
+            [scicloj.clay.v2.old.plotly-export :as plotly-export]
+            [scicloj.clay.v2.old.util.image :as util.image]
+            [scicloj.clay.v2.old.util.meta :as meta]
             [clj-commons.format.exceptions :as fe])
   (:import (javax.sound.sampled AudioFileFormat$Type
                                 AudioFormat
@@ -100,7 +100,7 @@
   (binding [fe/*fonts* nil
             fe/*default-frame-rules*
             (conj fe/*default-frame-rules*
-                  [:name #"scicloj.clay.v2\..*" :terminate])]
+                  [:name #"scicloj.clay.v2.old\..*" :terminate])]
     (fe/format-exception ex)))
 
 (defn print-throwable [ex collapsed]
@@ -429,8 +429,8 @@
         _ (doseq [f samples]
             (.put sbuf ^short (shortify f)))
         byte-input-stream (ByteArrayInputStream. (.array buf))
-        audio-input-stream (AudioInputStream. byte-input-stream 
-                                              audio-format 
+        audio-input-stream (AudioInputStream. byte-input-stream
+                                              audio-format
                                               (count samples))]
     (javax.sound.sampled.AudioSystem/write audio-input-stream
                                            AudioFileFormat$Type/WAVE

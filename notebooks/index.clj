@@ -7,7 +7,7 @@
             [scicloj.kindly.v4.kind :as kind]
             [tablecloth.api :as tc]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.clay.v2.api :as clay]))
+            [scicloj.clay.v2.old.api :as clay]))
 
 ^{:kindly/hide-code true
   :kindly/kind :kind/hiccup}
@@ -299,11 +299,11 @@
   (:require
    [scicloj.kindly.v4.api :as kindly]
    [scicloj.kindly.v4.kind :as kind]
-   [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
-   [scicloj.clay.v2.quarto.themes :as quarto.themes]
+   [scicloj.clay.v2.old.quarto.highlight-styles :as quarto.highlight-styles]
+   [scicloj.clay.v2.old.quarto.themes :as quarto.themes]
    [scicloj.metamorph.ml.toydata :as toydata]
    [scicloj.tableplot.v1.hanami :as hanami]
-   [scicloj.clay.v2.main]
+   [scicloj.clay.v2.old.main]
    [tablecloth.api :as tc]
    [clojure.string :as str]))
 
@@ -336,7 +336,7 @@
 
 ;; ## API
 
-(require '[scicloj.clay.v2.api :as clay])
+(require '[scicloj.clay.v2.old.api :as clay])
 
 ;; The entry point of the Clay API  is the `scicloj.clay.v2.api/make!` function.
 ;; Here are some usage examples.
@@ -542,8 +542,8 @@
 ;; then, using Quarto, render that file as HTML
 ;; and show it at the browser:
 (comment
-  (require '[scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
-           '[scicloj.clay.v2.quarto.themes :as quarto.themes])
+  (require '[scicloj.clay.v2.old.quarto.highlight-styles :as quarto.highlight-styles]
+           '[scicloj.clay.v2.old.quarto.themes :as quarto.themes])
   (clay/make! {:format [:quarto :html]
                :source-path "notebooks/index.clj"
                :quarto {:highlight-style quarto.highlight-styles/nord
@@ -1159,7 +1159,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 ;; Clay offers quite a few such predefined builtin dependencies:
 
 ^:kindly/hide-code
-(sort (keys scicloj.clay.v2.page/special-lib-resources))
+(sort (keys scicloj.clay.v2.old.page/special-lib-resources))
 
 ;; However, it is possible to also specify CDN links for JS & CSS dependencies explicitly. For example:
 

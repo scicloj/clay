@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.plotly-export
+(ns scicloj.clay.v2.old.plotly-export
   (:require [scicloj.kindly-render.shared.jso :as jso]
             [clojure.java.shell :as shell]))
 

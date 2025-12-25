@@ -1,12 +1,12 @@
-(ns scicloj.clay.v2.main
+(ns scicloj.clay.v2.old.main
   "command line interface"
   (:gen-class)
   (:require [babashka.fs :as fs]
             [clojure.edn :as edn]
             [clojure.string :as str]
             [clojure.tools.cli :as cli]
-            [scicloj.clay.v2.api :as api]
-            [scicloj.clay.v2.config :as config]
+            [scicloj.clay.v2.old.api :as api]
+            [scicloj.clay.v2.old.config :as config]
             [nrepl.cmdline]
             [scicloj.kindly.v4.api :as kindly]))
 

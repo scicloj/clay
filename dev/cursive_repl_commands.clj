@@ -33,8 +33,8 @@
   [clay-fn-name & args]
   ;; The tool needs to be required, and invoked with appropriate arguments.
   ;; `require` is fully qualified so it will work from uninitialized namespaces.
-  (str "(do (clojure.core/require '[scicloj.clay.v2.snippets])" \newline
-       "    (scicloj.clay.v2.snippets/" clay-fn-name (when args " ") (str/join " " args) "))" \newline))
+  (str "(do (clojure.core/require '[scicloj.clay.v2.old.snippets])" \newline
+       "    (scicloj.clay.v2.old.snippets/" clay-fn-name (when args " ") (str/join " " args) "))" \newline))
 
 (def file "\"~file-path\"")
 (def form-before-caret "(quote ~form-before-caret)")

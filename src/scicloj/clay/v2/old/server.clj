@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.server
+(ns scicloj.clay.v2.old.server
   (:require [babashka.fs :as fs]
             [clojure.java.browse :as browse]
             [clojure.java.io :as io]
@@ -6,8 +6,8 @@
             [hiccup.page]
             [org.httpkit.server :as httpkit]
             [ring.util.mime-type :as mime-type]
-            [scicloj.clay.v2.server.state :as server.state]
-            [scicloj.clay.v2.util.time :as time]
+            [scicloj.clay.v2.old.server.state :as server.state]
+            [scicloj.clay.v2.old.util.time :as time]
             [clojure.string :as str]
             [cognitect.transit :as transit]
             [hiccup.core :as hiccup])

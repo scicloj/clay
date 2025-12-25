@@ -1,7 +1,7 @@
-(ns scicloj.clay.v2.snippets
+(ns scicloj.clay.v2.old.snippets
   "Recommended entry points for creating editor bindings for Clay.
   Status: experimental."
-  (:require [scicloj.clay.v2.api :as api]))
+  (:require [scicloj.clay.v2.old.api :as api]))
 
 (defn- make-form!
   "Make a given Clojure form in a given format."

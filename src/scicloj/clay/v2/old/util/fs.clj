@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.util.fs
+(ns scicloj.clay.v2.old.util.fs
   (:require [babashka.fs :as fs]
             [clojure.string :as str]))
 

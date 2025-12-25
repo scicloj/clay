@@ -1,5 +1,5 @@
 (ns dev
-  (:require [scicloj.clay.v2.api :as clay]))
+  (:require [scicloj.clay.v2.old.api :as clay]))
 
 (clay/make! {:format [:quarto :html]
              :base-source-path "notebooks"

@@ -1,12 +1,12 @@
-(ns scicloj.clay.v2.api)
+(ns scicloj.clay.v2.old.api)
 ;; It can take some time to require dependencies,
 ;; we give the user some immediate feedback to let them know something is happening.
 (println "Clay loading...")
-(ns scicloj.clay.v2.api
-  (:require [scicloj.clay.v2.make :as make]
-            [scicloj.clay.v2.config :as config]
-            [scicloj.clay.v2.server :as server]
-            [scicloj.clay.v2.live-reload :as live-reload]
+(ns scicloj.clay.v2.old.api
+  (:require [scicloj.clay.v2.old.make :as make]
+            [scicloj.clay.v2.old.config :as config]
+            [scicloj.clay.v2.old.server :as server]
+            [scicloj.clay.v2.old.live-reload :as live-reload]
             [scicloj.kindly.v4.kind :as kind]))
 
 (defn stop! []

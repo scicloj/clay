@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.table)
+(ns scicloj.clay.v2.old.table)
 
 (defn row-vectors->table-hiccup [column-names row-vectors]
   (->> [:table {:class "table table-hover table-responsive"}

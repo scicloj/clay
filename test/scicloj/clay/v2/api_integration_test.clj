@@ -1,8 +1,8 @@
-(ns scicloj.clay.v2.api-integration-test
+(ns scicloj.clay.v2.old.api-integration-test
   (:require [clojure.test :refer [deftest testing is use-fixtures]]
             [clojure.string :as str]
             [babashka.fs :as fs]
-            [scicloj.clay.v2.api :as clay]))
+            [scicloj.clay.v2.old.api :as clay]))
 
 ;; Test fixtures for cleanup
 (defn cleanup-test-files [f]
@@ -126,7 +126,7 @@
 ;; A simple calculation
 (def result (+ 1 2 3))
 
-;; A string value  
+;; A string value
 \"This is a test string\"
 
 ;; A data structure
@@ -230,7 +230,7 @@
       (fs/delete "temp/test_nested.subdir.nested_notebook.html"))
     (when (fs/exists? "temp/test_nested") (fs/delete-tree "temp/test_nested"))
 
-    
+
     ;; Create a nested directory structure
     (fs/create-dirs "test_nested/subdir")
     (spit "test_nested/subdir/nested_notebook.clj"
@@ -242,7 +242,7 @@
       ;; With flattening disabled, should preserve directory structure
       (is (fs/exists? "temp/test_nested/subdir/nested_notebook.html"))
       (is (not (fs/exists? "temp/test_nested.subdir.nested_notebook.html"))))
-    
+
     ;; Clean up
     (fs/delete-tree "test_nested")
     (when (fs/exists? "temp/test_nested.subdir.nested_notebook.html")
@@ -270,7 +270,7 @@
 (+ 1 2 3)
 
 ;; ## Data structures
-{:clay \"awesome\" 
+{:clay \"awesome\"
  :test true
  :numbers [1 2 3 4 5]}
 

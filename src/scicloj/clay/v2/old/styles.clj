@@ -1,4 +1,4 @@
-(ns scicloj.clay.v2.styles
+(ns scicloj.clay.v2.old.styles
   (:require [clojure.java.io :as io]))
 
 (defn main [style]
