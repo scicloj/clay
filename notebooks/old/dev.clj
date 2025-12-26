@@ -1,4 +1,4 @@
-(ns dev
+(ns old.dev
   (:require [scicloj.clay.v2.old.api :as clay]))
 
 (clay/make! {:format [:quarto :html]

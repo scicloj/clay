@@ -1,6 +1,6 @@
 ;; DRAFT
 
-(ns compute-examples
+(ns old.compute-examples
   (:require [scicloj.kindly.v4.kind :as kind]
             [clojure.java.io :as io]))
 
@@ -48,7 +48,7 @@
            {:type     "button" :value "Click me!"
             :on-click (fn []
                         (kindly-compute
-                         {:func 'compute-examples/add
+                         {:func 'old.compute-examples/add
                           :args [@*a1 20]}
                          (fn [response]
                            (reset! *a1 response))))}]])))])
@@ -95,7 +95,7 @@
            [:input {:type "button" :value "Click to calculate click and open rate"
                     :on-click (fn []
                                 (kindly-compute
-                                 {:func 'compute-examples/calc-click-and-open-rate
+                                 {:func 'old.compute-examples/calc-click-and-open-rate
                                   :args [email-data]}
                                  (fn [response]
                                    (reset! *rates response))))}]])))]])

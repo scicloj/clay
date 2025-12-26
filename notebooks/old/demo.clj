@@ -1,4 +1,4 @@
-(ns demo)
+(ns old.demo)
 
 ;; This file merely shows how to use a Clojure file to write docs in Clay,
 ;; with no additional dependencies required.

@@ -1,7 +1,7 @@
 ;; # Clay
 
 ^:kindly/hide-code
-(ns index
+(ns old.index
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
             [scicloj.kindly.v4.kind :as kind]
@@ -295,7 +295,7 @@
 ;; This notebook is created by [a Clojure namespace](https://github.com/scicloj/clay/blob/main/notebooks/index.clj).
 ;; Here is the namespace definition and a few examples of what such a namespace may contain.
 
-(ns index
+(ns old.index
   (:require
    [scicloj.kindly.v4.api :as kindly]
    [scicloj.kindly.v4.kind :as kind]
@@ -834,7 +834,7 @@
 ;; Configuration is discovered as metadata under the `:clay` key on the namespace form:
 
 ^{:clay {:quarto {:myfrontmatterkey "myfrontmattervalue"}}}
-(ns index)
+(ns old.index)
 
 ;; * the clay metadata is on the form rather than the var itself.
 ;; * the `:quarto` configuration will be placed in the front matter for markdown output.
