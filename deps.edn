@@ -1,20 +1,20 @@
 {:paths ["src" "resources"]
- :deps {org.clojure/clojure {:mvn/version "1.12.0"}
+ :deps {org.clojure/clojure {:mvn/version "1.12.4"}
         org.clojure/tools.cli {:mvn/version "1.1.230"}
         nrepl/nrepl {:mvn/version "1.3.1"}
         com.cnuernber/charred {:mvn/version "1.037"}
         read-kinds/read-kinds {:local/root "../read-kinds"}
         ;; TODO back to lambdaisland/deep-diff2 once fix merged
         io.github.onbreath/deep-diff2 {:git/sha "1f969521b68ce9dd9feed9b51a99a4569482b6ad"}
-        carocad/parcera {:mvn/version "0.11.6"}
         org.antlr/antlr4-runtime {:mvn/version "4.7.1"}
         http-kit/http-kit {:mvn/version "2.8.0"}
         ring/ring-core {:mvn/version "1.14.1"}
         io.github.nextjournal/markdown {:mvn/version "0.6.157"}
         hiccup/hiccup {:mvn/version "2.0.0-RC5"}
         clj-commons/clj-yaml {:mvn/version "1.0.29"}
-        org.scicloj/kindly {:mvn/version "4-beta21"}
-        org.scicloj/kindly-advice {:mvn/version "1-beta14"}
+        org.scicloj/clay-old {:local/root "../clay-old"}
+        io.github.scicloj/kindly {:git/sha "2863a8e08c39b1ec50a2ffde2d0874942a113d4b"}
+        io.github.scicloj/kindly-advice {:git/sha "17f506f169ac09b2c2d90625f1a31246e0b87360"}
         org.scicloj/tempfiles {:mvn/version "1-beta1"}
         org.scicloj/kind-portal {:mvn/version "1-beta3"}
         org.clojure/tools.reader {:mvn/version "1.5.2"}

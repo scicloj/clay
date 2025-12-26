@@ -6,7 +6,7 @@
             [clojure.edn :as edn]
             [scicloj.kindly.v4.kind :as kind]
             [tablecloth.api :as tc]
-            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v5.api :as kindly]
             [scicloj.clay.v2.api :as clay]))
 
 ^{:kindly/hide-code true
@@ -297,7 +297,7 @@
 
 (ns index
   (:require
-   [scicloj.kindly.v4.api :as kindly]
+   [scicloj.kindly.v5.api :as kindly]
    [scicloj.kindly.v4.kind :as kind]
    [scicloj.clay.v2.quarto.highlight-styles :as quarto.highlight-styles]
    [scicloj.clay.v2.quarto.themes :as quarto.themes]

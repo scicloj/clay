@@ -5,9 +5,10 @@
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
-            [scicloj.clay.v2.notebook-old :as notebook-old]
+            [scicloj.clay.v2.old.notebook :as notebook-old]
+            [scicloj.clay.v2.old.make :as make-old]
             [scicloj.clay.v2.read :as read]
-            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v5.api :as kindly]
             [scicloj.clay.v2.util.diff :as diff]))
 
 (set! *warn-on-reflection* true)
@@ -382,14 +383,22 @@
                :kind :kind/md)
         (dissoc :code :comment? :region))))
 
+;; TODO Decide on whether we want to remove options form the notebook
+(defn old-kindly-options? [note]
+  (not (empty? (into [] (comp (mapcat (fn [x] (if (coll? x) x [x])))
+                              (filter #{'kindly/set-options! 'kindly/merge-options!})
+                              (take 1))
+                     (:form note)))))
+
 (defn ->old-notes-approx [notes]
   (->> notes
        (into []
-             (map #(-> %
-                       (cond-> (and (:comment? %)
-                                    (:code %))
-                         ->old-comment)
-                       (dissoc :gen))))))
+             (comp (map #(-> %
+                             (cond-> (and (:comment? %)
+                                          (:code %))
+                               ->old-comment)
+                             (dissoc :gen)))
+                   #_(remove old-kindly-options?)))))
 
 (defn ->new-notes-approx [notes]
   (->> notes
@@ -408,8 +417,18 @@
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
-    (let [old (-> (notebook-old/spec-notes spec)
-                  (->old-notes-approx))
+    ;; TODO this just works for one notebook without a base-source-path etc.
+    (let [old (-> (make-old/make! {:source-path [(-> (:full-source-path spec)
+                                                     (str/replace-first "notebooks"
+                                                                        "notebooks/old"))]
+                                   :base-source-path "../clay-old"
+                                   :format [:edn]
+                                   :show false})
+                  :info
+                  ffirst
+                  first
+                  :notes
+                  ->old-notes-approx)
           new (-> (assoc spec :collapse-comments-ws? true)
                   (relevant-notes)
                   (complete-notes spec)

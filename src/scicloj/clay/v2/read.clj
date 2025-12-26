@@ -29,6 +29,10 @@
                       (-> form first (= 'ns)))))
        first))
 
+;; TODO this is intentionally not a complete replacement
+;;      for read-kinds.notes/notebook-xform, it doesn't
+;;      assoc :kind/md so notebook-xform can still look
+;;      for expected kinds in the pipeline/transform
 (defn collapse-comments-ws [collapse-comments-ws? notes]
   (if collapse-comments-ws?
     (let [collapse (comp #{:kind/whitespace :kind/comment} :kind)
