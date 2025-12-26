@@ -1,5 +1,5 @@
-(ns scicloj.clay.v2.live-reload-test
-  (:require [scicloj.clay.v2.live-reload :as lr]
+(ns scicloj.clay.v2.old.live-reload-test
+  (:require [scicloj.clay.v2.old.live-reload :as lr]
             [babashka.fs :as fs]
             [clojure.test :refer [deftest is]]))
 

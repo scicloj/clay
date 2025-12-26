@@ -3,5 +3,5 @@
 
 (defn -main []
   (println "Profiling...")
-  (prof/profile (require '[scicloj.clay.v2.api]))
+  (prof/profile (require '[scicloj.clay.v2.old.api]))
   (println "Done. See /tmp/clj-async-profiler/results/"))

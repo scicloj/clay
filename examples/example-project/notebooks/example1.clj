@@ -26,7 +26,7 @@
   ;; Instead of using your editor setup and keybindings,
   ;; you can also use the Clay API directly:
 
-  (require '[scicloj.clay.v2.api :as clay])
+  (require '[scicloj.clay.v2.old.api :as clay])
 
   ;; Show the whole namespace
   (clay/make! {:source-path "notebooks/example1.clj"})

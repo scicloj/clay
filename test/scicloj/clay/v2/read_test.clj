@@ -1,5 +1,5 @@
-(ns scicloj.clay.v2.read-test
-  (:require [scicloj.clay.v2.read :as read]
+(ns scicloj.clay.v2.old.read-test
+  (:require [scicloj.clay.v2.old.read :as read]
             [clojure.test :refer [deftest is]]))
 
 (def read-ns-form-code-example
@@ -9,7 +9,7 @@
 ")
 
 (deftest read-ns-form-test
-  (is (= (scicloj.clay.v2.read/read-ns-form
+  (is (= (scicloj.clay.v2.old.read/read-ns-form
           read-ns-form-code-example)
          '(ns my-namespace
             (:require [clojure.core])))))
@@ -29,7 +29,7 @@
   (is
    (=
     (->> simple-ns-example
-         scicloj.clay.v2.read/->safe-notes
+         scicloj.clay.v2.old.read/->safe-notes
          (map #(dissoc % :gen)))
     '[{:region [2 1 3 29]
        :code "(ns my-namespace\n  (:require [clojure.core]))"
@@ -85,7 +85,7 @@ a-symbol
 (deftest safe-notes-detailed-test
   (is
    (= (->> detailed-ns-example
-           scicloj.clay.v2.read/->safe-notes
+           scicloj.clay.v2.old.read/->safe-notes
            (map #(dissoc % :gen)))
       '[{:region [3 1 3 16], :code ";; # A notebook", :comment? true}
         {:region [5 1 6 29],
