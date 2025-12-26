@@ -121,6 +121,14 @@
                                 (map? ?attr) ?attr))]
     (kindly/deep-merge form-config sym-config map-config)))
 
+(defn ns-servable? [{:keys [ns-form]}]
+  (let [form-meta (some-> ns-form meta :kindly/servable)
+        [_ sym ?doc ?attr] ns-form
+        sym-meta (some-> sym meta :kindly/servable)
+        meta-map (:kindly/servable (cond (map? ?doc) ?doc
+                                         (map? ?attr) ?attr))]
+    (or form-meta sym-meta meta-map)))
+
 (defn merge-ns-config [spec]
   (kindly/deep-merge
     spec
@@ -354,6 +362,22 @@
       ;; else, just show the qmd file
       (server/update-page! (assoc spec :full-target-path qmd-target-path)))))
 
+(defn with-items [notes spec]
+  (let [{:keys [items exception]} (notebook/items-and-test-forms notes spec)]
+    (assoc spec
+           :items items
+           :exception exception)))
+
+(defn clay-render-notebook-html [notes {:as spec
+                                        :keys [format
+                                               full-target-path
+                                               qmd-target-path
+                                               book
+                                               post-process]}]
+  (-> (with-items notes spec)
+      (config/add-field :page (if post-process
+                                (comp post-process page/html)
+                                page/html))))
 
 (defn clay-render-notebook [notes {:as spec
                                    :keys [format
@@ -361,10 +385,8 @@
                                           qmd-target-path
                                           book
                                           post-process]}]
-  (let [{:keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)
-        spec-with-items (assoc spec
-                               :items items
-                               :exception exception)]
+  (let [{:keys [test-forms exception]} spec
+        spec-with-items (with-items notes spec)]
     [(case (first format)
        :hiccup (page/hiccup spec-with-items)
        :html (do (-> spec-with-items
@@ -503,6 +525,22 @@
         (tagged-literal 'flare/html summary)
         summary))))
 
+(defn ^:export make-html-page
+  "Makes a single source to HTML, only if the namespace has `:kindly/servable` metadata.
+   Suitable to use in a webserver route to serve live calculated notebooks.
+   Returns a spec with the `:page` field containing the HTML."
+  [source-path]
+  {:pre [(string? source-path) (not (str/blank? source-path))]}
+  (let [spec {:show false
+              :source-path source-path}
+        config (config/config spec)
+        single-spec (->single-ns-spec spec config source-path)]
+    (if (ns-servable? single-spec)
+      (-> (notebook/spec-notes single-spec)
+          (clay-render-notebook-html single-spec))
+      (throw (ex-info (str "Did not find :kindly/servable in namespace metadata for " source-path)
+                      {:id ::ns-not-servable
+                       :source-path source-path})))))
 
 (comment
   (make! {:source-path       ["notebooks/scratch.clj"]

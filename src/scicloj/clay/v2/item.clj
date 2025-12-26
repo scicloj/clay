@@ -183,18 +183,16 @@
 
 (def scittle-header-form
   '(defn kindly-compute [input callback]
-     (ajax.core/POST
-       "/kindly-compute"
-       {:headers       {"Accept" "application/json"}
-        :params        (pr-str input)
-        :handler       (fn [response]
-                         (-> response
-                             read-string
-                             callback))
-        :error-handler (fn [e]
-                         (.log
-                          js/console
-                          (str "error on compute: " e)))})))
+     (-> (js/fetch "/kindly-compute"
+                   (clj->js {:method "POST"
+                             :headers {"Content-Type" "application/edn"
+                                       "Accept" "application/edn"}
+                             :body (pr-str input)}))
+         (.then (fn [response] (.text response)))
+         (.then (fn [text] (clojure.edn/read-string text)))
+         (.then callback)
+         (.catch (fn [e]
+                   (js/console.log "kindly-compute error:" e))))))
 
 (defn scittle-tag [cljs-form]
   [:script {:type "application/x-scittle"}
@@ -429,8 +427,8 @@
         _ (doseq [f samples]
             (.put sbuf ^short (shortify f)))
         byte-input-stream (ByteArrayInputStream. (.array buf))
-        audio-input-stream (AudioInputStream. byte-input-stream 
-                                              audio-format 
+        audio-input-stream (AudioInputStream. byte-input-stream
+                                              audio-format
                                               (count samples))]
     (javax.sound.sampled.AudioSystem/write audio-input-stream
                                            AudioFileFormat$Type/WAVE

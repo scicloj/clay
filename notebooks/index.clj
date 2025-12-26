@@ -812,6 +812,7 @@
 ;; | `:external-requirements` | skip file if both `:external-requirements` and `:keep-existing` | `["secret.txt"]` |
 ;; | `:quarto-target-path` | a Quarto project root where qmd files should be created | `"site"` |
 ;; | `:first-as-index` | In a Quarto book, should the first chapter be used as index page (default: false) | `true` |
+;; | `:ring-defaults` | Merged with (`site-defaults`)[https://github.com/ring-clojure/ring-defaults?tab=readme-ov-file] when creating Clays server. | `{:proxy true}`
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
