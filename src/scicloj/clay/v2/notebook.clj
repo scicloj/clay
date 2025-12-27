@@ -8,7 +8,10 @@
             [scicloj.clay.v2.old.notebook :as notebook-old]
             [scicloj.clay.v2.old.make :as make-old]
             [scicloj.clay.v2.read :as read]
-            [scicloj.kindly.v5.api :as kindly]
+            [scicloj.kindly.v4.api :as kindly]
+            [scicloj.kindly.v5.api :as kindly-v5]
+            [scicloj.kindly-advice.v1.completion :as ka-completion]
+            [scicloj.kindly-advice.v2.completion :as ka-completion-v2]
             [scicloj.clay.v2.util.diff :as diff]))
 
 (set! *warn-on-reflection* true)
@@ -383,6 +386,9 @@
                :kind :kind/md)
         (dissoc :code :comment? :region))))
 
+(defn ->note-approx [note]
+  (dissoc note :format))
+
 ;; TODO Decide on whether we want to remove options form the notebook
 (defn old-kindly-options? [note]
   (not (empty? (into [] (comp (mapcat (fn [x] (if (coll? x) x [x])))
@@ -397,18 +403,49 @@
                              (cond-> (and (:comment? %)
                                           (:code %))
                                ->old-comment)
-                             (dissoc :gen)))
-                   #_(remove old-kindly-options?)))))
+                             (dissoc :gen)
+                             ->note-approx))
+                   (remove old-kindly-options?)))))
+
+(defn new-kindly-options? [note]
+  (contains? (some-> note :value meta) :kindly/merge-options))
 
 (defn ->new-notes-approx [notes]
   (->> notes
        (into []
-             (map #(-> %
-                       (dissoc :line :column)
-                       (cond-> (-> % :narrowed nil?)
-                         (dissoc :narrowed)
-                         (-> % :narrower nil?)
-                         (dissoc :narrower)))))))
+             (comp (map #(-> %
+                             (dissoc :line :column)
+                             ->note-approx
+                             (cond-> (-> % :narrowed nil?)
+                               (dissoc :narrowed)
+                               (-> % :narrower nil?)
+                               (dissoc :narrower))))
+                   (remove new-kindly-options?)))))
+
+
+(defn old-spec-notes [spec]
+  (-> (make-old/make! {:source-path (:full-source-path spec)
+                       :format [:edn]
+                       :show false})
+      :info
+      ffirst
+      first
+      :notes
+      ->old-notes-approx))
+
+(defn new-spec-notes [{:as spec
+                       :keys      [ns-form full-source-path]}]
+  (with-redefs [;; See kindly-advice branch with v2-namespace for TODO on this
+                ka-completion/complete-options ka-completion-v2/complete-options
+                kindly/get-options (constantly nil)
+                kindly/set-options! kindly-v5/set-options!
+                kindly/merge-options! kindly-v5/merge-options!]
+    (-> (assoc spec :collapse-comments-ws? true)
+        (relevant-notes)
+        (complete-notes spec)
+        (log-time (str "Evaluated notebook with read-kinds "
+                       (or (some-> ns-form second name)
+                           (some-> full-source-path fs/file-name)))))))
 
 (defn spec-notes [{:as spec
                    :keys      [pprint-margin ns-form full-source-path]
@@ -418,24 +455,9 @@
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
     ;; TODO this just works for one notebook without a base-source-path etc.
-    (let [old (-> (make-old/make! {:source-path [(-> (:full-source-path spec)
-                                                     (str/replace-first "notebooks"
-                                                                        "notebooks/old"))]
-                                   :base-source-path "../clay-old"
-                                   :format [:edn]
-                                   :show false})
-                  :info
-                  ffirst
-                  first
-                  :notes
-                  ->old-notes-approx)
-          new (-> (assoc spec :collapse-comments-ws? true)
-                  (relevant-notes)
-                  (complete-notes spec)
-                  (->new-notes-approx)
-                  (log-time (str "Evaluated notebook with read-kinds "
-                                 (or (some-> ns-form second name)
-                                     (some-> full-source-path fs/file-name)))))]
+    (let [old (old-spec-notes spec)
+          new-ret (new-spec-notes spec)
+          new (->new-notes-approx new-ret)]
       ;; We can print the plain new and old notes..
       #_(diff/notes old new
                     :diff/to-repl :clojure/pprint
@@ -467,7 +489,7 @@
                     :diff/to-files :deep-diff2/full
                     :diff/keep-dirs 3
                     spec)
-      new)))
+      new-ret)))
 
 (defn items-and-test-forms
   [notes spec]
