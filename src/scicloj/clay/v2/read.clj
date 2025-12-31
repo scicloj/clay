@@ -68,7 +68,7 @@
                           {:form single-form})
         :else (->> code
                    (read/read-string-all)
-                   (read/eval-ast)
+                   (read/eval-notes)
                    (collapse-comments-ws collapse-comments-ws?)
                    (into [] notes/notebook-xform))))
 
