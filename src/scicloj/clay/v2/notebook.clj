@@ -5,10 +5,14 @@
             [scicloj.clay.v2.util.path :as path]
             [scicloj.clay.v2.item :as item]
             [scicloj.clay.v2.prepare :as prepare]
+            [scicloj.clay.v2.old.notebook :as notebook-old]
+            [scicloj.clay.v2.old.make :as make-old]
             [scicloj.clay.v2.read :as read]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.kindly-advice.v1.api :as kindly-advice])
-  (:import (java.io StringWriter)))
+            [scicloj.kindly.v5.api :as kindly-v5]
+            [scicloj.kindly-advice.v1.completion :as ka-completion]
+            [scicloj.kindly-advice.v2.completion :as ka-completion-v2]
+            [scicloj.clay.v2.util.diff :as diff]))
 
 (set! *warn-on-reflection* true)
 
@@ -42,29 +46,6 @@
   (and (sequential? form)
        (-> form first (= 'ns))))
 
-(defn str-and-reset! [w]
-  (when (instance? StringWriter *out*)
-    (locking w
-      (let [s (str w)]
-        (.setLength (.getBuffer ^StringWriter w) 0)
-        s))))
-
-(def ^:dynamic *out-orig* *out*)
-
-(defn maybe-println-orig [s]
-  (when (seq s)
-    (binding [*out* *out-orig*]
-      (print s)
-      (flush))))
-
-(def ^:dynamic *err-orig* *err*)
-
-(defn maybe-err-orig [s]
-  (when (seq s)
-    (binding [*out* *err-orig*]
-      (print s)
-      (flush))))
-
 ;; Babashka
 ;; - Make Clay runnable in Babashka
 ;;   - The way Clay reads - dependency of `carocad/parcera`, maybe we just remove it.
@@ -93,56 +74,6 @@
 ;; - We want our nREPL to return the result of `(+ 1 2)` (or exception), and with that stack.
 ;; - Can we frame the stack around eval?
 ;; - Is output being done right?
-
-(defn read-eval-capture
-  "Captures stdout and stderr while evaluating a note"
-  [{:as   note
-    :keys [code form]}]
-  note
-  #_
-  (let [out (StringWriter.)
-        err (StringWriter.)
-        note (try
-               (let [x (binding [*out* out
-                                 *err* err]
-                         (cond form (-> form
-                                        eval
-                                        deref-if-needed)
-                               code (-> code
-                                        read-string
-                                        eval
-                                        deref-if-needed)))]
-                 (assoc note :value x))
-               (catch Throwable ex
-                 (assoc note :exception ex)))
-        out-str (str out)
-        err-str (str err)
-        ;; A notebook may have also printed from a thread,
-        ;; *out* and *err* are replaced with StringWriters in with-out-err-capture
-        global-out (str-and-reset! *out*)
-        global-err (str-and-reset! *err*)
-        ;; Don't show output from requiring other namespaces
-        show (not (ns-form? form))]
-    (maybe-println-orig out-str)
-    (maybe-err-orig err-str)
-    (maybe-println-orig global-out)
-    (maybe-err-orig global-err)
-    (if show
-      (cond-> note
-        (seq out-str) (assoc :out out-str)
-        (seq err-str) (assoc :err err-str)
-        (seq global-out) (assoc :global-out global-out)
-        (seq global-err) (assoc :global-err global-err))
-      note)))
-
-(defn complete [{:as   note
-                 :keys [comment?]}]
-  (let [completed (cond-> note
-                    (not (or comment? (contains? note :value)))
-                    (read-eval-capture))]
-    (cond-> completed
-      (and (not comment?) (contains? completed :value))
-      (kindly-advice/advise))))
 
 (defn comment->item [comment]
   (-> comment
@@ -323,22 +254,6 @@
                                       code new-code)})))
   (@*path->last path))
 
-(defmacro with-out-err-captured
-  "Evaluates and computes the items for a notebook of notes"
-  [& body]
-  ;; For a notebook, we capture output globally, and per note.
-  ;; see read-eval-capture for why this is relevant.
-  `(let [out# (StringWriter.)
-         err# (StringWriter.)]
-     ;; Threads may inherit only the root binding
-     (with-redefs [*out* out#
-                   *err* err#]
-       ;; Futures will inherit the current binding,
-       ;; which was not affected by altering the root.
-       (binding [*out* out#
-                 *err* err#]
-         ~@body))))
-
 (defn itemize-notes
   "Evaluates and computes the items for a notebook of notes"
   [relevant-notes some-narrowed options]
@@ -409,22 +324,18 @@
                            :format])]
     (doall
       (for [note notes]
-        (complete (kindly/deep-merge opts note))))))
+        (kindly/deep-merge opts note)))))
 
 (defn relevant-notes [{:keys [full-source-path
-                         single-form
-                         single-value
-                         smart-sync
-                         pprint-margin]
-                  :or        {pprint-margin pp/*print-right-margin*}}]
-  (let [{:keys [code first-line-of-change]} (some-> full-source-path slurp-and-compare)
-        notes (->> (cond single-value (conj (when code
-                                              [{:form (read/read-ns-form code)}])
-                                            {:value single-value})
-                         single-form (conj (when code
-                                             [{:form (read/read-ns-form code)}])
-                                           {:form single-form})
-                         :else (read/->notes code))
+                              single-form
+                              single-value
+                              smart-sync
+                              pprint-margin]
+                       :or    {pprint-margin pp/*print-right-margin*}
+                       :as    spec}]
+  (let [{:keys [code first-line-of-change]} (some-> full-source-path
+                                                    slurp-and-compare)
+        notes (->> (read/->notes (assoc spec :code code))
                    (map-indexed (fn [i {:as   note
                                         :keys [code]}]
                                   (merge note
@@ -464,6 +375,78 @@
               "seconds")
      result#))
 
+(defn ->old-comment [note]
+  (let [comment-item (-> note :code notebook-old/comment->item)]
+    (-> note
+        (assoc :value (str/replace (:md comment-item)
+                                   ;; TODO stripping extra space added
+                                   ;; in front of headline Do we want
+                                   ;; to add this for read-kinds?
+                                   #"\n#" "#")
+               :kind :kind/md)
+        (dissoc :code :comment? :region))))
+
+(defn ->note-approx [note]
+  (dissoc note :format))
+
+;; TODO Decide on whether we want to remove options form the notebook
+(defn old-kindly-options? [note]
+  (not (empty? (into [] (comp (mapcat (fn [x] (if (coll? x) x [x])))
+                              (filter #{'kindly/set-options! 'kindly/merge-options!})
+                              (take 1))
+                     (:form note)))))
+
+(defn ->old-notes-approx [notes]
+  (->> notes
+       (into []
+             (comp (map #(-> %
+                             (cond-> (and (:comment? %)
+                                          (:code %))
+                               ->old-comment)
+                             (dissoc :gen)
+                             ->note-approx))
+                   (remove old-kindly-options?)))))
+
+(defn new-kindly-options? [note]
+  (contains? (some-> note :value meta) :kindly/merge-options))
+
+(defn ->new-notes-approx [notes]
+  (->> notes
+       (into []
+             (comp (map #(-> %
+                             (dissoc :line :column)
+                             ->note-approx
+                             (cond-> (-> % :narrowed nil?)
+                               (dissoc :narrowed)
+                               (-> % :narrower nil?)
+                               (dissoc :narrower))))
+                   (remove new-kindly-options?)))))
+
+
+(defn old-spec-notes [spec]
+  (-> (make-old/make! {:source-path (:full-source-path spec)
+                       :format [:edn]
+                       :show false})
+      :info
+      ffirst
+      first
+      :notes
+      ->old-notes-approx))
+
+(defn new-spec-notes [{:as spec
+                       :keys      [ns-form full-source-path]}]
+  (with-redefs [;; See kindly-advice branch with v2-namespace for TODO on this
+                ka-completion/complete-options ka-completion-v2/complete-options
+                kindly/get-options (constantly nil)
+                kindly/set-options! kindly-v5/set-options!
+                kindly/merge-options! kindly-v5/merge-options!]
+    (-> (assoc spec :collapse-comments-ws? true)
+        (relevant-notes)
+        (complete-notes spec)
+        (log-time (str "Evaluated notebook with read-kinds "
+                       (or (some-> ns-form second name)
+                           (some-> full-source-path fs/file-name)))))))
+
 (defn spec-notes [{:as spec
                    :keys      [pprint-margin ns-form full-source-path]
                    :or        {pprint-margin pp/*print-right-margin*}}]
@@ -471,12 +454,42 @@
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
             pp/*print-right-margin* pprint-margin]
-    (-> (relevant-notes spec)
-        (complete-notes spec)
-        (with-out-err-captured)
-        (log-time (str "Evaluated "
-                       (or (some-> ns-form second name)
-                           (some-> full-source-path fs/file-name)))))))
+    ;; TODO this just works for one notebook without a base-source-path etc.
+    (let [old (old-spec-notes spec)
+          new-ret (new-spec-notes spec)
+          new (->new-notes-approx new-ret)]
+      ;; We can print the plain new and old notes..
+      #_(diff/notes old new
+                    :diff/to-repl :clojure/pprint
+                    spec)
+      ;; ..or only differences
+      (diff/notes old new
+                  :diff/to-repl :deep-diff2/minimal
+                  spec)
+      ;; ..or only one difference
+      #_(diff/notes (take 1 old) (take 1 new)
+                    :diff/to-repl :deep-diff2/minimal
+                    spec)
+      ;; ..or write old and new files
+      #_(diff/notes old new
+                    :diff/to-files :clojure/pprint
+                    spec)
+      ;; ..or old, new and full diff files
+      #_(diff/notes old new
+                    :diff/to-files :deep-diff2/full
+                    spec)
+      ;; ..or old, new and minimal diffs, keeping only the last three runs
+      #_(diff/notes old new
+                    :diff/to-files :deep-diff2/minimal
+                    :diff/keep-dirs 3
+                    spec)
+      ;; ..or any combination of the above
+      #_(diff/notes old new
+                    :diff/to-repl :deep-diff2/minimal
+                    :diff/to-files :deep-diff2/full
+                    :diff/keep-dirs 3
+                    spec)
+      new-ret)))
 
 (defn items-and-test-forms
   [notes spec]
