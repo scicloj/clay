@@ -182,17 +182,26 @@
    :hiccup [:p string]})
 
 (def scittle-header-form
-  '(defn kindly-compute [input callback]
-     (-> (js/fetch "/kindly-compute"
-                   (clj->js {:method "POST"
-                             :headers {"Content-Type" "application/edn"
-                                       "Accept" "application/edn"}
-                             :body (pr-str input)}))
-         (.then (fn [response] (.text response)))
-         (.then (fn [text] (clojure.edn/read-string text)))
-         (.then callback)
-         (.catch (fn [e]
-                   (js/console.log "kindly-compute error:" e))))))
+  '(defn kindly-compute
+     "Request a function call from the Clay server"
+     ([params callback]
+      (ajax.core/POST
+        "/kindly-compute"
+        {:format        :transit
+         :params        params
+         :handler       callback
+         :error-handler (fn [e]
+                          (js/console.log (str "error on compute: " e)))}))
+     ([func params callback]
+      (ajax.core/POST
+        (str "/kindly-compute/" func)
+        {:format        :transit
+         :params        (if (sequential? params)
+                          {:args params}
+                          params)
+         :handler       callback
+         :error-handler (fn [e]
+                          (js/console.log (str "error on compute: " e)))}))))
 
 (defn scittle-tag [cljs-form]
   [:script {:type "application/x-scittle"}

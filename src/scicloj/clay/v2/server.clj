@@ -5,7 +5,6 @@
             [clojure.pprint :as pprint]
             [clojure.string :as str]
             [hiccup.core :as hiccup]
-            [hiccup.page]
             [muuntaja.core :as mc]
             [org.httpkit.server :as httpkit]
             [ring.middleware.defaults :as rmd]
@@ -227,25 +226,30 @@
 (defn call-annotated-endpoint
   "Processes and formats a servable or handler response.
    Will call the servable with `params` from the request,
-   unless `args` is present in the request, in which case it will apply those args instead.
+   unless `args` is present in the `params`,
+   in which case it will apply `args` instead.
    Negotiates request format, defaults to JSON if no content-type header,
    parses body params, calls the endpoint, and formats the response.
-   Response will be or HTML if the function name ends in the .html suffix,
-   otherwise defaults to JSON when no format was negotiated."
+   Response will be HTML if the result is a string and the function name ends in the `html` suffix.
+   Otherwise defaults to JSON when no format was negotiated."
   [muun req func]
   (when-let [v (resolve-servable-var (str func))]
     (let [m (meta v)
-          {:kindly/keys [servable handler]} m
+          {:keys [kindly/handler]} m
           {:keys [params]} req
           {:keys [args]} params
-          resp (cond
-                 handler (v req)
-                 servable {:status 200
-                           :body (if (sequential? args)
-                                   (apply v args)
-                                   (v params))})
+          result (if handler
+                   (v req)
+                   (if (sequential? args)
+                     (apply v args)
+                     (v params)))
+          resp (if handler
+                 result
+                 {:status 200
+                  :body result})
           resp (cond-> resp
-                 (or (:html m) (:kindly/html m) (str/ends-with? func ".html"))
+                 (and (string? result)
+                      (str/ends-with? func "html"))
                  (assoc-in [:headers "Content-Type"] "text/html; charset=utf-8"))]
       (mc/format-response muun req resp))))
 
@@ -303,10 +307,12 @@
     (if (:websocket? req)
       (httpkit/as-channel req websocket-handler)
       (case [request-method uri]
-        [:get "/"] {:body (-> state
-                              page
-                              (wrap-base-url state)
-                              (wrap-html state))
+        [:get "/"] {:body (if-let [{:keys [index-page]} (:last-rendered-spec state)]
+                            (slurp (io/file (:base-target-path state) (str index-page)))
+                            (-> state
+                                page
+                                (wrap-base-url state)
+                                (wrap-html state)))
                     :headers {"Content-Type" "text/html; charset=utf-8"}
                     :status 200}
         [:get "/counter"] {:body (-> state

@@ -4,18 +4,22 @@
 ;; We can also host an API in that webserver as a lightweight webapp backend.
 ;; This can be useful when prototyping or building interactive experiences.
 
+^:kindly/hide-code
 (ns clay-book.webserver
-  (:require
-   [clojure.data.json :as json]
-   [clojure.pprint :as pprint]
-   [clojure.string :as str]
-   [clojure.test :refer [deftest is]]
-   [cognitect.transit :as t]
-   [hiccup.page :as page]
-   [org.httpkit.client :as http]
-   [org.httpkit.server :as httpkit]
-   [scicloj.clay.v2.server :as server]))
+  (:require [clojure.data.json :as json]
+            [clojure.pprint :as pprint]
+            [clojure.string :as str]
+            [clojure.test :refer [deftest is]]
+            [cognitect.transit :as t]
+            [hiccup.page :as page]
+            [org.httpkit.client :as http]
+            [org.httpkit.server :as httpkit]
+            [scicloj.clay.v2.server :as server]))
 
+;; Clay serves on `http://localhost:1971/` by default.
+;; We can call `server/url` to confirm where Clay is running.
+
+(server/url)
 
 ;; ## Servable namespaces
 
@@ -26,9 +30,12 @@
 ^:kind/code
 (slurp "notebooks/clay_book/current_time.clj")
 
-;; The "current_time.clj" notebook is evaluated every time we visit the url `http://localhost:1971/notebooks/clay_book/current_time.html`
-;; because the namespace has `^:kindly/servable` annotated in metadata.
-;; Servable namespaces are a way to keep a report current, rather than serving a static snapshot.
+;; The `current_time.clj` notebook is evaluated every time we visit the url http://localhost:1971/notebooks/clay_book/current_time.html
+;; because the namespace is annotated as `^:kindly/servable`.
+
+;; Servable namespaces are a way to keep a notebook current,
+;; rather than serving a static snapshot.
+;; So if you have a report, it can always pull the latest data.
 
 ;; ## Servable functions
 
@@ -47,20 +54,23 @@
 ;; : `(defn ^:kindly/servable add [a b] (+ a b))`
 ;; :::
 
-;; Clay listens on `http://localhost:1971/` by default.
-;; We can call `server/url` to confirm where Clay is running.
-
-(server/url)
-
-;; HTTP requests to `/kindly-compute` will call the function and return the result in the response.
+;; HTTP requests to `/kindly-compute`
+;; will be handled by Clay, which will call the function
+;; and return the result in the response.
 ;; The function to call must be a fully qualified symbol that resolves to an annotated function.
-;; The function can be in the request params as `:func`.
+;; The function name should be placed in the url path.
+;; So to call the `clay-book.webserver/kindly-add` function,
+;; we use the URL `http://localhost:1971/kindly-compute/clay-book.webserver/kindly-add`
 ;; A sequence of arguments `:args` in the params will be applied to the function call.
 
 (def kindly-add-response
-  @(http/post (str (server/url) "kindly-compute")
-              {:body (json/write-str {:func "example.webserver/kindly-add"
-                                      :args [2 3]})}))
+  @(http/post (str (server/url) "kindly-compute/clay-book.webserver/kindly-add")
+              {:body (json/write-str {:args [2 3]})}))
+
+;; ::: {.callout-note}
+;; If you prefer, you can pass the function name as a param called `:func`
+;; rather than the URL path.
+;; :::
 
 ;; This is the request that we made:
 
@@ -72,57 +82,68 @@
 
 ;; The answer `"5"` is in the `:body`, and the `:content-type` is JSON.
 
-(deftest kindly-add-response-value
-  (is (= "5" (:body kindly-add-response)))
-  (is (str/starts-with? (:content-type (:headers kindly-add-response)) "application/json"))
-  (is (= 5 (json/read-str (:body kindly-add-response)))))
+(:body kindly-add-response)
 
-;; Rather than accepting `:args` in `:params`, we can instead simply take all the `:params`:
+(:content-type (:headers kindly-add-response))
 
-(defn ^:kindly/servable kindly-add-named [{:keys [a b]}]
+(json/read-str (:body kindly-add-response))
+
+;; Rather than accepting `:args` in `:params`,
+;; we can take all the `:params` as a map:
+
+(defn ^:kindly/servable kindly-add-named [{:keys [a b] :as params}]
   (+ a b))
 
-;; Rather than passing the function name in `:func` of params,
-;; we can instead use the fully qualified symbol as a route in the URL.
+;; When we call this function, we just provide the params.
+;; Rather than `{:args [2 3]}` we are now passing `{:a 4 :b 5}`:
 
 (def kindly-add-named-response
   @(http/post (str (server/url) "kindly-compute/clay-book.webserver/kindly-add-named")
-              {:headers {"Content-Type" "application/json"}
-               :body (json/write-str {:a 4 :b 5})}))
+              {:body (json/write-str {:a 4 :b 5})}))
 
 kindly-add-named-response
 
-(deftest kindly-add-named-response-value
-  (is (= 9 (json/read-str (:body kindly-add-named-response)))))
+(json/read-str (:body kindly-add-named-response))
 
-;; The reason for supporting multiple ways of encoding the request is to allow the
-;; client side code to be flexible in how it constructs a request.
+;; ::: {.callout-note}
+;; Servable functions can be placed in any resolvable namespace,
+;; they don't have to be inside a notebook.
+;; :::
 
-;; ## Calling kindly-compute from a Browser
+;; ## Calling `kindly-compute` from a Browser
 
-;; When using Scittle, Clay defines a convenience function `kindly-compute` to make a request:
+;; When using Scittle, Clay defines a convenience function `kindly-compute` to make a request.
+;; The result will be delivered to a callback handler function.
 
 ^:kind/scittle
-'(kindly-compute
-  {:func 'example.webserver/kindly-add
-   :args [11 20]}
-  (fn [result]
-    (js/console.log "kindly-compute result:" result)))
+'(defn handler [result]
+   (js/console.log "kindly-compute result:" result))
 
-;; If you prefer to write your own client code, it might look something like this:
+;; Requesting a function with positional args:
 
-;; ```
-;; (-> (js/fetch "/kindly-compute"
-;;               (clj->js {:method "POST"
-;;                         :headers {"Content-Type" "application/edn"
-;;                                   "Accept" "application/edn"}
-;;                         :body (pr-str input)}))
-;;     (.then (fn [response] (.text response)))
-;;     (.then (fn [text] (clojure.edn/read-string text)))
-;;     (.then callback)
-;;     (.catch (fn [e]
-;;               (js/console.log "kindly-compute error:" e))))
-;;```
+^:kind/scittle
+'(kindly-compute 'clay-book.webserver/kindly-add
+                 [11 20]
+                 handler)
+
+;; Requesting a function with a single params argument:
+
+^:kind/scittle
+'(kindly-compute 'clay-book.webserver/kindly-add-named
+                 {:a 8, :b 11}
+                 handler)
+
+;; If you prefer to write your own clientside code, it might look something like this:
+
+^:kind/hiccup
+[:script
+ "fetch('/kindly-compute/clay-book.webserver/kindly-add-named', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({a: 99, b: 1})
+  })
+    .then(resp => resp.json())
+    .then(result => console.log('Javascript call to kindly-add-named got', result));"]
 
 ;; ## Handler endpoints
 
@@ -147,8 +168,7 @@ kindly-add-named-response
 
 handle-add-response
 
-(deftest handle-add-response-value
-  (is (= 14 (json/read-str (:body handle-add-response)))))
+(json/read-str (:body handle-add-response))
 
 ;; ## Params
 
@@ -156,45 +176,26 @@ handle-add-response
 ;; Clay will negotiate the request and response encodings based on content and accept headers where they exist.
 ;; When no format is specified, Clay will default to using JSON.
 
-;; Here is an example where the request sends transit+msgpack and accepts transit+msgpack:
-
-(def transit-add-response
-  (-> @(http/post (str (server/url) "kindly-compute/clay-book.webserver/kindly-add-named")
-                  {:headers {"Content-Type" "application/transit+msgpack"
-                             "Accept" "application/transit+msgpack"}
-                   :body (let [baos (java.io.ByteArrayOutputStream.)
-                               writer (t/writer baos :msgpack)]
-                           (t/write writer {:a 7, :b 13})
-                           (.toByteArray baos))})
-      (update :body (fn [body]
-                      (t/read (t/reader body :msgpack))))))
-
-transit-add-response
-
-(deftest transit-add-response-value
-  (is (= 20 (:body transit-add-response))))
-
 ;; ## HTML Responses
 
-;; Endpoint response bodies are encoded either in a requested format or in JSON.
-;; However when the function name ends in `.html`, the endpoint will return content-type `text/html` instead.
+;; Most endpoint response bodies are encoded base on an "Accept" header if present, or in JSON by default.
+;; However when the function name ends in `html`, the endpoint will return `Content-Type: text/html` instead.
 
-(defn ^:kindly/servable greet.html [{:keys [name]}]
+(defn ^:kindly/servable greet-html [{:keys [name]}]
   (page/html5 [:h1 (str "Hello " name)]))
 
-;; In this example we do a GET with params in the query-string `?name=world`:
+;; We can GET the page with params in the query-string `?name=world`:
 
 (def greet-response
-  @(http/get (str (server/url) "kindly-compute/clay-book.webserver/greet.html?name=world")))
+  @(http/get (str (server/url) "kindly-compute/clay-book.webserver/greet-html?name=world")))
 
 greet-response
 
-;; We got HTML rather than JSON because the function name was `greet.html`
+;; We got HTML rather than JSON because the function name was `greet-html`
 
-(deftest greet-response-is-html
-  (is (= "<!DOCTYPE html>\n<html><h1>Hello world</h1></html>"
-         (:body greet-response))
-      (is (= "text/html; charset=utf-8" (:content-type (:headers greet-response))))))
+(:body greet-response)
+
+(:content-type (:headers greet-response))
 
 ;; ## Dynamic handlers
 
@@ -248,23 +249,46 @@ clicken-response
 ;; On the client you can access `clay_socket` to send and receive messages to the server:
 
 ^:kind/hiccup
-[:script "clay_socket.send('can you hear me?');
-          clay_socket.addEventListener('message', function(event) {
-            console.log(event);
-          });"]
+[:script
+ "clay_socket.send('can you hear me?');
+  clay_socket.addEventListener('message', function(event) {
+    console.log('Clay socket:', event.data);
+  });"]
 
 ;; ## Hosting
 
-;; You can choose a different port via `:port` (for example `:port 80` to listen on the HTTP port).
-
+;; You can choose a different port by supplying `:port` in configuration,
+;; for example `:port 80` to listen on the HTTP port.
 ;; If you need to adjust the Ring middleware (sessions, proxy headers, CSRF, etc.),
 ;; set `:ring-defaults` in your Clay config (`clay.edn` or the `make!` call).
 ;; It is deep-merged into Ring's `site-defaults` when Clay starts its server.
 ;; For example to run behind a proxy you could add `:ring-defaults {:proxy true}`.
 
+;; To launch Clay as a webserver from the [Command Line Interface](https://scicloj.github.io/clay/#cli):
+;;
+;; ```sh
+;; clojure -M -m scicloj.clay.v2.main -m "{:port 80}"
+;; ```
+
+;; ## Serving files
+
+;; Clay will serve any files in the `:base-target-path` configuration (`docs` is the default).
+;; As part of making a notebook, any non source files are copied from the `:base-source-path` to the `:base-target-path`.
+;; The server will also serve any files found in `resources/public`
+;; (configured by [`:ring-defaults`](https://github.com/ring-clojure/ring-defaults)).
+
+;; Normally Clay uses the root route `/` to show the last made file.
+;; You can override this by providing `:index-page "index.html"` configuartion.
+
+;; ```sh
+;; clojure -M -m scicloj.clay.v2.main -m "{:port 80 :index "index.html"}"
+;; ```
+
+;; Alternatively you can install a custom handler to handle `/`.
+
 ;; ## Conclusion
 
-;; Clay can act as a webserver for building data-driven web applications.
-;; Clay can be used for prototyping an interactive dashboard,
-;; sharing a live analysis, or building a lightweight web app.
-;; The main way to create endpoints is through annotation.
+;; Clay can act as a webserver for prototyping interactive dashboards,
+;; live analysis, or a web app.
+;; It's easy to create endpoints is by annotating functions,
+;; and call them from the rendered notebook.
