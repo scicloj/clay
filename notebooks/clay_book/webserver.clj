@@ -255,12 +255,24 @@ clicken-response
 
 ;; ## Hosting
 
-;; You can choose a different port by supplying `:port` in configuration,
-;; for example `:port 80` to listen on the HTTP port.
+;; ### Preparing HTML
+
+;; To build all the notebooks before launching the server:
+
+;; ```sh
+;; clojure -M -m scicloj.clay.v2.main --render
+;; ```
+
+;; This will produce all the HTML files and exit.
+
+;; ### Serving
+
+;; Consider supplying `:port` in configuration.
+;; For example `:port 80` to listen on the HTTP port.
 ;; If you need to adjust the Ring middleware (sessions, proxy headers, CSRF, etc.),
-;; set `:ring-defaults` in your Clay config (`clay.edn` or the `make!` call).
-;; It is deep-merged into Ring's `site-defaults` when Clay starts its server.
+;; `:ring-defaults` to be deep-merged into Ring's `site-defaults` when Clay starts its server.
 ;; For example to run behind a proxy you could add `:ring-defaults {:proxy true}`.
+;; This configuration can be put in a `clay.edn` file, or passed via the command line interface.
 
 ;; To launch Clay as a webserver from the [Command Line Interface](https://scicloj.github.io/clay/#cli):
 ;;
@@ -268,21 +280,17 @@ clicken-response
 ;; clojure -M -m scicloj.clay.v2.main -m "{:port 80}"
 ;; ```
 
-;; ## Serving files
+;; ### Serving non-notebook files
 
-;; Clay will serve any files in the `:base-target-path` configuration (`docs` is the default).
+;; Clay will serve any files in the `:base-target-path` (`docs` is the default).
 ;; As part of making a notebook, any non source files are copied from the `:subdirs-to-sync` to the `:base-target-path`.
+;; (the default is `["src" "notebooks"]`).
 ;; The server will also serve any files found in `resources/public`
-;; (configured by [`:ring-defaults`](https://github.com/ring-clojure/ring-defaults)).
+;; (because of [`:ring-defaults`](https://github.com/ring-clojure/ring-defaults)).
 
 ;; Normally Clay uses the root route `/` to show the last made file.
-;; If launched as a server, it will try to show "index.html" from the `:base-target-path`.
+;; But when launched as a server, it will show "index.html" from the `:base-target-path` if found.
 ;; Alternatively you can install a custom handler to handle `/`.
-
-;; ```sh
-;; clojure -M -m scicloj.clay.v2.main -m "{:port 80}"
-;; ```
-
 
 ;; ## Conclusion
 
