@@ -8,9 +8,7 @@
 (ns clay-book.webserver
   (:require [clojure.data.json :as json]
             [clojure.pprint :as pprint]
-            [clojure.string :as str]
             [clojure.test :refer [deftest is]]
-            [cognitect.transit :as t]
             [hiccup.page :as page]
             [org.httpkit.client :as http]
             [org.httpkit.server :as httpkit]
@@ -273,18 +271,18 @@ clicken-response
 ;; ## Serving files
 
 ;; Clay will serve any files in the `:base-target-path` configuration (`docs` is the default).
-;; As part of making a notebook, any non source files are copied from the `:base-source-path` to the `:base-target-path`.
+;; As part of making a notebook, any non source files are copied from the `:subdirs-to-sync` to the `:base-target-path`.
 ;; The server will also serve any files found in `resources/public`
 ;; (configured by [`:ring-defaults`](https://github.com/ring-clojure/ring-defaults)).
 
 ;; Normally Clay uses the root route `/` to show the last made file.
-;; You can override this by providing `:index-page "index.html"` configuartion.
+;; If launched as a server, it will try to show "index.html" from the `:base-target-path`.
+;; Alternatively you can install a custom handler to handle `/`.
 
 ;; ```sh
-;; clojure -M -m scicloj.clay.v2.main -m "{:port 80 :index "index.html"}"
+;; clojure -M -m scicloj.clay.v2.main -m "{:port 80}"
 ;; ```
 
-;; Alternatively you can install a custom handler to handle `/`.
 
 ;; ## Conclusion
 

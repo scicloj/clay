@@ -135,7 +135,8 @@
    (page @server.state/*state))
   ([state]
    (let [{:keys [last-rendered-spec live-reload]} state
-         path (some-> last-rendered-spec :full-target-path)]
+         path (some-> last-rendered-spec :full-target-path)
+         index (fs/path (:base-target-path last-rendered-spec) "index.html")]
      (cond
        (and path (str/ends-with? path ".pdf"))
        (hiccup/html
@@ -147,8 +148,11 @@
                    :width "100%"
                    :height "900px"}]]])
 
-       (fs/exists? path)
+       (and path (fs/exists? path))
        (slurp path)
+
+       (fs/exists? index)
+       (slurp index)
 
        :else
        (hiccup/html
@@ -307,6 +311,7 @@
     (if (:websocket? req)
       (httpkit/as-channel req websocket-handler)
       (case [request-method uri]
+        ;; TODO: might be able to just serve index when there is no last rendered page?
         [:get "/"] {:body (if-let [{:keys [index-page]} (:last-rendered-spec state)]
                             (slurp (io/file (:base-target-path state) (str index-page)))
                             (-> state
