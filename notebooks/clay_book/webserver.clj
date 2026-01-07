@@ -1,34 +1,49 @@
-;; # Webserver
-
-;; Clay launches a webserver to serve the HTML pages that it builds.
-;; We can also host an API in that webserver as a lightweight webapp backend.
-;; This can be useful when prototyping or building interactive experiences.
-
 ^:kindly/hide-code
 (ns clay-book.webserver
   (:require [clojure.data.json :as json]
             [clojure.pprint :as pprint]
-            [clojure.test :refer [deftest is]]
             [hiccup.page :as page]
             [org.httpkit.client :as http]
             [org.httpkit.server :as httpkit]
             [scicloj.clay.v2.server :as server]))
 
-;; Clay serves on `http://localhost:1971/` by default.
+;; # Web Server
+
+;; Clay launches a web server to serve the HTML pages made from Clojure namespaces.
+;; We can also host an API in that web server as a lightweight web app backend.
+;; This can be useful when prototyping or building interactive experiences.
+
+;; **Key features:**
+;;
+;; * **Servable namespaces** - Notebooks that evaluate when you view them
+;; * **Annotated endpoints** — Mark functions with metadata to create HTTP endpoints
+;; * **Live reloading** — Update handlers without restarting
+;; * **Multiple formats** — Negotiate JSON, EDN, Transit, or HTML responses
+;; * **Browser integration** — Call endpoints from Scittle or plain JavaScript
+;; * **Lightweight deployment** — Launch from the command line
+
+;; Clay serves on http://localhost:1971/ by default.
 ;; We can call `server/url` to confirm where Clay is running.
 
+(require '[scicloj.clay.v2.server :as server])
 (server/url)
+
+;; While the Clay server is running, it shows the last made namespace at `/`.
+;; To view other pages, you can navigate to a particular page,
+;; for example, this page is at `/clay_book.webserver.html`,
+;; so if you run Clay locally and make this notebook, you can navigate to it at
+;; http://localhost:1971/clay_book.webserver.html
 
 ;; ## Servable namespaces
 
 ;; When you request a servable namespace,
-;; Clay re-evaluates the namespace to return HTML,
-;; rather than serving a previously made static file.
+;; Clay evaluates the namespace to return HTML,
+;; rather than serving a static file.
 
 ^:kind/code
 (slurp "notebooks/clay_book/current_time.clj")
 
-;; The `current_time.clj` notebook is evaluated every time we visit the url http://localhost:1971/notebooks/clay_book/current_time.html
+;; The `current_time.clj` notebook is evaluated when we visit the URL http://localhost:1971/notebooks/clay_book/current_time.html
 ;; because the namespace is annotated as `^:kindly/servable`.
 
 ;; Servable namespaces are a way to keep a notebook current,
@@ -37,13 +52,16 @@
 
 ;; ## Servable functions
 
-;; Functions may be annotated as endpoints that can be called by a HTTP request.
+;; Functions behave as endpoints that can be called by an HTTP request
+;; when they have the metadata flag `^:kindly/servable`.
+
+;; ### Accepting positional `args`
 
 (defn ^:kindly/servable kindly-add [a b]
   (+ a b))
 
 ;; ::: {.callout-note}
-;; Unlike other Kindly annotations, the servable function metadata must be placed on the var.
+;; Unlike other Kindly annotations, the servable function metadata must be placed on the Var.
 ;;
 ;; Wrong
 ;; : `^:kindly/servable (defn add [a b] (+ a b))`
@@ -56,7 +74,7 @@
 ;; will be handled by Clay, which will call the function
 ;; and return the result in the response.
 ;; The function to call must be a fully qualified symbol that resolves to an annotated function.
-;; The function name should be placed in the url path.
+;; The function name should be placed in the URL path.
 ;; So to call the `clay-book.webserver/kindly-add` function,
 ;; we use the URL `http://localhost:1971/kindly-compute/clay-book.webserver/kindly-add`
 ;; A sequence of arguments `:args` in the params will be applied to the function call.
@@ -86,13 +104,12 @@
 
 (json/read-str (:body kindly-add-response))
 
-;; Rather than accepting `:args` in `:params`,
-;; we can take all the `:params` as a map:
+;; ### Accepting a single map of `params`
 
-(defn ^:kindly/servable kindly-add-named [{:keys [a b] :as params}]
+(defn ^:kindly/servable kindly-add-named [{:keys [a b]}]
   (+ a b))
 
-;; When we call this function, we just provide the params.
+;; When we call this function, we provide params.
 ;; Rather than `{:args [2 3]}` we are now passing `{:a 4 :b 5}`:
 
 (def kindly-add-named-response
@@ -108,7 +125,7 @@ kindly-add-named-response
 ;; they don't have to be inside a notebook.
 ;; :::
 
-;; ## Calling `kindly-compute` from a Browser
+;; ## Calling `kindly-compute` from a browser
 
 ;; When using Scittle, Clay defines a convenience function `kindly-compute` to make a request.
 ;; The result will be delivered to a callback handler function.
@@ -131,7 +148,7 @@ kindly-add-named-response
                  {:a 8, :b 11}
                  handler)
 
-;; If you prefer to write your own clientside code, it might look something like this:
+;; If you prefer to write your own client-side code, it might look something like this:
 
 ^:kind/hiccup
 [:script
@@ -142,6 +159,8 @@ kindly-add-named-response
   })
     .then(resp => resp.json())
     .then(result => console.log('Javascript call to kindly-add-named got', result));"]
+
+;; The Clay server must be running for browser requests to succeed.
 
 ;; ## Handler endpoints
 
@@ -163,6 +182,7 @@ kindly-add-named-response
               {:body (json/write-str {:a 5, :b 9})}))
 
 ;; The request was printed as a side-effect of calling the endpoint.
+;; Handlers have access to the session, cookies, and everything about the request.
 
 handle-add-response
 
@@ -170,19 +190,28 @@ handle-add-response
 
 ;; ## Params
 
-;; Params may be passed in the query-string, or in the body of the request encoded as form-params, json, edn, or transit.
+;; Params may be placed in the query-string, or in the body of the request.
 ;; Clay will negotiate the request and response encodings based on content and accept headers where they exist.
 ;; When no format is specified, Clay will default to using JSON.
+;; Requests with body-params should set a "Content-Type" header to let Clay know how to read the body,
+;; and an "Accept" header to let Clay know what format the response should be in.
+;; JavaScript `fetch` sets "Content Type" to `text/plain` by default,
+;; which will not be decoded.
+;; Available formats are form-params, json, edn, or transit.
 
 ;; ## HTML Responses
 
-;; Most endpoint response bodies are encoded base on an "Accept" header if present, or in JSON by default.
-;; However when the function name ends in `html`, the endpoint will return `Content-Type: text/html` instead.
+;; Endpoint response bodies are encoded based on an "Accept" header if present,
+;; or in JSON by default.
+;; However when a servable function name ends in `html`,
+;; then the response will be `Content-Type: text/html` instead.
+;; This differentiates between endpoints that return data,
+;; and endpoints that return HTML pages.
 
 (defn ^:kindly/servable greet-html [{:keys [name]}]
   (page/html5 [:h1 (str "Hello " name)]))
 
-;; We can GET the page with params in the query-string `?name=world`:
+;; We can GET the page with params in the query string `?name=world`:
 
 (def greet-response
   @(http/get (str (server/url) "kindly-compute/clay-book.webserver/greet-html?name=world")))
@@ -205,36 +234,39 @@ greet-response
 
 (defn my-handler [{:keys [request-method uri]}]
   (case [request-method uri]
-    [:get "/clicken"] {:status 200
+    [:get "/chicken"] {:status 200
                        :headers {"Content-Type" "text/plain; charset=utf-8"}
                        :body "bock bock bock"}
     nil))
 
 (server/install-handler! #'my-handler)
 
-;; `/clicken` is a top level route (not namespaced).
+;; `/chicken` is a top-level route (not namespaced).
 ;; We could handle `/` which would be necessary for a complete website.
 ;; Handling `/` prevents Clay interactively showing the last made namespace,
 ;; so only do that when deploying.
 
-(def clicken-response
-  @(http/get (str (server/url) "clicken")))
+(def chicken-response
+  @(http/get (str (server/url) "chicken")))
 
-clicken-response
+(:body chicken-response)
 
-(deftest clicken-response-value
-  (is (= "bock bock bock" (:body clicken-response))))
-
-;; Unlike normal server handlers, clay handlers may return `nil`,
-;; which allows your handler to ignore a request, leaving it to other handlers to handle.
+;; Unlike most [Ring](https://github.com/ring-clojure/ring) handlers,
+;; Clay handlers may return `nil` to ignore a request,
+;; leaving it to other handlers or the site-defaults handler.
 ;; You can install multiple handlers side-by-side in this way.
 
-;; Clay requires a handler to be a var holding a function because
+;; Clay requires a handler to be a **var holding a function** because
 ;; that allows you to replace the definition of the handler conveniently,
 ;; and for the handlers to be tracked by their var.
 ;; Vars have identity, functions do not.
 
-;; ## Clay Websocket handler
+;; Because handlers and servable functions are Vars,
+;; they can be updated dynamically without restarting the server.
+;; If you need to remove an unwanted handler,
+;;`server/clear-handlers!` will clear all current handlers.
+
+;; ## Clay WebSocket handler
 
 ;; Similar to dynamic handlers, you may also install a websocket handler:
 
@@ -244,7 +276,7 @@ clicken-response
 
 (server/install-websocket-handler! :on-receive #'my-websocket-receive)
 
-;; On the client you can access `clay_socket` to send and receive messages to the server:
+;; On the client, you can access `clay_socket` to send and receive messages to the server:
 
 ^:kind/hiccup
 [:script
@@ -267,34 +299,85 @@ clicken-response
 
 ;; ### Serving
 
-;; Consider supplying `:port` in configuration.
-;; For example `:port 80` to listen on the HTTP port.
+;; Configure Clay with `:port 80` to listen on the default HTTP port.
 ;; If you need to adjust the Ring middleware (sessions, proxy headers, CSRF, etc.),
 ;; `:ring-defaults` to be deep-merged into Ring's `site-defaults` when Clay starts its server.
 ;; For example to run behind a proxy you could add `:ring-defaults {:proxy true}`.
-;; This configuration can be put in a `clay.edn` file, or passed via the command line interface.
+;; Configuration can be put in a `clay.edn` file, or passed via the command line interface.
 
-;; To launch Clay as a webserver from the [Command Line Interface](https://scicloj.github.io/clay/#cli):
+;; To launch Clay as a web server from the [Command Line Interface](https://scicloj.github.io/clay/#cli):
 ;;
 ;; ```sh
 ;; clojure -M -m scicloj.clay.v2.main -m "{:port 80}"
 ;; ```
 
-;; ### Serving non-notebook files
+;; You may find it convenient to package your project as an
+;; [uberjar](https://clojure.org/guides/tools_build#_compiled_uberjar_application_build)
+;; for deployment to a hosting service.
 
-;; Clay will serve any files in the `:base-target-path` (`docs` is the default).
-;; As part of making a notebook, any non source files are copied from the `:subdirs-to-sync` to the `:base-target-path`.
-;; (the default is `["src" "notebooks"]`).
-;; The server will also serve any files found in `resources/public`
-;; (because of [`:ring-defaults`](https://github.com/ring-clojure/ring-defaults)).
+;; ### Static files
+
+;; Clay will serve any files in the `:base-target-path` (`"docs"` is the default).
+;; When making notebooks,
+;; any non-source files are copied from the `:subdirs-to-sync`
+;; (`["src" "notebooks"]` by default) to the `:base-target-path` (`"docs"` by default).
+
+;; Clay will also serve any files found in `resources/public`,
+;; as provided by Ring's site-defaults.
+;; This can be changed by configuring
+;; [`:ring-defaults`](https://github.com/ring-clojure/ring-defaults)
+
+;; ### Site index file
 
 ;; Normally Clay uses the root route `/` to show the last made file.
-;; But when launched as a server, it will show "index.html" from the `:base-target-path` if found.
+;; But when first launched as a server,
+;; it will show "index.html" from the `:base-target-path` if found.
 ;; Alternatively you can install a custom handler to handle `/`.
+
+;; ## Glossary
+
+;; URL
+;; : `https://clojurecivitas.github.io/about.html`
+;;   scheme + host + uri
+
+;; URI
+;; : `/about.html` the path at the end of a URL
+
+;; request-method
+;; : **GET**, **POST**, PUT, PATCH, DELETE, OPTIONS, CONNECT, TRACE
+
+;; handler
+;; : A function that takes a request like `{:uri "/about.html"}`
+;;   and returns a response like `{:body "ClojureCivitas is a shared blog space"}`.
+
+;; routing
+;; : Matching a `request-method` and a `uri` to determine a sub-handler that should process the request.
+;;   Handlers may perform routing, and may call other handlers.
+
+;; endpoint
+;; : A servable function that can be called from the frontend via HTTP.
+
+;; params
+;; : Data extracted from an HTTP request, which can come from three sources:
+;;   * URL params: query string after `?`, e.g., `/some/path?a=1` yields `{:a "1"}`
+;;   * Form params: form-encoded body (usually from HTML form submission)
+;;   * Body params: JSON or other format in the request body
+
+;; middleware
+;; : A function that wraps a handler to modify the request before it reaches the handler,
+;;   and modify the response after the handler returns.
+;;   For example adding authentication or logging.
+;;   The result of wrapping a handler is a handler.
+
+;; frontend
+;; : Application code that runs in the Browser (JavaScript or ClojureScript).
+
+;; backend
+;; : Application code that runs on the server (in Clojure).
 
 ;; ## Conclusion
 
-;; Clay can act as a webserver for prototyping interactive dashboards,
+;; Clay can act as a web server for prototyping interactive dashboards,
 ;; live analysis, or a web app.
-;; It's easy to create endpoints is by annotating functions,
+;; It's easy to create endpoints by annotating functions
 ;; and call them from the rendered notebook.
