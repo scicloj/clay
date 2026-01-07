@@ -370,7 +370,7 @@ greet-response
 ;;   The result of wrapping a handler is a handler.
 
 ;; frontend
-;; : Application code that runs in the Browser (JavaScript or ClojureScript).
+;; : Application code that runs in the browser (JavaScript or ClojureScript).
 
 ;; backend
 ;; : Application code that runs on the server (in Clojure).
