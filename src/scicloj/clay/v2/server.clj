@@ -301,7 +301,6 @@
     (if (:websocket? req)
       (httpkit/as-channel req websocket-handler)
       (case [request-method uri]
-        ;; TODO: might be able to just serve index when there is no last rendered page?
         [:get "/"] {:body (-> state
                               page
                               (wrap-base-url state)
