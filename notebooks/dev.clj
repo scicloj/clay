@@ -6,6 +6,7 @@
              :source-path ["index.clj"
                            "clay_book/examples.clj"
                            "clay_book/test_generation.clj"
+                           "clay_book/webserver.clj"
                            #_"clay_book/emmy_viewers.clj"]
              :base-target-path "docs"
              :book {:title "Clay Documentation"}

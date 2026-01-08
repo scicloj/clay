@@ -6,6 +6,15 @@
          :base-target-path nil
          :last-rendered-spec nil}))
 
+(defonce *handlers
+  (atom #{}))
+
+(defonce *websocket-handlers
+  (atom {}))
+
+(defonce *clients
+  (atom #{}))
+
 (defn swap-state! [f & args]
   (-> *state
       (swap!

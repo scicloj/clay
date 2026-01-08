@@ -182,19 +182,26 @@
    :hiccup [:p string]})
 
 (def scittle-header-form
-  '(defn kindly-compute [input callback]
-     (ajax.core/POST
-       "/kindly-compute"
-       {:headers       {"Accept" "application/json"}
-        :params        (pr-str input)
-        :handler       (fn [response]
-                         (-> response
-                             read-string
-                             callback))
-        :error-handler (fn [e]
-                         (.log
-                          js/console
-                          (str "error on compute: " e)))})))
+  '(defn kindly-compute
+     "Request a function call from the Clay server"
+     ([params callback]
+      (ajax.core/POST
+        "/kindly-compute"
+        {:format        :transit
+         :params        params
+         :handler       callback
+         :error-handler (fn [e]
+                          (js/console.log (str "error on compute: " e)))}))
+     ([func params callback]
+      (ajax.core/POST
+        (str "/kindly-compute/" func)
+        {:format        :transit
+         :params        (if (sequential? params)
+                          {:args params}
+                          params)
+         :handler       callback
+         :error-handler (fn [e]
+                          (js/console.log (str "error on compute: " e)))}))))
 
 (defn scittle-tag [cljs-form]
   [:script {:type "application/x-scittle"}
@@ -429,8 +436,8 @@
         _ (doseq [f samples]
             (.put sbuf ^short (shortify f)))
         byte-input-stream (ByteArrayInputStream. (.array buf))
-        audio-input-stream (AudioInputStream. byte-input-stream 
-                                              audio-format 
+        audio-input-stream (AudioInputStream. byte-input-stream
+                                              audio-format
                                               (count samples))]
     (javax.sound.sampled.AudioSystem/write audio-input-stream
                                            AudioFileFormat$Type/WAVE

@@ -18,7 +18,8 @@
   (-> (str/starts-with? (str (fs/canonicalize child-path))
                         (str (fs/canonicalize parent-path)))))
 
-(defn find-notebooks [base-source-path]
-  (->> (fs/glob base-source-path "**.clj")
-       (map #(fs/relativize base-source-path %))
+(defn find-notebooks [paths]
+  (->> (mapcat (fn [path]
+                 (fs/glob path "**.clj"))
+               paths)
        (map str)))

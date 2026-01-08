@@ -3,22 +3,22 @@
             [clojure.java.browse :as browse]
             [clojure.java.io :as io]
             [clojure.pprint :as pprint]
-            [hiccup.page]
+            [clojure.string :as str]
+            [hiccup.core :as hiccup]
+            [muuntaja.core :as mc]
+            [muuntaja.middleware :as mm]
             [org.httpkit.server :as httpkit]
+            [ring.middleware.defaults :as rmd]
             [ring.util.mime-type :as mime-type]
             [scicloj.clay.v2.server.state :as server.state]
             [scicloj.clay.v2.util.time :as time]
-            [clojure.string :as str]
-            [cognitect.transit :as transit]
-            [hiccup.core :as hiccup])
+            [scicloj.kindly.v4.api :as kindly])
   (:import (java.net ServerSocket)))
 
 (def default-port 1971)
 
-(defonce *clients (atom #{}))
-
 (defn broadcast! [msg]
-  (doseq [ch @*clients]
+  (doseq [ch @server.state/*clients]
     (httpkit/send! ch msg)))
 
 (defn scittle-eval-string!
@@ -75,6 +75,14 @@
       } else if (event.data=='loading') {
         document.body.style.opacity = 0.5;
         document.body.prepend(document.createElement('div', {class: 'loader'}));
+      } else if (event.data.startsWith('eval-js ')) {
+        const code = event.data.substring('eval-js '.length);
+        try {
+          const result = eval(code);
+          console.log('Clay eval-js result:', result);
+        } catch (e) {
+          console.error('Clay eval-js error:', e);
+        }
       } else if (event.data.startsWith('scittle-eval-string ')) {
         // Evaluate ClojureScript code directly
         const code = event.data.substring('scittle-eval-string '.length);
@@ -88,8 +96,6 @@
         } else {
           console.warn('Scittle not available for eval-string');
         }
-      } else {
-        console.log('unknown ws message: ' + event.data);
       }
     });
 
@@ -129,7 +135,8 @@
    (page @server.state/*state))
   ([state]
    (let [{:keys [last-rendered-spec live-reload]} state
-         path (some-> last-rendered-spec :full-target-path)]
+         path (some-> last-rendered-spec :full-target-path)
+         index (fs/file (:base-target-path last-rendered-spec) "index.html")]
      (cond
        (and path (str/ends-with? path ".pdf"))
        (hiccup/html
@@ -141,8 +148,11 @@
                    :width "100%"
                    :height "900px"}]]])
 
-       (fs/exists? path)
+       (and path (fs/exists? path))
        (slurp path)
+
+       (fs/exists? index)
+       (slurp index)
 
        :else
        (hiccup/html
@@ -181,48 +191,127 @@
                             (header state)]))
                         (communication-script state)))))
 
+(defn resolve-servable-var [func]
+  (if (str/blank? func)
+    (throw (ex-info "Func missing"
+                    {:id ::func-missing}))
+    (let [func-var (try (resolve (symbol func)) (catch Exception _ex))
+          {:kindly/keys [servable rpc handler]} (meta func-var)]
+      (cond (not func-var)
+            (throw (ex-info (str "Func not resolved: " func)
+                            {:id ::not-resolved
+                             :func func}))
+            (or (not (var? func-var)) (not (fn? @func-var)))
+            (throw (ex-info (str "Not a function var: " func)
+                            {:id ::not-a-function
+                             :func func}))
+            (not (or servable rpc handler))
+            (throw (ex-info (str "Function is not safe to serve: " func)
+                            {:id ::not-safe-to-serve
+                             :func func}))
+            :else
+            func-var))))
 
-(defn compute
-  [input]
-  (let [{:keys [func args]} input]
-    (if-let [func-var (resolve func)]
-      (if (-> func-var meta :kindly/servable)
-        (apply func-var args)
-        (throw (Exception. (str "Function is not safe to serve: "
-                                func))))
-      (throw (Exception. (str "Symbol not found: "
-                              func))))))
+(defn uri->filename [uri]
+  (some-> uri
+          (clojure.string/replace #"\." "/")
+          (clojure.string/replace #"-" "_")
+          (str/replace #".html$" ".clj")))
 
-(defn routes
-  "Web server routes."
+;; delay is to avoid cyclic dependency
+(def *make-html-page
+  (delay (resolve 'scicloj.clay.v2.make/make-html-page)))
+
+(defn call-annotated-endpoint
+  "Processes a servable or handler request.
+   Will apply `args` from `params` of the request if present,
+   or call the function with `params` as an argument.
+   Response will be HTML if the result is a string and the function name ends in the `html` suffix."
+  [req func]
+  (when-let [v (resolve-servable-var (str func))]
+    (let [m (meta v)
+          {:keys [kindly/handler]} m
+          {:keys [params]} req
+          {:keys [args]} params
+          result (if handler
+                   (v req)
+                   (if (sequential? args)
+                     (apply v args)
+                     (v params)))
+          resp (if handler
+                 result
+                 {:status 200
+                  :body result})
+          resp (cond-> resp
+                 (and (string? result)
+                      (str/ends-with? func "html"))
+                 (assoc-in [:headers "Content-Type"] "text/html; charset=utf-8"))]
+      resp)))
+
+(defn annotated-routes
+  "When uri resolves to a servable function to call.
+   Negotiates body based on content-type and accept headers when present,
+   defaults to JSON otherwise, or HTML when ends with .html or :html present in metadata."
+  [{:keys [body request-method uri] :as req}]
+  (when (or (= uri "/kindly-compute")
+            (str/starts-with? uri "/kindly-compute/"))
+    (let [req (cond-> req
+                (and body (not (get (:headers req) "content-type")))
+                (assoc-in [:headers "content-type"] "application/json"))
+          {:keys [query-params form-params body-params]} req
+          req (update req :params merge query-params form-params body-params)
+          {:keys [params]} req
+          func (if (= uri "/kindly-compute")
+                 (:func params "")
+                 (str/replace-first uri "/kindly-compute/" ""))]
+      (call-annotated-endpoint req func))))
+
+(defn live-namespace-routes
+  "When the uri resolves to a servable namespace"
+  [{:keys [uri]}]
+  (when (str/ends-with? uri ".html")
+   (when-let [html (try (some-> (uri->filename (subs uri 1))
+                                (@*make-html-page)
+                                :page)
+                        (catch Exception _ex))]
+     {:status 200
+      :headers {"Content-Type" "text/html; charset=utf-8"}
+      :body html})))
+
+(def websocket-handler
+  {:on-open (fn [ch]
+              (swap! server.state/*clients conj ch)
+              (when (:loading @server.state/*state)
+                (httpkit/send! ch "loading"))
+              (doseq [on-open (:on-open @server.state/*websocket-handlers)]
+                (on-open ch)))
+   :on-close (fn [ch reason]
+               (swap! server.state/*clients disj ch)
+               (doseq [on-close (:on-close @server.state/*websocket-handlers)]
+                 (on-close ch reason)))
+   :on-receive (fn [ch msg]
+                 (doseq [on-receive (:on-receive @server.state/*websocket-handlers)]
+                   (on-receive ch msg)))})
+
+(defn clay-routes
+  "Clay's built in web server routes."
   [{:keys [body request-method uri]
     :as req}]
   (let [state @server.state/*state]
     (if (:websocket? req)
-      (httpkit/as-channel req {:on-open (fn [ch]
-                                          (swap! *clients conj ch)
-                                          (when (:loading state)
-                                            (httpkit/send! ch "loading")))
-                               :on-close (fn [ch _reason] (swap! *clients disj ch))
-                               :on-receive (fn [_ch msg])})
+      (httpkit/as-channel req websocket-handler)
       (case [request-method uri]
         [:get "/"] {:body (-> state
                               page
                               (wrap-base-url state)
                               (wrap-html state))
-                    :headers {"Content-Type" "text/html"}
+                    :headers {"Content-Type" "text/html; charset=utf-8"}
                     :status 200}
         [:get "/counter"] {:body (-> state
                                      :counter
                                      str)
+                           :headers {"Content-Type" "application/json"}
                            :status 200}
-        [:post "/kindly-compute"] (let [input (-> body
-                                                  (transit/reader :json)
-                                                  transit/read
-                                                  read-string)
-                                        output (compute input)]
-                                    {:body (pr-str output)
-                                     :status 200})
         ;; else
         (let [f (io/file (str (:base-target-path state) uri))]
           (if (.exists f)
@@ -231,7 +320,7 @@
                             slurp
                             (wrap-html state))
                         f)
-             :headers (when-let [t (mime-type/ext-mime-type uri {"cljs" "text/plain"})]
+             :headers (when-let [t (mime-type/ext-mime-type uri {"cljs" "text/plain; charset=utf-8"})]
                         {"Content-Type" t})
              :status  200}
             (case [request-method uri]
@@ -244,7 +333,31 @@
               {:body   "not found"
                :status 404})))))))
 
+(defn all-routes [req]
+  (or (some (fn [handler]
+              (handler req))
+            @server.state/*handlers)
+      (annotated-routes req)
+      (live-namespace-routes req)
+      (clay-routes req)))
+
+(defn encode? [_ response]
+  ((some-fn coll? number? string? keyword? boolean? nil?) (:body response)))
+
+(defn clay-handler [{:keys [site-defaults]}]
+  (-> all-routes
+      (mm/wrap-format (assoc-in mc/default-options [:http :encode-response-body?] encode?))
+      (rmd/wrap-defaults (kindly/deep-merge rmd/site-defaults
+                                            {:security {:anti-forgery false}}
+                                            site-defaults))))
+(comment
+  (alter-var-root #'routes (constantly (clay-handler {}))))
+
 (defonce *stop-server! (atom nil))
+
+(defonce ^{:doc "`routes` is a handler, the name is kept for backwards compatibility.
+                 Will be bound when open is first called, as it requires configuration."}
+  routes nil)
 
 (defn core-http-server [port]
   (httpkit/run-server #'routes {:port port}))
@@ -272,6 +385,7 @@
   ([] (open! {}))
   ([{:as opts :keys [port browse ide]}]
    (when-not @*stop-server!
+     (alter-var-root #'routes (constantly (clay-handler opts)))
      (let [port (or port (get-free-port))
            stop-server (core-http-server port)]
        (server.state/set-port! port)
@@ -315,3 +429,27 @@
   (when-let [s @*stop-server!]
     (s))
   (reset! *stop-server! nil))
+
+(defn install-handler!
+  "Adds a ring request handler to Clay's built in server.
+   Handlers are functions that take a request and return a response, or nil if not handled.
+   `handler-var` should be a var that derefs to a handler.
+   Using a var makes installation idempotent and dynamic."
+  [handler-var]
+  {:pre [(var? handler-var)]}
+  (swap! server.state/*handlers conj handler-var))
+
+(defn clear-handlers! []
+  (reset! server.state/*handlers #{}))
+
+(defn install-websocket-handler!
+  "Adds a httpkit websocket handler to Clay's built in server.
+   `event-type` :on-receive should be a var that derefs to a function taking channel and message.
+   Using a var makes installation idempotent and dynamic."
+  [event-type handler-var]
+  {:pre [(#{:on-open :on-close :on-receive} event-type)
+         (var? handler-var)]}
+  (swap! server.state/*websocket-handlers update event-type (fnil conj #{}) handler-var))
+
+(defn clear-websocket-handlers! []
+  (reset! server.state/*websocket-handlers {}))

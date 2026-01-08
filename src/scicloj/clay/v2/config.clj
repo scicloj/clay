@@ -48,14 +48,17 @@
           (and (nil? keep-existing)
                (> (count source-paths) 1)) (assoc :keep-existing true)))
 
-(defn source-paths [{:as config :keys [base-source-path source-path render]}]
+(defn source-paths [{:as config :keys [base-source-path source-path render watch-dirs]}]
   (cond (string? source-path)
         (assoc config :source-paths [source-path])
         (sequential? source-path)
         (assoc config :source-paths source-path)
-        (and render base-source-path (or (nil? source-path)
-                                         (= source-path :all)))
-        (assoc config :source-paths (util.fs/find-notebooks base-source-path))
+        render
+        (assoc config
+               :source-paths (util.fs/find-notebooks
+                              (cond watch-dirs watch-dirs
+                                    base-source-path [base-source-path]
+                                    :else ["notebooks"])))
         ;; nil source-path for single forms
         :else (assoc config :source-paths [nil])))
 
