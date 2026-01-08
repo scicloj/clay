@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## Pending
+- Web server support, see https://scicloj.github.io/clay/clay_book.webserver.html (PR #315)
+  Servable namespaces, servable functions, dynamic handlers, content negotiation.
+- CLI --render will now look in "notebooks" if no base-source-path is configured (PR #315)
+
 ## [2.0.3 - 2025-11-22]
 - fix content type for cljs files Scittle (PR #308)
 - used symbols in `:keys` desctucturing (PR #309) - by @onbreath
