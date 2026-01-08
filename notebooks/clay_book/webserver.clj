@@ -81,7 +81,8 @@
 
 (def kindly-add-response
   @(http/post (str (server/url) "kindly-compute/clay-book.webserver/kindly-add")
-              {:body (json/write-str {:args [2 3]})}))
+              {:body (json/write-str {:args [2 3]})
+               :headers {"content-type" "application/json"}}))
 
 ;; ::: {.callout-note}
 ;; If you prefer, you can pass the function name as a param called `:func`
@@ -114,7 +115,8 @@
 
 (def kindly-add-named-response
   @(http/post (str (server/url) "kindly-compute/clay-book.webserver/kindly-add-named")
-              {:body (json/write-str {:a 4 :b 5})}))
+              {:body (json/write-str {:a 4 :b 5})
+               :headers {"content-type" "application/json"}}))
 
 kindly-add-named-response
 
@@ -179,7 +181,8 @@ kindly-add-named-response
 
 (def handle-add-response
   @(http/post (str (server/url) "kindly-compute/clay-book.webserver/handle-add")
-              {:body (json/write-str {:a 5, :b 9})}))
+              {:body (json/write-str {:a 5, :b 9})
+               :headers {"content-type" "application/json"}}))
 
 ;; The request was printed as a side-effect of calling the endpoint.
 ;; Handlers have access to the session, cookies, and everything about the request.
@@ -190,14 +193,31 @@ handle-add-response
 
 ;; ## Params
 
-;; Params may be placed in the query-string, or in the body of the request.
-;; Clay will negotiate the request and response encodings based on content and accept headers where they exist.
-;; When no format is specified, Clay will default to using JSON.
-;; Requests with body-params should set a "Content-Type" header to let Clay know how to read the body,
-;; and an "Accept" header to let Clay know what format the response should be in.
-;; JavaScript `fetch` sets "Content Type" to `text/plain` by default,
-;; which will not be decoded.
-;; Available formats are form-params, json, edn, or transit.
+;; Params may be placed in the query-string or in the body of the request.
+
+;; ### Request Formats
+
+;; Requests with body params must set a `Content-Type` header to indicate the format.
+;; Clay supports:
+;;
+;; - `application/x-www-form-urlencoded` (form params)
+;; - `application/json` (JSON)
+;; - `application/edn` (EDN)
+;; - `application/transit+json` (Transit JSON)
+;; - `application/transit+msgpack` (Transit MessagePack)
+
+;; ### Response Formats
+
+;; To receive a response in a specific format, set the `Accept` header.
+;; Clay supports:
+;;
+;; - `application/json` (JSON, the default)
+;; - `application/edn` (EDN)
+;; - `application/transit+json` (Transit JSON)
+;; - `application/transit+msgpack` (Transit MessagePack)
+
+;; Content negotiation is performed by [Muuntaja](https://github.com/metosin/muuntaja) middleware,
+;; which is configured in `scicloj.clay.v2.server/clay-handler`.
 
 ;; ## HTML Responses
 
@@ -333,6 +353,10 @@ greet-response
 ;; But when first launched as a server,
 ;; it will show "index.html" from the `:base-target-path` if found.
 ;; Alternatively you can install a custom handler to handle `/`.
+
+;; ### Adding Clay to an existing server
+
+
 
 ;; ## Glossary
 

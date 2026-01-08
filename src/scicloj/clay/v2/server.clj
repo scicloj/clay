@@ -6,13 +6,13 @@
             [clojure.string :as str]
             [hiccup.core :as hiccup]
             [muuntaja.core :as mc]
+            [muuntaja.middleware :as mm]
             [org.httpkit.server :as httpkit]
             [ring.middleware.defaults :as rmd]
             [ring.util.mime-type :as mime-type]
             [scicloj.clay.v2.server.state :as server.state]
             [scicloj.clay.v2.util.time :as time]
-            [scicloj.kindly.v4.api :as kindly]
-            [muuntaja.core :as m])
+            [scicloj.kindly.v4.api :as kindly])
   (:import (java.net ServerSocket)))
 
 (def default-port 1971)
@@ -222,21 +222,12 @@
 (def *make-html-page
   (delay (resolve 'scicloj.clay.v2.make/make-html-page)))
 
-(def muun
-  (-> mc/default-options
-      (assoc-in [:http :encode-response-body?] (constantly true))
-      (m/create)))
-
 (defn call-annotated-endpoint
-  "Processes and formats a servable or handler response.
-   Will call the servable with `params` from the request,
-   unless `args` is present in the `params`,
-   in which case it will apply `args` instead.
-   Negotiates request format, defaults to JSON if no content-type header,
-   parses body params, calls the endpoint, and formats the response.
-   Response will be HTML if the result is a string and the function name ends in the `html` suffix.
-   Otherwise defaults to JSON when no format was negotiated."
-  [muun req func]
+  "Processes a servable or handler request.
+   Will apply `args` from `params` of the request if present,
+   or call the function with `params` as an argument.
+   Response will be HTML if the result is a string and the function name ends in the `html` suffix."
+  [req func]
   (when-let [v (resolve-servable-var (str func))]
     (let [m (meta v)
           {:keys [kindly/handler]} m
@@ -255,7 +246,7 @@
                  (and (string? result)
                       (str/ends-with? func "html"))
                  (assoc-in [:headers "Content-Type"] "text/html; charset=utf-8"))]
-      (mc/format-response muun req resp))))
+      resp)))
 
 (defn annotated-routes
   "When uri resolves to a servable function to call.
@@ -267,14 +258,13 @@
     (let [req (cond-> req
                 (and body (not (get (:headers req) "content-type")))
                 (assoc-in [:headers "content-type"] "application/json"))
-          req (mc/negotiate-and-format-request muun req)
           {:keys [query-params form-params body-params]} req
           req (update req :params merge query-params form-params body-params)
           {:keys [params]} req
           func (if (= uri "/kindly-compute")
                  (:func params "")
                  (str/replace-first uri "/kindly-compute/" ""))]
-      (call-annotated-endpoint muun req func))))
+      (call-annotated-endpoint req func))))
 
 (defn live-namespace-routes
   "When the uri resolves to a servable namespace"
@@ -352,11 +342,17 @@
       (live-namespace-routes req)
       (clay-routes req)))
 
+(defn encode? [_ response]
+  ((some-fn coll? number? string? keyword? boolean? nil?) (:body response)))
+
 (defn clay-handler [{:keys [site-defaults]}]
   (-> all-routes
+      (mm/wrap-format (assoc-in mc/default-options [:http :encode-response-body?] encode?))
       (rmd/wrap-defaults (kindly/deep-merge rmd/site-defaults
                                             {:security {:anti-forgery false}}
                                             site-defaults))))
+(comment
+  (alter-var-root #'routes (constantly (clay-handler {}))))
 
 (defonce *stop-server! (atom nil))
 
