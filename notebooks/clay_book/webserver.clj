@@ -354,10 +354,6 @@ greet-response
 ;; it will show "index.html" from the `:base-target-path` if found.
 ;; Alternatively you can install a custom handler to handle `/`.
 
-;; ### Adding Clay to an existing server
-
-
-
 ;; ## Glossary
 
 ;; URL
