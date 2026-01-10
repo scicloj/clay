@@ -363,9 +363,11 @@
       (server/update-page! (assoc spec :full-target-path qmd-target-path)))))
 
 (defn with-items [notes spec]
-  (let [{:keys [items exception]} (notebook/items-and-test-forms notes spec)]
+  (let [{:as dbg 
+         :keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)]
     (assoc spec
            :items items
+           :test-forms test-forms
            :exception exception)))
 
 (defn clay-render-notebook-html [notes {:as spec
@@ -385,8 +387,8 @@
                                           qmd-target-path
                                           book
                                           post-process]}]
-  (let [{:keys [test-forms exception]} spec
-        spec-with-items (with-items notes spec)]
+  (let [{:as spec-with-items
+         :keys [test-forms exception]} (with-items notes spec)]
     [(case (first format)
        :hiccup (page/hiccup spec-with-items)
        :html (do (-> spec-with-items
