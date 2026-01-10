@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## Pending
+## [2.0.4 - 2026-01-11]
 - Web server support, see https://scicloj.github.io/clay/clay_book.webserver.html (PR #315)
   Servable namespaces, servable functions, dynamic handlers, content negotiation.
 - CLI --render will now look in "notebooks" if no base-source-path is configured (PR #315)
