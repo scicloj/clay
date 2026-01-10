@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -65,6 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./clay_book.webserver.html" rel="next">
 <link href="./clay_book.examples.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -73,10 +74,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5a8d307a9c6e8f7ae1e32b18942d8e67.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-efadf303b668e02c5a1bfac1c8418d92.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -163,6 +164,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Test generation</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clay_book.webserver.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Web Server</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -179,10 +186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples"><span class="header-section-number">3.4</span> Examples</a>
   <ul>
   <li><a href="#sequential-tests" id="toc-sequential-tests" class="nav-link" data-scroll-target="#sequential-tests"><span class="header-section-number">3.4.1</span> Sequential tests</a></li>
-  <li><a href="#mixed-sequential-and-simple-tests" id="toc-mixed-sequential-and-simple-tests" class="nav-link" data-scroll-target="#mixed-sequential-and-simple-tests"><span class="header-section-number">3.4.2</span> Mixed sequential and simple tests</a></li>
-  <li><a href="#only-simple-tests" id="toc-only-simple-tests" class="nav-link" data-scroll-target="#only-simple-tests"><span class="header-section-number">3.4.3</span> Only simple tests</a></li>
   </ul></li>
-  <li><a href="#more-examples" id="toc-more-examples" class="nav-link" data-scroll-target="#more-examples"><span class="header-section-number">3.5</span> More examples</a></li>
   </ul>
 </nav>
     </div>
@@ -265,173 +269,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sequential-tests" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="sequential-tests"><span class="header-section-number">3.4.1</span> Sequential tests</h3>
 <p>Here is a namespace with a few sequential tests, that depend on the state evolving throughout the notebook.</p>
-<div class="grid">
-<div class="g-col-6">
-<p><strong>sequential.clj</strong></p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> test-gen.sequential</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (<span class="at">:require</span> [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.api <span class="at">:as</span> kindly]))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> x </span><span class="dv">9</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> *a </span>(<span class="kw">atom</span> <span class="dv">0</span>))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">;; `kind/test-last` function:</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>(kind/test-last [<span class="kw">=</span> <span class="dv">10</span>])</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the </span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">;; `^kind/test-last` metadata:</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>^kind/test-last [<span class="kw">=</span> <span class="dv">11</span>]</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the </span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">;; `kindky/check` macro:</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>(kindly/check <span class="kw">=</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(make-notebook-and-show-tests</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="st">"notebooks/test_gen/sequential.clj"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div class="g-col-6">
-<p><strong>sequential_generated_test.clj</strong></p>
-<div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> test-gen.sequential-generated-test</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> (<span class="at">:require</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  [scicloj.kindly.v4.api <span class="at">:as</span> kindly]</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  [clojure.<span class="kw">test</span> <span class="at">:refer</span> [<span class="bu">deftest</span><span class="fu"> is</span>]]))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v1</span>_l5 (<span class="bu">def</span><span class="fu"> x </span><span class="dv">9</span>))</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v2</span>_l7 (<span class="bu">def</span><span class="fu"> *a </span>(<span class="kw">atom</span> <span class="dv">0</span>)))</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v3</span>_l9 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t5</span>_l14 (<span class="kw">is</span> (<span class="kw">=</span> v3_l9 <span class="dv">10</span>)))</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v6</span>_l16 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t8</span>_l21 (<span class="kw">is</span> (<span class="kw">=</span> v6_l16 <span class="dv">11</span>)))</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v9</span>_l23 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t11</span>_l28 (<span class="kw">is</span> (<span class="kw">=</span> v9_l23 <span class="dv">12</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Cannot invoke “java.lang.CharSequence.length()” because “this.text” is null
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<pre><code>                                     clojure.core/eval      core.clj: 3232
+                                                   ...                   
+                   clay-book.test-generation/eval87075       dev.clj:  130
+clay-book.test-generation/make-notebook-and-show-tests       dev.clj:   48
+                                  clojure.string/split    string.clj:  225
+                         java.util.regex.Pattern.split  Pattern.java: 1482
+                         java.util.regex.Pattern.split  Pattern.java: 1403
+                       java.util.regex.Pattern.matcher  Pattern.java: 1181
+                        java.util.regex.Matcher.&lt;init&gt;  Matcher.java:  255
+                         java.util.regex.Matcher.reset  Matcher.java:  459
+                 java.util.regex.Matcher.getTextLength  Matcher.java: 1806
+java.lang.NullPointerException: Cannot invoke "java.lang.CharSequence.length()" because "this.text" is null
+
+</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="mixed-sequential-and-simple-tests" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="mixed-sequential-and-simple-tests"><span class="header-section-number">3.4.2</span> Mixed sequential and simple tests</h3>
-<p>Here is a namespace that involves both sequential and simple tests. This is expressed through <code>:test-mode :simple</code> in the kindly options part of the call to <code>kind/test-last</code>.</p>
-<div class="grid">
-<div class="g-col-6">
-<p><strong>sequential_and_simple.clj</strong></p>
-<div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> test-gen.sequential-and-simple</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="at">:require</span> [scicloj.kindly.v4.kind <span class="at">:as</span> kind]))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> x </span><span class="dv">9</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">;; A sequential test:</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x <span class="dv">11</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>(kind/test-last [<span class="kw">=</span> <span class="dv">20</span>])</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">;; A simple test:</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>(kind/test-last</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a> [<span class="kw">=</span> <span class="dv">9</span>]</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a> {<span class="at">:test-mode</span> <span class="at">:simple</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-<div class="g-col-6">
-<p><strong>sequential_and_simple_generated_test.clj</strong></p>
-<div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> test-gen.sequential-and-simple-generated-test</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> (<span class="at">:require</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  [clojure.<span class="kw">test</span> <span class="at">:refer</span> [<span class="bu">deftest</span><span class="fu"> is</span>]]))</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v1</span>_l4 (<span class="bu">def</span><span class="fu"> x </span><span class="dv">9</span>))</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v3</span>_l8 (<span class="kw">+</span> x <span class="dv">11</span>))</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t4</span>_l10 (<span class="kw">is</span> (<span class="kw">=</span> v3_l8 <span class="dv">20</span>)))</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v6</span>_l14 (<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>))</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t7</span>_l16 (<span class="kw">is</span> (<span class="kw">=</span> (<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>) <span class="dv">9</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</section>
-<section id="only-simple-tests" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="only-simple-tests"><span class="header-section-number">3.4.3</span> Only simple tests</h3>
-<p>Here is a namespace where all tests are simple. This can be expressed through <code>:test-mode :simple</code>, which can be specified either in the namespace-level <code>:kindly/options</code> (as we do here), or in each and every <code>kind/test-last</code> call.</p>
-<div class="grid">
-<div class="g-col-6">
-<p><strong>simple.clj</strong></p>
-<div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>^{<span class="at">:kindly/options</span> {<span class="at">:test-mode</span> <span class="at">:simple</span>}}</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> test-gen.simple</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  (<span class="at">:require</span> [scicloj.kindly.v4.kind <span class="at">:as</span> kind]))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">;; A simple test:</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>(kind/test-last</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a> [<span class="kw">=</span> <span class="dv">9</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-<div class="g-col-6">
-<p><strong>simple_generated_test.clj</strong></p>
-<div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> test-gen.simple-generated-test</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a> (<span class="at">:require</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  [clojure.<span class="kw">test</span> <span class="at">:refer</span> [<span class="bu">deftest</span><span class="fu"> is</span>]]))</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t3</span>_l9 (<span class="kw">is</span> (<span class="kw">=</span> (<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>) <span class="dv">9</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="more-examples" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="more-examples"><span class="header-section-number">3.5</span> More examples</h2>
-<p>For a detailed example using this mechanism, see <a href="https://github.com/scicloj/clojisr/blob/master/notebooks/clojisr/v1/tutorials/main.clj">the source</a> of the <a href="https://scicloj.github.io/clojisr/clojisr.v1.tutorials.main.html">ClojisR tutorial</a>.</p>
 <div style="background-color:grey;height:2px;width:100%;"></div>
 <div><pre><small><small>source: <a href="https://github.com/scicloj/clay/blob/main/notebooks/clay_book/test_generation.clj">notebooks/clay_book/test_generation.clj</a></small></small></pre></div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -842,6 +717,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./clay_book.webserver.html" class="pagination-link" aria-label="Web Server">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Web Server</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

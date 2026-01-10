@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5a8d307a9c6e8f7ae1e32b18942d8e67.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-efadf303b668e02c5a1bfac1c8418d92.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -190,6 +190,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./clay_book.test_generation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Test generation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clay_book.webserver.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Web Server</span></span></a>
   </div>
 </li>
     </ul>
@@ -622,23 +628,23 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.50150577</td>
+<td style="text-align: right;">0.14146585</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.95223069</td>
+<td style="text-align: right;">0.12266827</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.27950126</td>
+<td style="text-align: right;">0.89298996</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.95169399</td>
+<td style="text-align: right;">0.70617722</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.80425846</td>
+<td style="text-align: right;">0.77218093</td>
 </tr>
 </tbody>
 </table>
@@ -1142,6 +1148,16 @@ window.Quarto = {
 <td>In a Quarto book, should the first chapter be used as index page (default: false)</td>
 <td><code>true</code></td>
 </tr>
+<tr class="odd">
+<td><code>:port</code></td>
+<td>Clay server port (default 1971)</td>
+<td><code>80</code></td>
+</tr>
+<tr class="even">
+<td><code>:ring-defaults</code></td>
+<td>Merged with (<code>site-defaults</code>)[https://github.com/ring-clojure/ring-defaults?tab=readme-ov-file] when creating Clays server.</td>
+<td><code>{:proxy true}</code></td>
+</tr>
 </tbody>
 </table>
 <p>When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded. For example: you may set <code>:base-target-path "temp"</code> at your <code>clay.edn</code> file. When publishing a static page, you may wish to target a <code>docs</code> directory by setting <code>:base-target-path "docs"</code> in your call to <code>clay/make!</code>. Creating a dev namespace is a good way to invoke a different configuration for publishing.</p>
@@ -1289,15 +1305,15 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.37788716</td>
+<td style="text-align: right;">0.62170622</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.91258263</td>
+<td style="text-align: right;">0.48648587</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.72884470</td>
+<td style="text-align: right;">0.38953018</td>
 </tr>
 </tbody>
 </table>
@@ -1320,15 +1336,15 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.28017767</td>
+<td style="text-align: right;">0.71870623</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.56113747</td>
+<td style="text-align: right;">0.20232272</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.08025624</td>
+<td style="text-align: right;">0.58698957</td>
 </tr>
 </tbody>
 </table>
@@ -1351,15 +1367,15 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.26176990</td>
+<td style="text-align: right;">0.10553796</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.58727111</td>
+<td style="text-align: right;">0.14893455</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.28694115</td>
+<td style="text-align: right;">0.08410393</td>
 </tr>
 </tbody>
 </table>
