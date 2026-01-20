@@ -35,8 +35,6 @@ The [clay.el](https://github.com/scicloj/clay.el) Emacs package offers relevant 
 
 Please reach out to add your project to this list.
 
-;; ## Projects using Clay
-
 - [Clojure Civitas](https://clojurecivitas.github.io/)
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 - [Wolframite documentation](https://scicloj.github.io/wolframite)
