@@ -47,27 +47,37 @@
     (->> [port counter reload-regexp]
          (apply format "
 <script type=\"text/javascript\">
+  clay_port = %d;
+  clay_server_counter = '%d';
+  reload_regexp = new RegExp('%s');
 
-    clay_port = %d;
-    clay_server_counter = '%d';
-    reload_regexp = new RegExp('%s');
-
-    clay_refresh = function() {
-      // Check whether we are still in the main page
-      // (but possibly in an anchor (#...) inside it):
-      if(reload_regexp.test(window.location.href)) {
-        // Just reload, keeping the current position:
-        location.reload();
-      } else {
-         // We might be in a different book to the chapter.
-         // So, reload and force returning to the main page.
-         location.assign('http://localhost:'+clay_port);
-      }
+  clay_refresh = function() {
+    // Check whether we are still in the main page
+    // (but possibly in an anchor (#...) inside it):
+    if(reload_regexp.test(window.location.href)) {
+      // Just reload, keeping the current position:
+      location.reload();
+    } else {
+        // We might be in a different book to the chapter.
+        // So, reload and force returning to the main page.
+        location.assign('http://localhost:'+clay_port);
     }
+  }
 
-    const clay_socket = new WebSocket('ws://localhost:'+clay_port);
+  let clay_socket;
+  let clay_reconnect_timeout;
 
-    clay_socket.addEventListener('open', (event) => { clay_socket.send('Hello Server!')});
+  function clay_connect() {
+    clay_socket = new WebSocket('ws://localhost:'+clay_port);
+
+    clay_socket.addEventListener('open', (event) => {
+      clay_socket.send('Hello Server!')
+    });
+
+    clay_socket.addEventListener('close', (event) => {
+      clearTimeout(clay_reconnect_timeout);
+      clay_reconnect_timeout = setTimeout(clay_connect, 2000);
+    });
 
     clay_socket.addEventListener('message', (event)=> {
       if (event.data=='refresh') {
@@ -98,6 +108,10 @@
         }
       }
     });
+  }
+
+  clay_connect();
+
 
   async function clay_1 () {
     const response = await fetch('/counter');
@@ -390,14 +404,16 @@
            stop-server (core-http-server port)]
        (server.state/set-port! port)
        (reset! *stop-server! stop-server)
-       (println "Clay serving at" (port->url port))
-       ;; browse can be :browser to prefer using a browser always
-       (when (or (= browse :browser)
-                 ;; clay default is browse true,
-                 ;; ide flag causes a flare to request a webview in the ide
-                 ;; so if ide is true we do not show the browser, even when browse is true
-                 (and browse (not ide)))
-         (browse!))))))
+       (println "Clay serving at" (port->url port))))
+   ;; browse can be :browser to prefer using a browser always
+   (when (and (or (= browse :browser)
+                  ;; clay default is browse true,
+                  ;; ide flag causes a flare to request a webview in the ide
+                  ;; so if ide is true we do not show the browser, even when browse is true
+                  (and browse (not ide)))
+              ;; always and only browse when there are no connected clients
+              (empty? @server.state/*clients))
+     (browse!))))
 
 (defn update-page! [{:as spec
                      :keys [show
@@ -408,8 +424,6 @@
                                                   "/"
                                                   ".clay.html")}}]
   (server.state/set-base-target-path! base-target-path)
-  (when show
-    (open! spec))
   (io/make-parents full-target-path)
   (when page
     (spit full-target-path page))
