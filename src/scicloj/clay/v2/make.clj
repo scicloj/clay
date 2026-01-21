@@ -363,7 +363,7 @@
       (server/update-page! (assoc spec :full-target-path qmd-target-path)))))
 
 (defn with-items [notes spec]
-  (let [{:as dbg 
+  (let [{:as dbg
          :keys [items test-forms exception]} (notebook/items-and-test-forms notes spec)]
     (assoc spec
            :items items
@@ -495,6 +495,8 @@
                 (fs/delete-tree target))
               (util.fs/copy-tree-no-clj subdir target)))))))
 
+(def ^:dynamic *making* false)
+
 (defn make! [spec]
   (let [config (config/config spec)
         {:keys [single-form single-value]} spec
@@ -502,30 +504,31 @@
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec
         full-source-paths (set (map :full-source-path single-ns-specs))]
     (println "Clay make started: " full-source-paths)
-    (when show
-      (server/open! main-spec)
-      (server/loading!))
-    (when (and clean-up-target-dir
-               (not (or single-form single-value)))
-      (fs/delete-tree base-target-path))
-    (sync-resources! main-spec)
-    (let [info (cond-> (mapv handle-single-source-spec! single-ns-specs)
-                 book (conj (make-book! main-spec))
-                 live-reload (conj (if (#{:toggle} live-reload)
-                                     (live-reload/toggle! make! main-spec full-source-paths)
-                                     (live-reload/start! make! main-spec full-source-paths))))
-          summary (merge
-                   (when show
-                     {:url     (server/url)})
-                   {:key     "clay"
-                    :title   "Clay"
-                    :display :editor
-                    ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
-                    :reveal  false
-                    :info    info})]
-      (if (and ide (not= browse :browser))
-        (tagged-literal 'flare/html summary)
-        summary))))
+    (binding [*making* true]
+      (when show
+        (server/open! main-spec)
+        (server/loading!))
+      (when (and clean-up-target-dir
+                 (not (or single-form single-value)))
+        (fs/delete-tree base-target-path))
+      (sync-resources! main-spec)
+      (let [info (cond-> (mapv handle-single-source-spec! single-ns-specs)
+                   book (conj (make-book! main-spec))
+                   live-reload (conj (if (#{:toggle} live-reload)
+                                       (live-reload/toggle! make! main-spec full-source-paths)
+                                       (live-reload/start! make! main-spec full-source-paths))))
+            summary (merge
+                     (when show
+                       {:url     (server/url)})
+                     {:key     "clay"
+                      :title   "Clay"
+                      :display :editor
+                      ;; TODO: Maybe we can remove 'reveal' when fixed in Calva
+                      :reveal  false
+                      :info    info})]
+        (if (and ide (not= browse :browser))
+          (tagged-literal 'flare/html summary)
+          summary)))))
 
 (defn ^:export make-html-page
   "Makes a single source to HTML, only if the namespace has `:kindly/servable` metadata.

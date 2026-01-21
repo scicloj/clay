@@ -148,7 +148,8 @@
   ([]
    (page @server.state/*state))
   ([state]
-   (let [{:keys [last-rendered-spec live-reload]} state
+   (let [{:keys [last-rendered-spec]} state
+         {:keys [page]} last-rendered-spec
          path (some-> last-rendered-spec :full-target-path)
          index (fs/file (:base-target-path last-rendered-spec) "index.html")]
      (cond
@@ -164,6 +165,8 @@
 
        (and path (fs/exists? path))
        (slurp path)
+
+       page page
 
        (fs/exists? index)
        (slurp index)
@@ -419,13 +422,14 @@
                      :keys [show
                             base-target-path
                             page
-                            full-target-path]
+                            full-target-path
+                            in-memory]
                      :or   {full-target-path (str base-target-path
                                                   "/"
                                                   ".clay.html")}}]
   (server.state/set-base-target-path! base-target-path)
-  (io/make-parents full-target-path)
-  (when page
+  (when (and page (not in-memory))
+    (io/make-parents full-target-path)
     (spit full-target-path page))
   (-> spec
       (assoc :full-target-path full-target-path)
