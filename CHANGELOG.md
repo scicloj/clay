@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## Pending
-- Clay will now only open a browser if there are no existing connected clients
-- Clay pages will now attempt to reconnect to the Clay server
+- Clay will now only open a browser if there are no existing connected clients (PR #321)
+- Clay pages will now attempt to reconnect to the Clay server (PR #321)
+- New option `:in-memory true` don't write HTML files to disk, just serve them (PR #322)
+- Added `scicloj.clay.v2.make/*making*` for functions that may be called from a notebook (PR #322)
+- Added `org.slf4j/slf4j-simple` to avoid confusing log messages when Clay starts (PR #322)
 
 ## [2.0.5 - 2026-01-11]
 - Web server support, see https://scicloj.github.io/clay/clay_book.webserver.html (PR #315)
