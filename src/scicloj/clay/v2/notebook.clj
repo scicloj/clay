@@ -65,10 +65,41 @@
       (print s)
       (flush))))
 
+;; Babashka
+;; - Make Clay runnable in Babashka
+;;   - The way Clay reads - dependency of `carocad/parcera`, maybe we just remove it.
+;;   - or make parcera optional... or replace the functionality.
+;;   - major motivation for `read-kinds`
+;;   - maybe we can use `read-kinds` or adapt it.
+;;
+;; - Vs Run Clay in Clojure, and run Babashka as separate process <<
+;;   - still valuable
+;;   -
+
+;; Jank
+;; - Could we ever run clay in Jank?
+;; - If we can't, can we read Jank code in Clojure?
+;; - If we can read it, and we can send it to an nREPL, that's interesting.
+
+;; should we use nREPL for Clojure
+;; - We already do in some way -- the integrations are via nREPL
+;; - Where should **Clay** run? Same process or different process.
+;; - Can we cancel evaluation?
+
+;; Error messages
+;; - Not integrated with the tooling
+;; - Problem: we are sending things like `(clay/make! {:single-form "(+ 1 2)"})`
+;;   but we want our repl to treat it like `(+ 1 2)`...
+;; - We want our nREPL to return the result of `(+ 1 2)` (or exception), and with that stack.
+;; - Can we frame the stack around eval?
+;; - Is output being done right?
+
 (defn read-eval-capture
   "Captures stdout and stderr while evaluating a note"
   [{:as   note
     :keys [code form]}]
+  note
+  #_
   (let [out (StringWriter.)
         err (StringWriter.)
         note (try
