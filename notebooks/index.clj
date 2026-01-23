@@ -21,25 +21,21 @@
 ;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly-noted/kindly) convention.
 ;; It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from Clojure source code and comments.
 ;;
-;;
 ;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
 ;;
 ;; **Artifact:** [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay)
-;;
-;; **Status:** The project has moved into Beta stage (March 2024).
-;;
-;;
+
 ;; ## Goals
 
 ;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
-;; - Encourage writing Kindly-compatible notes for future compatiblity with other tools.
+;; - Encourage writing Kindly-compatible notes for future compatibility with other tools.
 ;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
 
 ;; ## Getting started
 
 ;; Try it out by starting a Clojure command line
 ;; ```bash
-;; clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"2-beta23\"}}}"
+;; clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"RELEASE\"}}}"
 ;; ```
 ;; The `:mvn/version` may be changing frequently, copy the up-to-date version from
 ;; [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay).
@@ -99,7 +95,17 @@
 ;; - Head over to [Examples](clay_book.examples.html) to see what features it provides and corresponding examples.
 ;; - See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
 ;; - See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
-;;
+
+;; ::: {.callout-note}
+;; You may see the following warning messages:
+;; ```
+;; SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+;; SLF4J: Defaulting to no-operation (NOP) logger implementation
+;; SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+;; ```
+;; Which you can ignore, or if you like, add `org.slf4j/slf4j-nop {:mvn/version "2.0.17"}` to your dependencies.
+;; :::
+
 ;; ## Projects using Clay
 
 ;; - [Clojure Civitas](https://clojurecivitas.github.io/)
