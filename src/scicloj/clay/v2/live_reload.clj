@@ -101,7 +101,7 @@
         dirs (set (map (comp str fs/canonicalize)
                        watch-dirs))
         watch (dirs-to-watch (watched-dirs) dirs files)
-        root (fs/canonicalize ".")]
+        current (fs/canonicalize ".")]
     (doseq [dir watch]
       (when (not (fs/exists? dir))
         (fs/create-dir dir)
@@ -114,7 +114,7 @@
     (watch-dirs! watch make-fn spec)
     (when (empty? files)
       (server/update-page! orig-spec))
-    [:watching (mapv #(fs/relativize root %) (watched-dirs))]))
+    [:watching (mapv #(str (fs/relativize current %)) (watched-dirs))]))
 
 (defn stop!
   "Stop all directory watchers."
