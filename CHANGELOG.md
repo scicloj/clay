@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## Pending
+## [2.0.6 - 2026-01-24]
 - Clay will now only open a browser if there are no existing connected clients (PR #321)
 - Clay pages will now attempt to reconnect to the Clay server (PR #321)
 - New option `:in-memory true` don't write HTML files to disk, just serve them (PR #322)
