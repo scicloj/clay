@@ -18,11 +18,25 @@
     v))
 
 (def hidden-form-starters
-  #{'ns 'comment
-    'def 'defonce 'defn 'defmacro
-    'defrecord 'defprotocol 'deftype
-    'extend-protocol 'extend
-    'require})
+  "Set of symbols that mark forms whose evaluation results should not be shown
+  in notebooks by default. These typically return vars or other values that are
+  not useful for notebook display."
+  ;; namespace setup:
+  #{'ns 'require 'import 'use 'refer 'refer-clojure 'alias
+    ;; namespace manipulation:
+    'in-ns 'create-ns 'remove-ns
+    ;; explicitly hidden:
+    'comment
+    ;; var creation/mutation:
+    'def 'defonce 'intern 'alter-var-root
+    ;; function-like definitions:
+    'defn 'defmacro 'definline 'defmulti 'defmethod
+    ;; type definitions:
+    'defrecord 'defprotocol 'deftype 'definterface
+    ;; type extensions:
+    'extend 'extend-protocol 'extend-type 'reify
+    ;; deprecated but still exists:
+    'defstruct})
 
 (defn info-line [{:keys [full-source-path
                          remote-repo]}]
