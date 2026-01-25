@@ -547,11 +547,4 @@
                       {:id ::ns-not-servable
                        :source-path source-path})))))
 
-(comment
-  (make! {:source-path       ["notebooks/scratch.clj"]
-          :format [:gfm]
-          :show false})
-  ,
-  (make! {:source-path       ["notebooks/index.clj"]
-          :format [:gfm]
-          :show false}))
+
