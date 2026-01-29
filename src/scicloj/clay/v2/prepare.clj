@@ -589,3 +589,7 @@
 (add-preparer-from-value-fn!
  :kind/highcharts
  #'item/highcharts)
+
+(add-preparer-from-value-fn!
+ :kind/doc
+ #'item/doc)
