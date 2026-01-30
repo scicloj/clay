@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [2.0.7 - 2026-01-30]
 - updated the set of form starters whose results should be hidden (PR #324)
-- added `kind/doc` for documentation entries
+- added `kind/doc` for documentation entries (PR #325)
 
 ## [2.0.6 - 2026-01-24]
 - Clay will now only open a browser if there are no existing connected clients (PR #321)
