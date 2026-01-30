@@ -1178,3 +1178,30 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
  {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
                     "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
                :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
+
+
+;; ## Documentation
+;; (experimental 🧪)
+
+;; With `kind/doc`, one may create a documentation item for a value.
+;; The documentation is rendered as markdown, and can be structured
+;; with user-defined given prefix and suffix.
+
+;; Often, the prefix will be used to speficy the Markdown heading,
+;; e.g., `"### "`, which conveniently adds a table-of-contents item
+;; for the the documentation entry when rendered through Quarto.
+
+;; For example:
+
+(kind/doc :abcd/efgh
+          {:prefix "### "
+           :suffix "🍃 This is a very important keyword of deep meaning. 🍂"})
+
+;; The value can be a var, in which case, the typical var metadata
+;; (arglists if present, and docstring) are added.
+
+;; For example:
+
+(kind/doc #'clojure.core/eduction
+          {:prefix "### "
+           :suffix "😼"})
