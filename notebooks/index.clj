@@ -164,7 +164,10 @@
        "WiOUiHsq_dc"]
       ["May 2nd 2025"
        "Clojure for data analysis - getting started with Noj v2, VSCode, Calva, and Clay"
-       "B1yPkpyiEEs"]]
+       "B1yPkpyiEEs"]
+      ["Nov 14th 2025"
+       "The Search for Meaning Through Collaboration and Code - Timothy Pratley (Clojure/conj)"
+       "XS0NyQ-aePk"]]
      reverse
      (map (fn [[date title youtube-id]]
             [:tr

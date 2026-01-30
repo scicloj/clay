@@ -421,7 +421,11 @@ window.Quarto = {
 <span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>   <span class="at">:time-for-transition</span> <span class="dv">1000</span>}]</span>
 <span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a> {<span class="at">:html/deps</span> [<span class="at">:echarts</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<<<<<<< HEAD
 <div id="id13"><script type="application/x-scittle">(reagent.dom/render [(fn [{:keys [spec0 transition time-for-transition]}] (let [*spec (reagent.core/atom spec0)] (fn [] [:div [:div {:style {:height "400px"}, :ref (fn [el] (when el (let [chart (.init js/echarts el)] (.setOption chart (clj->js (clojure.core/deref *spec))))))}] (js/setInterval (fn* [] (swap! *spec transition)) time-for-transition) [:p {:style {:display :none}} (hash (clojure.core/deref *spec))]]))) {:spec0 {:title {:text "Echarts Example"}, :tooltip {}, :legend {:data ["sales"]}, :xAxis {:data ["Shirts" "Cardigans" "Chiffons" "Pants" "Heels" "Socks"]}, :yAxis {}, :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}, :transition (fn [spec] (update-in spec [:series 0 :data] (partial map (fn* [p1__94604#] (+ p1__94604# (rand-int 10) -5))))), :time-for-transition 1000}] (js/document.getElementById "id13"))</script></div>
+=======
+<div id="id13"><script type="application/x-scittle">(reagent.dom/render [(fn [{:keys [spec0 transition time-for-transition]}] (let [*spec (reagent.core/atom spec0)] (fn [] [:div [:div {:style {:height "400px"}, :ref (fn [el] (when el (let [chart (.init js/echarts el)] (.setOption chart (clj->js (clojure.core/deref *spec))))))}] (js/setInterval (fn* [] (swap! *spec transition)) time-for-transition) [:p {:style {:display :none}} (hash (clojure.core/deref *spec))]]))) {:spec0 {:title {:text "Echarts Example"}, :tooltip {}, :legend {:data ["sales"]}, :xAxis {:data ["Shirts" "Cardigans" "Chiffons" "Pants" "Heels" "Socks"]}, :yAxis {}, :series [{:name "sales", :type "bar", :data [5 20 36 10 10 20]}]}, :transition (fn [spec] (update-in spec [:series 0 :data] (partial map (fn* [p1__63861#] (+ p1__63861# (rand-int 10) -5))))), :time-for-transition 1000}] (js/document.getElementById "id13"))</script></div>
+>>>>>>> main
 </section>
 <section id="scittle" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="scittle"><span class="header-section-number">2.5</span> Scittle</h2>
@@ -769,21 +773,37 @@ flowchart TD
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">take</span> <span class="dv">5</span> people-as-maps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
+<<<<<<< HEAD
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>({<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">36</span>}</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">38</span>}</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">98</span>}</span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">96</span>}</span>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">60</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+=======
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>({<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">55</span>}</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">38</span>}</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojurescript"</span>, <span class="at">:age</span> <span class="dv">22</span>}</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"clojure"</span>, <span class="at">:age</span> <span class="dv">87</span>}</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a> {<span class="at">:preferred-language</span> <span class="st">"babashka"</span>, <span class="at">:age</span> <span class="dv">13</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+>>>>>>> main
 </div>
 <div class="sourceClojure">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">take</span> <span class="dv">5</span> people-as-vectors)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
+<<<<<<< HEAD
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>([<span class="st">"babashka"</span> <span class="dv">36</span>]</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojurescript"</span> <span class="dv">38</span>]</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojurescript"</span> <span class="dv">98</span>]</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">96</span>]</span>
 <span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">60</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+=======
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>([<span class="st">"clojurescript"</span> <span class="dv">55</span>]</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">38</span>]</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojurescript"</span> <span class="dv">22</span>]</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a> [<span class="st">"clojure"</span> <span class="dv">87</span>]</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a> [<span class="st">"babashka"</span> <span class="dv">13</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+>>>>>>> main
 </div>
 <div class="sourceClojure">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;&gt;</span> people-as-vectors</span>
@@ -791,11 +811,19 @@ flowchart TD
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>     <span class="kw">set</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
+<<<<<<< HEAD
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>#{[<span class="st">"babashka"</span> <span class="dv">96</span>]</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">98</span>]</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">38</span>]</span>
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">36</span>]</span>
 <span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">60</span>]}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+=======
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>#{[<span class="st">"clojure"</span> <span class="dv">87</span>]</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">55</span>]</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">13</span>]</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"clojurescript"</span> <span class="dv">22</span>]</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"babashka"</span> <span class="dv">38</span>]}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+>>>>>>> main
 </div>
 <p>When something inside needs to be displayed in a special kind of way, the data structures are printed in a way that makes that clear.</p>
 <div class="sourceClojure">
@@ -1084,11 +1112,21 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td style="text-align: right;">36</td>
+=======
+<td>clojurescript</td>
+<td style="text-align: right;">55</td>
+>>>>>>> main
 </tr>
 <tr class="even">
+<td>babashka</td>
+<td style="text-align: right;">38</td>
+</tr>
+<tr class="odd">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td style="text-align: right;">38</td>
 </tr>
 <tr class="odd">
@@ -1106,9 +1144,35 @@ flowchart TD
 <tr class="even">
 <td>babashka</td>
 <td style="text-align: right;">98</td>
+=======
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td style="text-align: right;">87</td>
 </tr>
 <tr class="odd">
+<td>babashka</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
 <td>clojurescript</td>
+<td style="text-align: right;">71</td>
+>>>>>>> main
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<<<<<<< HEAD
+=======
+<td style="text-align: right;">49</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+>>>>>>> main
 <td style="text-align: right;">71</td>
 </tr>
 <tr class="even">
@@ -1117,17 +1181,22 @@ flowchart TD
 </tr>
 <tr class="odd">
 <td>clojure</td>
+<<<<<<< HEAD
 <td style="text-align: right;">63</td>
 </tr>
 <tr class="even">
 <td>babashka</td>
 <td style="text-align: right;">52</td>
+=======
+<td style="text-align: right;">88</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>…</td>
 <td style="text-align: right;">…</td>
 </tr>
 <tr class="even">
+<<<<<<< HEAD
 <td>clojure</td>
 <td style="text-align: right;">88</td>
 </tr>
@@ -1170,6 +1239,50 @@ flowchart TD
 <tr class="even">
 <td>clojure</td>
 <td style="text-align: right;">54</td>
+=======
+<td>clojurescript</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td style="text-align: right;">89</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td style="text-align: right;">96</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td style="text-align: right;">35</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
@@ -1237,11 +1350,53 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+>>>>>>> main
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>38</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+<td>71</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>76</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>71</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<<<<<<< HEAD
 <td>38</td>
 </tr>
 <tr class="odd">
@@ -1299,6 +1454,17 @@ flowchart TD
 <tr class="even">
 <td>babashka</td>
 <td>94</td>
+=======
+<td>13</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>22</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>clojure</td>
@@ -1330,6 +1496,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>30</td>
 </tr>
 <tr class="odd">
@@ -1347,11 +1514,73 @@ flowchart TD
 <tr class="even">
 <td>clojure</td>
 <td>46</td>
+=======
+<td>57</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>clojure</td>
-<td>54</td>
+<td>93</td>
 </tr>
+<<<<<<< HEAD
+=======
+<tr class="even">
+<td>clojure</td>
+<td>84</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>28</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>36</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>89</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>80</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>34</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>66</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>28</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>96</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>35</td>
+</tr>
+>>>>>>> main
 </tbody>
 </table>
 </div>
@@ -1366,15 +1595,24 @@ flowchart TD
 <table class="table table-hover clay-table caption-top">
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+>>>>>>> main
 <td>38</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>98</td>
 </tr>
 <tr class="even">
@@ -1384,6 +1622,17 @@ flowchart TD
 <tr class="odd">
 <td>babashka</td>
 <td>60</td>
+=======
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
@@ -1405,15 +1654,24 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+>>>>>>> main
 <td>38</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>98</td>
 </tr>
 <tr class="even">
@@ -1423,6 +1681,17 @@ flowchart TD
 <tr class="odd">
 <td>babashka</td>
 <td>60</td>
+=======
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
@@ -1444,10 +1713,16 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 </tr>
 <tr class="even">
+=======
+>>>>>>> main
 <td>clojurescript</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
@@ -1471,15 +1746,24 @@ flowchart TD
 <table class="table table-hover clay-table caption-top">
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+>>>>>>> main
 <td>38</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>98</td>
 </tr>
 <tr class="even">
@@ -1489,6 +1773,17 @@ flowchart TD
 <tr class="odd">
 <td>babashka</td>
 <td>60</td>
+=======
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
@@ -1508,15 +1803,24 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+>>>>>>> main
 <td>38</td>
 </tr>
 <tr class="odd">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>98</td>
 </tr>
 <tr class="even">
@@ -1526,6 +1830,17 @@ flowchart TD
 <tr class="odd">
 <td>babashka</td>
 <td>60</td>
+=======
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
@@ -1594,11 +1909,53 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+>>>>>>> main
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>38</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+<td>71</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>76</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>71</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<<<<<<< HEAD
 <td>38</td>
 </tr>
 <tr class="odd">
@@ -1656,6 +2013,17 @@ flowchart TD
 <tr class="even">
 <td>babashka</td>
 <td>94</td>
+=======
+<td>13</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>22</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>clojure</td>
@@ -1687,6 +2055,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>30</td>
 </tr>
 <tr class="odd">
@@ -1704,11 +2073,73 @@ flowchart TD
 <tr class="even">
 <td>clojure</td>
 <td>46</td>
+=======
+<td>57</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>clojure</td>
-<td>54</td>
+<td>93</td>
 </tr>
+<<<<<<< HEAD
+=======
+<tr class="even">
+<td>clojure</td>
+<td>84</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>28</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>36</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>89</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>80</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>34</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>66</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>28</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>96</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>35</td>
+</tr>
+>>>>>>> main
 </tbody>
 </table>
 </div>
@@ -1730,11 +2161,53 @@ flowchart TD
 </thead>
 <tbody>
 <tr class="odd">
+<<<<<<< HEAD
 <td>babashka</td>
 <td>36</td>
+=======
+<td>clojurescript</td>
+<td>55</td>
+>>>>>>> main
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>38</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>13</td>
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+<td>71</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>76</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>49</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>71</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<<<<<<< HEAD
 <td>38</td>
 </tr>
 <tr class="odd">
@@ -1792,6 +2265,17 @@ flowchart TD
 <tr class="even">
 <td>babashka</td>
 <td>94</td>
+=======
+<td>13</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>22</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>clojure</td>
@@ -1823,6 +2307,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td>clojurescript</td>
+<<<<<<< HEAD
 <td>30</td>
 </tr>
 <tr class="odd">
@@ -1840,11 +2325,73 @@ flowchart TD
 <tr class="even">
 <td>clojure</td>
 <td>46</td>
+=======
+<td>57</td>
+>>>>>>> main
 </tr>
 <tr class="odd">
 <td>clojure</td>
-<td>54</td>
+<td>93</td>
 </tr>
+<<<<<<< HEAD
+=======
+<tr class="even">
+<td>clojure</td>
+<td>84</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>28</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>36</td>
+</tr>
+<tr class="even">
+<td>babashka</td>
+<td>89</td>
+</tr>
+<tr class="odd">
+<td>clojure</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>80</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>34</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>66</td>
+</tr>
+<tr class="odd">
+<td>babashka</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>clojure</td>
+<td>28</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>clojurescript</td>
+<td>96</td>
+</tr>
+<tr class="odd">
+<td>clojurescript</td>
+<td>35</td>
+</tr>
+>>>>>>> main
 </tbody>
 </table>
 </div>
@@ -1858,7 +2405,11 @@ flowchart TD
 </div>
 <div class="clay-table">
 <div class="clay-table">
+<<<<<<< HEAD
 <table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>babashka</td><td>36</td></tr><tr><td>clojurescript</td><td>38</td></tr><tr><td>clojurescript</td><td>98</td></tr><tr><td>babashka</td><td>96</td></tr><tr><td>babashka</td><td>60</td></tr><tr><td>babashka</td><td>98</td></tr><tr><td>clojurescript</td><td>71</td></tr><tr><td>clojurescript</td><td>29</td></tr><tr><td>clojure</td><td>63</td></tr><tr><td>babashka</td><td>52</td></tr><tr><td>babashka</td><td>48</td></tr><tr><td>babashka</td><td>58</td></tr><tr><td>clojurescript</td><td>76</td></tr><tr><td>clojure</td><td>98</td></tr><tr><td>clojure</td><td>78</td></tr><tr><td>babashka</td><td>94</td></tr><tr><td>clojure</td><td>8</td></tr><tr><td>babashka</td><td>85</td></tr><tr><td>clojure</td><td>88</td></tr><tr><td>clojure</td><td>48</td></tr><tr><td>clojurescript</td><td>11</td></tr><tr><td>babashka</td><td>66</td></tr><tr><td>clojure</td><td>86</td></tr><tr><td>clojurescript</td><td>30</td></tr><tr><td>clojure</td><td>11</td></tr><tr><td>babashka</td><td>1</td></tr><tr><td>clojure</td><td>84</td></tr><tr><td>clojure</td><td>46</td></tr><tr><td>clojure</td><td>54</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"paging":false,"scrollY":400,"sPaginationType":"full_numbers","order":[]});</script></table>
+=======
+<table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>clojurescript</td><td>55</td></tr><tr><td>babashka</td><td>38</td></tr><tr><td>clojurescript</td><td>22</td></tr><tr><td>clojure</td><td>87</td></tr><tr><td>babashka</td><td>13</td></tr><tr><td>clojurescript</td><td>71</td></tr><tr><td>clojure</td><td>76</td></tr><tr><td>clojurescript</td><td>49</td></tr><tr><td>babashka</td><td>71</td></tr><tr><td>clojure</td><td>88</td></tr><tr><td>clojurescript</td><td>13</td></tr><tr><td>clojure</td><td>86</td></tr><tr><td>clojurescript</td><td>22</td></tr><tr><td>clojurescript</td><td>57</td></tr><tr><td>clojure</td><td>93</td></tr><tr><td>clojure</td><td>84</td></tr><tr><td>babashka</td><td>10</td></tr><tr><td>clojure</td><td>28</td></tr><tr><td>clojurescript</td><td>36</td></tr><tr><td>babashka</td><td>89</td></tr><tr><td>clojure</td><td>35</td></tr><tr><td>clojure</td><td>80</td></tr><tr><td>clojurescript</td><td>34</td></tr><tr><td>clojurescript</td><td>66</td></tr><tr><td>babashka</td><td>16</td></tr><tr><td>clojure</td><td>28</td></tr><tr><td>clojurescript</td><td>5</td></tr><tr><td>clojurescript</td><td>96</td></tr><tr><td>clojurescript</td><td>35</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"paging":false,"scrollY":400,"sPaginationType":"full_numbers","order":[]});</script></table>
+>>>>>>> main
 </div>
 </div>
 <div class="sourceClojure">
@@ -1868,7 +2419,11 @@ flowchart TD
 </div>
 <div class="clay-table">
 <div class="clay-table">
+<<<<<<< HEAD
 <table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>babashka</td><td>36</td></tr><tr><td>clojurescript</td><td>38</td></tr><tr><td>clojurescript</td><td>98</td></tr><tr><td>babashka</td><td>96</td></tr><tr><td>babashka</td><td>60</td></tr><tr><td>babashka</td><td>98</td></tr><tr><td>clojurescript</td><td>71</td></tr><tr><td>clojurescript</td><td>29</td></tr><tr><td>clojure</td><td>63</td></tr><tr><td>babashka</td><td>52</td></tr><tr><td>babashka</td><td>48</td></tr><tr><td>babashka</td><td>58</td></tr><tr><td>clojurescript</td><td>76</td></tr><tr><td>clojure</td><td>98</td></tr><tr><td>clojure</td><td>78</td></tr><tr><td>babashka</td><td>94</td></tr><tr><td>clojure</td><td>8</td></tr><tr><td>babashka</td><td>85</td></tr><tr><td>clojure</td><td>88</td></tr><tr><td>clojure</td><td>48</td></tr><tr><td>clojurescript</td><td>11</td></tr><tr><td>babashka</td><td>66</td></tr><tr><td>clojure</td><td>86</td></tr><tr><td>clojurescript</td><td>30</td></tr><tr><td>clojure</td><td>11</td></tr><tr><td>babashka</td><td>1</td></tr><tr><td>clojure</td><td>84</td></tr><tr><td>clojure</td><td>46</td></tr><tr><td>clojure</td><td>54</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"paging":false,"scrollY":300,"sPaginationType":"full_numbers","order":[]});</script></table>
+=======
+<table class="table table-hover table-responsive clay-table"><thead><tr><th>preferred-language</th><th>age</th></tr></thead><tbody><tr><td>clojurescript</td><td>55</td></tr><tr><td>babashka</td><td>38</td></tr><tr><td>clojurescript</td><td>22</td></tr><tr><td>clojure</td><td>87</td></tr><tr><td>babashka</td><td>13</td></tr><tr><td>clojurescript</td><td>71</td></tr><tr><td>clojure</td><td>76</td></tr><tr><td>clojurescript</td><td>49</td></tr><tr><td>babashka</td><td>71</td></tr><tr><td>clojure</td><td>88</td></tr><tr><td>clojurescript</td><td>13</td></tr><tr><td>clojure</td><td>86</td></tr><tr><td>clojurescript</td><td>22</td></tr><tr><td>clojurescript</td><td>57</td></tr><tr><td>clojure</td><td>93</td></tr><tr><td>clojure</td><td>84</td></tr><tr><td>babashka</td><td>10</td></tr><tr><td>clojure</td><td>28</td></tr><tr><td>clojurescript</td><td>36</td></tr><tr><td>babashka</td><td>89</td></tr><tr><td>clojure</td><td>35</td></tr><tr><td>clojure</td><td>80</td></tr><tr><td>clojurescript</td><td>34</td></tr><tr><td>clojurescript</td><td>66</td></tr><tr><td>babashka</td><td>16</td></tr><tr><td>clojure</td><td>28</td></tr><tr><td>clojurescript</td><td>5</td></tr><tr><td>clojurescript</td><td>96</td></tr><tr><td>clojurescript</td><td>35</td></tr></tbody><script>new DataTable(document.currentScript.parentElement, {"paging":false,"scrollY":300,"sPaginationType":"full_numbers","order":[]});</script></table>
+>>>>>>> main
 </div>
 </div>
 </section>
@@ -1904,7 +2459,11 @@ flowchart TD
 <div class="sourceClojure">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb87"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>(random-vega-lite-plot <span class="dv">9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<<<<<<< HEAD
 <div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":1,"z":4,"x":0,"y":0.14851897737413133},{"w":6,"z":6,"x":1,"y":-0.1515086710505601},{"w":5,"z":1,"x":2,"y":-0.18839938096385345},{"w":7,"z":3,"x":3,"y":-0.05836690569594849},{"w":2,"z":4,"x":4,"y":0.19092192082988124},{"w":4,"z":5,"x":5,"y":-0.16284437783403904},{"w":1,"z":3,"x":6,"y":-0.627836119973154},{"w":4,"z":8,"x":7,"y":-0.2075602578306729},{"w":4,"z":5,"x":8,"y":0.057632392142651256}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div>
+=======
+<div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":8,"z":6,"x":0,"y":0.47890360345408467},{"w":0,"z":2,"x":1,"y":0.1430294996697472},{"w":8,"z":5,"x":2,"y":-0.26593841640071325},{"w":6,"z":5,"x":3,"y":-0.40652164253285694},{"w":1,"z":2,"x":4,"y":-0.26145117041048616},{"w":0,"z":1,"x":5,"y":-0.5788158334042339},{"w":2,"z":4,"x":6,"y":-0.7807304180956309},{"w":0,"z":1,"x":7,"y":-0.6928361104377816},{"w":5,"z":2,"x":8,"y":-1.1804440729149448}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div>
+>>>>>>> main
 <p>When the vega/vega-lite data is given in CSV format, Clay will serve it in a separate CSV file alongside the generated HTML.</p>
 <div class="sourceClojure">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb88"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> {<span class="at">:data</span> {<span class="at">:values</span> <span class="st">"x,y</span></span>
@@ -2613,7 +3172,11 @@ flowchart TD
 <span id="cb121-14"><a href="#cb121-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">:labels</span> {<span class="at">:x</span> <span class="st">"wt"</span></span>
 <span id="cb121-15"><a href="#cb121-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">:y</span> <span class="st">"mpg"</span>}}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<<<<<<< HEAD
 <div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-12" style="width:100%;height:400px;"><script data-for="htmlwidget-12" type="application/htmlwidget-sizing">{"viewer":{"width":"100%","height":400,"padding":"0","fille":true},"browser":{"width":"100%","height":400,"padding":"0","fille":true}}</script><script data-for="htmlwidget-12" type="application/json">{"x":{"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"layout":{"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"xaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[0.0,16.0,32.0,48.0,64.0,80.0,96.0],"zeroline":false,"title":{"text":"wt","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"y","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"categoryorder":"array","range":[-9.9,108.9]},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"showlegend":false,"barmode":"relative","yaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[-4.0,-3.0,-2.0,-1.0,0.0],"zeroline":false,"title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["-4.0","-3.0","-2.0","-1.0","0.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"x","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["-4.0","-3.0","-2.0","-1.0","0.0"],"categoryorder":"array","range":[-4.936778636264095,0.4532562723014797]},"hovermode":"closest","margin":{"t":25.7412480974125,"r":7.30593607305936,"b":39.6955859969559,"l":37.2602739726027},"shapes":[{"yref":"paper","fillcolor":null,"xref":"paper","y1":1,"type":"rect","line":{"color":null,"width":0,"linetype":[]},"y0":0,"x1":1,"x0":0}]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https:\/\/plot.ly","cur_data":"1f2fea5b54d146","source":"A","shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"attrs":{"1f2fea5b54d146":{"x":{},"y":{},"type":"scatter"}},"data":[{"y":[-0.08963103724497068,0.004086696587681793,-0.448384120105633,-0.1514603866638592,-0.25735540417679115,-0.40608373264015085,-0.5411478561739698,-0.842923967013827,-0.7001663768039947,-0.49102840405801307,-0.8697002402400548,-0.5595856018019375,-0.13137960811058946,-0.15924553674167374,-0.3750394962116397,-0.8318420603182479,-1.1808794657713897,-1.203590084649397,-1.4536024987957517,-1.2603684839001734,-1.668879965395642,-1.6320334064314437,-2.002059588523882,-1.777335182254219,-1.4444081738457197,-1.2336689559622263,-1.642865510816663,-1.8722923991669753,-2.313149121933025,-2.5432445514756865,-2.2730641946727714,-2.539936107755078,-3.0288763543928834,-3.511422541784404,-3.6280400397801715,-3.309874074521603,-3.065245933638691,-3.0936090566982077,-3.08157083044279,-3.270634951920554,-3.2952541346407482,-3.0125514753858784,-2.7886697975212495,-2.876506015774633,-3.159150398318297,-3.503981131826402,-3.8933046026760216,-3.901346729032946,-3.773056692560628,-3.295373133480454,-3.2441503128055036,-3.5533057490448416,-3.0949738559662396,-2.770411108736186,-3.263071928740271,-2.8633677634592285,-3.0972522345479554,-2.610976920509394,-2.6680383284162144,-2.383874204416969,-2.269970378122043,-2.559438102772798,-3.0396454714883867,-3.355599120576907,-3.0730008747507815,-2.6816768312213632,-3.1133707337724954,-3.198615612533245,-3.5408454638919586,-4.010693194754059,-3.553093784265655,-3.8280635043116704,-3.498594659840562,-3.086725056412435,-3.190300724602548,-3.266020844761617,-3.144607969788179,-3.0576526321691975,-2.6727391861335037,-2.6899934904701217,-2.4707205807035644,-2.0380026910030535,-2.531111022772248,-2.802067565080045,-2.4989618296464644,-2.721131814219362,-3.2176779048274504,-3.5955185100997835,-3.989917238599127,-4.172151323285522,-4.07141154138793,-3.6126381548130055,-3.496983066160161,-3.67385864931075,-3.795545477694989,-4.003727527256346,-3.7778464773405616,-3.8293611165527492,-4.270081051670787,-4.487609060550297],"hoveron":"points","frame":null,"hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"mode":"markers","type":"scatter","xaxis":"x","showlegend":false,"yaxis":"y","x":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99],"text":["{:x 0, :y -0.08963103724497068}","{:x 1, :y 0.004086696587681793}","{:x 2, :y -0.448384120105633}","{:x 3, :y -0.1514603866638592}","{:x 4, :y -0.25735540417679115}","{:x 5, :y -0.40608373264015085}","{:x 6, :y -0.5411478561739698}","{:x 7, :y -0.842923967013827}","{:x 8, :y -0.7001663768039947}","{:x 9, :y -0.49102840405801307}","{:x 10, :y -0.8697002402400548}","{:x 11, :y -0.5595856018019375}","{:x 12, :y -0.13137960811058946}","{:x 13, :y -0.15924553674167374}","{:x 14, :y -0.3750394962116397}","{:x 15, :y -0.8318420603182479}","{:x 16, :y -1.1808794657713897}","{:x 17, :y -1.203590084649397}","{:x 18, :y -1.4536024987957517}","{:x 19, :y -1.2603684839001734}","{:x 20, :y -1.668879965395642}","{:x 21, :y -1.6320334064314437}","{:x 22, :y -2.002059588523882}","{:x 23, :y -1.777335182254219}","{:x 24, :y -1.4444081738457197}","{:x 25, :y -1.2336689559622263}","{:x 26, :y -1.642865510816663}","{:x 27, :y -1.8722923991669753}","{:x 28, :y -2.313149121933025}","{:x 29, :y -2.5432445514756865}","{:x 30, :y -2.2730641946727714}","{:x 31, :y -2.539936107755078}","{:x 32, :y -3.0288763543928834}","{:x 33, :y -3.511422541784404}","{:x 34, :y -3.6280400397801715}","{:x 35, :y -3.309874074521603}","{:x 36, :y -3.065245933638691}","{:x 37, :y -3.0936090566982077}","{:x 38, :y -3.08157083044279}","{:x 39, :y -3.270634951920554}","{:x 40, :y -3.2952541346407482}","{:x 41, :y -3.0125514753858784}","{:x 42, :y -2.7886697975212495}","{:x 43, :y -2.876506015774633}","{:x 44, :y -3.159150398318297}","{:x 45, :y -3.503981131826402}","{:x 46, :y -3.8933046026760216}","{:x 47, :y -3.901346729032946}","{:x 48, :y -3.773056692560628}","{:x 49, :y -3.295373133480454}","{:x 50, :y -3.2441503128055036}","{:x 51, :y -3.5533057490448416}","{:x 52, :y -3.0949738559662396}","{:x 53, :y -2.770411108736186}","{:x 54, :y -3.263071928740271}","{:x 55, :y -2.8633677634592285}","{:x 56, :y -3.0972522345479554}","{:x 57, :y -2.610976920509394}","{:x 58, :y -2.6680383284162144}","{:x 59, :y -2.383874204416969}","{:x 60, :y -2.269970378122043}","{:x 61, :y -2.559438102772798}","{:x 62, :y -3.0396454714883867}","{:x 63, :y -3.355599120576907}","{:x 64, :y -3.0730008747507815}","{:x 65, :y -2.6816768312213632}","{:x 66, :y -3.1133707337724954}","{:x 67, :y -3.198615612533245}","{:x 68, :y -3.5408454638919586}","{:x 69, :y -4.010693194754059}","{:x 70, :y -3.553093784265655}","{:x 71, :y -3.8280635043116704}","{:x 72, :y -3.498594659840562}","{:x 73, :y -3.086725056412435}","{:x 74, :y -3.190300724602548}","{:x 75, :y -3.266020844761617}","{:x 76, :y -3.144607969788179}","{:x 77, :y -3.0576526321691975}","{:x 78, :y -2.6727391861335037}","{:x 79, :y -2.6899934904701217}","{:x 80, :y -2.4707205807035644}","{:x 81, :y -2.0380026910030535}","{:x 82, :y -2.531111022772248}","{:x 83, :y -2.802067565080045}","{:x 84, :y -2.4989618296464644}","{:x 85, :y -2.721131814219362}","{:x 86, :y -3.2176779048274504}","{:x 87, :y -3.5955185100997835}","{:x 88, :y -3.989917238599127}","{:x 89, :y -4.172151323285522}","{:x 90, :y -4.07141154138793}","{:x 91, :y -3.6126381548130055}","{:x 92, :y -3.496983066160161}","{:x 93, :y -3.67385864931075}","{:x 94, :y -3.795545477694989}","{:x 95, :y -4.003727527256346}","{:x 96, :y -3.7778464773405616}","{:x 97, :y -3.8293611165527492}","{:x 98, :y -4.270081051670787}","{:x 99, :y -4.487609060550297}"]}]},"evals":[],"jsHooks":[]}</script></div>
+=======
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-12" style="width:100%;height:400px;"><script data-for="htmlwidget-12" type="application/htmlwidget-sizing">{"viewer":{"width":"100%","height":400,"padding":"0","fille":true},"browser":{"width":"100%","height":400,"padding":"0","fille":true}}</script><script data-for="htmlwidget-12" type="application/json">{"x":{"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"layout":{"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"xaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[0.0,16.0,32.0,48.0,64.0,80.0,96.0],"zeroline":false,"title":{"text":"wt","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"y","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["0.0","16.0","32.0","48.0","64.0","80.0","96.0"],"categoryorder":"array","range":[-9.9,108.9]},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"showlegend":false,"barmode":"relative","yaxis":{"linewidth":0,"nticks":null,"linecolor":null,"ticklen":3.65296803652968,"tickcolor":"rgba(51,51,51,1)","tickmode":"array","gridcolor":"rgba(255,255,255,1)","automargin":true,"type":"linear","tickvals":[-4.0,-3.0,-2.0,-1.0,0.0],"zeroline":false,"title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"autorange":false,"showticklabels":true,"showline":false,"showgrid":true,"ticktext":["-4.0","-3.0","-2.0","-1.0","0.0"],"ticks":"outside","gridwidth":0.66417600664176,"anchor":"x","domain":[0,1],"hoverformat":".2f","tickangle":0,"tickwidth":0.66417600664176,"categoryarray":["-4.0","-3.0","-2.0","-1.0","0.0"],"categoryorder":"array","range":[-5.272617291418508,0.9753711288638629]},"hovermode":"closest","margin":{"t":25.7412480974125,"r":7.30593607305936,"b":39.6955859969559,"l":37.2602739726027},"shapes":[{"yref":"paper","fillcolor":null,"xref":"paper","y1":1,"type":"rect","line":{"color":null,"width":0,"linetype":[]},"y0":0,"x1":1,"x0":0}]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https:\/\/plot.ly","cur_data":"1f2fea5b54d146","source":"A","shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"attrs":{"1f2fea5b54d146":{"x":{},"y":{},"type":"scatter"}},"data":[{"y":[0.01004000775694136,0.45470542717366536,0.0011208341702318991,-0.46261843295169125,-0.940434977559862,-0.9641262948409608,-0.5457229396017853,-0.13693654458401716,-0.42694600915126635,-0.8280148121361294,-0.9370551319322503,-0.9127406978191926,-0.7987733899146767,-0.6308055264086773,-0.48731826180175575,-0.7501667312831292,-0.7623774971405919,-0.27719401396097043,-0.2434385110523386,-0.05147952510243636,-0.11815955240761222,0.19262743022786666,-0.23795478590011165,-0.6329526985075521,-1.016053546019601,-1.0579190382483379,-1.0783069216125567,-0.8107772112581858,-0.3466303753617297,-0.7115154556335753,-1.0169783038390752,-1.213924397183656,-0.7167908890251217,-0.5273165340104237,-0.7041949828843584,-0.8601082618166783,-0.8344924751360666,-0.8947411534474609,-1.1123590161276797,-1.1534276754606538,-1.4202874303436417,-1.5911301147067105,-2.0143380187337616,-2.158924247227784,-2.3497557791104553,-2.1231035375897167,-2.2711461789446385,-2.155166440976695,-1.9851875737260827,-1.6675593516470013,-1.4134335099627218,-1.436062340702454,-0.9521106327088574,-0.7760819240655209,-0.9605511155679766,-1.0024158012921698,-1.3314700909883634,-1.0410751693768283,-0.9857790703640387,-0.5272702058342348,-0.7464443239720814,-1.2181996907041972,-0.9815921975156815,-1.171834013954932,-1.499029808891585,-1.2326766139717047,-1.479595270381802,-1.845749119008984,-2.130643212671272,-2.4417228658531713,-2.510985247579065,-2.721650175676249,-2.918074232242539,-2.8568038454917346,-3.2300921347179186,-3.6043681722701892,-3.2461765499050825,-3.1225287042277414,-3.2407133193790565,-3.4947553321392535,-3.8967061349078937,-4.2788722053824255,-4.7375880019238465,-4.751951589728311,-4.433708166790009,-4.074983925381035,-3.8784590439254814,-4.02097408599899,-4.4248131685962075,-4.231142000525648,-4.210738774174643,-3.929791495610747,-3.5897318415839945,-3.9354223941010025,-3.8658332510090627,-3.8465441452459417,-3.487135676632,-3.388389181620807,-2.978686832928984,-3.098288523737387],"hoveron":"points","frame":null,"hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"mode":"markers","type":"scatter","xaxis":"x","showlegend":false,"yaxis":"y","x":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99],"text":["{:x 0, :y 0.01004000775694136}","{:x 1, :y 0.45470542717366536}","{:x 2, :y 0.0011208341702318991}","{:x 3, :y -0.46261843295169125}","{:x 4, :y -0.940434977559862}","{:x 5, :y -0.9641262948409608}","{:x 6, :y -0.5457229396017853}","{:x 7, :y -0.13693654458401716}","{:x 8, :y -0.42694600915126635}","{:x 9, :y -0.8280148121361294}","{:x 10, :y -0.9370551319322503}","{:x 11, :y -0.9127406978191926}","{:x 12, :y -0.7987733899146767}","{:x 13, :y -0.6308055264086773}","{:x 14, :y -0.48731826180175575}","{:x 15, :y -0.7501667312831292}","{:x 16, :y -0.7623774971405919}","{:x 17, :y -0.27719401396097043}","{:x 18, :y -0.2434385110523386}","{:x 19, :y -0.05147952510243636}","{:x 20, :y -0.11815955240761222}","{:x 21, :y 0.19262743022786666}","{:x 22, :y -0.23795478590011165}","{:x 23, :y -0.6329526985075521}","{:x 24, :y -1.016053546019601}","{:x 25, :y -1.0579190382483379}","{:x 26, :y -1.0783069216125567}","{:x 27, :y -0.8107772112581858}","{:x 28, :y -0.3466303753617297}","{:x 29, :y -0.7115154556335753}","{:x 30, :y -1.0169783038390752}","{:x 31, :y -1.213924397183656}","{:x 32, :y -0.7167908890251217}","{:x 33, :y -0.5273165340104237}","{:x 34, :y -0.7041949828843584}","{:x 35, :y -0.8601082618166783}","{:x 36, :y -0.8344924751360666}","{:x 37, :y -0.8947411534474609}","{:x 38, :y -1.1123590161276797}","{:x 39, :y -1.1534276754606538}","{:x 40, :y -1.4202874303436417}","{:x 41, :y -1.5911301147067105}","{:x 42, :y -2.0143380187337616}","{:x 43, :y -2.158924247227784}","{:x 44, :y -2.3497557791104553}","{:x 45, :y -2.1231035375897167}","{:x 46, :y -2.2711461789446385}","{:x 47, :y -2.155166440976695}","{:x 48, :y -1.9851875737260827}","{:x 49, :y -1.6675593516470013}","{:x 50, :y -1.4134335099627218}","{:x 51, :y -1.436062340702454}","{:x 52, :y -0.9521106327088574}","{:x 53, :y -0.7760819240655209}","{:x 54, :y -0.9605511155679766}","{:x 55, :y -1.0024158012921698}","{:x 56, :y -1.3314700909883634}","{:x 57, :y -1.0410751693768283}","{:x 58, :y -0.9857790703640387}","{:x 59, :y -0.5272702058342348}","{:x 60, :y -0.7464443239720814}","{:x 61, :y -1.2181996907041972}","{:x 62, :y -0.9815921975156815}","{:x 63, :y -1.171834013954932}","{:x 64, :y -1.499029808891585}","{:x 65, :y -1.2326766139717047}","{:x 66, :y -1.479595270381802}","{:x 67, :y -1.845749119008984}","{:x 68, :y -2.130643212671272}","{:x 69, :y -2.4417228658531713}","{:x 70, :y -2.510985247579065}","{:x 71, :y -2.721650175676249}","{:x 72, :y -2.918074232242539}","{:x 73, :y -2.8568038454917346}","{:x 74, :y -3.2300921347179186}","{:x 75, :y -3.6043681722701892}","{:x 76, :y -3.2461765499050825}","{:x 77, :y -3.1225287042277414}","{:x 78, :y -3.2407133193790565}","{:x 79, :y -3.4947553321392535}","{:x 80, :y -3.8967061349078937}","{:x 81, :y -4.2788722053824255}","{:x 82, :y -4.7375880019238465}","{:x 83, :y -4.751951589728311}","{:x 84, :y -4.433708166790009}","{:x 85, :y -4.074983925381035}","{:x 86, :y -3.8784590439254814}","{:x 87, :y -4.02097408599899}","{:x 88, :y -4.4248131685962075}","{:x 89, :y -4.231142000525648}","{:x 90, :y -4.210738774174643}","{:x 91, :y -3.929791495610747}","{:x 92, :y -3.5897318415839945}","{:x 93, :y -3.9354223941010025}","{:x 94, :y -3.8658332510090627}","{:x 95, :y -3.8465441452459417}","{:x 96, :y -3.487135676632}","{:x 97, :y -3.388389181620807}","{:x 98, :y -2.978686832928984}","{:x 99, :y -3.098288523737387}"]}]},"evals":[],"jsHooks":[]}</script></div>
+>>>>>>> main
 </section>
 <section id="dmol.js" class="level2" data-number="2.27">
 <h2 data-number="2.27" class="anchored" data-anchor-id="dmol.js"><span class="header-section-number">2.27</span> 3DMol.js</h2>
@@ -2728,7 +3291,11 @@ flowchart TD
 </div>
 <div><script>portal_api.embed().renderOutputItem(
                 {'mime': 'x-application/edn',
+<<<<<<< HEAD
                  'text': (() => "[^{:source \"[:big [:big \\\"a plot\\\"]]\", :line 1085, :column 16, :end-line 1085, :end-column 38, :kindly/kind :kind/hiccup, :kindly/options nil, :portal.viewer/default :portal.viewer/hiccup} [:big ^{:source \"[:big \\\"a plot\\\"]\", :line 1085, :column 22, :end-line 1085, :end-column 37} [:big \"a plot\"]] ^#:portal.viewer{:default :portal.viewer/hiccup} [:portal.viewer/vega-lite ^{:source \"{:data {:values data},\\n       :mark \\\"point\\\"\\n       :encoding\\n       {:size {:field \\\"w\\\" :type \\\"quantitative\\\"}\\n        :x {:field \\\"x\\\", :type \\\"quantitative\\\"},\\n        :y {:field \\\"y\\\", :type \\\"quantitative\\\"},\\n        :fill {:field \\\"z\\\", :type \\\"nominal\\\"}}}\", :line 453, :column 7, :end-line 459, :end-column 46, :kindly/kind :kind/vega-lite, :kindly/options nil} {:data ^{:source \"{:values data}\", :line 453, :column 14, :end-line 453, :end-column 28} {:values (^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 4, :z 3, :x 0, :y -0.2494860835045919} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 3, :z 6, :x 1, :y -0.15337433002221945} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 5, :z 5, :x 2, :y -0.29681636868286876} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 7, :z 8, :x 3, :y 0.030486994935195022} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 0, :z 4, :x 4, :y 0.06415078303072841} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 2, :z 7, :x 5, :y -0.3170229267704575} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 1, :z 0, :x 6, :y -0.5717504293029954} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 4, :z 0, :x 7, :y -0.9159673973420973} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 3, :z 0, :x 8, :y -0.8689952458138426})}, :mark \"point\", :encoding ^{:source \"{:size {:field \\\"w\\\" :type \\\"quantitative\\\"}\\n        :x {:field \\\"x\\\", :type \\\"quantitative\\\"},\\n        :y {:field \\\"y\\\", :type \\\"quantitative\\\"},\\n        :fill {:field \\\"z\\\", :type \\\"nominal\\\"}}\", :line 456, :column 8, :end-line 459, :end-column 45} {:size ^{:source \"{:field \\\"w\\\" :type \\\"quantitative\\\"}\", :line 456, :column 15, :end-line 456, :end-column 48} {:field \"w\", :type \"quantitative\"}, :x ^{:source \"{:field \\\"x\\\", :type \\\"quantitative\\\"}\", :line 457, :column 12, :end-line 457, :end-column 46} {:field \"x\", :type \"quantitative\"}, :y ^{:source \"{:field \\\"y\\\", :type \\\"quantitative\\\"}\", :line 458, :column 12, :end-line 458, :end-column 46} {:field \"y\", :type \"quantitative\"}, :fill ^{:source \"{:field \\\"z\\\", :type \\\"nominal\\\"}\", :line 459, :column 15, :end-line 459, :end-column 44} {:field \"z\", :type \"nominal\"}}}]]")}
+=======
+                 'text': (() => "[^{:source \"[:big [:big \\\"a plot\\\"]]\", :line 1085, :column 16, :end-line 1085, :end-column 38, :kindly/kind :kind/hiccup, :kindly/options nil, :portal.viewer/default :portal.viewer/hiccup} [:big ^{:source \"[:big \\\"a plot\\\"]\", :line 1085, :column 22, :end-line 1085, :end-column 37} [:big \"a plot\"]] ^#:portal.viewer{:default :portal.viewer/hiccup} [:portal.viewer/vega-lite ^{:source \"{:data {:values data},\\n       :mark \\\"point\\\"\\n       :encoding\\n       {:size {:field \\\"w\\\" :type \\\"quantitative\\\"}\\n        :x {:field \\\"x\\\", :type \\\"quantitative\\\"},\\n        :y {:field \\\"y\\\", :type \\\"quantitative\\\"},\\n        :fill {:field \\\"z\\\", :type \\\"nominal\\\"}}}\", :line 453, :column 7, :end-line 459, :end-column 46, :kindly/kind :kind/vega-lite, :kindly/options nil} {:data ^{:source \"{:values data}\", :line 453, :column 14, :end-line 453, :end-column 28} {:values (^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 8, :z 8, :x 0, :y 0.206894997525088} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 6, :z 7, :x 1, :y 0.22692043792761207} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 0, :z 7, :x 2, :y -0.07160367721500005} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 1, :z 4, :x 3, :y 0.2868193736892357} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 5, :z 5, :x 4, :y 0.6627146254451173} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 8, :z 8, :x 5, :y 1.0057194030582615} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 2, :z 6, :x 6, :y 0.5138001928702008} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 3, :z 6, :x 7, :y 0.6425191560746943} ^{:source \"{:w (rand-int 9)\\n                       :z (rand-int 9)\\n                       :x x\\n                       :y y}\", :line 466, :column 23, :end-line 469, :end-column 29} {:w 8, :z 4, :x 8, :y 0.910995354760864})}, :mark \"point\", :encoding ^{:source \"{:size {:field \\\"w\\\" :type \\\"quantitative\\\"}\\n        :x {:field \\\"x\\\", :type \\\"quantitative\\\"},\\n        :y {:field \\\"y\\\", :type \\\"quantitative\\\"},\\n        :fill {:field \\\"z\\\", :type \\\"nominal\\\"}}\", :line 456, :column 8, :end-line 459, :end-column 45} {:size ^{:source \"{:field \\\"w\\\" :type \\\"quantitative\\\"}\", :line 456, :column 15, :end-line 456, :end-column 48} {:field \"w\", :type \"quantitative\"}, :x ^{:source \"{:field \\\"x\\\", :type \\\"quantitative\\\"}\", :line 457, :column 12, :end-line 457, :end-column 46} {:field \"x\", :type \"quantitative\"}, :y ^{:source \"{:field \\\"y\\\", :type \\\"quantitative\\\"}\", :line 458, :column 12, :end-line 458, :end-column 46} {:field \"y\", :type \"quantitative\"}, :fill ^{:source \"{:field \\\"z\\\", :type \\\"nominal\\\"}\", :line 459, :column 15, :end-line 459, :end-column 44} {:field \"z\", :type \"nominal\"}}}]]")}
+>>>>>>> main
                 , document.currentScript.parentElement);</script></div>
 </section>
 <section id="nesting-kinds-in-hiccup" class="level2" data-number="2.30">
@@ -3030,7 +3597,11 @@ flowchart TD
 </tbody>
 </table>
 </div>
+<<<<<<< HEAD
 <hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":3,"z":7,"x":0,"y":-0.1807878008785292},{"w":7,"z":1,"x":1,"y":0.06331234727688106},{"w":5,"z":7,"x":2,"y":0.3997072475525699},{"w":4,"z":0,"x":3,"y":0.35136485769917236},{"w":4,"z":8,"x":4,"y":0.7213768194504065},{"w":7,"z":8,"x":5,"y":0.5808958437273816},{"w":7,"z":3,"x":6,"y":0.8728660821869293},{"w":0,"z":7,"x":7,"y":0.7881829311520879},{"w":8,"z":7,"x":8,"y":0.9116813093949987}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"clay_book.examples_files\/data3.csv","format":{"type":"csv"}},"mark":"point","encoding":{"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"}}});</script></div><hr><pre><code>kind/reagent</code></pre><div id="id19"><script type="application/x-scittle">(reagent.dom/render [(fn [numbers] [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))]) [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39]] (js/document.getElementById "id19"))</script></div></div>
+=======
+<hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":5,"z":8,"x":0,"y":0.2484047078634084},{"w":1,"z":1,"x":1,"y":-0.01789589190233165},{"w":5,"z":6,"x":2,"y":0.00439858469009724},{"w":5,"z":2,"x":3,"y":0.1253728218716944},{"w":6,"z":8,"x":4,"y":-0.12131743031686892},{"w":7,"z":4,"x":5,"y":-0.35525712943335575},{"w":8,"z":1,"x":6,"y":-0.28323236202250723},{"w":6,"z":7,"x":7,"y":-0.14632153261137337},{"w":0,"z":4,"x":8,"y":-0.6361173312532095}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><hr><pre><code>kind/vega-lite</code></pre><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"url":"clay_book.examples_files\/data3.csv","format":{"type":"csv"}},"mark":"point","encoding":{"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"}}});</script></div><hr><pre><code>kind/reagent</code></pre><div id="id19"><script type="application/x-scittle">(reagent.dom/render [(fn [numbers] [:p {:style {:background "#d4ebe9"}} (pr-str (map inc numbers))]) [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39]] (js/document.getElementById "id19"))</script></div></div>
+>>>>>>> main
 <p>Scittle and Reagent kinds are recognized automatically inside Hiccup:</p>
 <div class="sourceClojure">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb134"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>(kind/hiccup</span>
@@ -3115,7 +3686,11 @@ flowchart TD
 </table>
 </div></td>
 <td><div>
+<<<<<<< HEAD
 <script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":3,"z":0,"x":0,"y":0.2759659958107764},{"w":7,"z":3,"x":1,"y":0.4055517580020749},{"w":1,"z":4,"x":2,"y":0.4030916103761123},{"w":1,"z":8,"x":3,"y":-0.020740330027754994},{"w":8,"z":5,"x":4,"y":-0.1907677205498598},{"w":8,"z":3,"x":5,"y":-0.08308420926273719},{"w":1,"z":4,"x":6,"y":-0.3305165915224898},{"w":0,"z":7,"x":7,"y":0.0871400626108334},{"w":8,"z":4,"x":8,"y":-0.24272116101286423}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
+=======
+<script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":3,"z":8,"x":0,"y":0.45913529203842374},{"w":8,"z":0,"x":1,"y":0.83058364226615},{"w":7,"z":4,"x":2,"y":0.596595606337402},{"w":4,"z":6,"x":3,"y":0.7589643431085331},{"w":8,"z":3,"x":4,"y":0.6195985043683997},{"w":4,"z":5,"x":5,"y":0.4700046786582902},{"w":1,"z":4,"x":6,"y":0.043015780504393586},{"w":0,"z":5,"x":7,"y":-0.4076773227346937},{"w":2,"z":2,"x":8,"y":-0.26799679720214886}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
+>>>>>>> main
 </div></td>
 </tr>
 <tr class="odd">
@@ -3176,7 +3751,11 @@ flowchart TD
 </div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
 <td><div style="margin-left:10px;">
 <div>
+<<<<<<< HEAD
 <script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":6,"z":5,"x":0,"y":0.37459246788448375},{"w":8,"z":1,"x":1,"y":0.8008725095639208},{"w":0,"z":4,"x":2,"y":1.261226678075604},{"w":3,"z":6,"x":3,"y":1.7263231040086513},{"w":3,"z":0,"x":4,"y":1.607209609757402},{"w":4,"z":8,"x":5,"y":1.4751776377911678},{"w":0,"z":5,"x":6,"y":1.0192278985945311},{"w":2,"z":0,"x":7,"y":1.4558818103177429},{"w":7,"z":7,"x":8,"y":1.4186230254684666}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
+=======
+<script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":6,"z":0,"x":0,"y":-0.40332013064354977},{"w":3,"z":5,"x":1,"y":-0.7497170012675869},{"w":5,"z":2,"x":2,"y":-0.2515839759947347},{"w":4,"z":3,"x":3,"y":-0.7509350942130593},{"w":7,"z":6,"x":4,"y":-1.0916685481557278},{"w":2,"z":7,"x":5,"y":-1.1060890168654995},{"w":5,"z":6,"x":6,"y":-1.1838845696656228},{"w":2,"z":8,"x":7,"y":-1.212202448617056},{"w":5,"z":5,"x":8,"y":-1.6610467467572088}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script>
+>>>>>>> main
 </div>
 </div></td>
 </tr>
@@ -3205,6 +3784,7 @@ flowchart TD
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
+<<<<<<< HEAD
 <td style="text-align: right;">0.98303034</td>
 </tr>
 <tr class="even">
@@ -3214,6 +3794,17 @@ flowchart TD
 <tr class="odd">
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0.97925585</td>
+=======
+<td style="text-align: right;">0.18431189</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.16641432</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.48247871</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
@@ -3258,7 +3849,11 @@ flowchart TD
 <span id="cb143-14"><a href="#cb143-14" aria-hidden="true" tabindex="-1"></a>                   :=mark-size <span class="dv">3</span></span>
 <span id="cb143-15"><a href="#cb143-15" aria-hidden="true" tabindex="-1"></a>                   :=mark-opacity <span class="fl">0.2</span>}))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<<<<<<< HEAD
 <div><p>[</p><div class="clay-sequential" style="margin-left:10%;width:110%;"><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":5,"z":0,"x":0,"y":0.11425582390972255},{"w":2,"z":7,"x":1,"y":0.26579667920576044},{"w":0,"z":1,"x":2,"y":-0.23010135799159293},{"w":6,"z":6,"x":3,"y":-0.6981737534847099},{"w":7,"z":8,"x":4,"y":-0.664968604146858},{"w":7,"z":8,"x":5,"y":-0.20848943560745614},{"w":7,"z":8,"x":6,"y":0.219710508492594},{"w":1,"z":0,"x":7,"y":0.3100182764218744},{"w":6,"z":7,"x":8,"y":0.7510642823812295}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><div class="clay-dataset"><p>_unnamed [3 2]:</p>
+=======
+<div><p>[</p><div class="clay-sequential" style="margin-left:10%;width:110%;"><div><script>vegaEmbed(document.currentScript.parentElement, {"data":{"values":[{"w":6,"z":4,"x":0,"y":0.12759048527380978},{"w":3,"z":5,"x":1,"y":-0.0950270529975521},{"w":8,"z":7,"x":2,"y":0.057671007972940336},{"w":5,"z":4,"x":3,"y":0.3531209180637116},{"w":8,"z":5,"x":4,"y":0.6492636102352464},{"w":4,"z":5,"x":5,"y":0.7484218803945106},{"w":0,"z":1,"x":6,"y":1.0461539146620624},{"w":7,"z":1,"x":7,"y":0.874550674746214},{"w":7,"z":1,"x":8,"y":0.9379069612377386}]},"mark":"point","encoding":{"size":{"field":"w","type":"quantitative"},"x":{"field":"x","type":"quantitative"},"y":{"field":"y","type":"quantitative"},"fill":{"field":"z","type":"nominal"}}});</script></div><div class="clay-dataset"><p>_unnamed [3 2]:</p>
+>>>>>>> main
 <table class="table caption-top">
 <thead>
 <tr class="header">
@@ -3269,6 +3864,7 @@ flowchart TD
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
+<<<<<<< HEAD
 <td style="text-align: right;">0.18532630</td>
 </tr>
 <tr class="even">
@@ -3278,6 +3874,17 @@ flowchart TD
 <tr class="odd">
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0.67897117</td>
+=======
+<td style="text-align: right;">0.90250244</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.69044754</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.92354227</td>
+>>>>>>> main
 </tr>
 </tbody>
 </table>
