@@ -39,6 +39,7 @@ Please reach out to add your project to this list.
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 - [Wolframite documentation](https://scicloj.github.io/wolframite)
 - [Clay documentation](https://scicloj.github.io/clay/)
+- [QClojure](https://github.com/lsolbach/qclojure)
 - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly
 - [Noj documentation](https://scicloj.github.io/noj/)
 - [Tableplot documentation](https://scicloj.github.io/tableplot/)
