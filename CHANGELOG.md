@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2.0.8 - 2026-01-31]
+- simplified the `kind/doc` behavior (still experimental)
+
 ## [2.0.7 - 2026-01-30]
 - updated the set of form starters whose results should be hidden (PR #324)
 - added `kind/doc` for documentation entries (PR #325) (experimental)
