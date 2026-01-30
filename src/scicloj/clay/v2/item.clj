@@ -578,14 +578,11 @@
 
 (defn doc
   "Create documentation markdown for a given value, var or other."
-  [{:as context
-    :keys [value kindly/options]}]
-  {:md (let [{:keys [prefix suffix]} options]
-         (str prefix
-              (if (sequential? value)
-                (->> value
-                     (map val->doc)
-                     (str/join))
-                (val->doc value))
-              suffix))})
+  [value]
+  {:md (str "### "
+            (if (sequential? value)
+              (->> value
+                   (map val->doc)
+                   (str/join))
+              (val->doc value)))})
 

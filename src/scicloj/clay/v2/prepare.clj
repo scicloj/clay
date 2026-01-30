@@ -574,7 +574,7 @@
  :kind/vega-lite
  #'item/vega-embed)
 
-(add-preparer!
+(add-preparer-from-value-fn!
  :kind/doc
  #'item/doc)
 
