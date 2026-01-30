@@ -574,6 +574,10 @@
  :kind/vega-lite
  #'item/vega-embed)
 
+(add-preparer!
+ :kind/doc
+ #'item/doc)
+
 (add-preparer-from-value-fn!
  :kind/video
  #'item/video)
@@ -590,6 +594,4 @@
  :kind/highcharts
  #'item/highcharts)
 
-(add-preparer-from-value-fn!
- :kind/doc
- #'item/doc)
+

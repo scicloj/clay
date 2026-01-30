@@ -558,3 +558,34 @@
         with-out-str
         md
         (merge {:item-class "clay-dataset"}))))
+
+(defn var->doc [v]
+  (let [{:keys [name arglists doc]} (meta v)]
+    (prn (meta v))
+    (str (format "`%s`\n" name)
+         (->> arglists
+              (map (fn [l]
+                     (->> l
+                          pr-str
+                          (format "`%s`\n\n"))))
+              (str/join ""))
+         doc)))
+
+(defn val->doc [v]
+  (if (var? v)
+    (var->doc v)
+    (format "`%s`\n" (pr-str v))))
+
+(defn doc
+  "Create documentation markdown for a given value, var or other."
+  [{:as context
+    :keys [value kindly/options]}]
+  {:md (let [{:keys [prefix suffix]} options]
+         (str prefix
+              (if (sequential? value)
+                (->> value
+                     (map val->doc)
+                     (str/join))
+                (val->doc value))
+              suffix))})
+
