@@ -112,6 +112,7 @@
 ;; - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 ;; - [Wolframite documentation](https://scicloj.github.io/wolframite)
 ;; - [Clay documentation](https://scicloj.github.io/clay/)
+;; - [QClojure](https://github.com/lsolbach/qclojure)
 ;; - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly
 ;; - [Noj documentation](https://scicloj.github.io/noj/)
 ;; - [Tableplot documentation](https://scicloj.github.io/tableplot/)
@@ -164,7 +165,10 @@
        "WiOUiHsq_dc"]
       ["May 2nd 2025"
        "Clojure for data analysis - getting started with Noj v2, VSCode, Calva, and Clay"
-       "B1yPkpyiEEs"]]
+       "B1yPkpyiEEs"]
+      ["Nov 14th 2025"
+       "The Search for Meaning Through Collaboration and Code - Timothy Pratley (Clojure/conj)"
+       "XS0NyQ-aePk"]]
      reverse
      (map (fn [[date title youtube-id]]
             [:tr
@@ -1178,3 +1182,22 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
  {:html/deps [{:js ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
                     "https://cdn.jsdelivr.net/npm/leaflet-providers@2.0.0/leaflet-providers.min.js"]
                :css ["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"]}]})
+
+
+;; ## Documentation
+;; (experimental 🧪)
+
+;; With `kind/doc`, one may create a documentation entries for a value.
+;; The entries will be level-3 headings (`###` in Markdown)
+;; and will thus appear in the table of contents when rendered through Quarto.
+
+;; Typically, we interleave such documentation entries with free-form
+;; notebook examples.
+
+(kind/doc :abcd/efgh)
+
+;; When the value is a var, the typical var metadata
+;; (arglists if present, and docstring) are added.
+
+(kind/doc #'clojure.core/eduction)
+

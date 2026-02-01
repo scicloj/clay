@@ -35,12 +35,11 @@ The [clay.el](https://github.com/scicloj/clay.el) Emacs package offers relevant 
 
 Please reach out to add your project to this list.
 
-;; ## Projects using Clay
-
 - [Clojure Civitas](https://clojurecivitas.github.io/)
 - [Tablecloth documentation](https://scicloj.github.io/tablecloth/)
 - [Wolframite documentation](https://scicloj.github.io/wolframite)
 - [Clay documentation](https://scicloj.github.io/clay/)
+- [QClojure](https://github.com/lsolbach/qclojure)
 - [Kindly-noted](https://scicloj.github.io/kindly-noted/) - documenting the ecosystem around Kindly
 - [Noj documentation](https://scicloj.github.io/noj/)
 - [Tableplot documentation](https://scicloj.github.io/tableplot/)
