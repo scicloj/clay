@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [unreleased]
 - updated deps: Kindly, tools.reader
+- set `kindly/*prefer-kinds*` when rendering to let functions know they would rather return kindly-annotated values rather than launch external tools
 
 ## [2.0.8 - 2026-01-31]
 - simplified the `kind/doc` behavior (still experimental)
