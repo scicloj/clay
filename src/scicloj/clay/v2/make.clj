@@ -504,7 +504,8 @@
         {:keys [ide browse show book base-target-path clean-up-target-dir live-reload]} main-spec
         full-source-paths (set (map :full-source-path single-ns-specs))]
     (println "Clay make started: " full-source-paths)
-    (binding [*making* true]
+    (binding [*making* true
+              kindly/*prefer-kinds* true]
       (when show
         (server/open! main-spec)
         (server/loading!))
