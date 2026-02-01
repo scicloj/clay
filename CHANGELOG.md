@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2.0.9 - 2026-02-01]
 - updated deps: Kindly, tools.reader
 - set `kindly/*prefer-kinds*` when rendering to let functions know they would rather return kindly-annotated values rather than launch external tools
 
