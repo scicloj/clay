@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [unreleased]
+- updated deps: Kindly, tools.reader
+
 ## [2.0.8 - 2026-01-31]
 - simplified the `kind/doc` behavior (still experimental)
 
