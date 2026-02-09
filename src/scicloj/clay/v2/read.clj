@@ -100,6 +100,29 @@
               :generated-string)
    :comment? true})
 
+(defn merge-trailing [prev comment]
+  (let [[psl psc _ pec] (:region prev)
+        [_ csc cel cec] (:region comment)
+        spaces (max 0 (- csc pec))
+        spacer (apply str (repeat spaces " "))]
+    (-> prev
+        (update :code str spacer (:code comment))
+        (assoc :region [psl psc cel cec]))))
+
+(defn include-trailing-comments [notes]
+  (reduce (fn [acc note]
+            (let [prev (peek acc)]
+              (if (and (:comment? note)
+                       prev
+                       (not (:comment? prev))
+                       (let [[_ _ pel] (:region prev)
+                             [csl] (:region note)]
+                         (= csl pel)))
+                (conj (pop acc) (merge-trailing prev note))
+                (conj acc note))))
+          []
+          notes))
+
 (defn ->notes [code]
   (->> code
        ((juxt read-by-tools-reader read-by-parcera))
@@ -113,6 +136,7 @@
                      (filter #(-> % :method (= :tools-reader)))
                      first))))
        (sort-by :region)
+       (include-trailing-comments)
        (map #(dissoc % :method))
        (partition-by :comment?)
        (mapcat (fn [part]
