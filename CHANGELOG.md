@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## PENDING
+## [2.0.10 - 2026-02-10]
 - capture trailing comments in code blocks
+- no need for cleanup of Plotly specs anymore (due to a fix in Tableplot) - this may break behavior for old Tableplot versions
 
 ## [2.0.9 - 2026-02-01]
 - updated deps: Kindly, tools.reader

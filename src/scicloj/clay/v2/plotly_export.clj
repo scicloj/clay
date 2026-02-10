@@ -21,9 +21,7 @@ fig.write_image(filename)
 ")
 
 (defn export-plot! [filename data layout]
-  ;; TODO: should figure out why these invalid properties are on data
-  (let [data (update data 0 dissoc :r :fill :mode :theta :z :lon :lat :width)
-        layout (dissoc layout :automargin)
+  (let [layout (dissoc layout :automargin)
         payload (jso/write-json-str {:data data
                                      :layout layout
                                      :filename filename})
