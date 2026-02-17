@@ -247,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="printedClojure">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">121</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>If we think about it, we know the resulting number has to be more than 100. Thus, we may add a test for that by taking the result of the last form, infoking the <code>&gt;</code> function with the additional argument <code>100</code>, and making sure the result is truthy.</p>
+<p>If we think about it, we know the resulting number has to be more than 100. Thus, we may add a test for that by taking the result of the last form, invoking the <code>&gt;</code> function with the additional argument <code>100</code>, and making sure the result is truthy.</p>
 <p>This can be expressed in any one of a few equivalent ways:</p>
 <ul>
 <li><code>(kind/test-last [&gt; 100])</code></li>
@@ -258,7 +258,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v1</span>_l4 (<span class="bu">def</span><span class="fu"> x </span><span class="dv">11</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v3</span>_l8 (<span class="kw">*</span> x x))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t4</span>_l10 (<span class="kw">is</span> (<span class="kw">&gt;</span> v3_l8 <span class="dv">100</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Here, the forms of the notebook are added as <code>def</code> forms, except fot the test itself which is added as a <code>deftest</code>.</p>
+<p>Here, the forms of the notebook are added as <code>def</code> forms, except for the test itself which is added as a <code>deftest</code>.</p>
+<p>When the test is just a single predicate with no extra arguments, you can also pass the function directly without wrapping it in a vector. For example, <code>(kind/test-last pos?)</code> is equivalent to <code>(kind/test-last [pos?])</code>.</p>
 </section>
 <section id="the-different-test-modes" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="the-different-test-modes"><span class="header-section-number">3.3</span> The different test modes</h2>
@@ -286,24 +287,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">;; `kind/test-last` function:</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by passing a function</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">;; directly (without a vector):</span></span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>(kind/test-last [<span class="kw">=</span> <span class="dv">10</span>])</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>(kind/test-last <span class="kw">pos?</span>)</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the </span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">;; `^kind/test-last` metadata:</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">;; `kind/test-last` function:</span></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>^kind/test-last [<span class="kw">=</span> <span class="dv">11</span>]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>(kind/test-last [<span class="kw">=</span> <span class="dv">11</span>])</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the </span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">;; `kindky/check` macro:</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">;; `^kind/test-last` metadata:</span></span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>(kindly/check <span class="kw">=</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>^kind/test-last [<span class="kw">=</span> <span class="dv">12</span>]</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">;; Express a test by the </span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">;; `kindly/check` macro:</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>(kindly/check <span class="kw">=</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="g-col-6">
@@ -326,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v3</span>_l9 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t5</span>_l14 (<span class="kw">is</span> (<span class="kw">=</span> v3_l9 <span class="dv">10</span>)))</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t5</span>_l14 (<span class="kw">is</span> (<span class="kw">pos?</span> v3_l9)))</span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v6</span>_l16 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
@@ -338,7 +346,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v9</span>_l23 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t11</span>_l28 (<span class="kw">is</span> (<span class="kw">=</span> v9_l23 <span class="dv">12</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t11</span>_l28 (<span class="kw">is</span> (<span class="kw">=</span> v9_l23 <span class="dv">12</span>)))</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> v12</span>_l30 (<span class="kw">+</span> x (<span class="kw">swap!</span> *a <span class="kw">inc</span>)))</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t14</span>_l35 (<span class="kw">is</span> (<span class="kw">=</span> v12_l30 <span class="dv">13</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -413,7 +427,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>)</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>(kind/test-last</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a> [<span class="kw">=</span> <span class="dv">9</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a> [<span class="kw">=</span> <span class="dv">9</span>])</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">;; A simple test with a bare function:</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>(<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>(kind/test-last <span class="kw">pos?</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="g-col-6">
@@ -426,7 +446,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  [clojure.<span class="kw">test</span> <span class="at">:refer</span> [<span class="bu">deftest</span><span class="fu"> is</span>]]))</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t3</span>_l9 (<span class="kw">is</span> (<span class="kw">=</span> (<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>) <span class="dv">9</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t3</span>_l9 (<span class="kw">is</span> (<span class="kw">=</span> (<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>) <span class="dv">9</span>)))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>(<span class="bu">deftest</span><span class="fu"> t6</span>_l16 (<span class="kw">is</span> (<span class="kw">pos?</span> (<span class="kw">+</span> <span class="dv">4</span> <span class="dv">5</span>))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
