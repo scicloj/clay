@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2.0.11]
+## [2.0.11 - 2026-02-17]
 - `kind/test-last` now supports passing a bare function (e.g., `(kind/test-last pos?)`) in addition to the existing vector form (`(kind/test-last [pos?])`)
 
 ## [2.0.10 - 2026-02-10]
