@@ -8,21 +8,28 @@
 
 (+ x (swap! *a inc))
 
+;; Express a test by passing a function
+;; directly (without a vector):
+
+(kind/test-last pos?)
+
+(+ x (swap! *a inc))
+
 ;; Express a test by the
 ;; `kind/test-last` function:
 
-(kind/test-last [= 10])
+(kind/test-last [= 11])
 
 (+ x (swap! *a inc))
 
 ;; Express a test by the 
 ;; `^kind/test-last` metadata:
 
-^kind/test-last [= 11]
+^kind/test-last [= 12]
 
 (+ x (swap! *a inc))
 
 ;; Express a test by the 
-;; `kindky/check` macro:
+;; `kindly/check` macro:
 
-(kindly/check = 12)
+(kindly/check = 13)

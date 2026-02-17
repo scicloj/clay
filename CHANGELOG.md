@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2.0.11]
+- `kind/test-last` now supports passing a bare function (e.g., `(kind/test-last pos?)`) in addition to the existing vector form (`(kind/test-last [pos?])`)
+
 ## [2.0.10 - 2026-02-10]
 - capture trailing comments in code blocks
 - no need for cleanup of Plotly specs anymore (due to a fix in Tableplot) - this may break behavior for old Tableplot versions

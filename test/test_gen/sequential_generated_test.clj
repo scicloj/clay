@@ -15,7 +15,7 @@
 (def v3_l9 (+ x (swap! *a inc)))
 
 
-(deftest t5_l14 (is (= v3_l9 10)))
+(deftest t5_l14 (is (pos? v3_l9)))
 
 
 (def v6_l16 (+ x (swap! *a inc)))
@@ -28,3 +28,9 @@
 
 
 (deftest t11_l28 (is (= v9_l23 12)))
+
+
+(def v12_l30 (+ x (swap! *a inc)))
+
+
+(deftest t14_l35 (is (= v12_l30 13)))

@@ -42,7 +42,7 @@
                          remote-repo]}]
   (let [relative-file-path (path/path-relative-to-repo full-source-path)]
     (item/info-line {:path relative-file-path
-                     :url  (some-> remote-repo (path/file-git-url relative-file-path))})))
+                     :url (some-> remote-repo (path/file-git-url relative-file-path))})))
 
 (defn narrowed? [code]
   (some-> code
@@ -81,7 +81,7 @@
 
 (defn read-eval-capture
   "Captures stdout and stderr while evaluating a note"
-  [{:as   note
+  [{:as note
     :keys [code form]}]
   (let [out (StringWriter.)
         err (StringWriter.)
@@ -118,7 +118,7 @@
         (seq global-err) (assoc :global-err global-err))
       note)))
 
-(defn complete [{:as   note
+(defn complete [{:as note
                  :keys [comment?]}]
   (let [completed (cond-> note
                     (not (or comment? (contains? note :value)))
@@ -132,9 +132,9 @@
       (str/split #"\n")
       (->> (map #(-> %
                      (str/replace
-                       #"^;+\s?" "")
+                      #"^;+\s?" "")
                      (str/replace
-                       #"^#" "\n#")))
+                      #"^#" "\n#")))
            (str/join "\n"))
       item/md))
 
@@ -142,9 +142,9 @@
   (or hide-code
       narrowed
       (-> form meta :kindly/hide-code)
-      (-> form meta :kindly/hide-code?)                     ; legacy convention
+      (-> form meta :kindly/hide-code?) ; legacy convention
       (-> value meta :kindly/hide-code)
-      (-> value meta :kindly/hide-code?)                    ; legacy convention
+      (-> value meta :kindly/hide-code?) ; legacy convention
       (when kind
         (some-> note
                 :kindly/options
@@ -175,9 +175,9 @@
                [:div.g-col-6 (:hiccup code-item)]
                (->> (map #(prepare/item->hiccup % spec) value-items)
                     (into [:div.g-col-6]))]
-      :deps   (set (mapcat :deps value-items))}]))
+      :deps (set (mapcat :deps value-items))}]))
 
-(defn note-to-items [{:as   note
+(defn note-to-items [{:as note
                       :keys [comment?
                              code
                              exception
@@ -247,11 +247,16 @@
         form))
 
 (defn clean-test-last-form [form]
-  (case (str (first form))
-    "kind/test-last" (second form)
-    "kindly/check" (rest form)
-    ;; else
-    form))
+  (if-not (sequential? form)
+    [form]
+    (let [cleaned (case (str (first form))
+                    "kind/test-last" (second form)
+                    "kindly/check" (rest form)
+                    ;; else
+                    form)]
+      (if (sequential? cleaned)
+        cleaned
+        [cleaned]))))
 
 (defn var-based-deftest-form [test-name var-name form]
   (let [[f-symbol & args] form]
@@ -301,9 +306,9 @@
          path
          (fn [{:keys [code]}]
            (let [new-code (slurp path)]
-             {:code                 new-code
+             {:code new-code
               :first-line-of-change (first-line-of-change
-                                      code new-code)})))
+                                     code new-code)})))
   (@*path->last path))
 
 (defmacro with-out-err-captured
@@ -361,24 +366,24 @@
                               comment? nil
                               ;; the regular case, just a def
                               :else (def-form varname form))
-                  step {:i                    (inc i)
-                        :items                (into items (remove nil?) new-items)
-                        :test-forms           (if test-form
-                                                (conj test-forms test-form)
-                                                test-forms)
+                  step {:i (inc i)
+                        :items (into items (remove nil?) new-items)
+                        :test-forms (if test-form
+                                      (conj test-forms test-form)
+                                      test-forms)
                         :last-nontest-varname (if (or comment? test-note)
                                                 last-nontest-varname
                                                 varname)
-                        :last-nontest-form    (if (or comment? test-note)
-                                                last-nontest-form
-                                                form)}]
+                        :last-nontest-form (if (or comment? test-note)
+                                             last-nontest-form
+                                             form)}]
               (if (and exception (not (:exception-continue options)))
                 (reduced (assoc step :exception exception))
                 step)))
           ;; initial value
-          {:i              0
-           :items          []
-           :test-forms     []
+          {:i 0
+           :items []
+           :test-forms []
            :last-nontest-i nil}
           ;; sequence
           relevant-notes))
@@ -391,15 +396,15 @@
                            :kindly/options
                            :format])]
     (doall
-      (for [note notes]
-        (complete (kindly/deep-merge opts note))))))
+     (for [note notes]
+       (complete (kindly/deep-merge opts note))))))
 
 (defn relevant-notes [{:keys [full-source-path
-                         single-form
-                         single-value
-                         smart-sync
-                         pprint-margin]
-                  :or        {pprint-margin pp/*print-right-margin*}}]
+                              single-form
+                              single-value
+                              smart-sync
+                              pprint-margin]
+                       :or {pprint-margin pp/*print-right-margin*}}]
   (let [{:keys [code first-line-of-change]} (some-> full-source-path slurp-and-compare)
         notes (->> (cond single-value (conj (when code
                                               [{:form (read/read-ns-form code)}])
@@ -408,7 +413,7 @@
                                              [{:form (read/read-ns-form code)}])
                                            {:form single-form})
                          :else (read/->notes code))
-                   (map-indexed (fn [i {:as   note
+                   (map-indexed (fn [i {:as note
                                         :keys [code]}]
                                   (merge note
                                          {:i i}
@@ -436,7 +441,7 @@
                      (or (ns-form? form)
                          (>= i first-narrowed-index)
                          (-> region
-                             (nth 2)  ;last region line
+                             (nth 2) ;last region line
                              (> first-line-of-change)))))))))
 
 (defmacro log-time [expr msg]
@@ -448,8 +453,8 @@
      result#))
 
 (defn spec-notes [{:as spec
-                   :keys      [pprint-margin ns-form full-source-path]
-                   :or        {pprint-margin pp/*print-right-margin*}}]
+                   :keys [pprint-margin ns-form full-source-path]
+                   :or {pprint-margin pp/*print-right-margin*}}]
   (binding [*ns* *ns*
             *warn-on-reflection* *warn-on-reflection*
             *unchecked-math* *unchecked-math*
@@ -475,8 +480,8 @@
                   (fn [test-forms]
                     (let [deftest-forms (->> test-forms
                                              (filter #(-> % first (= 'deftest))))]
-                      (when                                 ;; there are some actual test forms
-                        (seq deftest-forms)
+                      (when ;; there are some actual test forms
+                       (seq deftest-forms)
                         #_(prn [:test-forms test-forms
                                 :deftest-forms deftest-forms
                                 :check (->> deftest-forms
@@ -494,11 +499,10 @@
                           (cons (first test-forms)
                                 deftest-forms))))))))))
 
-
 (comment
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"}))
 
   (-> "notebooks/scratch.clj"
       (notebook-items {:full-target-path "docs/scratch.html"
-                       :single-form      '(+ 1 2)})))
+                       :single-form '(+ 1 2)})))

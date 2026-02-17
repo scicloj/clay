@@ -8,3 +8,9 @@
 
 (kind/test-last
  [= 9])
+
+;; A simple test with a bare function:
+
+(+ 4 5)
+
+(kind/test-last pos?)

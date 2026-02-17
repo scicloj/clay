@@ -75,7 +75,7 @@
 
 ;; If we think about it, we know the resulting number has to be more than 100.
 ;; Thus, we may add a test for that by taking the result of the last form,
-;; infoking the `>` function with the additional argument `100`,
+;; invoking the `>` function with the additional argument `100`,
 ;; and making sure the result is truthy.
 
 ;; This can be expressed in any one of a few equivalent ways:
@@ -95,7 +95,11 @@
 ;; ```
 
 ;; Here, the forms of the notebook are added as `def` forms,
-;; except fot the test itself which is added as a `deftest`.
+;; except for the test itself which is added as a `deftest`.
+
+;; When the test is just a single predicate with no extra arguments,
+;; you can also pass the function directly without wrapping it in a vector.
+;; For example, `(kind/test-last pos?)` is equivalent to `(kind/test-last [pos?])`.
 
 ;; ## The different test modes
 
