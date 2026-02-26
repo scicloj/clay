@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## Unreleased
+## [2.0.12 - 2026-02-26]
 - downgrade ring-defaults to be compatible with ring version (PR #329 by @holyjak)
 
 ## [2.0.11 - 2026-02-17]
