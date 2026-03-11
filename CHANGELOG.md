@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## unreleased
+## [2.0.13 - 2026-03-11]
 - fix flare not displaying (PR #332)
 
 ## [2.0.12 - 2026-02-26]
