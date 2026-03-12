@@ -186,20 +186,26 @@
                              global-err
                              global-out
                              kindly/options]}
-                     {:as opts}]
+                     {:keys [show-output]
+                      :or {show-output true}
+                      :as opts}]
   (if (and comment? code)
     [(comment->item code)]
     (let [code-item (when-not (hide-code? note opts)
                       (item/source-clojure code))
+          show-value (not (hide-value? note opts))
           {:keys [exception-continue]} opts
           value-items (cond-> []
-                        err (conj (item/print-output "ERR" err))
-                        out (conj (item/print-output "OUT" out))
-                        global-err (conj (item/print-output "THREAD ERR" global-err))
-                        global-out (conj (item/print-output "THREAD OUT" global-out))
-                        exception (conj (item/print-throwable exception exception-continue))
-                        (and (contains? note :value)
-                             (not (hide-value? note opts)))
+                        (and show-output show-value)
+                        (cond-> err (conj (item/print-output "stderr" err))
+                                out (conj (item/print-output "stdout" out))
+                                global-err (conj (item/print-output "stderr" global-err))
+                                global-out (conj (item/print-output "stdout" global-out)))
+
+                        exception
+                        (conj (item/print-throwable exception exception-continue))
+
+                        (and (contains? note :value) show-value)
                         (into (-> note
                                   (update :value deref-if-needed)
                                   (prepare/prepare-or-pprint))))]

@@ -825,6 +825,7 @@
 ;; | `:port` | Clay server port (default 1971) | `80` |
 ;; | `:ring-defaults` | Merged with (`site-defaults`)[https://github.com/ring-clojure/ring-defaults?tab=readme-ov-file] when creating Clays server. | `{:proxy true}`
 ;; | `:in-memory` | (experimental) do not write to disk, serve from memory | `true` |
+;; | `:show-output` | defaults to true, set to false to hide stderr/stdout | `false` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
