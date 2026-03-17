@@ -44,13 +44,17 @@
     (item/info-line {:path relative-file-path
                      :url (some-> remote-repo (path/file-git-url relative-file-path))})))
 
+(defn strip-string-literals [s]
+  (str/replace s #"\"(?:\\.|[^\"\\])*\"" ""))
+
+(defn marker-outside-string? [code marker]
+  (str/includes? (strip-string-literals code) marker))
+
 (defn narrowed? [code]
-  (some-> code
-          (str/includes? ",,")))
+  (marker-outside-string? code ",,"))
 
 (defn narrower? [code]
-  (some-> code
-          (str/includes? ",,,")))
+  (marker-outside-string? code ",,,"))
 
 (defn ns-form? [form]
   (and (sequential? form)
