@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [unreleased]
 - improvements to stderr/stdout handling (PR #334)
   - in particular, added `show-output` option
+- do not narrow `,,` inside a string (PR #335)
 
 ## [2.0.13 - 2026-03-11]
 - fix flare not displaying (PR #332)
