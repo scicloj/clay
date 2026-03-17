@@ -428,8 +428,8 @@
                                   (merge note
                                          {:i i}
                                          (when-not (:comment? note)
-                                           {:narrowed (narrowed? code)
-                                            :narrower (narrower? code)})))))
+                                           {:narrowed (some-> code narrowed?)
+                                            :narrower (some-> code narrower?)})))))
         some-narrowed (some :narrowed notes)
         some-narrower (some :narrower notes)
         narrowed-indices (when some-narrowed
