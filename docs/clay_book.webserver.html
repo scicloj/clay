@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(server/url)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">"http://localhost:1974/"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">"http://localhost:1972/"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>While the Clay server is running, it shows the last made namespace at <code>/</code>. To view other pages, you can navigate to a particular page, for example, this page is at <code>/clay_book.webserver.html</code>, so if you run Clay locally and make this notebook, you can navigate to it at http://localhost:1971/clay_book.webserver.html</p>
 <section id="servable-namespaces" class="level2" data-number="4.1">
@@ -371,7 +371,7 @@ Note
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span> {<span class="st">"content-type"</span> <span class="st">"application/json"</span>},</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a> <span class="at">:method</span> <span class="at">:post</span>,</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a> <span class="at">:url</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a> <span class="st">"http://localhost:1974/kindly-compute/clay-book.webserver/kindly-add"</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a> <span class="st">"http://localhost:1972/kindly-compute/clay-book.webserver/kindly-add"</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And this is the response we got:</p>
 <div class="sourceClojure">
@@ -382,7 +382,7 @@ Note
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a> {<span class="at">:content-length</span> <span class="st">"1"</span>,</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">:content-type</span> <span class="st">"application/json; charset=utf-8"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Wed, 11 Mar 2026 20:03:26 GMT"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Tue, 17 Mar 2026 17:12:30 GMT"</span>,</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">:server</span> <span class="st">"http-kit"</span>,</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">:x-content-type-options</span> <span class="st">"nosniff"</span>},</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a> <span class="at">:status</span> <span class="dv">200</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -429,12 +429,12 @@ Note
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">:headers</span> {<span class="st">"content-type"</span> <span class="st">"application/json"</span>},</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">:method</span> <span class="at">:post</span>,</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">:url</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://localhost:1974/kindly-compute/clay-book.webserver/kindly-add-named"</span>},</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://localhost:1972/kindly-compute/clay-book.webserver/kindly-add-named"</span>},</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a> <span class="at">:body</span> <span class="st">"9"</span>,</span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a> {<span class="at">:content-length</span> <span class="st">"1"</span>,</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">:content-type</span> <span class="st">"application/json; charset=utf-8"</span>,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Wed, 11 Mar 2026 20:03:26 GMT"</span>,</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Tue, 17 Mar 2026 17:12:30 GMT"</span>,</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">:server</span> <span class="st">"http-kit"</span>,</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">:x-content-type-options</span> <span class="st">"nosniff"</span>},</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a> <span class="at">:status</span> <span class="dv">200</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -524,82 +524,31 @@ Note
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>              {<span class="at">:body</span> (json/write-str {<span class="at">:a</span> <span class="dv">5</span>, <span class="at">:b</span> <span class="dv">9</span>})</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">:headers</span> {<span class="st">"content-type"</span> <span class="st">"application/json"</span>}}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>THREAD OUT
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<pre><code>Request handle-add :post
-{:cookies {},
- :remote-addr "127.0.0.1",
- :start-time 381277864099464,
- :params {:b 9, :a 5},
- :flash nil,
- :body-params {:b 9, :a 5},
- :headers
- {"accept-encoding" "gzip, deflate",
-  "content-length" "13",
-  "content-type" "application/json",
-  "host" "localhost:1974",
-  "user-agent" "http-kit/2.0"},
- :async-channel
- #object[org.httpkit.server.AsyncChannel 0x5b42c89c "/127.0.0.1:1974&lt;-&gt;/127.0.0.1:38036"],
- :server-port 1974,
- :muuntaja/request
- {:format "application/json",
-  :charset "utf-8",
-  :raw-format "application/json"},
- :content-length 13,
- :form-params {},
- :websocket? false,
- :session/key nil,
- :query-params {},
- :content-type "application/json",
- :character-encoding "utf8",
- :uri "/kindly-compute/clay-book.webserver/handle-add",
- :server-name "localhost",
- :query-string nil,
- :muuntaja/response
- {:format "application/json", :charset "utf-8", :raw-format nil},
- :body
- #object[org.httpkit.BytesInputStream 0xa3ebdd5 "BytesInputStream[len=13]"],
- :multipart-params {},
- :scheme :http,
- :request-method :post,
- :session {}}
-</code></pre>
-</div>
-</div>
 <p>The request was printed as a side-effect of calling the endpoint. Handlers have access to the session, cookies, and everything about the request.</p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>handle-add-response</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>handle-add-response</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:opts</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:body</span> <span class="st">"{</span><span class="sc">\"</span><span class="st">a</span><span class="sc">\"</span><span class="st">:5,</span><span class="sc">\"</span><span class="st">b</span><span class="sc">\"</span><span class="st">:9}"</span>,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">:headers</span> {<span class="st">"content-type"</span> <span class="st">"application/json"</span>},</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">:method</span> <span class="at">:post</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">:url</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://localhost:1974/kindly-compute/clay-book.webserver/handle-add"</span>},</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a> <span class="at">:body</span> <span class="st">"14"</span>,</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a> {<span class="at">:content-length</span> <span class="st">"2"</span>,</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">:content-type</span> <span class="st">"application/json; charset=utf-8"</span>,</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Wed, 11 Mar 2026 20:03:26 GMT"</span>,</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">:server</span> <span class="st">"http-kit"</span>,</span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">:x-content-type-options</span> <span class="st">"nosniff"</span>},</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a> <span class="at">:status</span> <span class="dv">200</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:opts</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:body</span> <span class="st">"{</span><span class="sc">\"</span><span class="st">a</span><span class="sc">\"</span><span class="st">:5,</span><span class="sc">\"</span><span class="st">b</span><span class="sc">\"</span><span class="st">:9}"</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">:headers</span> {<span class="st">"content-type"</span> <span class="st">"application/json"</span>},</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">:method</span> <span class="at">:post</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">:url</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://localhost:1972/kindly-compute/clay-book.webserver/handle-add"</span>},</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a> <span class="at">:body</span> <span class="st">"14"</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a> {<span class="at">:content-length</span> <span class="st">"2"</span>,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">:content-type</span> <span class="st">"application/json; charset=utf-8"</span>,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Tue, 17 Mar 2026 17:12:30 GMT"</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">:server</span> <span class="st">"http-kit"</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">:x-content-type-options</span> <span class="st">"nosniff"</span>},</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a> <span class="at">:status</span> <span class="dv">200</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>(json/read-str (<span class="at">:body</span> handle-add-response))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(json/read-str (<span class="at">:body</span> handle-add-response))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dv">14</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dv">14</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="params" class="level2" data-number="4.5">
@@ -632,43 +581,43 @@ Note
 <h2 data-number="4.6" class="anchored" data-anchor-id="html-responses"><span class="header-section-number">4.6</span> HTML Responses</h2>
 <p>Endpoint response bodies are encoded based on an “Accept” header if present, or in JSON by default. However when a servable function name ends in <code>html</code>, then the response will be <code>Content-Type: text/html</code> instead. This differentiates between endpoints that return data, and endpoints that return HTML pages.</p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> </span>^<span class="at">:kindly/servable</span> greet-html [{<span class="at">:keys</span> [<span class="kw">name</span>]}]</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  (page/html5 [<span class="at">:h1</span> (<span class="kw">str</span> <span class="st">"Hello "</span> <span class="kw">name</span>)]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> </span>^<span class="at">:kindly/servable</span> greet-html [{<span class="at">:keys</span> [<span class="kw">name</span>]}]</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  (page/html5 [<span class="at">:h1</span> (<span class="kw">str</span> <span class="st">"Hello "</span> <span class="kw">name</span>)]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can GET the page with params in the query string <code>?name=world</code>:</p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> greet-response</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  @(http/get (<span class="kw">str</span> (server/url) <span class="st">"kindly-compute/clay-book.webserver/greet-html?name=world"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> greet-response</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  @(http/get (<span class="kw">str</span> (server/url) <span class="st">"kindly-compute/clay-book.webserver/greet-html?name=world"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>greet-response</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>greet-response</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:opts</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:method</span> <span class="at">:get</span>,</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">:url</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://localhost:1974/kindly-compute/clay-book.webserver/greet-html?name=world"</span>},</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a> <span class="at">:body</span> <span class="st">"&lt;!DOCTYPE html&gt;</span><span class="sc">\n</span><span class="st">&lt;html&gt;&lt;h1&gt;Hello world&lt;/h1&gt;&lt;/html&gt;"</span>,</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a> {<span class="at">:content-length</span> <span class="st">"49"</span>,</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">:content-type</span> <span class="st">"text/html; charset=utf-8"</span>,</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Wed, 11 Mar 2026 20:03:26 GMT"</span>,</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">:server</span> <span class="st">"http-kit"</span>,</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:x-content-type-options</span> <span class="st">"nosniff"</span>},</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a> <span class="at">:status</span> <span class="dv">200</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:opts</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a> {<span class="at">:method</span> <span class="at">:get</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">:url</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://localhost:1972/kindly-compute/clay-book.webserver/greet-html?name=world"</span>},</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a> <span class="at">:body</span> <span class="st">"&lt;!DOCTYPE html&gt;</span><span class="sc">\n</span><span class="st">&lt;html&gt;&lt;h1&gt;Hello world&lt;/h1&gt;&lt;/html&gt;"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a> <span class="at">:headers</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a> {<span class="at">:content-length</span> <span class="st">"49"</span>,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">:content-type</span> <span class="st">"text/html; charset=utf-8"</span>,</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">:date</span> <span class="st">"Tue, 17 Mar 2026 17:12:30 GMT"</span>,</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">:server</span> <span class="st">"http-kit"</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">:x-content-type-options</span> <span class="st">"nosniff"</span>},</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a> <span class="at">:status</span> <span class="dv">200</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We got HTML rather than JSON because the function name was <code>greet-html</code></p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">:body</span> greet-response)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">:body</span> greet-response)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="st">"&lt;!DOCTYPE html&gt;</span><span class="sc">\n</span><span class="st">&lt;html&gt;&lt;h1&gt;Hello world&lt;/h1&gt;&lt;/html&gt;"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="st">"&lt;!DOCTYPE html&gt;</span><span class="sc">\n</span><span class="st">&lt;html&gt;&lt;h1&gt;Hello world&lt;/h1&gt;&lt;/html&gt;"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">:content-type</span> (<span class="at">:headers</span> greet-response))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">:content-type</span> (<span class="at">:headers</span> greet-response))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="st">"text/html; charset=utf-8"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="st">"text/html; charset=utf-8"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="dynamic-handlers" class="level2" data-number="4.7">
@@ -676,29 +625,29 @@ Note
 <p>Handlers are more generic than endpoints. Not all handlers are associated with a route, or maybe we just prefer to use a non-annotated handler. Clay supports these by allowing you to add handlers to the Clay server stack.</p>
 <p>You can add a handler with <code>install-handler!</code></p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> my-handler </span>[{<span class="at">:keys</span> [request-method uri]}]</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">case</span> [request-method uri]</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    [<span class="at">:get</span> <span class="st">"/chicken"</span>] {<span class="at">:status</span> <span class="dv">200</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">:headers</span> {<span class="st">"Content-Type"</span> <span class="st">"text/plain; charset=utf-8"</span>}</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">:body</span> <span class="st">"bock bock bock"</span>}</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">nil</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> my-handler </span>[{<span class="at">:keys</span> [request-method uri]}]</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">case</span> [request-method uri]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    [<span class="at">:get</span> <span class="st">"/chicken"</span>] {<span class="at">:status</span> <span class="dv">200</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">:headers</span> {<span class="st">"Content-Type"</span> <span class="st">"text/plain; charset=utf-8"</span>}</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">:body</span> <span class="st">"bock bock bock"</span>}</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">nil</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>(server/install-handler! <span class="va">#'my-handler</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(server/install-handler! <span class="va">#'my-handler</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>#{<span class="va">#'clay-book.webserver/my-handler</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>#{<span class="va">#'clay-book.webserver/my-handler</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>/chicken</code> is a top-level route (not namespaced). We could handle <code>/</code> which would be necessary for a complete website. Handling <code>/</code> prevents Clay interactively showing the last made namespace, so only do that when deploying.</p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> chicken-response</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  @(http/get (<span class="kw">str</span> (server/url) <span class="st">"chicken"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> chicken-response</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  @(http/get (<span class="kw">str</span> (server/url) <span class="st">"chicken"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">:body</span> chicken-response)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">:body</span> chicken-response)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="st">"bock bock bock"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="st">"bock bock bock"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Unlike most <a href="https://github.com/ring-clojure/ring">Ring</a> handlers, Clay handlers may return <code>nil</code> to ignore a request, leaving it to other handlers or the site-defaults handler. You can install multiple handlers side-by-side in this way.</p>
 <p>Clay requires a handler to be a <strong>var holding a function</strong> because that allows you to replace the definition of the handler conveniently, and for the handlers to be tracked by their var. Vars have identity, functions do not.</p>
@@ -708,24 +657,24 @@ Note
 <h2 data-number="4.8" class="anchored" data-anchor-id="clay-websocket-handler"><span class="header-section-number">4.8</span> Clay WebSocket handler</h2>
 <p>Similar to dynamic handlers, you may also install a websocket handler:</p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> my-websocket-receive </span>[ch msg]</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">println</span> <span class="st">"Received"</span> msg)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  (httpkit/send! ch <span class="st">"got it"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> my-websocket-receive </span>[ch msg]</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">println</span> <span class="st">"Received"</span> msg)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  (httpkit/send! ch <span class="st">"got it"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>(server/install-websocket-handler! <span class="at">:on-receive</span> <span class="va">#'my-websocket-receive</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>(server/install-websocket-handler! <span class="at">:on-receive</span> <span class="va">#'my-websocket-receive</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="printedClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:on-receive</span> #{<span class="va">#'clay-book.webserver/my-websocket-receive</span>}}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:on-receive</span> #{<span class="va">#'clay-book.webserver/my-websocket-receive</span>}}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>On the client, you can access <code>clay_socket</code> to send and receive messages to the server:</p>
 <div class="sourceClojure">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>^<span class="at">:kind/hiccup</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>[<span class="at">:script</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a> <span class="st">"clay_socket.send('can you hear me?');</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="st">  clay_socket.addEventListener('message', function(event) {</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="st">    console.log('Clay socket:', event.data);</span></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="st">  });"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>^<span class="at">:kind/hiccup</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>[<span class="at">:script</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a> <span class="st">"clay_socket.send('can you hear me?');</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="st">  clay_socket.addEventListener('message', function(event) {</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="st">    console.log('Clay socket:', event.data);</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="st">  });"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <script>clay_socket.send('can you hear me?');
   clay_socket.addEventListener('message', function(event) {
@@ -737,14 +686,14 @@ Note
 <section id="preparing-html" class="level3" data-number="4.9.1">
 <h3 data-number="4.9.1" class="anchored" data-anchor-id="preparing-html"><span class="header-section-number">4.9.1</span> Preparing HTML</h3>
 <p>To build all the notebooks before launching the server:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M</span> <span class="at">-m</span> scicloj.clay.v2.main <span class="at">--render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M</span> <span class="at">-m</span> scicloj.clay.v2.main <span class="at">--render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will produce all the HTML files and exit.</p>
 </section>
 <section id="serving" class="level3" data-number="4.9.2">
 <h3 data-number="4.9.2" class="anchored" data-anchor-id="serving"><span class="header-section-number">4.9.2</span> Serving</h3>
 <p>Configure Clay with <code>:port 80</code> to listen on the default HTTP port. If you need to adjust the Ring middleware (sessions, proxy headers, CSRF, etc.), <code>:ring-defaults</code> to be deep-merged into Ring’s <code>site-defaults</code> when Clay starts its server. For example to run behind a proxy you could add <code>:ring-defaults {:proxy true}</code>. Configuration can be put in a <code>clay.edn</code> file, or passed via the command line interface.</p>
 <p>To launch Clay as a web server from the <a href="https://scicloj.github.io/clay/#cli">Command Line Interface</a>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M</span> <span class="at">-m</span> scicloj.clay.v2.main <span class="at">-m</span> <span class="st">"{:port 80}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clojure</span> <span class="at">-M</span> <span class="at">-m</span> scicloj.clay.v2.main <span class="at">-m</span> <span class="st">"{:port 80}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You may find it convenient to package your project as an <a href="https://clojure.org/guides/tools_build#_compiled_uberjar_application_build">uberjar</a> for deployment to a hosting service.</p>
 </section>
 <section id="static-files" class="level3" data-number="4.9.3">
