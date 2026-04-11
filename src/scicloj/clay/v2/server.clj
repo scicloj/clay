@@ -144,6 +144,11 @@
       [:pre {:style {:margin 0}}
        (time/now)]]]]))
 
+(defn relative-url-path [base-path target-path]
+  (-> (fs/relativize base-path target-path)
+      (str)
+      (str/replace \\ \/)))
+
 (defn page
   ([]
    (page @server.state/*state))
@@ -151,14 +156,15 @@
    (let [{:keys [last-rendered-spec]} state
          {:keys [page]} last-rendered-spec
          path (some-> last-rendered-spec :full-target-path)
-         index (fs/file (:base-target-path last-rendered-spec) "index.html")]
+         {:keys [base-target-path]} last-rendered-spec
+         index (fs/file base-target-path "index.html")]
      (cond
        (and path (str/ends-with? path ".pdf"))
        (hiccup/html
         [:html
          [:head [:title "PDF Viewer"]]
          [:body
-          [:embed {:src (str "/" (fs/unixify (fs/relativize (:base-target-path last-rendered-spec) path)))
+          [:embed {:src (str "/" (relative-url-path base-target-path path))
                    :type "application/pdf"
                    :width "100%"
                    :height "900px"}]]])
@@ -190,7 +196,7 @@
     (str/replace html #"(<\s*head[^>]*>)"
                  (str "$1"
                       "<base href=\"/"
-                      (fs/unixify (fs/relativize base-target-path full-target-path))
+          (relative-url-path base-target-path full-target-path)
                       "\" />\n"))
     html))
 

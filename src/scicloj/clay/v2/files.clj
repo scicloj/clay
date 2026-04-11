@@ -12,9 +12,8 @@
   (str (fs/path (str (fs/strip-ext target-path) "_files")
                 (str (name custom-name) idx ext))))
 
-(defn relative-url [target-path file]
+(defn relative-path [target-path file]
   (-> (fs/relativize (fs/parent target-path) file)
-      (fs/unixify)
       (str)))
 
 (defn next-file!
@@ -27,7 +26,7 @@
                       (get target-path)
                       (get value))]
       (do (io/make-parents file)
-          [file (relative-url target-path file)])
+          [file (relative-path target-path file)])
       (do (swap! *target-path->files
                  (fn [target-path->files]
                    (let [files (target-path->files target-path)]
@@ -43,4 +42,4 @@
                              (get target-path)
                              (get value))]
             (io/make-parents new-file)
-            [new-file (relative-url target-path new-file)])))))
+            [new-file (relative-path target-path new-file)])))))
