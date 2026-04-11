@@ -15,9 +15,9 @@
 
 (def special-lib-resources
   {:vega {:js {:from-the-web
-               ["https://cdn.jsdelivr.net/npm/vega@5.25.0"
-                "https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"
-                "https://cdn.jsdelivr.net/npm/vega-embed@6.22.2"]}}
+               ["https://cdn.jsdelivr.net/npm/vega@6.2.0"
+                "https://cdn.jsdelivr.net/npm/vega-lite@6.4.2"
+                "https://cdn.jsdelivr.net/npm/vega-embed@7.1.0"]}}
    :datatables {:js {:from-the-web
                      ["https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"]}
                 :css {:from-the-web
