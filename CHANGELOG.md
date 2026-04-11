@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## unreleased
+- fix relative paths on windows (PR #337)
+
 ## [2.0.14 - 2026-03-17]
 - improvements to stderr/stdout handling (PR #334)
   - in particular, added `show-output` option
