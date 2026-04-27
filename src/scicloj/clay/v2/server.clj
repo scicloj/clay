@@ -371,7 +371,8 @@
   (-> all-routes
       (mm/wrap-format (assoc-in mc/default-options [:http :encode-response-body?] encode?))
       (rmd/wrap-defaults (kindly/deep-merge rmd/site-defaults
-                                            {:security {:anti-forgery false
+                                            {:static {:resources false}
+                                             :security {:anti-forgery false
                                                         :frame-options false}}
                                             site-defaults))))
 (comment
