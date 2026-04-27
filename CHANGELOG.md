@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [unreleased]
+- web server fix: do not serve resources (PR #338)
+
 ## [2.0.15 - 2026-04-11]
 - fix relative paths on windows (PR #337)
 - updated vega, vega-lite, vega-embed versions (#336) - thansk, @wlkr
