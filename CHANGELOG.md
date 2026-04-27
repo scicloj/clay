@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [unreleased]
+## [2.0.16 - 2026-04-27]
 - web server fix: do not serve resources (PR #338)
 
 ## [2.0.15 - 2026-04-11]
