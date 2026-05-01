@@ -476,10 +476,14 @@
       (finally (files/init-target! full-target-path)))))
 
 (defn sync-resources! [{:keys [base-target-path
+                               base-source-path
                                quarto-target-path
                                subdirs-to-sync
                                keep-sync-root]}]
-  (doseq [subdir subdirs-to-sync
+  (doseq [subdir (if (and base-source-path
+                          (not (contains? (set subdirs-to-sync) base-source-path)))
+                   (conj subdirs-to-sync base-source-path)
+                   subdirs-to-sync)
           target-path (if (and base-target-path quarto-target-path
                                (not= base-target-path quarto-target-path))
                         [base-target-path quarto-target-path]
@@ -547,5 +551,3 @@
       (throw (ex-info (str "Did not find :kindly/servable in namespace metadata for " source-path)
                       {:id ::ns-not-servable
                        :source-path source-path})))))
-
-
