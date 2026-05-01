@@ -64,6 +64,10 @@ The best places to discuss this project are:
 ![quaternary clay in Estonia](https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg)
 (credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Clay-ss-2005.jpg))
 
+## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 Copyright © 2025 Scicloj
