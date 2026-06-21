@@ -407,7 +407,7 @@
               [:wrote gfm-target])
        :quarto (do (io/make-parents (io/file qmd-target-path))
                    (-> spec-with-items
-                       (update-in [:quarto :format] select-keys [(second format)])
+                       ;;(update-in [:quarto :format] select-keys [(second format)])
                        (cond-> book (update :quarto dissoc :title))
                        page/md
                        (->> (spit qmd-target-path)))
@@ -547,5 +547,3 @@
       (throw (ex-info (str "Did not find :kindly/servable in namespace metadata for " source-path)
                       {:id ::ns-not-servable
                        :source-path source-path})))))
-
-
