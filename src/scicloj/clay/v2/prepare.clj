@@ -12,7 +12,8 @@
             [hiccup.core :as hiccup]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly-render.shared.jso :as jso]))
+            [scicloj.kindly-render.shared.jso :as jso]
+            [clojure.string :as str]))
 
 (def *kind->preparer
   (atom {}))
@@ -487,12 +488,15 @@
    (if (and (item/static? context)
             (vector? value)
             (= :svg (first value)))
-     (let [[svg-path relative-path]
-           (files/next-file! context "image" value ".svg")]
+     (let [[svg-path relative-path] (files/next-file! context "image" value ".svg")
+           class (when (-> value second map?)
+                   (-> value second :class))]
        (->> (ensure-svg-xmlns value)
             (hiccup/html {:mode :xml})
             (spit svg-path))
-       {:md (str "![" (:caption options) "](" relative-path ")")})
+       {:md (str "![" (:caption options) "](" relative-path ")"
+                 (when class
+                   (str "{" (str/join " " (map #(str "." %) (str/split class #"\s+"))) "}")))})
      (let [*deps (atom
                   (-> context
                       :kindly/options
