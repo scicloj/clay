@@ -495,7 +495,7 @@
             (hiccup/html {:mode :xml})
             (spit svg-path))
        {:md (str "![" (:caption options) "](" relative-path ")"
-                 (when class
+                 (when (and class (-> context :format first #{:quarto}))
                    (str "{" (str/join " " (map #(str "." %) (str/split class #"\s+"))) "}")))})
      (let [*deps (atom
                   (-> context
