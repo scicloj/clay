@@ -77,8 +77,7 @@
                                :keys [item-class script]}]
   (-> hiccup
       (add-class-to-hiccup item-class)
-      (merge-attrs (some-> (:kindly/options item)
-                           (select-keys [:style :class])))
+      (merge-attrs (some-> item :kindly/options (select-keys [:style :class :id])))
       (cond-> script
         (conj script))))
 
@@ -490,13 +489,17 @@
             (= :svg (first value)))
      (let [[svg-path relative-path] (files/next-file! context "image" value ".svg")
            class (when (-> value second map?)
-                   (-> value second :class))]
+                   (-> value second :class))
+           {:keys [id]} options]
        (->> (ensure-svg-xmlns value)
             (hiccup/html {:mode :xml})
             (spit svg-path))
        {:md (str "![" (:caption options) "](" relative-path ")"
-                 (when (and class (-> context :format first #{:quarto}))
-                   (str "{" (str/join " " (map #(str "." %) (str/split class #"\s+"))) "}")))})
+                 (when (and (or id class) (-> context :format first #{:quarto}))
+                   (str "{" (str/join " "
+                                      (concat (when id [(str "#" id)])
+                                              (map #(str "." %) (str/split class #"\s+"))))
+                        "}")))})
      (let [*deps (atom
                   (-> context
                       :kindly/options
