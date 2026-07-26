@@ -477,7 +477,7 @@
               (contains? (second hiccup) :xmlns))
         hiccup
         (update-in hiccup [1] assoc :xmlns "http://www.w3.org/2000/svg"))
-      (into [(first hiccup) {:xlmns "http://www.w3.org/2000/svg"}] (rest hiccup)))
+      (into [(first hiccup) {:xmlns "http://www.w3.org/2000/svg"}] (rest hiccup)))
     hiccup))
 
 (add-preparer!
@@ -593,5 +593,3 @@
 (add-preparer-from-value-fn!
  :kind/highcharts
  #'item/highcharts)
-
-
