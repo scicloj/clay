@@ -184,14 +184,32 @@
       :kind/fn (let [new-value (or (when-let [f (-> context-with-advice
                                                     :kindly/options
                                                     :kindly/f)]
-                                     (f value))
-                                   (when (vector? value) (let [[f & args] value]
-                                                           (apply f args)))
-                                   (when (map? value) (let [{:keys [kindly/f]} value]
-                                                        (-> value
-                                                            (dissoc :kindly/f)
-                                                            f)))
-                                   (throw (ex-message "missing function for :kind/fn")))]
+                                     (when (not (ifn? f))
+                                       (throw (ex-info "Value :kind/fn, :kindly/options :kindly/f is not function"
+                                                       {:id ::kind-fn-value-f})))
+                                     (or (f value)
+                                         (throw (ex-info "Options :kindly/f returned nil"
+                                                         {:id ::options-kindly-f-returned-nil}))))
+                                   (when (vector? value)
+                                     (let [[f & args] value]
+                                       (when (not (ifn? f))
+                                         (throw (ex-info "Vector :kind/fn, first element is not function"
+                                                         {:id ::kind-fn-vector-f})))
+                                       (or (apply f args)
+                                           (throw (ex-info "Vector :kindly/f returned nil"
+                                                           {:id ::vector-kindly-f-returned-nil})))))
+                                   (when (map? value)
+                                     (let [{:keys [kindly/f]} value]
+                                       (when (not (ifn? f))
+                                         (throw (ex-info "Map of :kind/fn, :kindly/f is not a function"
+                                                         {:id ::kind-fn-map-f})))
+                                       (or (-> value
+                                               (dissoc :kindly/f)
+                                               f)
+                                           (throw (ex-info "Map :kindly/f returned nil"
+                                                           {:id ::map-kindly-f-returned-nil})))))
+                                   (throw (ex-info "missing function for :kind/fn"
+                                                   {:id ::kind-fn-f})))]
                  (-> context
                      (assoc :value new-value)
                      (dissoc :form :kind :advice)
