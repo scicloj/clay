@@ -12,7 +12,8 @@
             [hiccup.core :as hiccup]
             [scicloj.kindly.v4.api :as kindly]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.kindly-render.shared.jso :as jso]))
+            [scicloj.kindly-render.shared.jso :as jso]
+            [clojure.string :as str]))
 
 (def *kind->preparer
   (atom {}))
@@ -76,8 +77,7 @@
                                :keys [item-class script]}]
   (-> hiccup
       (add-class-to-hiccup item-class)
-      (merge-attrs (some-> (:kindly/options item)
-                           (select-keys [:style :class])))
+      (merge-attrs (some-> item :kindly/options (select-keys [:style :class :id])))
       (cond-> script
         (conj script))))
 
@@ -487,12 +487,19 @@
    (if (and (item/static? context)
             (vector? value)
             (= :svg (first value)))
-     (let [[svg-path relative-path]
-           (files/next-file! context "image" value ".svg")]
+     (let [[svg-path relative-path] (files/next-file! context "image" value ".svg")
+           class (when (-> value second map?)
+                   (-> value second :class))
+           {:keys [id]} options]
        (->> (ensure-svg-xmlns value)
             (hiccup/html {:mode :xml})
             (spit svg-path))
-       {:md (str "![" (:caption options) "](" relative-path ")")})
+       {:md (str "![" (:caption options) "](" relative-path ")"
+                 (when (and (or id class) (-> context :format first #{:quarto}))
+                   (str "{" (str/join " "
+                                      (concat (when id [(str "#" id)])
+                                              (map #(str "." %) (str/split class #"\s+"))))
+                        "}")))})
      (let [*deps (atom
                   (-> context
                       :kindly/options
