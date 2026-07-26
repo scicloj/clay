@@ -19,7 +19,7 @@
 (def *id (atom 0))
 
 (defn static? [context]
-  (or (#{:pdf :gfm} (last (:format context)))
+  (or (#{:pdf :gfm :typst} (last (:format context)))
       (:static (:kindly/options context))))
 
 (defn next-id! []
@@ -585,4 +585,3 @@
                    (map val->doc)
                    (str/join))
               (val->doc value)))})
-
