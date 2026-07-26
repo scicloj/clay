@@ -250,21 +250,23 @@ flowchart TD
 
 clay-image
 
-;; With Kindly options specifying caption
-;; (works when rendered throuth Quarto):
+;; With Kindly options specifying caption, id, and class(es)
+;; when rendered with Quarto:
 (kind/image
  clay-image
- {:caption "Clojure logo"})
+ {:caption "Clojure logo"
+  :id "fig-clojure-logo"
+  :class "logo img"})
 
 ;; Urls to images can be annotated as images as well.
 
 (kind/image
  {:src "https://upload.wikimedia.org/wikipedia/commons/2/2c/Clay-ss-2005.jpg"})
 
-;; Other image representations are currently not supported.
+;; A string, file, path, uri, or url can be used as an image:
 
 (kind/image
- "AN IMAGE")
+ (io/file "notebooks/images/Clay.svg.png"))
 
 ;; ## Audio
 
