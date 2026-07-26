@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. This change
 - fix xmlns typo (PR #342)
 - include class on svg img (PR #343)
 - support more ways to express an image (PR #344)
-
+- more specific errors for `:kindly/f` (PR #345)
 
 ## [2.0.16 - 2026-04-27]
 - web server fix: do not serve resources (PR #338)
