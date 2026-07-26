@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## unreleased
 - fix xmlns typo (PR #342)
+- Include class on svg img (PR #343)
 
 ## [2.0.16 - 2026-04-27]
 - web server fix: do not serve resources (PR #338)
