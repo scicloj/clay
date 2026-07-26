@@ -10,7 +10,7 @@
 
 (defn file-path [target-path custom-name idx ext]
   (str (fs/path (str (fs/strip-ext target-path) "_files")
-                (str (name custom-name) idx ext))))
+                (str (name custom-name) idx "." ext))))
 
 (defn relative-path [target-path file]
   (-> (fs/relativize (fs/parent target-path) file)

@@ -7,7 +7,8 @@
             [scicloj.clay.v2.plotly-export :as plotly-export]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.clay.v2.util.meta :as meta]
-            [clj-commons.format.exceptions :as fe])
+            [clj-commons.format.exceptions :as fe]
+            [babashka.fs :as fs])
   (:import (javax.sound.sampled AudioFileFormat$Type
                                 AudioFormat
                                 AudioInputStream)
@@ -338,7 +339,7 @@
                      config {}}} :value}]
   (if (static? context)
     (let [[plot-path relative-path]
-          (files/next-file! context "plotly-chart" value ".png")
+          (files/next-file! context "plotly-chart" value "png")
           exit (plotly-export/export-plot! plot-path data layout)]
       (if (zero? exit)
         (println "Clay plotly-export:" [:wrote plot-path])
@@ -391,6 +392,18 @@
               in-vector
               (str/join "\n"))})
 
+(defn image-md [context relative-path]
+  (let [{:keys [kindly/options]} context
+        {:keys [caption id class]} options]
+    {:md (str "![" caption "](" relative-path ")"
+              (when (and (or id class)
+                         (-> context :format first #{:quarto}))
+                (str "{"
+                     (str/join " "
+                               (concat (when id [(str "#" id)])
+                                       (map #(str "." %) (str/split class #"\s+"))))
+                     "}")))}))
+
 (defn image [{:keys [value kindly/options]
               :as context}]
   (if (sequential? value)
@@ -402,16 +415,26 @@
     (merge
      {:item-class "clay-image"}
      (cond
-       ;; An image url:
-       (:src value)
-       {:hiccup [:img value]}
        ;; A BufferedImage object:
        (util.image/buffered-image? value)
        (let [[png-path relative-path]
-             (files/next-file! context "image" value ".png")]
+             (files/next-file! context "image" value "png")]
          (when-not (util.image/write! value "png" png-path)
            (throw (ex-message "Failed to save image as PNG.")))
+         (image-md context relative-path)
          {:md (str "![" (:caption options) "](" relative-path ")")})
+
+       ;; An image url:
+       (and (map? value) (:src value))
+       {:hiccup [:img value]}
+
+       ;; A File/Path/URL/URI/string
+       (try (fs/path value) (catch Exception _ex))
+       (let [[dest-path relative-path]
+             (files/next-file! context "image" value (fs/extension value))]
+         (fs/copy value dest-path {:replace-existing true})
+         (image-md context relative-path))
+
        :else
        {:md (str "unsupported image format: " (type value))}))))
 
@@ -452,7 +475,7 @@
                     [:source {:src src}]]}
       ;; Audio samples
       samples (let [[wav-path relative-path]
-                    (files/next-file! context "audio" value ".wav")]
+                    (files/next-file! context "audio" value "wav")]
                 (when-not (write-samples-to-wav! {:samples samples
                                                   :sample-rate sample-rate
                                                   :target-path wav-path})
@@ -466,7 +489,7 @@
         data-to-use (or (when-let [{:keys [values format]} data]
                           (when (some-> format :type name (= "csv"))
                             (let [[csv-path relative-path]
-                                  (files/next-file! context "data" values ".csv")]
+                                  (files/next-file! context "data" values "csv")]
                               (spit csv-path values)
                               {:url relative-path
                                :format format})))
@@ -585,4 +608,3 @@
                    (map val->doc)
                    (str/join))
               (val->doc value)))})
-

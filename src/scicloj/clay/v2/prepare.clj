@@ -487,19 +487,14 @@
    (if (and (item/static? context)
             (vector? value)
             (= :svg (first value)))
-     (let [[svg-path relative-path] (files/next-file! context "image" value ".svg")
-           class (when (-> value second map?)
-                   (-> value second :class))
-           {:keys [id]} options]
+     (let [[svg-path relative-path] (files/next-file! context "image" value "svg")]
        (->> (ensure-svg-xmlns value)
             (hiccup/html {:mode :xml})
             (spit svg-path))
-       {:md (str "![" (:caption options) "](" relative-path ")"
-                 (when (and (or id class) (-> context :format first #{:quarto}))
-                   (str "{" (str/join " "
-                                      (concat (when id [(str "#" id)])
-                                              (map #(str "." %) (str/split class #"\s+"))))
-                        "}")))})
+       (item/image-md (update context :class (fn [c]
+                                               (or c (when (-> value second map?)
+                                                       (-> value second :class)))))
+                      relative-path))
      (let [*deps (atom
                   (-> context
                       :kindly/options

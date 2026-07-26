@@ -109,7 +109,7 @@
 
 (defn include-from-a-local-file [url custom-name js-or-css context]
   (let [[path relative-path]
-        (files/next-file! context custom-name url (str "." (name js-or-css)))]
+        (files/next-file! context custom-name url (name js-or-css))]
     (io/make-parents path)
     (->> url (resource/get) (spit path))
     ((include js-or-css) relative-path)))
