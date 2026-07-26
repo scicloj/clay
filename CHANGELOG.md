@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## unreleased
+## [2.0.17 - 2026-07-26]
 - fix xmlns typo (PR #342)
 - include class on svg img (PR #343)
 - support more ways to express an image (PR #344)
