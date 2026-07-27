@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2.0.18 - 2026-07-27]
+- allow multiple quarto formats - WIP (PR #340)
+
 ## [2.0.17 - 2026-07-26]
 - fix xmlns typo (PR #342)
 - include class on svg img (PR #343)
