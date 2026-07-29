@@ -505,14 +505,16 @@
    (if (and (item/static? context)
             (vector? value)
             (= :svg (first value)))
-     (let [[svg-path relative-path] (files/next-file! context "image" value "svg")]
+     (let [[svg-path relative-path] (files/next-file! context "image" value "svg")
+           svg-class (when (-> value second map?)
+                       (-> value second :class))
+           context (if svg-class
+                     (update-in context [:kindly/options :class] add-class-to-class-str svg-class)
+                     context)]
        (->> (ensure-svg-xmlns value)
             (hiccup/html {:mode :xml})
             (spit svg-path))
-       (item/image-md (update context :class (fn [c]
-                                               (or c (when (-> value second map?)
-                                                       (-> value second :class)))))
-                      relative-path))
+       (item/image-md context relative-path))
      (let [*deps (atom
                   (-> context
                       :kindly/options
