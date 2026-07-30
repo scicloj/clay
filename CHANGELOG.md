@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## Unreleased
+- fix class propagation on SVG (PR #346)
+
 ## [2.0.18 - 2026-07-27]
 - allow multiple quarto formats - WIP (PR #340)
 
