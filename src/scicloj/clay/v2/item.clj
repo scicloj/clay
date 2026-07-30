@@ -401,7 +401,7 @@
                 (str "{"
                      (str/join " "
                                (concat (when id [(str "#" id)])
-                                       (map #(str "." %) (str/split class #"\s+"))))
+                                       (when class (map #(str "." %) (str/split class #"\s+")))))
                      "}")))}))
 
 (defn image [{:keys [value kindly/options]
