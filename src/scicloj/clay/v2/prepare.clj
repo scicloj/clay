@@ -216,8 +216,11 @@
                      (dissoc :form :kind :advice)
                      (prepare)
                      (->> (map #(assoc % :prepared-by-fn true)))))
-      ;; else - a regular kind, or predicate based
-      (if kind
+      ;; else predicate based or a regular kind
+      (if (and (not kind)
+               (tagged-literal? value)
+               (= 'flare/html (:tag value)))
+        [(:form value)]
         [(-> context-with-advice
              ((or (@*kind->preparer kind)
                   fallback-preparer))
@@ -226,10 +229,7 @@
              (update :md limit-md-height note)
              ;; items need the options from the context
              ;; TODO: shouldn't this at least be a merge? context-with-advice should have options from the context
-             (assoc :kindly/options (:kindly/options note)))]
-        (when (and (tagged-literal? value)
-                   (= 'flare/html (:tag value)))
-          [(:form value)])))))
+             (assoc :kindly/options (:kindly/options note)))]))))
 
 (add-preparer-from-value-fn!
  :kind/println
