@@ -169,18 +169,19 @@
     (or (@*kind->preparer kind)
         (#{:kind/fragment :kind/fn} kind))))
 
-(defn prepare [{:as context
-                :keys [value]}
-               {:keys [fallback-preparer]}]
-  (let [{:as context-with-advice :keys [kind]} (advise-if-needed context)]
+(def fallback-preparer
+  (preparer-from-value-fn #'item/pprint))
+
+(defn prepare [{:as note :keys [value]}]
+  (let [{:as context-with-advice :keys [kind]} (advise-if-needed note)]
     (case kind
       :kind/fragment (->> value
                           ;; splice the fragment
                           (mapcat (fn [subvalue]
-                                    (-> context
+                                    (-> note
                                         (dissoc :form :kind :advice)
                                         (assoc :value subvalue)
-                                        (prepare {:fallback-preparer fallback-preparer})))))
+                                        (prepare)))))
       :kind/fn (let [new-value (or (when-let [f (-> context-with-advice
                                                     :kindly/options
                                                     :kindly/f)]
@@ -210,34 +211,25 @@
                                                            {:id ::map-kindly-f-returned-nil})))))
                                    (throw (ex-info "missing function for :kind/fn"
                                                    {:id ::kind-fn-f})))]
-                 (-> context
+                 (-> note
                      (assoc :value new-value)
                      (dissoc :form :kind :advice)
-                     (prepare {:fallback-preparer fallback-preparer})
+                     (prepare)
                      (->> (map #(assoc % :prepared-by-fn true)))))
-      ;; else - a regular kind
-      (when-let [preparer (-> kind
-                              (@*kind->preparer)
-                              (or fallback-preparer))]
+      ;; else - a regular kind, or predicate based
+      (if kind
         [(-> context-with-advice
-             preparer
+             ((or (@*kind->preparer kind)
+                  fallback-preparer))
              ;; returns an item
-             (update :hiccup limit-hiccup-height context)
-             (update :md limit-md-height context)
+             (update :hiccup limit-hiccup-height note)
+             (update :md limit-md-height note)
              ;; items need the options from the context
              ;; TODO: shouldn't this at least be a merge? context-with-advice should have options from the context
-             (assoc :kindly/options (:kindly/options context)))]))))
-
-
-(defn prepare-or-pprint [context]
-  (prepare context {:fallback-preparer
-                    (preparer-from-value-fn #'item/pprint)}))
-
-(defn prepare-or-str [context]
-  (prepare context {:fallback-preparer
-                    (preparer-from-value-fn #'item/md)}))
-
-
+             (assoc :kindly/options (:kindly/options note)))]
+        (when (and (tagged-literal? value)
+                   (= 'flare/html (:tag value)))
+          [(:form value)])))))
 
 (add-preparer-from-value-fn!
  :kind/println

@@ -212,7 +212,7 @@
                         (and (contains? note :value) show-value)
                         (into (-> note
                                   (update :value deref-if-needed)
-                                  (prepare/prepare-or-pprint))))]
+                                  (prepare/prepare))))]
       (cond (and (not code-item) (empty? value-items))
             []
 
