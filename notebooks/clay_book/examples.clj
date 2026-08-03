@@ -152,6 +152,8 @@ scittle.core.eval_string('(.log js/console 123)')
   "<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
   "</svg>"))
 
+;; ### Flares
+
 ;; [Flares](https://calva.io/flares/#flares) are automatically recognized
 ;; as `kind/html`.
 
