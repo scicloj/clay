@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file. This change
 
 ## Unreleased
 - fix class propagation on SVG (PR #346)
+- handle flares as `:kind/html` (PR #348)
+- updated deps: kindly, kindly-advice
 
 ## [2.0.18 - 2026-07-27]
 - allow multiple quarto formats - WIP (PR #340)
