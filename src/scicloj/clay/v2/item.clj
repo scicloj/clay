@@ -388,9 +388,12 @@
            path)]]])]})
 
 (defn html [html]
-  {:html (->> html
-              in-vector
-              (str/join "\n"))})
+  (if (and (tagged-literal? html)
+           (= 'flare/html (:tag html)))
+    (:form html)
+    {:html (->> html
+                in-vector
+                (str/join "\n"))}))
 
 (defn image-md [context relative-path]
   (let [{:keys [kindly/options]} context
