@@ -42,6 +42,11 @@
 
 ;; As we can see, this kind is displayed by converting Hiccup to HTML.
 
+;; ## Hiccup2
+
+;; `kind/hiccup2` is a valid Kindly kind which is not supported by Clay yet.
+;; It is supposed to provide support for Hiccup version 2.
+
 ;; ## Reagent
 
 ;; With `kind/reagent`, one may render [Reagent](https://reagent-project.github.io/) components.
