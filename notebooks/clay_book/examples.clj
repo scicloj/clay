@@ -44,8 +44,14 @@
 
 ;; ## Hiccup2
 
-;; `kind/hiccup2` is a valid Kindly kind which is not supported by Clay yet.
-;; It is supposed to provide support for Hiccup version 2.
+;; `kind/hiccup2` provides support for Hiccup version 2.
+
+(kind/hiccup2
+ [:ul
+  [:li [:p "hi"]]
+  [:li [:big [:big [:p {:style ; https://www.htmlcsscolor.com/hex/7F5F3F
+                        {:color "#7F5F3F"}}
+                    "hello"]]]]])
 
 ;; ## Reagent
 
