@@ -125,7 +125,7 @@ scittle.core.eval_script_tags();")
 ;; Also the Small Clojure Interpreter wich powers Scittle is exposed to JavaScript. Because within this notebook the default evaluation is still active, you can check in the browser console that the following string `123` appears before the above `hello`.
 
 (kind/html
-"<script>
+ "<script>
 scittle.core.eval_string('(.log js/console 123)')
 </script>")
 
@@ -151,6 +151,13 @@ scittle.core.eval_string('(.log js/console 123)')
   "<svg height=100 width=100>"
   "<circle cx=50 cy=50 r=40 stroke='purple' stroke-width=3 fill='floralwhite' />"
   "</svg>"))
+
+;; [Flares](https://calva.io/flares/#flares) are automatically recognized
+;; as `kind/html`.
+
+(tagged-literal
+ 'flare/html {:html "<div style='height:40px; width:40px; background:purple'></div> "
+              :key "example"})
 
 ;; ## Markdown
 
