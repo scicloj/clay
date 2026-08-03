@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [2.0.18 - 2026-08-03]
+## [2.0.19 - 2026-08-03]
 - fix class propagation on SVG (PR #346)
 - handle flares as `:kind/html` (PR #348)
 - updated deps: 
