@@ -1,10 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## Unreleased
+## [2.0.18 - 2026-08-03]
 - fix class propagation on SVG (PR #346)
 - handle flares as `:kind/html` (PR #348)
-- updated deps: kindly, kindly-advice
+- updated deps: 
+  - kindly (adding `kind/hiccup2`, though it is not supported it yet in Clay),
+  - kindly-advice (adding recognition for flare)
 
 ## [2.0.18 - 2026-07-27]
 - allow multiple quarto formats - WIP (PR #340)
