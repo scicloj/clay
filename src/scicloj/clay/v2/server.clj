@@ -432,21 +432,19 @@
                             base-target-path
                             page
                             full-target-path
-                            in-memory]
-                     :or   {full-target-path (str base-target-path
-                                                  "/"
-                                                  ".clay.html")}}]
-  (server.state/set-base-target-path! base-target-path)
-  (when (and page (not in-memory))
-    (io/make-parents full-target-path)
-    (spit full-target-path page))
-  (-> spec
-      (assoc :full-target-path full-target-path)
-      (server.state/reset-last-rendered-spec!))
-  (when show
-    (swap! server.state/*state dissoc :loading)
-    (broadcast! "refresh"))
-  [:ok])
+                            in-memory]}]
+  (let [full-target-path (or full-target-path  (str base-target-path "/" ".clay.html"))]
+    (server.state/set-base-target-path! base-target-path)
+    (when (and page (not in-memory))
+      (io/make-parents full-target-path)
+      (spit full-target-path page))
+    (-> spec
+        (assoc :full-target-path full-target-path)
+        (server.state/reset-last-rendered-spec!))
+    (when show
+      (swap! server.state/*state dissoc :loading)
+      (broadcast! "refresh"))
+    [:ok]))
 
 (defn loading! []
   (swap! server.state/*state assoc :loading true)
