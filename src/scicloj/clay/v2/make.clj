@@ -407,7 +407,7 @@
               [:wrote gfm-target])
        :quarto (do (io/make-parents (io/file qmd-target-path))
                    (-> spec-with-items
-                       (cond-> format
+                       (cond-> (get-in spec-with-items [:quarto :format])
                          (update-in [:quarto :format]
                                     (fn [fmt]
                                       (if (and (map? fmt)
