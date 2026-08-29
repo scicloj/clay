@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [2.0.21 - 2026-08-11]
+- fixed Clojure 1.3 destructuring case (PR #350) - thanks, @generateme
+
 ## [2.0.20 - 2026-08-03]
 - fix class propagation on SVG (PR #346)
 - updated deps: 
