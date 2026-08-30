@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## Unreleased
+- only update format when present (PR #351)
+
 ## [2.0.21 - 2026-08-11]
 - fixed Clojure 1.3 destructuring case (PR #350) - thanks, @generateme
 
