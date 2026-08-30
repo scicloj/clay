@@ -570,7 +570,7 @@
 
 ;; Evaluate and render all files in base-source-path:
 (comment
-  (clay/make! {:base-source-path "other_notebooks"
+  (clay/make! {:base-source-path "notebooks/subdir"
                :render true}))
 
 ;; Create a Quarto book
