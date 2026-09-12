@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [Unreleased]
+- fixe Highcharts URL
+
 ## [2.0.22 - 2026-08-30]
 - only update format when present (PR #351)
 
