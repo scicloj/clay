@@ -403,7 +403,9 @@
                          (-> context :format first #{:quarto}))
                 (str "{"
                      (str/join " "
-                               (concat (when id [(str "#" id)])
+                               (concat (when id [(str "#" (if (keyword? id)
+                                                            (name id)
+                                                            id))])
                                        (when class (map #(str "." %) (str/split class #"\s+")))))
                      "}")))}))
 
@@ -424,8 +426,7 @@
              (files/next-file! context "image" value "png")]
          (when-not (util.image/write! value "png" png-path)
            (throw (ex-message "Failed to save image as PNG.")))
-         (image-md context relative-path)
-         {:md (str "![" (:caption options) "](" relative-path ")")})
+         (image-md context relative-path))
 
        ;; An image url:
        (and (map? value) (:src value))
