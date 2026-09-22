@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [2.0.23 - 2026-09-23]
-- fixe Highcharts URL
+- fixed Highcharts URL
 - call `name` on keywords so that the id does not get the leading `:` (PR #354)
 - fix markdown for a buffered image to preserve id and caption when present
 
