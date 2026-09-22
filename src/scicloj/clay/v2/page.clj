@@ -91,7 +91,7 @@
                           :css {:from-the-web
                                 ["https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/crosstalk-1.2.1/css/crosstalk.min.css"
                                  "https://raw.githubusercontent.com/scicloj/ggplotly-deps/refs/heads/main/lib/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css"]}}
-   :highcharts {:js {:from-the-web ["https://code.highcharts.com/highcharts.js"]}}})
+   :highcharts {:js {:from-the-web ["https://cdn.jsdelivr.net/npm/highcharts@11.4.8/highcharts.js"]}}})
 
 (def include
   {:js hiccup.page/include-js
