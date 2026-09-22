@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [2.0.23 - 2026-09-23]
 - fixed Highcharts URL
 - call `name` on keywords so that the id does not get the leading `:` (PR #354)
-- fix markdown for a buffered image to preserve id and caption when present
+- fix markdown for a buffered image to preserve id and caption when present (PR #354)
 
 ## [2.0.22 - 2026-08-30]
 - only update format when present (PR #351)
