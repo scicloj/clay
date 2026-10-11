@@ -93,8 +93,8 @@
 ;; - [Examples](clay_book.examples.html) to see what features.
 ;; - [API](index.html#api)
 ;; - [Configuration](index.html#configuration) subsections for more options and variations.
-;; - [Setup](index.html#setup) section
-;; - [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+;; - [Setup](index.html#setup) for integrating Clay with your editor so you do not need to call `make!` yourself.
+;; - [Videos](index.html#videos) demonstrating the above Setup, and more.
 
 ;; ::: {.callout-note}
 ;; You may see the following warning messages:
