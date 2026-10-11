@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## Unreleased
+## [2.0.24 - 2026-09-23]
 - added `:page-layout` option (PR #358)
 
 ## [2.0.23 - 2026-09-23]
