@@ -18,8 +18,10 @@
 
 ;; ## About
 
-;; [Clay](https://github.com/scicloj/clay) is a minimalistic Clojure tool for data visualization and literate programming, compatible with the [Kindly](https://scicloj.github.io/kindly-noted/kindly) convention.
-;; It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from Clojure source code and comments.
+;; Clay is a data visualization and literate programming tool
+;; that creates documents (HTML pages, PDFs, books, blog posts, reports, slideshows)
+;; from Clojure source code and comments.
+;; Visualizations are requested by metadata annotations defined by the [Kindly standard](https://scicloj.github.io/kindly-noted/kindly).
 ;;
 ;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/clay)
 ;;
@@ -27,64 +29,60 @@
 
 ;; ## Goals
 
-;; - Easily explore & share data visualizations and notebooks for others to easily pick & use.
-;; - Encourage writing Kindly-compatible notes for future compatibility with other tools.
-;; - Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.
+;; - Explore and share data visualizations as notebooks.
+;; - Compatibility with other tools.
+;; - Flow with the REPL: encourage typical Clojure practices in projects, editors and usage.
 
 ;; ## Getting started
 
-;; Try it out by starting a Clojure command line
+;; The quickest way to try Clay is live reload mode:
+;; Clay watches your files and re-renders automatically every time you save.
+
+;; ### Live reload
+
+;; **1. Create a directory** to work in:
+
+;; ```bash
+;; mkdir tryclay && cd tryclay
+;; ```
+
+;; **2. Start Clay** from the command line:
+
+;; ```bash
+;; clj -Sforce -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"RELEASE\"} org.slf4j/slf4j-nop {:mvn/version \"RELEASE\"}}}" -M -m scicloj.clay.v2.main
+;; ```
+
+;; Clay is now running in live-reload mode, watching the `notebooks` directory.
+;; It opens `http://localhost:1971/` in your browser to show results.
+
+;; **3. Create a notebook** — open `notebooks/my_notebook.clj` in your editor and add:
+
+^:kind/code ^:kindly/hide-code
+[";; Hello **world**"]
+
+;; **4. Save the file** — the browser updates instantly.
+
+;; Tip: put your browser side by side with your editor so you see results as you type.
+
+;; ### REPL API (`make!`)
+;;
+;; If you prefer invoking Clay from the REPL API, start a Clojure REPL:
 ;; ```bash
 ;; clj -Sdeps "{:deps {org.scicloj/clay {:mvn/version \"RELEASE\"}}}"
 ;; ```
-;; The `:mvn/version` may be changing frequently, copy the up-to-date version from
-;; [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/clay.svg)](https://clojars.org/org.scicloj/clay).
-
-;; Wait for a while, it will drop you at a prompt reading `user=> `,
-;; now let's require the clay namespace by typing
+;; then require and call Clay:
 ;; ```clj
 ;; (require '[scicloj.clay.v2.api :as clay])
-;; ```
-;; and then type:
-;; ```clj
 ;; (clay/make! {:single-form '(+ 1 2 3)})
 ;; ```
-;;
-;; The terminal now looks something like below:
-;; ```clj
-;; $ clj -Sdeps '{:deps {org.scicloj/clay {:mvn/version "2-beta23"}}}'
-;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.pom from clojars
-;; Downloading: org/scicloj/clay/2-beta23/clay-2-beta23.jar from clojars
-;; Clojure 1.10.3
-;; user=> (require '[scicloj.clay.v2.api :as clay])
-;; nil
-;; user=> (clay/make! {:single-form '(+ 1 2 3)})
-;; serving Clay at http://localhost:1971/
-;; [[[[:wrote "docs/.clay.html"] nil]] nil [:watching-new-files #{}]]
-;; ```
 
-;; It will open `http://localhost:1971/` in your web browser
-;; (or use another port if 1971 is taken),
-;; and congratulations, you've just made your first Clay document!
-
-;; Now you can keep updating the document by trying different forms,
-;; like
-;; ```clj
-;; (clay/make! {:single-form '(str "hello" "world")})
-;; ```
-;; or whatever is interesting to you.
-;; Along the way, the web page will get updated automatically for you!
-
-;; At some point, you might find that you'd better write code in a .clj file.
-;; No problem, Clay can also render a document from a Clojure file.
-;; Here, we take [notebooks/demo.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj) as an example.
+;; Here is an example notebook: [notebooks/demo.clj](https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj).
 ;; Click the link and save the file to your computer as, say, `/tmp/demo.clj`,
 ;; then you can render this Clojure namespace (or file if you prefer) by typing the following in the REPL:
 ;; ```clj
 ;; (clay/make! {:source-path "/tmp/demo.clj"})
 ;; ```
 
-;;
 ;; As your docs evolve, you may want to add more Clojure files, and manage them as a project.
 ;; You can organize them as a normal Clojure project with a `deps.edn`,
 ;; you can browse Clay's own [notebooks/](https://github.com/scicloj/clay/tree/main/notebooks)
@@ -92,9 +90,11 @@
 ;;
 ;; You can also:
 
-;; - Head over to [Examples](clay_book.examples.html) to see what features it provides and corresponding examples.
-;; - See the [API](index.html#api) and [Configuration](index.html#configuration) subsections for more options and variations.
-;; - See the [Setup](index.html#setup) section and recent [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
+;; - [Examples](clay_book.examples.html) to see what features.
+;; - [API](index.html#api)
+;; - [Configuration](index.html#configuration) subsections for more options and variations.
+;; - [Setup](index.html#setup) section
+;; - [Videos](index.html#videos) for details about integrating Clay with your editor so you do not need to call `make!` yourself.
 
 ;; ::: {.callout-note}
 ;; You may see the following warning messages:
@@ -826,6 +826,7 @@
 ;; | `:ring-defaults` | Merged with (`site-defaults`)[https://github.com/ring-clojure/ring-defaults?tab=readme-ov-file] when creating Clays server. | `{:proxy true}`
 ;; | `:in-memory` | (experimental) do not write to disk, serve from memory | `true` |
 ;; | `:show-output` | defaults to true, set to false to hide stderr/stdout | `false` |
+;; | `:page-layout` | When not `:article` conveys to outermost div class, and quarto options | `:custom` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
@@ -1201,4 +1202,3 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 ;; (arglists if present, and docstring) are added.
 
 (kind/doc #'clojure.core/eduction)
-

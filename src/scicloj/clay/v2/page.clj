@@ -205,9 +205,10 @@
        distinct))
 
 (defn html [{:as spec
-             :keys [items title toc? favicon exception]}]
+             :keys [items title toc? favicon exception page-layout]}]
   (let [deps (items->deps items)
         special-libs (concat [:html-default :katex] deps)
+        custom-layout (and page-layout (not= page-layout :article))
         head [:head
               [:meta {:charset "UTF-8"}]
               [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
@@ -244,8 +245,13 @@
               (when (some #{:scittle :reagent} deps)
                 (item/scittle-tag
                  item/scittle-header-form))
-              [:div.container
-               [:div.row
+              [:div {:class (if custom-layout
+                              (str "page-layout-" (if (keyword? page-layout)
+                                                    (name page-layout)
+                                                    page-layout))
+                              "container")}
+               [:div {:class (when-not custom-layout
+                               "row")}
                 (when toc?
                   [:div.col-sm-3
                    [:nav.sticky-top {:id "toc"

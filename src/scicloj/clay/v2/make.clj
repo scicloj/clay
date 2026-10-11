@@ -388,7 +388,7 @@
                                           book
                                           post-process]}]
   (let [{:as spec-with-items
-         :keys [test-forms exception]} (with-items notes spec)]
+         :keys [test-forms exception page-layout]} (with-items notes spec)]
     [(case (first format)
        :hiccup (page/hiccup spec-with-items)
        :html (do (-> spec-with-items
@@ -413,7 +413,9 @@
                                       (if (and (map? fmt)
                                                (contains? fmt (second format)))
                                         (select-keys fmt [(second format)])
-                                        fmt))))
+                                        fmt)))
+                         page-layout
+                         (assoc-in [:quarto :page-layout] page-layout))
                        (cond-> book (update :quarto dissoc :title))
                        page/md
                        (->> (spit qmd-target-path)))
