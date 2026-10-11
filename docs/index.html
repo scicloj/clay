@@ -212,7 +212,11 @@ window.Quarto = {
   <ul>
   <li><a href="#about" id="toc-about" class="nav-link" data-scroll-target="#about"><span class="header-section-number">1.1</span> About</a></li>
   <li><a href="#goals" id="toc-goals" class="nav-link" data-scroll-target="#goals"><span class="header-section-number">1.2</span> Goals</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">1.3</span> Getting started</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">1.3</span> Getting started</a>
+  <ul class="collapse">
+  <li><a href="#live-reload" id="toc-live-reload" class="nav-link" data-scroll-target="#live-reload"><span class="header-section-number">1.3.1</span> Live reload</a></li>
+  <li><a href="#repl-api-make" id="toc-repl-api-make" class="nav-link" data-scroll-target="#repl-api-make"><span class="header-section-number">1.3.2</span> REPL API (<code>make!</code>)</a></li>
+  </ul></li>
   <li><a href="#projects-using-clay" id="toc-projects-using-clay" class="nav-link" data-scroll-target="#projects-using-clay"><span class="header-section-number">1.4</span> Projects using Clay</a></li>
   <li><a href="#videos" id="toc-videos" class="nav-link" data-scroll-target="#videos"><span class="header-section-number">1.5</span> Videos</a></li>
   <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">1.6</span> Setup</a>
@@ -230,7 +234,7 @@ window.Quarto = {
   <li><a href="#example-notebook-namespace" id="toc-example-notebook-namespace" class="nav-link" data-scroll-target="#example-notebook-namespace"><span class="header-section-number">1.7</span> Example notebook namespace</a></li>
   <li><a href="#api" id="toc-api" class="nav-link" data-scroll-target="#api"><span class="header-section-number">1.8</span> API</a>
   <ul class="collapse">
-  <li><a href="#live-reload" id="toc-live-reload" class="nav-link" data-scroll-target="#live-reload"><span class="header-section-number">1.8.1</span> Live reload</a></li>
+  <li><a href="#live-reload-1" id="toc-live-reload-1" class="nav-link" data-scroll-target="#live-reload-1"><span class="header-section-number">1.8.1</span> Live reload</a></li>
   <li><a href="#hiccup-output" id="toc-hiccup-output" class="nav-link" data-scroll-target="#hiccup-output"><span class="header-section-number">1.8.2</span> Hiccup output</a></li>
   </ul></li>
   <li><a href="#cli" id="toc-cli" class="nav-link" data-scroll-target="#cli"><span class="header-section-number">1.9</span> CLI</a></li>
@@ -318,49 +322,52 @@ window.Quarto = {
 <img alt="Clay logo" src="https://raw.githubusercontent.com/scicloj/clay/main/resources/Clay.svg.png" style="width:100px;">
 <section id="about" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="about"><span class="header-section-number">1.1</span> About</h2>
-<p><a href="https://github.com/scicloj/clay">Clay</a> is a minimalistic Clojure tool for data visualization and literate programming, compatible with the <a href="https://scicloj.github.io/kindly-noted/kindly">Kindly</a> convention. It allows to conduct visual data explorations and create documents (HTML pages like this one, books, blog posts, reports, slideshows) from Clojure source code and comments.</p>
+<p>Clay is a data visualization and literate programming tool that creates documents (HTML pages, PDFs, books, blog posts, reports, slideshows) from Clojure source code and comments. Visualizations are requested by metadata annotations defined by the <a href="https://scicloj.github.io/kindly-noted/kindly">Kindly standard</a>.</p>
 <p><strong>Source:</strong> <a href="https://github.com/scicloj/clay"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&amp;logo=github&amp;logoColor=white" class="img-fluid" alt="(GitHub repo)"></a></p>
 <p><strong>Artifact:</strong> <a href="https://clojars.org/org.scicloj/clay"><img src="https://img.shields.io/clojars/v/org.scicloj/clay.svg" class="img-fluid" alt="Clojars Project"></a></p>
 </section>
 <section id="goals" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="goals"><span class="header-section-number">1.2</span> Goals</h2>
 <ul>
-<li>Easily explore &amp; share data visualizations and notebooks for others to easily pick &amp; use.</li>
-<li>Encourage writing Kindly-compatible notes for future compatibility with other tools.</li>
-<li>Flow with the REPL: encourage user interactions that flow naturally with the typical use of Clojure in editors and REPLs.</li>
+<li>Explore and share data visualizations as notebooks.</li>
+<li>Compatibility with other tools.</li>
+<li>Flow with the REPL: encourage typical Clojure practices in projects, editors and usage.</li>
 </ul>
 </section>
 <section id="getting-started" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">1.3</span> Getting started</h2>
-<p>Try it out by starting a Clojure command line</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clj</span> <span class="at">-Sdeps</span> <span class="st">"{:deps {org.scicloj/clay {:mvn/version </span><span class="dt">\"</span><span class="st">RELEASE</span><span class="dt">\"</span><span class="st">}}}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The <code>:mvn/version</code> may be changing frequently, copy the up-to-date version from <a href="https://clojars.org/org.scicloj/clay"><img src="https://img.shields.io/clojars/v/org.scicloj/clay.svg" class="img-fluid" alt="Clojars Project"></a>.</p>
-<p>Wait for a while, it will drop you at a prompt reading <code>user=&gt;</code>, now let’s require the clay namespace by typing</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">require</span> '[scicloj.clay.v2.api <span class="at">:as</span> clay])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>and then type:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:single-form</span> '(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The terminal now looks something like below:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>$ clj -Sdeps '{<span class="at">:deps</span> {org.scicloj/clay {<span class="at">:mvn/version</span> <span class="st">"2-beta23"</span>}}}'</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Downloading: org/scicloj/clay/<span class="dv">2</span>-beta23/clay<span class="dv">-2</span>-beta23.pom from clojars</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Downloading: org/scicloj/clay/<span class="dv">2</span>-beta23/clay<span class="dv">-2</span>-beta23.jar from clojars</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Clojure <span class="dv">1</span>.<span class="fl">10.3</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>user=&gt; (<span class="kw">require</span> '[scicloj.clay.v2.api <span class="at">:as</span> clay])</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="va">nil</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>user=&gt; (clay/make! {<span class="at">:single-form</span> '(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>)})</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>serving Clay at http<span class="at">://localhost:1971/</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>[[[[<span class="at">:wrote</span> <span class="st">"docs/.clay.html"</span>] <span class="va">nil</span>]] <span class="va">nil</span> [<span class="at">:watching-new-files</span> #{}]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>It will open <code>http://localhost:1971/</code> in your web browser (or use another port if 1971 is taken), and congratulations, you’ve just made your first Clay document!</p>
-<p>Now you can keep updating the document by trying different forms, like</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:single-form</span> '(<span class="kw">str</span> <span class="st">"hello"</span> <span class="st">"world"</span>)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>or whatever is interesting to you. Along the way, the web page will get updated automatically for you!</p>
-<p>At some point, you might find that you’d better write code in a .clj file. No problem, Clay can also render a document from a Clojure file. Here, we take <a href="https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj">notebooks/demo.clj</a> as an example. Click the link and save the file to your computer as, say, <code>/tmp/demo.clj</code>, then you can render this Clojure namespace (or file if you prefer) by typing the following in the REPL:</p>
+<p>The quickest way to try Clay is live reload mode: Clay watches your files and re-renders automatically every time you save.</p>
+<section id="live-reload" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="live-reload"><span class="header-section-number">1.3.1</span> Live reload</h3>
+<p><strong>1. Create a directory</strong> to work in:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> tryclay <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> tryclay</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>2. Start Clay</strong> from the command line:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clj</span> <span class="at">-Sforce</span> <span class="at">-Sdeps</span> <span class="st">"{:deps {org.scicloj/clay {:mvn/version </span><span class="dt">\"</span><span class="st">RELEASE</span><span class="dt">\"</span><span class="st">} org.slf4j/slf4j-nop {:mvn/version </span><span class="dt">\"</span><span class="st">RELEASE</span><span class="dt">\"</span><span class="st">}}}"</span> <span class="at">-M</span> <span class="at">-m</span> scicloj.clay.v2.main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Clay is now running in live-reload mode, watching the <code>notebooks</code> directory. It opens <code>http://localhost:1971/</code> in your browser to show results.</p>
+<p><strong>3. Create a notebook</strong> — open <code>notebooks/my_notebook.clj</code> in your editor and add:</p>
+<div class="sourceClojure">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; Hello **world**</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>4. Save the file</strong> — the browser updates instantly.</p>
+<p>Tip: put your browser side by side with your editor so you see results as you type.</p>
+</section>
+<section id="repl-api-make" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="repl-api-make"><span class="header-section-number">1.3.2</span> REPL API (<code>make!</code>)</h3>
+<p>If you prefer invoking Clay from the REPL API, start a Clojure REPL:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">clj</span> <span class="at">-Sdeps</span> <span class="st">"{:deps {org.scicloj/clay {:mvn/version </span><span class="dt">\"</span><span class="st">RELEASE</span><span class="dt">\"</span><span class="st">}}}"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>then require and call Clay:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">require</span> '[scicloj.clay.v2.api <span class="at">:as</span> clay])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:single-form</span> '(<span class="kw">+</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span>)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here is an example notebook: <a href="https://raw.githubusercontent.com/scicloj/clay/refs/heads/main/notebooks/demo.clj">notebooks/demo.clj</a>. Click the link and save the file to your computer as, say, <code>/tmp/demo.clj</code>, then you can render this Clojure namespace (or file if you prefer) by typing the following in the REPL:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode clj code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(clay/make! {<span class="at">:source-path</span> <span class="st">"/tmp/demo.clj"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>As your docs evolve, you may want to add more Clojure files, and manage them as a project. You can organize them as a normal Clojure project with a <code>deps.edn</code>, you can browse Clay’s own <a href="https://github.com/scicloj/clay/tree/main/notebooks">notebooks/</a> to get a sense.</p>
 <p>You can also:</p>
 <ul>
-<li>Head over to <a href="clay_book.examples.html">Examples</a> to see what features it provides and corresponding examples.</li>
-<li>See the <a href="index.html#api">API</a> and <a href="index.html#configuration">Configuration</a> subsections for more options and variations.</li>
-<li>See the <a href="index.html#setup">Setup</a> section and recent <a href="index.html#videos">Videos</a> for details about integrating Clay with your editor so you do not need to call <code>make!</code> yourself.</li>
+<li><a href="clay_book.examples.html">Examples</a> to see what features.</li>
+<li><a href="index.html#api">API</a></li>
+<li><a href="index.html#configuration">Configuration</a> subsections for more options and variations.</li>
+<li><a href="index.html#setup">Setup</a> for integrating Clay with your editor so you do not need to call <code>make!</code> yourself.</li>
+<li><a href="index.html#videos">Videos</a> demonstrating the above Setup, and more.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -379,6 +386,7 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <p>Which you can ignore, or if you like, add <code>org.slf4j/slf4j-nop {:mvn/version "2.0.17"}</code> to your dependencies.</p>
 </div>
 </div>
+</section>
 </section>
 <section id="projects-using-clay" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="projects-using-clay"><span class="header-section-number">1.4</span> Projects using Clay</h2>
@@ -656,23 +664,23 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.14048077</td>
+<td style="text-align: right;">0.42277584</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.59110820</td>
+<td style="text-align: right;">0.74580997</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.32154953</td>
+<td style="text-align: right;">0.57094290</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.38359703</td>
+<td style="text-align: right;">0.43402506</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.66384176</td>
+<td style="text-align: right;">0.27714598</td>
 </tr>
 </tbody>
 </table>
@@ -970,8 +978,8 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">comment</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  (clay/browse!))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="live-reload" class="level3" data-number="1.8.1">
-<h3 data-number="1.8.1" class="anchored" data-anchor-id="live-reload"><span class="header-section-number">1.8.1</span> Live reload</h3>
+<section id="live-reload-1" class="level3" data-number="1.8.1">
+<h3 data-number="1.8.1" class="anchored" data-anchor-id="live-reload-1"><span class="header-section-number">1.8.1</span> Live reload</h3>
 <p>(experimental)</p>
 <p>Clay can listen to file changes (using <a href="https://github.com/nextjournal/beholder">nextjournal/beholder</a>) and respond with remaking the page.</p>
 <p>See the example above with <code>:live-reload true</code>.</p>
@@ -1196,6 +1204,11 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <td>defaults to true, set to false to hide stderr/stdout</td>
 <td><code>false</code></td>
 </tr>
+<tr class="odd">
+<td><code>:page-layout</code></td>
+<td>When not <code>:article</code> conveys to outermost div class, and quarto options</td>
+<td><code>:custom</code></td>
+</tr>
 </tbody>
 </table>
 <p>When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded. For example: you may set <code>:base-target-path "temp"</code> at your <code>clay.edn</code> file. When publishing a static page, you may wish to target a <code>docs</code> directory by setting <code>:base-target-path "docs"</code> in your call to <code>clay/make!</code>. Creating a dev namespace is a good way to invoke a different configuration for publishing.</p>
@@ -1343,15 +1356,15 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.60940987</td>
+<td style="text-align: right;">0.96816386</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.02157505</td>
+<td style="text-align: right;">0.41711170</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.45826795</td>
+<td style="text-align: right;">0.86798618</td>
 </tr>
 </tbody>
 </table>
@@ -1374,15 +1387,15 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.51397497</td>
+<td style="text-align: right;">0.78448789</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.67784347</td>
+<td style="text-align: right;">0.23251888</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.08431051</td>
+<td style="text-align: right;">0.62458525</td>
 </tr>
 </tbody>
 </table>
@@ -1405,15 +1418,15 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0.66638263</td>
+<td style="text-align: right;">0.55010631</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.02577562</td>
+<td style="text-align: right;">0.22936665</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.92979161</td>
+<td style="text-align: right;">0.45254694</td>
 </tr>
 </tbody>
 </table>
