@@ -515,9 +515,11 @@
       (into [(first hiccup) {:xmlns "http://www.w3.org/2000/svg"}] (rest hiccup)))
     hiccup))
 
+;; PROBLEM: kind handlers may have children
 (defn layout-hiccup? [value]
   (and (vector? value)
-       (#{:kind/hiccup :kind/row :kind/col} (first value))))
+       (or (> (count value) 2)
+           (#{:kind/hiccup :kind/row :kind/col} (first value)))))
 
 (defn kind? [x]
   (and (keyword? x)
