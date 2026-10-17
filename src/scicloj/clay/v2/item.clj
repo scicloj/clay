@@ -575,6 +575,14 @@
                (jso/write-json-str value))]]
    :deps [:highcharts]})
 
+(defn row [xs]
+  {:hiccup (into [:div.kind-col {:style {:display :flex}}]
+                 xs)})
+
+(defn col [xs]
+  {:hiccup (into [:div.kind-row {:style {:display :flex, :flex-direction :column}}]
+                 xs)})
+
 (defn dataset [{:as context
                 :keys [value kindly/options]}]
   (let [{:keys [dataset/print-range]} options]

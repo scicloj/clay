@@ -1,6 +1,7 @@
 (ns scicloj.clay.v2.config
-  (:require [clojure.java.io :as io]
-            [clojure.edn :as edn]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [clojure.string :as str]
             [scicloj.clay.v2.util.fs :as util.fs]
             [scicloj.kindly.v4.api :as kindly]))
 
@@ -19,7 +20,7 @@
 
 (defn xdg-config-home []
   (let [env-var (System/getenv "XDG_CONFIG_HOME")]
-    (if (and env-var (not (clojure.string/blank? env-var)))
+    (if (and env-var (not (str/blank? env-var)))
       env-var
       (str (System/getProperty "user.home") "/.config"))))
 
