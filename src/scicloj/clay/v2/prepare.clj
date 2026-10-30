@@ -515,12 +515,6 @@
       (into [(first hiccup) {:xmlns "http://www.w3.org/2000/svg"}] (rest hiccup)))
     hiccup))
 
-;; PROBLEM: kind handlers may have children
-(defn layout-hiccup? [value]
-  (and (vector? value)
-       (or (> (count value) 2)
-           (#{:kind/hiccup :kind/row :kind/col} (first value)))))
-
 (defn kind? [x]
   (and (keyword? x)
        (= "kind" (namespace x))))
@@ -528,6 +522,14 @@
 (defn kind-as-hiccup? [value]
   (and (vector? value)
        (kind? (first value))))
+
+(defn- subform-context [context value kind]
+  (-> context
+      (dissoc :form :kind :advice)
+      (update :kindly/options dissoc :element/max-height)
+      (assoc :value value)
+      (cond-> kind (assoc :kind kind
+                          :advice []))))
 
 (defn prepare-hiccup [{:as context
                        :keys [value kindly/options]}
@@ -556,32 +558,21 @@
               hiccup (->> value
                           (claywalk/prewalk
                            (fn [subform]
-                             (let [subform-for-context (cond
-                                                         (scittle-form? subform)
-                                                         (kind/scittle subform)
-                                                         ,
-                                                         (reagent-form? subform)
-                                                         (kind/reagent subform)
-                                                         ,
-                                                         (layout-hiccup? subform)
-                                                         (kindly/attach-meta-to-value (rest subform)
-                                                                                      {:kindly/kind (first subform)})
-                                                         ,
-                                                         (kind-as-hiccup? subform)
-                                                         (kindly/attach-meta-to-value (second subform)
-                                                                                      {:kindly/kind (first subform)
-                                                                                       :kindly/options (get subform 2)})
-                                                         ,
-                                                         :else
-                                                         subform)
-                                   subcontext (-> context
-                                                  (dissoc :form :kind :advice)
-                                                  (update :kindly/options dissoc :element/max-height)
-                                                  (assoc :value subform-for-context))]
-                               (if (some-> subcontext
-                                           kindly-advice/advise
-                                           :kind
-                                           non-hiccup-kind?)
+                             (let [kind (when (kind-as-hiccup? subform)
+                                          (first subform))
+                                   subcontext (if kind
+                                                (subform-context context
+                                                                 (if (= (count subform) 2)
+                                                                   (second subform)
+                                                                   (rest subform))
+                                                                 kind)
+                                                (subform-context context
+                                                                 (cond (scittle-form? subform) (kind/scittle subform)
+                                                                       (reagent-form? subform) (kind/reagent subform)
+                                                                       :else subform)
+                                                                 nil))
+                                   kind (or kind (-> subcontext kindly-advice/advise :kind))]
+                               (if (some-> kind non-hiccup-kind?)
                                  (let [items (prepare subcontext)]
                                    (swap! *deps concat (mapcat :deps items))
                                    (->> items
