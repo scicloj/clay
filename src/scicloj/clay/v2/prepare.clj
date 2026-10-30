@@ -169,75 +169,92 @@
     (or (@*kind->preparer kind)
         (#{:kind/fragment :kind/fn} kind))))
 
+(def ^:dynamic *spec*
+  "Preparers don't receive configuration options as arguments,
+   but should they need them, they are bound to *spec*"
+  nil)
+
+(declare prepare hiccup)
+
+(defn prepare-value-with [value-handler value]
+  (let [handle (requiring-resolve (symbol value-handler))
+        result (handle value)]
+    (if (and (map? result)
+             (or (:hiccup result)
+                 (:html result)
+                 (:md result)))
+      result
+      (prepare {:value result}))))
+
 (defn prepare [{:as context
-                :keys [value]}
-               {:keys [fallback-preparer]}]
-  (let [{:as context-with-advice :keys [kind]} (advise-if-needed context)]
-    (case kind
-      :kind/fragment (->> value
-                          ;; splice the fragment
-                          (mapcat (fn [subvalue]
-                                    (-> context
-                                        (dissoc :form :kind :advice)
-                                        (assoc :value subvalue)
-                                        (prepare {:fallback-preparer fallback-preparer})))))
-      :kind/fn (let [new-value (or (when-let [f (-> context-with-advice
-                                                    :kindly/options
-                                                    :kindly/f)]
-                                     (when (not (ifn? f))
-                                       (throw (ex-info "Value :kind/fn, :kindly/options :kindly/f is not function"
-                                                       {:id ::kind-fn-value-f})))
-                                     (or (f value)
-                                         (throw (ex-info "Options :kindly/f returned nil"
-                                                         {:id ::options-kindly-f-returned-nil}))))
-                                   (when (vector? value)
-                                     (let [[f & args] value]
+                :keys [value]}]
+  (let [{:keys [fallback-preparer kinds]} *spec*
+        {:as context-with-advice :keys [kind]} (advise-if-needed context)
+        value-handler (and (map? kinds)
+                           (get kinds kind))]
+    (if value-handler
+      (prepare-value-with value-handler value)
+      (case kind
+        :kind/fragment (->> value
+                            ;; splice the fragment
+                            (mapcat (fn [subvalue]
+                                      (-> context
+                                          (dissoc :form :kind :advice)
+                                          (assoc :value subvalue)
+                                          (prepare)))))
+        :kind/fn (let [new-value (or (when-let [f (-> context-with-advice
+                                                      :kindly/options
+                                                      :kindly/f)]
                                        (when (not (ifn? f))
-                                         (throw (ex-info "Vector :kind/fn, first element is not function"
-                                                         {:id ::kind-fn-vector-f})))
-                                       (or (apply f args)
-                                           (throw (ex-info "Vector :kindly/f returned nil"
-                                                           {:id ::vector-kindly-f-returned-nil})))))
-                                   (when (map? value)
-                                     (let [{:keys [kindly/f]} value]
-                                       (when (not (ifn? f))
-                                         (throw (ex-info "Map of :kind/fn, :kindly/f is not a function"
-                                                         {:id ::kind-fn-map-f})))
-                                       (or (-> value
-                                               (dissoc :kindly/f)
-                                               f)
-                                           (throw (ex-info "Map :kindly/f returned nil"
-                                                           {:id ::map-kindly-f-returned-nil})))))
-                                   (throw (ex-info "missing function for :kind/fn"
-                                                   {:id ::kind-fn-f})))]
-                 (-> context
-                     (assoc :value new-value)
-                     (dissoc :form :kind :advice)
-                     (prepare {:fallback-preparer fallback-preparer})
-                     (->> (map #(assoc % :prepared-by-fn true)))))
-      ;; else - a regular kind
-      (when-let [preparer (-> kind
-                              (@*kind->preparer)
-                              (or fallback-preparer))]
-        [(-> context-with-advice
-             preparer
-             ;; returns an item
-             (update :hiccup limit-hiccup-height context)
-             (update :md limit-md-height context)
-             ;; items need the options from the context
-             ;; TODO: shouldn't this at least be a merge? context-with-advice should have options from the context
-             (assoc :kindly/options (:kindly/options context)))]))))
+                                         (throw (ex-info "Value :kind/fn, :kindly/options :kindly/f is not function"
+                                                         {:id ::kind-fn-value-f})))
+                                       (or (f value)
+                                           (throw (ex-info "Options :kindly/f returned nil"
+                                                           {:id ::options-kindly-f-returned-nil}))))
+                                     (when (vector? value)
+                                       (let [[f & args] value]
+                                         (when (not (ifn? f))
+                                           (throw (ex-info "Vector :kind/fn, first element is not function"
+                                                           {:id ::kind-fn-vector-f})))
+                                         (or (apply f args)
+                                             (throw (ex-info "Vector :kindly/f returned nil"
+                                                             {:id ::vector-kindly-f-returned-nil})))))
+                                     (when (map? value)
+                                       (let [{:keys [kindly/f]} value]
+                                         (when (not (ifn? f))
+                                           (throw (ex-info "Map of :kind/fn, :kindly/f is not a function"
+                                                           {:id ::kind-fn-map-f})))
+                                         (or (-> value
+                                                 (dissoc :kindly/f)
+                                                 f)
+                                             (throw (ex-info "Map :kindly/f returned nil"
+                                                             {:id ::map-kindly-f-returned-nil})))))
+                                     (throw (ex-info "missing function for :kind/fn"
+                                                     {:id ::kind-fn-f})))]
+                   (-> context
+                       (assoc :value new-value)
+                       (dissoc :form :kind :advice)
+                       (prepare)
+                       (->> (map #(assoc % :prepared-by-fn true)))))
+        ;; else - a regular kind
+        (when-let [preparer (-> kind
+                                (@*kind->preparer)
+                                (or fallback-preparer))]
+          [(-> context-with-advice
+               preparer
+               ;; returns an item
+               (update :hiccup limit-hiccup-height context)
+               (update :md limit-md-height context)
+               ;; items need the options from the context
+               ;; TODO: shouldn't this at least be a merge? context-with-advice should have options from the context
+               (assoc :kindly/options (:kindly/options context)))])))))
 
 
-(defn prepare-or-pprint [context]
-  (prepare context {:fallback-preparer
-                    (preparer-from-value-fn #'item/pprint)}))
-
-(defn prepare-or-str [context]
-  (prepare context {:fallback-preparer
-                    (preparer-from-value-fn #'item/md)}))
-
-
+(defn prepare-or-pprint
+  [context opts]
+  (binding [*spec* (assoc opts :fallback-preparer
+                          (preparer-from-value-fn #'item/pprint))]
+    (prepare context)))
 
 (add-preparer-from-value-fn!
  :kind/println
@@ -278,7 +295,7 @@
                                                            (dissoc :form :kind :advice)
                                                            (update :kindly/options dissoc :element/max-height)
                                                            (assoc :value (second elem))
-                                                           (prepare {}))]
+                                                           (prepare))]
                                           (do (swap! *deps concat (mapcat :deps items))
                                               (map (fn [item]
                                                      (-> item
@@ -377,7 +394,7 @@
                                                                          (dissoc :form :kind :advice)
                                                                          (update :kindly/options dissoc :element/max-height)
                                                                          (assoc :value v)
-                                                                         prepare-or-pprint)]
+                                                                         (prepare))]
                                                            (swap! *deps concat (mapcat :deps items))
                                                            items))))})))]
        (if (->> prepared-kv-pairs
@@ -424,7 +441,7 @@
                                             (dissoc :form :kind :advice)
                                             (update :kindly/options dissoc :element/max-height)
                                             (assoc :value subvalue)
-                                            prepare-or-pprint))))]
+                                            (prepare)))))]
       (if (not-all-plain-values? prepared-parts)
         ;; some parts are not just plain Clojure values - handle recursively
         {:hiccup [:div
@@ -498,60 +515,75 @@
       (into [(first hiccup) {:xmlns "http://www.w3.org/2000/svg"}] (rest hiccup)))
     hiccup))
 
+(defn kind? [x]
+  (and (keyword? x)
+       (= "kind" (namespace x))))
+
+(defn kind-as-hiccup? [value]
+  (and (vector? value)
+       (kind? (first value))))
+
+(defn- subform-context [context value kind]
+  (-> context
+      (dissoc :form :kind :advice)
+      (update :kindly/options dissoc :element/max-height)
+      (assoc :value value)
+      (cond-> kind (assoc :kind kind
+                          :advice []))))
+
 (defn hiccup [{:as context
-               :keys [value kindly/options]}
-              version]
-  (if (and (item/static? context)
-           (vector? value)
-           (= :svg (first value)))
-    (let [[svg-path relative-path] (files/next-file! context "image" value "svg")
-          svg-class (when (-> value second map?)
-                      (-> value second :class))
-          context (if svg-class
-                    (update-in context [:kindly/options :class] add-class-to-class-str svg-class)
-                    context)
-          svg (ensure-svg-xmlns value)
-          s (case version
-              1 (hiccup/html {:mode :xml} svg)
-              2 (hiccup2/html {:mode :xml} svg))]
-      (spit svg-path s)
-      (item/image-md context relative-path))
-    (let [*deps (atom
-                 (-> context
-                     :kindly/options
-                     :html/deps)) ; TODO: implement without mutable state
-          hiccup (->> value
-                      (claywalk/prewalk
-                       (fn [subform]
-                         (let [subform-for-context (cond
-                                                     (scittle-form? subform)
-                                                     (kind/scittle subform)
-                                                     ,
-                                                     (reagent-form? subform)
-                                                     (kind/reagent subform)
-                                                     ,
-                                                     :else
-                                                     subform)
-                               subcontext (-> context
-                                              (dissoc :form :kind :advice)
-                                              (update :kindly/options dissoc :element/max-height)
-                                              (assoc :value subform-for-context))]
-                           (if (some-> subcontext
-                                       kindly-advice/advise
-                                       :kind
-                                       non-hiccup-kind?)
-                             (let [items (prepare-or-pprint
-                                          subcontext)]
-                               (swap! *deps concat (mapcat :deps items))
-                               (->> items
-                                    (map #(item->hiccup % context))
-                                    wrap-with-div-if-many))
-                             subform)))))]
-      (case version
-        1 {:hiccup hiccup
-           :deps (distinct @*deps)}
-        2 {:html (hiccup2/html hiccup)
-           :deps (distinct @*deps)}))))
+                       :keys [value kindly/options]}
+                      version]
+  (cond (and (item/static? context)
+             (vector? value)
+             (= :svg (first value)))
+        (let [[svg-path relative-path] (files/next-file! context "image" value "svg")
+              svg-class (when (-> value second map?)
+                          (-> value second :class))
+              context (if svg-class
+                        (update-in context [:kindly/options :class] add-class-to-class-str svg-class)
+                        context)
+              svg (ensure-svg-xmlns value)
+              s (case version
+                  1 (hiccup/html {:mode :xml} svg)
+                  2 (hiccup2/html {:mode :xml} svg))]
+          (spit svg-path s)
+          (item/image-md context relative-path))
+
+        :else
+        (let [*deps (atom
+                     (-> context
+                         :kindly/options
+                         :html/deps)) ; TODO: implement without mutable state
+              hiccup (->> value
+                          (claywalk/prewalk
+                           (fn [subform]
+                             (let [kind (when (kind-as-hiccup? subform)
+                                          (first subform))
+                                   subcontext (if kind
+                                                (subform-context context
+                                                                 (if (= (count subform) 2)
+                                                                   (second subform)
+                                                                   (rest subform))
+                                                                 kind)
+                                                (subform-context context
+                                                                 (cond (scittle-form? subform) (kind/scittle subform)
+                                                                       (reagent-form? subform) (kind/reagent subform)
+                                                                       :else subform)
+                                                                 nil))
+                                   kind (or kind (-> subcontext kindly-advice/advise :kind))]
+                               (if (some-> kind non-hiccup-kind?)
+                                 (let [items (prepare subcontext)]
+                                   (swap! *deps concat (mapcat :deps items))
+                                   (->> items
+                                        (map #(item->hiccup % context))
+                                        wrap-with-div-if-many))
+                                 subform)))))]
+          (case version
+            1 {:hiccup hiccup
+               :deps (distinct @*deps)}
+            2 {:html (hiccup2/html hiccup)
+               :deps (distinct @*deps)}))))
 
 (add-preparer!
  :kind/hiccup
@@ -627,3 +659,11 @@
 (add-preparer-from-value-fn!
  :kind/highcharts
  #'item/highcharts)
+
+(add-preparer-from-value-fn!
+ :kind/row
+ #'item/row)
+
+(add-preparer-from-value-fn!
+ :kind/col
+ #'item/col)

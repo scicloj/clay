@@ -1,21 +1,19 @@
 (ns scicloj.clay.v2.item
-  (:require [clojure.pprint :as pp]
+  (:require [babashka.fs :as fs]
+            [clj-commons.format.exceptions :as fe]
+            [clojure.pprint :as pp]
             [clojure.string :as str]
-            [scicloj.kind-portal.v1.prepare :as kind-portal]
-            [scicloj.kindly-render.shared.jso :as jso]
             [scicloj.clay.v2.files :as files]
             [scicloj.clay.v2.plotly-export :as plotly-export]
             [scicloj.clay.v2.util.image :as util.image]
             [scicloj.clay.v2.util.meta :as meta]
-            [clj-commons.format.exceptions :as fe]
-            [babashka.fs :as fs])
-  (:import (javax.sound.sampled AudioFileFormat$Type
-                                AudioFormat
-                                AudioInputStream)
-           (java.io ByteArrayInputStream
-                    File)
-           (java.nio ByteBuffer
-                     ByteOrder)))
+            [scicloj.kind-portal.v1.prepare :as kind-portal]
+            [scicloj.kindly-advice.v1.completion :as completion]
+            [scicloj.kindly-render.shared.jso :as jso]
+            [scicloj.kindly.v4.api :as kindly])
+  (:import (java.io ByteArrayInputStream File)
+           (java.nio ByteBuffer ByteOrder)
+           (javax.sound.sampled AudioFileFormat$Type AudioFormat AudioInputStream)))
 
 (def *id (atom 0))
 
@@ -574,6 +572,27 @@
                "Highcharts.chart(document.currentScript.parentElement, %s);"
                (jso/write-json-str value))]]
    :deps [:highcharts]})
+
+(defn- with-attrs [xs]
+  (let [attrs (when (and (seq? xs)
+                         (map? (first xs))
+                         (not (completion/meta-kind (first xs))))
+                (first xs))
+        children (if attrs
+                   (rest xs)
+                   (if (seq? xs) xs [xs]))]
+    [attrs children]))
+
+(defn- layout-hiccup [tag layout-attrs xs]
+  (let [[attrs children] (with-attrs xs)]
+    {:hiccup (into [tag (kindly/deep-merge layout-attrs attrs)]
+                   children)}))
+
+(defn row [xs]
+  (layout-hiccup :div.kind-col {:style {:display :flex}} xs))
+
+(defn col [xs]
+  (layout-hiccup :div.kind-row {:style {:display :flex :flex-direction :column}} xs))
 
 (defn dataset [{:as context
                 :keys [value kindly/options]}]

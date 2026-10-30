@@ -827,6 +827,7 @@
 ;; | `:in-memory` | (experimental) do not write to disk, serve from memory | `true` |
 ;; | `:show-output` | defaults to true, set to false to hide stderr/stdout | `false` |
 ;; | `:page-layout` | When not `:article` conveys to outermost div class, and quarto options | `:custom` |
+;; | `:kinds` | (experimental) a map of kind to render symbol or keyword | `{:kind/plotje :scicloj.plotje.api/pose}` |
 
 ;; When working interactively, it is helpful to render to a temporary directory that can be git ignored and discarded.
 ;; For example: you may set `:base-target-path "temp"` at your `clay.edn` file.
