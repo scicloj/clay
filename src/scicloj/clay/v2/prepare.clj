@@ -174,7 +174,7 @@
    but should they need them, they are bound to *spec*"
   nil)
 
-(declare prepare prepare-hiccup)
+(declare prepare hiccup)
 
 (defn prepare-value-with [value-handler value]
   (let [handle (requiring-resolve (symbol value-handler))
@@ -531,7 +531,7 @@
       (cond-> kind (assoc :kind kind
                           :advice []))))
 
-(defn prepare-hiccup [{:as context
+(defn hiccup [{:as context
                        :keys [value kindly/options]}
                       version]
   (cond (and (item/static? context)
@@ -587,11 +587,11 @@
 
 (add-preparer!
  :kind/hiccup
- #(prepare-hiccup % 1))
+ #(hiccup % 1))
 
 (add-preparer!
  :kind/hiccup2
- #(prepare-hiccup % 2))
+ #(hiccup % 2))
 
 (add-preparer-from-value-fn!
  :kind/html
